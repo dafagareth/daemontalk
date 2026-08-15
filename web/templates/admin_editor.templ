@@ -1,0 +1,182 @@
+package templates
+
+import (
+	"fmt"
+	"daemontalk/internal/postdb"
+)
+
+// AdminPostEditor is the Medium/Studio-inspired distraction-free post editor.
+// Includes large borderless title, Quill bubble WYSIWYG editor with markdown conversion,
+// real-time autosave status indicator, and post details / publish modal.
+templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
+	<link rel="stylesheet" href="/static/css/quill.bubble.css"/>
+	<section
+		id="ed-root"
+		class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10"
+		data-post-id={ fmt.Sprintf("%d", p.ID) }
+		data-draft={ fmt.Sprintf("%t", p.Draft) }
+	>
+		<!-- Editor Top Action Bar -->
+		<div class="flex items-center gap-3 mb-10 pb-4 border-b border-border/60">
+			<a
+				href="/admin#content"
+				class="inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-text px-3 py-1.5 rounded-none hover:bg-hover transition-colors shrink-0"
+			>
+				@iconArrowLeft()
+				<span>Studio / Content</span>
+			</a>
+			if p.Draft {
+				<span class="badge badge-draft shrink-0">Draft</span>
+			} else {
+				<span class="badge badge-ok shrink-0">Published</span>
+			}
+			<span id="ed-status" class="text-xs font-mono text-muted truncate"></span>
+			<button id="ed-publish-btn" type="button" class="btn btn-primary ml-auto shrink-0 shadow-sm">
+				if p.Draft {
+					Publish
+				} else {
+					Update
+				}
+			</button>
+		</div>
+
+		if errMsg != "" {
+			<div class="mb-6 px-4 py-3 rounded-none border border-[var(--c-warn)] bg-[var(--c-warn-bg)] text-sm text-[var(--c-warn)] flex items-center gap-2">
+				@IconError("w-4 h-4 shrink-0")
+				<span>{ errMsg }</span>
+			</div>
+		}
+
+		<!-- Post Title Input -->
+		<input
+			id="ed-title"
+			type="text"
+			value={ p.Title }
+			placeholder="Title"
+			maxlength="200"
+			autocomplete="off"
+			class="display w-full bg-transparent border-0 outline-none text-3xl sm:text-4xl font-bold text-text mb-6 placeholder:text-muted/50"
+		/>
+
+		<!-- Quill Editor Body -->
+		<div id="ed-body" class="min-h-[350px] text-base leading-relaxed">
+			@templ.Raw(editorHTML)
+		</div>
+	</section>
+
+	<!-- Publish / Post Details Modal -->
+	<div id="ed-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
+		<div class="w-full max-w-lg mt-10 sm:mt-16 rounded-none border border-border bg-bg p-6 sm:p-8 shadow-2xl">
+			<div class="flex items-center justify-between mb-6 pb-3 border-b border-border/60">
+				<div>
+					<h2 class="text-lg font-bold text-text">
+						if p.Draft {
+							Publish Post
+						} else {
+							Post Details & Settings
+						}
+					</h2>
+					<p class="text-xs text-muted mt-0.5">Configure publication metadata and slug.</p>
+				</div>
+				<button type="button" id="ed-modal-close" aria-label="Close" class="w-8 h-8 rounded-none hover:bg-hover text-muted hover:text-text flex items-center justify-center text-xl leading-none transition-colors">&times;</button>
+			</div>
+
+			<form id="ed-publish-form" method="post" action={ publishAction(p) } class="flex flex-col gap-4">
+				<input type="hidden" id="pub-hidden-title" name="title" value={ p.Title }/>
+				<input type="hidden" id="pub-hidden-body" name="body" value={ p.BodyMD }/>
+				<div>
+					<label for="pub-slug" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Slug (URL Path)</label>
+					if p.Draft {
+						<input id="pub-slug" type="text" name="slug" value={ p.Slug } maxlength="200" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]"/>
+					} else {
+						<input id="pub-slug" type="text" name="slug" value={ p.Slug } readonly aria-label="Slug (locked once published)" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-chip text-muted cursor-not-allowed"/>
+					}
+				</div>
+
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<label for="pub-date" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Date</label>
+						<input id="pub-date" type="date" name="date" required value={ p.Date } class="w-full px-3.5 py-2.5 text-sm rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]"/>
+					</div>
+					<div>
+						<label for="pub-lang" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Language</label>
+						<select id="pub-lang" name="lang" class="w-full px-3.5 py-2.5 text-sm rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]">
+							<option value="en" selected?={ p.Lang != "id" }>English (en)</option>
+							<option value="id" selected?={ p.Lang == "id" }>Indonesian (id)</option>
+						</select>
+					</div>
+				</div>
+
+				<div>
+					<label for="pub-tags" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Tags (comma separated)</label>
+					<input id="pub-tags" type="text" name="tags" value={ p.Tags } maxlength="200" placeholder="go, linux, web" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]"/>
+				</div>
+
+				<div>
+					<label for="pub-cover" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Cover URL (optional)</label>
+					<input id="pub-cover" type="text" name="cover" value={ p.Cover } maxlength="500" placeholder="/static/images/cover.png" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]"/>
+				</div>
+
+				<div>
+					<label for="pub-desc" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Description (optional &mdash; defaults to first paragraph)</label>
+					<textarea id="pub-desc" name="description" maxlength="300" rows="2" class="w-full px-3.5 py-2.5 text-sm rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)] resize-y">{ p.Description }</textarea>
+				</div>
+
+				<div class="flex items-center justify-end gap-3 pt-4 border-t border-border/60 mt-2">
+					<button type="submit" name="action" value="draft" class="btn btn-secondary px-4 py-2 text-sm font-medium">
+						Save as Draft
+					</button>
+					<button type="submit" name="action" value="publish" class="btn btn-primary px-5 py-2 text-sm font-semibold shadow-sm">
+						if p.Draft {
+							Publish Now
+						} else {
+							Save Changes
+						}
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="/static/js/quill.min.js"></script>
+	<script src="/static/js/turndown.min.js"></script>
+	<script src="/static/js/admin_editor.js" defer></script>
+}
+
+func publishAction(p postdb.WebPost) templ.SafeURL {
+	if p.ID == 0 {
+		return templ.SafeURL("")
+	}
+	return templ.SafeURL(fmt.Sprintf("/admin/posts/%d/publish", p.ID))
+}
+
+// AdminWebPostsSection displays web posts list on the admin content page.
+templ AdminWebPostsSection(webPosts []postdb.WebPost) {
+	<div class="flex items-center justify-between mb-4">
+		<h2 class="text-sm font-semibold text-text">Web Editor Posts</h2>
+		<a href="/admin/posts/new" class="btn btn-primary btn-sm">+ New Post</a>
+	</div>
+	if len(webPosts) == 0 {
+		<p class="text-sm text-muted mb-10">No web posts yet. Posts created via web editor will appear here.</p>
+	} else {
+		<ul class="admin-list divide-y divide-[var(--c-border)] mb-10">
+			for _, wp := range webPosts {
+				<li class="flex items-center gap-3 px-4 py-3">
+					<div class="min-w-0 flex-1">
+						<div class="flex items-center gap-2">
+							<a href={ templ.SafeURL("/blog/" + wp.Slug) } class="text-sm font-medium text-text hover:text-link truncate">{ wp.Title }</a>
+							if wp.Draft {
+								<span class="badge badge-draft shrink-0">DRAFT</span>
+							}
+						</div>
+						<p class="text-xs font-mono text-muted mt-0.5">{ wp.Slug } &middot; { wp.Date } &middot; { wp.Lang }</p>
+					</div>
+					<a href={ templ.SafeURL(fmt.Sprintf("/admin/posts/%d/edit", wp.ID)) } class="btn btn-secondary btn-sm shrink-0">Edit</a>
+					<form method="post" action={ templ.SafeURL(fmt.Sprintf("/admin/posts/%d/delete", wp.ID)) } data-confirm="Delete this post? This action cannot be undone." class="shrink-0">
+						<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+					</form>
+				</li>
+			}
+		</ul>
+	}
+}

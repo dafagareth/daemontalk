@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@source "../../templates";
+@source "../../templates/**/*.templ";
+@source "../../**/*.templ";
+@source "../../../*.go";
+@source "../../../internal/**/*.go";
+
+@import "./theme.css";
+@theme {
+  --font-serif: Lora, Merriweather, "PT Serif", serif;
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-surface: var(--c-surface);
+  --color-border: var(--c-border);
+  --color-link: var(--c-link);
+  --color-bg: var(--c-bg);
+  --color-hover: var(--c-hover);
+  --color-chip: var(--c-chip);
+  --color-accent: var(--c-accent);
+}
+@import "./base.css";
+@import "./components.css";
+@import "./utilities.css";

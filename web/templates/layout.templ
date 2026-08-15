@@ -1,0 +1,220 @@
+package templates
+
+import (
+	"strings"
+
+	"daemontalk/internal/i18n"
+)
+
+// headTags renders the shared <head> for both public pages and the admin
+// shell. Public-only SEO tags (feeds, hreflang, OG/Twitter, JSON-LD) are
+// skipped when noindex is true: the admin shell has nothing worth indexing
+// and gets a robots exclusion instead.
+templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="view-transition" content="same-origin"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>{ pageTitle(page) }</title>
+		<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+		<link rel="icon" type="image/png" sizes="32x32" href="/static/logo/favicon-32x32.png"/>
+		<link rel="icon" type="image/png" sizes="16x16" href="/static/logo/favicon-16x16.png"/>
+		<link rel="apple-touch-icon" sizes="180x180" href="/static/logo/apple-touch-icon.png"/>
+		<!-- Set theme before first paint to avoid a flash of the wrong theme. -->
+		<script>
+			(function() {
+				var t = localStorage.getItem("theme");
+				if (t) document.documentElement.setAttribute("data-theme", t);
+			})();
+		</script>
+		if !noindex {
+			<!-- Animasi intro hanya pada kunjungan pertama per sesi; navigasi
+			     berikutnya langsung tampil (tidak fade ulang tiap pindah halaman). -->
+			<script>
+				(function() {
+					try {
+						if (sessionStorage.getItem("visited")) {
+							document.documentElement.setAttribute("data-anims", "off");
+						}
+						sessionStorage.setItem("visited", "1");
+					} catch (e) {}
+				})();
+			</script>
+			<noscript><style>.reveal, .anim-fade-up, .anim-fade-in { opacity: 1 !important; transform: none !important; }</style></noscript>
+		}
+		<link rel="preconnect" href="https://fonts.googleapis.com"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=DM+Mono:wght@400;500&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"/>
+		<link rel="stylesheet" href={ assetURL("/static/css/main.css") }/>
+		<link rel="stylesheet" href={ assetURL("/static/css/chroma.css") }/>
+		if noindex {
+			<meta name="robots" content="noindex,nofollow"/>
+		} else {
+			<link rel="alternate" type="application/rss+xml" title="daemontalk" href="/rss.xml"/>
+			<link rel="alternate" type="application/feed+json" title="daemontalk" href="/feed.json"/>
+			<link rel="alternate" hreflang="en" href={ siteBaseURL + hreflangEN(currentPath) }/>
+			<link rel="alternate" hreflang="id" href={ siteBaseURL + "/id" + hreflangEN(currentPath) }/>
+			<link rel="alternate" hreflang="x-default" href={ siteBaseURL + hreflangEN(currentPath) }/>
+			<link rel="manifest" href="/manifest.json"/>
+			<meta name="description" content={ meta.ogDesc() }/>
+			<meta property="og:title" content={ pageTitle(page) }/>
+			<meta property="og:description" content={ meta.ogDesc() }/>
+			<meta property="og:type" content={ meta.ogType() }/>
+			<meta property="og:url" content={ siteBaseURL + currentPath }/>
+			<meta property="og:image" content={ meta.ogImage() }/>
+			<meta property="og:image:width" content="1200"/>
+			<meta property="og:image:height" content="630"/>
+			<meta property="og:site_name" content="daemontalk"/>
+			<meta name="twitter:card" content="summary_large_image"/>
+			<meta name="twitter:title" content={ pageTitle(page) }/>
+			<meta name="twitter:description" content={ meta.ogDesc() }/>
+			<meta name="twitter:image" content={ meta.ogImage() }/>
+			if meta.JSONLD != "" {
+				@templ.Raw(`<script type="application/ld+json">` + meta.JSONLD + `</script>`)
+			}
+		}
+		<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+	</head>
+}
+
+templ Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageMeta, content templ.Component) {
+	<!DOCTYPE html>
+	<html lang={ lang }>
+		@headTags(page, currentPath, meta, false)
+		<body class="min-h-screen flex flex-col">
+			<!-- Top nav & Sub-nav -->
+			@topNav(ui, lang, page, currentPath)
+			<!-- Fullscreen Mobile Navigation Drawer -->
+			@mobileMenu(ui, lang, page, currentPath)
+			<!-- Content -->
+			<main class="w-full flex-1">
+				@content
+			</main>
+			<!-- Global Back to top floating button -->
+			<button
+				id="back-to-top"
+				onclick="window.scrollTo({top:0,behavior:'smooth'})"
+				aria-label="Back to top"
+				class="fixed bottom-6 right-6 z-40 w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-all opacity-0 pointer-events-none shadow-md"
+			>
+				@IconArrowUp()
+			</button>
+			<!-- Footer -->
+			@footer(ui, lang)
+			<!-- Keyboard Shortcuts Modal -->
+			@shortcutsModal()
+			<!-- Confirm Modal -->
+			@confirmModal()
+			<!-- Visited Posts Marker -->
+			@visitedPostsScript()
+			<!-- Layout Interactive Scripts -->
+			@layoutScripts()
+		</body>
+	</html>
+}
+
+func prefix(lang string) string {
+	if lang == "id" {
+		return "/id"
+	}
+	return ""
+}
+
+func switchLangURL(lang string, currentPath string) string {
+	if lang == "id" {
+		p := strings.TrimPrefix(currentPath, "/id")
+		if p == "" {
+			return "/"
+		}
+		return p
+	}
+	if currentPath == "/" {
+		return "/id"
+	}
+	return "/id" + currentPath
+}
+
+func pageTitle(page string) string {
+	suffix := "daemontalk"
+	switch page {
+	case "home", "":
+		return suffix
+	case "projects":
+		return "Projects · " + suffix
+	case "blog":
+		return "Blog · " + suffix
+	case "about":
+		return "About · " + suffix
+	case "behind":
+		return "Behind · " + suffix
+	case "uses":
+		return "Uses · " + suffix
+	case "now":
+		return "Now · " + suffix
+	case "saved":
+		return "Reading List · " + suffix
+	case "stats":
+		return "Stats · " + suffix
+	case "daily":
+		return "Daily Tech Briefing · " + suffix
+	case "til":
+		return "TIL · " + suffix
+	case "guestbook":
+		return "Guestbook · " + suffix
+	case "search":
+		return "Search · " + suffix
+	case "resume":
+		return "Resume · " + suffix
+	case "changelog":
+		return "Changelog · " + suffix
+	case "links":
+		return "Links · " + suffix
+	case "404":
+		return "404 · Page Not Found · " + suffix
+	case "403":
+		return "403 · Access Forbidden · " + suffix
+	case "500":
+		return "500 · Internal Server Error · " + suffix
+	default:
+		if strings.HasPrefix(page, "#") {
+			return page + " · " + suffix
+		}
+		return page
+	}
+}
+
+// hreflangEN returns the English-equivalent path by stripping any /id prefix.
+func hreflangEN(path string) string {
+	p := strings.TrimPrefix(path, "/id")
+	if p == "" {
+		return "/"
+	}
+	return p
+}
+
+templ visitedPostsScript() {
+	<script>
+		(function() {
+			var read = [];
+			try { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}
+			if (!read.length) return;
+			var set = {};
+			read.forEach(function(s) { set[s] = true; });
+			function markVisited() {
+				document.querySelectorAll('a[data-slug]').forEach(function(a) {
+					if (set[a.dataset.slug]) {
+						var h = a.querySelector('h1,h2,h3,h4,h5,h6');
+						if (h) {
+							h.classList.add('post-visited');
+						} else {
+							a.classList.add('post-visited');
+						}
+					}
+				});
+			}
+			markVisited();
+			// Re-apply after HTMX swaps (load more, etc.)
+			document.addEventListener('htmx:afterSwap', markVisited);
+		})();
+	</script>
+}

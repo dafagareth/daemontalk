@@ -1,0 +1,38 @@
+FROM golang:1.26-bookworm
+
+# Install Node.js 22 LTS via NodeSource (Tailwind CSS v4 oxide requires Node >=20;
+# the apt default in bookworm is only Node 18 which is too old)
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# When running as host UID (non-root), Go needs writable locations for its caches.
+# /tmp is always writable by any user.
+ENV GOCACHE=/tmp/go-cache
+ENV GOPATH=/tmp/go-path
+ENV HOME=/tmp
+
+# Download pre-built templ and air binaries.
+# This avoids go install + sum.golang.org entirely — faster and more reliable in CI/Docker.
+RUN curl -fsSL https://github.com/a-h/templ/releases/download/v0.3.1020/templ_Linux_x86_64.tar.gz \
+        | tar -xz -C /usr/local/bin templ \
+    && chmod +x /usr/local/bin/templ \
+    && curl -fsSL https://github.com/air-verse/air/releases/download/v1.67.4/air_1.67.4_linux_amd64 \
+        -o /usr/local/bin/air \
+    && chmod +x /usr/local/bin/air
+
+# Pre-install npm dependencies to speed up container startup.
+# node_modules will be isolated via docker-compose anonymous volume.
+COPY package.json package-lock.json* ./
+RUN npm install && chmod -R a+rw /app/node_modules
+
+EXPOSE 8080
+
+# NOTE: No USER directive here — docker-compose.dev.yml passes the host UID:GID
+# via the 'user' field so the container process owns its own bind-mounted files.
+
+# Runs templ --watch, tailwind --watch, and air in parallel (see Makefile: dev target)
+CMD ["make", "dev"]

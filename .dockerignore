@@ -1,0 +1,11 @@
+node_modules/
+tmp/
+.git/
+portfolio
+dist/
+claude.md
+Portfolio.prd.md
+*.bak
+
+# Runtime SQLite data — must never leak into the image
+data/

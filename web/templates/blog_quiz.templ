@@ -1,0 +1,300 @@
+package templates
+
+import (
+	"fmt"
+	"strings"
+
+	"daemontalk/internal/post"
+)
+
+type quizOption struct {
+	Key         string
+	Text        string
+	IsCorrect   bool
+	Explanation string
+}
+
+type quizItem struct {
+	Question string
+	Options  []quizOption
+}
+
+func getQuizItems(p post.Post) []quizItem {
+	isEn := p.Lang == "en"
+
+	for _, t := range p.Tags {
+		switch strings.ToLower(t) {
+		case "go":
+			if isEn {
+				return []quizItem{
+					{
+						Question: "1. In Go concurrency, what is the primary advantage of Goroutines over standard OS threads?",
+						Options: []quizOption{
+							{Key: "A", Text: "Goroutines start with an initial ~2KB stack and are multiplexed by the Go runtime across OS threads.", IsCorrect: true, Explanation: "Correct! The lightweight 2KB dynamic stack enables millions of concurrent goroutines without exhausting RAM."},
+							{Key: "B", Text: "Goroutines require zero stack memory allocation when spawned.", IsCorrect: false, Explanation: "Incorrect. Goroutines still require an initial contiguous stack segment (~2KB)."},
+							{Key: "C", Text: "Goroutines can only execute on single-core CPU architectures.", IsCorrect: false, Explanation: "Incorrect. The Go runtime distributes goroutines across multiple OS threads and cores via GOMAXPROCS."},
+						},
+					},
+					{
+						Question: "2. What is the primary operational role of an unbuffered channel in Go?",
+						Options: []quizOption{
+							{Key: "A", Text: "To buffer up to 100 items without requiring an active receiver.", IsCorrect: false, Explanation: "Incorrect. That is the function of a buffered channel."},
+							{Key: "B", Text: "To perform a synchronous handshake where the sender blocks until the receiver is ready.", IsCorrect: true, Explanation: "Correct! Unbuffered channels guarantee direct synchronization between goroutines."},
+							{Key: "C", Text: "To automatically accelerate garbage collection cycles.", IsCorrect: false, Explanation: "Incorrect. Channels are pure communication and synchronization primitives."},
+						},
+					},
+					{
+						Question: "3. When is the Go 1.23 `unique` package particularly recommended?",
+						Options: []quizOption{
+							{Key: "A", Text: "When canonicalizing repetitive strings or values to eliminate redundant heap allocations.", IsCorrect: true, Explanation: "Correct! `unique.Make()` interns values globally to reduce memory footprint and speed up comparisons."},
+							{Key: "B", Text: "As a drop-in replacement for standard `os.ReadFile` calls.", IsCorrect: false, Explanation: "Incorrect. The unique package is designed for memory interning, not file I/O."},
+							{Key: "C", Text: "For encrypting payloads with AES-256.", IsCorrect: false, Explanation: "Incorrect. Cryptographic operations are handled by standard `crypto` packages."},
+						},
+					},
+				}
+			}
+			return []quizItem{
+				{
+					Question: "1. Mengapa Goroutine jauh lebih ringan dibandingkan thread sistem operasi (OS Thread)?",
+					Options: []quizOption{
+						{Key: "A", Text: "Karena alokasi stack awal hanya ~2KB dan dijadwalkan langsung oleh Go runtime di userspace.", IsCorrect: true, Explanation: "Tepat! Stack dinamis 2KB memungkinkan eksekusi jutaan goroutine secara simultan tanpa kehabisan memori."},
+						{Key: "B", Text: "Karena Goroutine tidak membutuhkan memori RAM sama sekali.", IsCorrect: false, Explanation: "Salah. Goroutine tetap membutuhkan alokasi memori stack minimal (~2KB)."},
+						{Key: "C", Text: "Karena Goroutine hanya bisa berjalan pada prosesor single-core.", IsCorrect: false, Explanation: "Salah. Go runtime mendistribusikan goroutine ke banyak OS thread dan inti CPU."},
+					},
+				},
+				{
+					Question: "2. Apa fungsi utama dari Unbuffered Channel di Go?",
+					Options: []quizOption{
+						{Key: "A", Text: "Menyimpan antrean data sementara tanpa batasan kapasitas.", IsCorrect: false, Explanation: "Salah. Itu adalah karakteristik antrean queue tak terbatas, bukan unbuffered channel."},
+						{Key: "B", Text: "Sinkronisasi langsung (handshake) di mana pengirim menunggu penerima siap.", IsCorrect: true, Explanation: "Tepat! Unbuffered channel menjamin transfer data dilakukan secara langsung dan sinkron antara dua goroutine."},
+						{Key: "C", Text: "Mempercepat alokasi memori heap pada aplikasi.", IsCorrect: false, Explanation: "Salah. Channel adalah sarana komunikasi dan konkurensi, bukan manajemen alokasi heap."},
+					},
+				},
+				{
+					Question: "3. Pada Go 1.23, apa kegunaan utama paket standar `unique`?",
+					Options: []quizOption{
+						{Key: "A", Text: "Kanonikalisasi (interning) string atau nilai repetitif guna menghemat pemakaian memori heap.", IsCorrect: true, Explanation: "Tepat! `unique.Make()` mengintern nilai secara global sehingga string duplikat hanya disimpan satu kali di memori."},
+						{Key: "B", Text: "Menghapus database SQLite secara otomatis.", IsCorrect: false, Explanation: "Salah. Paket `unique` berfokus pada deduplikasi memori nilai di tingkat runtime."},
+						{Key: "C", Text: "Membuat koneksi TLS tanpa verifikasi sertifikat.", IsCorrect: false, Explanation: "Salah. Keamanan TLS diatur oleh package `crypto/tls`."},
+					},
+				},
+			}
+
+		case "rust":
+			if isEn {
+				return []quizItem{
+					{
+						Question: "1. How does Rust guarantee thread safety without a garbage collector?",
+						Options: []quizOption{
+							{Key: "A", Text: "Through strict compile-time ownership, borrowing, and Send/Sync trait validations.", IsCorrect: true, Explanation: "Correct! The borrow checker proves at compile time that data races cannot occur."},
+							{Key: "B", Text: "By running an invisible reference counting runtime thread in the background.", IsCorrect: false, Explanation: "Incorrect. Rust produces zero-cost binaries without runtime tracing background threads."},
+							{Key: "C", Text: "By forcing all heap memory to be read-only forever.", IsCorrect: false, Explanation: "Incorrect. Mutation is fully supported under exclusive `&mut` reference rules."},
+						},
+					},
+					{
+						Question: "2. What is the fundamental difference between `#[tracing::instrument]` and basic `println!` in Rust?",
+						Options: []quizOption{
+							{Key: "A", Text: "Tracing structures logs into contextual spans with timestamps, parent-child traces, and OpenTelemetry exports.", IsCorrect: true, Explanation: "Correct! Tracing provides enterprise-grade observability and async span context."},
+							{Key: "B", Text: "Tracing automatically compiles the binary in debug mode only.", IsCorrect: false, Explanation: "Incorrect. Tracing is designed for ultra-high throughput in production release builds."},
+							{Key: "C", Text: "There is no difference.", IsCorrect: false, Explanation: "Incorrect. Basic stdout printing lacks structured spans, metadata filtering, and collector exports."},
+						},
+					},
+				}
+			}
+			return []quizItem{
+				{
+					Question: "1. Bagaimana cara Rust mencegah data race saat kompilasi tanpa Garbage Collector?",
+					Options: []quizOption{
+						{Key: "A", Text: "Melalui sistem Ownership, aturan Borrowing eksklusif, dan penandaan trait Send/Sync.", IsCorrect: true, Explanation: "Tepat! Borrow checker memverifikasi keamanan memori dan konkurensi langsung saat proses build."},
+						{Key: "B", Text: "Dengan menjalankan virtual machine Java di latar belakang.", IsCorrect: false, Explanation: "Salah. Rust mengompilasi kode ke binary native mesin tanpa VM/GC."},
+						{Key: "C", Text: "Dengan melarang mutasi variabel sama sekali.", IsCorrect: false, Explanation: "Salah. Mutasi didukung penuh dengan aturan kepemilikan tunggal `&mut`."},
+					},
+				},
+				{
+					Question: "2. Mengapa crate `tracing` lebih disukai daripada logging tradisional di Rust?",
+					Options: []quizOption{
+						{Key: "A", Text: "Menyediakan contextual spans terstruktur yang mendukung asynchronous tracing dan ekspor OpenTelemetry.", IsCorrect: true, Explanation: "Tepat! Tracing mencatat alur eksekusi fungsi async lengkap dengan metadata dan parent-child relationship."},
+						{Key: "B", Text: "Menghapus kebutuhan menangani error Result<T, E>.", IsCorrect: false, Explanation: "Salah. Penanganan error tetap menggunakan idiom standar Rust."},
+						{Key: "C", Text: "Membuat ukuran file binary lebih kecil dari 1KB.", IsCorrect: false, Explanation: "Salah. Tracing berfokus pada observabilitas sistem produksi."},
+					},
+				},
+			}
+
+		case "linux", "ebpf", "security":
+			if isEn {
+				return []quizItem{
+					{
+						Question: "1. What is the core security principle behind Linux Landlock LSM?",
+						Options: []quizOption{
+							{Key: "A", Text: "It allows unprivileged processes to self-sandbox and restrict their own filesystem and network access.", IsCorrect: true, Explanation: "Correct! Landlock enables unprivileged applications to enforce least privilege without requiring root."},
+							{Key: "B", Text: "It requires superuser (root) daemon privileges for every filesystem lookup.", IsCorrect: false, Explanation: "Incorrect. The main breakthrough of Landlock is unprivileged self-containment."},
+							{Key: "C", Text: "It reboots the operating system whenever a syscall fails.", IsCorrect: false, Explanation: "Incorrect. Syscalls that violate Landlock rules simply return -EACCES or -EPERM."},
+						},
+					},
+					{
+						Question: "2. How does eBPF execute safely within the Linux kernel space?",
+						Options: []quizOption{
+							{Key: "A", Text: "The kernel verifier checks for safety, memory bounds, and guaranteed termination before JIT compilation.", IsCorrect: true, Explanation: "Correct! The in-kernel BPF verifier guarantees safety before bytecode is JIT-compiled to native CPU instructions."},
+							{Key: "B", Text: "It executes inside an unverified emulated QEMU virtual machine.", IsCorrect: false, Explanation: "Incorrect. eBPF runs bare-metal in kernel space after verifier approval."},
+							{Key: "C", Text: "It sends all instructions over an HTTP API to an external cloud server.", IsCorrect: false, Explanation: "Incorrect. eBPF is entirely contained inside the local kernel."},
+						},
+					},
+				}
+			}
+			return []quizItem{
+				{
+					Question: "1. Apa keunggulan utama Landlock LSM pada kernel Linux modern?",
+					Options: []quizOption{
+						{Key: "A", Text: "Memungkinkan proses non-root (unprivileged) membatasi akses filesystem dan jaringannya sendiri (self-sandboxing).", IsCorrect: true, Explanation: "Tepat! Landlock memberi aplikasi kontrol untuk membatasi hak aksesnya secara mandiri tanpa memerlukan akses sudo/root."},
+						{Key: "B", Text: "Mengharuskan akses root untuk setiap operasi pembacaan file.", IsCorrect: false, Explanation: "Salah. Justru keunggulan Landlock adalah dapat dijalankan oleh user biasa."},
+						{Key: "C", Text: "Menghapus modul kernel Linux secara otomatis.", IsCorrect: false, Explanation: "Salah. Landlock adalah Linux Security Module resmi di kernel mainline."},
+					},
+				},
+				{
+					Question: "2. Bagaimana eBPF memastikan kode yang dimasukkan ke kernel tidak menyebabkan kernel crash?",
+					Options: []quizOption{
+						{Key: "A", Text: "Kernel verifier menganalisis seluruh jalur eksekusi bytecode, batas memori, dan loop tak terbatas sebelum di-JIT.", IsCorrect: true, Explanation: "Tepat! Verifier kernel memastikan program BPF aman dan pasti selesai sebelum diizinkan berjalan."},
+						{Key: "B", Text: "Kode eBPF hanya dijalankan di komputer simulasi.", IsCorrect: false, Explanation: "Salah. eBPF berjalan langsung di kernel mesin aktif."},
+						{Key: "C", Text: "Dengan mematikan sistem proteksi memori CPU.", IsCorrect: false, Explanation: "Salah. eBPF sangat patuh pada proteksi memori kernel."},
+					},
+				},
+			}
+		}
+	}
+
+	// Generic Architecture & Engineering fallback questions
+	if isEn {
+		return []quizItem{
+			{
+				Question: "1. What is the key advantage of a Zero-Tracker engineering architecture?",
+				Options: []quizOption{
+					{Key: "A", Text: "Guarantees user privacy, eliminates third-party script latency, and reduces payload size to zero tracking pixels.", IsCorrect: true, Explanation: "Correct! Eliminating third-party trackers protects user data and maximizes performance."},
+					{Key: "B", Text: "Removes all CSS styles and renders raw unstyled text only.", IsCorrect: false, Explanation: "Incorrect. Zero-tracker is strictly about privacy and tracking scripts, not styling."},
+					{Key: "C", Text: "Requires users to solve a CAPTCHA on every single page navigation.", IsCorrect: false, Explanation: "Incorrect. Zero-tracker makes browsing seamless without annoying roadblocks."},
+				},
+			},
+			{
+				Question: "2. Why is Server-Side Rendering (SSR) preferred for technical dispatches and documentation?",
+				Options: []quizOption{
+					{Key: "A", Text: "Provides instant First Contentful Paint (FCP), flawless SEO indexing, and works without heavy client hydration.", IsCorrect: true, Explanation: "Correct! Pure SSR serves raw semantic HTML instantly for superior speed and universal accessibility."},
+					{Key: "B", Text: "Forces the client to download a 50MB JavaScript bundle before rendering any content.", IsCorrect: false, Explanation: "Incorrect. Pure SSR avoids heavy client-side bundles entirely."},
+					{Key: "C", Text: "Disables browser caching completely.", IsCorrect: false, Explanation: "Incorrect. SSR pages can be efficiently cached with standard HTTP cache headers."},
+				},
+			},
+		}
+	}
+
+	return []quizItem{
+		{
+			Question: "1. Apa esensi utama arsitektur rekayasa Zero-Tracker?",
+			Options: []quizOption{
+				{Key: "A", Text: "Tidak mengumpulkan cookie pelacak pihak ketiga atau mengirimkan data aktivitas pengguna ke server luar.", IsCorrect: true, Explanation: "Tepat! Zero-tracker menggaransi privasi penuh tanpa skrip analitik invasif."},
+				{Key: "B", Text: "Menghapus seluruh gambar dan video dari halaman web.", IsCorrect: false, Explanation: "Salah. Zero-tracker berkaitan dengan privasi data, bukan media visual."},
+				{Key: "C", Text: "Memblokir pengunjung yang menggunakan koneksi Wi-Fi.", IsCorrect: false, Explanation: "Salah. Privasi berlaku untuk semua jenis koneksi."},
+			},
+		},
+		{
+			Question: "2. Mengapa Server-Side Rendering (SSR) disukai untuk media informasi dan blog teknis?",
+			Options: []quizOption{
+				{Key: "A", Text: "Mengoptimalkan SEO, mempercepat First Contentful Paint (FCP), dan berjalan tanpa ketergantungan JS berat.", IsCorrect: true, Explanation: "Tepat! HTML langsung siap disajikan dari server sehingga mesin pencari dan browser membaca instan."},
+				{Key: "B", Text: "Memaksa browser pengguna mengunduh bundle JavaScript berukuran 50MB.", IsCorrect: false, Explanation: "Salah. SSR justru meminimalkan beban eksekusi JS di browser."},
+				{Key: "C", Text: "Menyebabkan halaman tidak bisa dibuka saat jaringan lambat.", IsCorrect: false, Explanation: "Salah. SSR mentransfer HTML polos yang paling efisien di jaringan lambat."},
+			},
+		},
+	}
+}
+
+templ postKnowledgeCheck(p post.Post, lang string) {
+	if items := getQuizItems(p); len(items) > 0 {
+		<div class="mt-12 pt-8 border-t border-border/60" id="quiz-container">
+			<div class="flex items-center justify-between gap-4 pb-3 border-b border-border/60 mb-5">
+				<div class="flex items-center gap-2">
+					<h3 class="text-sm font-bold tracking-wider uppercase font-mono text-text">
+						if lang == "id" {
+							Uji Pemahaman Konsep (Quiz)
+						} else {
+							Interactive Knowledge Check
+						}
+					</h3>
+				</div>
+				<div class="flex items-center gap-2 text-xs font-mono text-muted">
+					<span id="quiz-step-label" data-lang={ lang }>
+						if lang == "id" {
+							{ fmt.Sprintf("1 dari %d", len(items)) }
+						} else {
+							{ fmt.Sprintf("1 of %d", len(items)) }
+						}
+					</span>
+				</div>
+			</div>
+
+			<div class="relative overflow-hidden" id="quiz-carousel">
+				for i, it := range items {
+					<div class={ "quiz-slide", templ.KV("block", i == 0), templ.KV("hidden", i != 0) } data-index={ fmt.Sprintf("%d", i) }>
+						<p class="text-sm sm:text-base font-semibold text-text mb-4 leading-relaxed">{ it.Question }</p>
+						<div class="quiz-options grid grid-cols-1 gap-2.5">
+							for _, opt := range it.Options {
+								<button
+									type="button"
+									onclick="handleQuizClick(this)"
+									data-correct={ fmt.Sprintf("%t", opt.IsCorrect) }
+									data-explain={ opt.Explanation }
+									class="w-full text-left p-3 sm:p-3.5 rounded-none border border-border bg-surface hover:bg-hover transition-all text-xs sm:text-sm text-text flex items-start gap-3 cursor-pointer group"
+								>
+									<span class="inline-flex items-center justify-center w-5 h-5 rounded-none border border-border font-mono text-xs font-bold text-muted group-hover:text-text group-hover:border-[var(--c-text)] shrink-0">
+										{ opt.Key }
+									</span>
+									<span class="flex-1 leading-snug">{ opt.Text }</span>
+								</button>
+							}
+						</div>
+						<div class="quiz-feedback hidden"></div>
+					</div>
+				}
+			</div>
+
+			<!-- Quiz Carousel Navigation Controls -->
+			if len(items) > 1 {
+				<div class="flex items-center justify-between pt-4 mt-5 border-t border-border/40">
+					<button
+						type="button"
+						id="quiz-prev-btn"
+						onclick="prevQuizStep()"
+						disabled
+						class="text-xs font-mono px-3 py-1.5 rounded-none border border-border text-muted hover:text-text hover:bg-hover transition-colors disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+					>
+						if lang == "id" {
+							&larr; Sebelumnya
+						} else {
+							&larr; Previous
+						}
+					</button>
+					<div class="flex items-center gap-1.5">
+						for i := range items {
+							<button
+								type="button"
+								onclick={ templ.ComponentScript{Call: fmt.Sprintf("goToQuizStep(%d)", i)} }
+								aria-label={ fmt.Sprintf("Question %d", i+1) }
+								class={ "quiz-dot rounded-none transition-all cursor-pointer", templ.KV("w-4 h-1.5 bg-[var(--c-link)]", i == 0), templ.KV("w-1.5 h-1.5 bg-[var(--c-border)] hover:bg-[var(--c-muted)]", i != 0) }
+							></button>
+						}
+					</div>
+					<button
+						type="button"
+						id="quiz-next-btn"
+						onclick="nextQuizStep()"
+						class="text-xs font-mono px-3 py-1.5 rounded-none border border-border text-muted hover:text-text hover:bg-hover transition-colors disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+					>
+						if lang == "id" {
+							Selanjutnya &rarr;
+						} else {
+							Next &rarr;
+						}
+					</button>
+				</div>
+			}
+
+			<script src="/static/js/quiz.js" defer></script>
+		</div>
+	}
+}

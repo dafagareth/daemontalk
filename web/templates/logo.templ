@@ -1,0 +1,7 @@
+package templates
+
+// BrandIcon renders the original moth icon image, adapting to light/dark themes.
+templ BrandIcon(class string) {
+	<img src="/static/logo/icon-light.png" alt="Moth Icon" class={ "logo-light object-contain " + class } />
+	<img src="/static/logo/icon-dark.png" alt="Moth Icon" class={ "logo-dark object-contain " + class } />
+}

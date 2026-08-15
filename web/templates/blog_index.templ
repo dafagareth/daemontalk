@@ -1,0 +1,187 @@
+package templates
+
+import (
+	"fmt"
+
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ BlogIndex(ui i18n.UI, posts []post.Post, lang string, page int, totalPages int, viewCounts map[string]int, tagCounts map[string]int, currentTag string) {
+	<section class="container-page py-6 sm:py-10 transition-all">
+		<h1 class="sr-only">{ ui.Blog_Title }</h1>
+
+		if len(posts) == 0 {
+			<p class="text-sm text-muted py-12 text-center">{ ui.Blog_NoPosts }</p>
+		} else {
+			<p id="blog-noresults" class="hidden text-sm text-muted mb-8 text-center py-8">{ ui.Blog_NoResults }</p>
+
+			<!-- 2. Portal News Layout (Homepage only) -->
+			if currentTag == "" {
+				@portalNewsLayout(ui, posts, tagCounts, lang, viewCounts)
+			} else {
+				<!-- Tag Filter Header -->
+				<!-- Tag Filter Header -->
+				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 mb-8 pb-4 border-b border-border/60">
+					<div class="flex flex-wrap items-center gap-2 sm:gap-3 text-sm sm:text-base font-mono font-bold text-text uppercase tracking-wider">
+						<span class="text-link inline-flex items-center">
+							@tagIcon(currentTag, "w-5 h-5 sm:w-6 sm:h-6")
+						</span>
+						<span class="text-lg sm:text-xl truncate">{ currentTag }</span>
+						<span class="text-muted font-normal whitespace-nowrap">· { fmt.Sprintf("%d dispatches", len(posts)) }</span>
+					</div>
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="text-xs sm:text-sm font-mono text-muted hover:text-link transition-colors inline-flex items-center gap-2 whitespace-nowrap">
+						@iconArrowLeft()
+						<span>View all dispatches</span>
+					</a>
+				</div>
+
+				<!-- TOP HERO SECTION (Custom Tag layout) -->
+				if len(posts) > 0 {
+					@portalTagHeroTop(ui, posts, lang, viewCounts)
+				}
+
+				<!-- BORDERLESS 16:9 ARTICLE GRID (For remaining posts on page 1, and subsequent pages) -->
+				<div id="blog-list" class="mt-4 sm:mt-8">
+					<div id="blog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+						if len(posts) > 6 {
+							for _, p := range posts[6:] {
+								@blogCardItem(ui, p, lang, viewCounts, currentTag != "")
+							}
+						}
+					</div>
+				</div>
+
+				<!-- LOAD MORE PAGINATION -->
+				if totalPages > 1 {
+					<div id="load-more-wrap" class="mt-12 mb-8 text-center">
+						<button
+							hx-get={ fmt.Sprintf("/blog/posts?page=2&lang=%s&tag=%s", lang, currentTag) }
+							hx-trigger="click"
+							hx-target="#blog-grid"
+							hx-swap="beforeend"
+							class="px-6 py-2.5 border-2 border-border text-xs font-mono font-bold uppercase tracking-widest text-text hover:bg-hover transition-colors cursor-pointer inline-flex items-center justify-center min-w-[200px]"
+						>
+							if lang == "id" {
+								TAMPILKAN LEBIH BANYAK
+							} else {
+								LOAD MORE
+							}
+						</button>
+					</div>
+				}
+			}
+
+			<script src="/static/js/blog_index.js"></script>
+		}
+	</section>
+}
+
+templ TagPage(ui i18n.UI, tag string, posts []post.Post, lang string, viewCounts map[string]int) {
+	<section class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+		<div class="mb-8 pb-4 border-b border-border">
+			<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="text-xs font-mono text-link hover:underline inline-flex items-center gap-1.5 mb-3">
+				@iconArrowLeft()
+				<span>View all dispatches</span>
+			</a>
+			<div class="flex items-baseline justify-between gap-4">
+				<div class="flex items-center gap-3 text-sm sm:text-base font-mono font-bold text-text uppercase tracking-wider">
+					<span class="text-link inline-flex items-center">
+						@tagIcon(tag, "w-6 h-6")
+					</span>
+					<span class="text-lg sm:text-xl">{ tag }</span>
+				</div>
+				<span class="text-xs font-mono text-muted">{ fmt.Sprintf("%d articles", len(posts)) }</span>
+			</div>
+		</div>
+
+		<!-- TOP HERO SECTION (Custom Tag layout) -->
+		if len(posts) > 0 {
+			@portalTagHeroTop(ui, posts, lang, viewCounts)
+		}
+
+		<!-- BORDERLESS 16:9 ARTICLE GRID (For remaining posts) -->
+		<div id="blog-list" class="mt-4 sm:mt-8">
+			<div id="blog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+				if len(posts) > 6 {
+					for _, p := range posts[6:] {
+						@blogCardItem(ui, p, lang, viewCounts, true)
+					}
+				}
+			</div>
+		</div>
+	</section>
+}
+
+templ blogHeroItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]int) {
+	@blogCardItem(ui, p, lang, viewCounts, false)
+}
+
+templ blogCardItemDynamic(ui i18n.UI, p post.Post, lang string, viewCounts map[string]int, idx int) {
+	@blogCardItem(ui, p, lang, viewCounts, false)
+}
+
+// BORDERLESS FLAT EDITORIAL CARD (Consistent 16:9 Thumbnail, Clean Meta, Headline, Snippet)
+templ blogCardItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]int, hideTag bool) {
+	<article class="blog-item group flex flex-row sm:flex-col gap-4 sm:gap-0 min-w-0 items-start sm:items-stretch h-full" data-search={ searchIndex(p) }>
+		<!-- Media Container -->
+		<div class="relative aspect-[16/9] w-24 sm:w-full overflow-hidden rounded-none-none shrink-0 sm:mb-3 bg-surface">
+			@postThumbnail(p, blogPrefix(lang) + "/blog/" + p.Slug)
+		</div>
+
+		<!-- Content Container -->
+		<div class="flex-1 min-w-0 flex flex-col justify-center sm:justify-start h-full">
+			<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } data-slug={ p.Slug } class="block group mb-1 sm:mb-2 sm:mt-1">
+				<h3 class="text-sm sm:text-xl font-black text-text group-hover:text-link transition-colors line-clamp-3 leading-snug break-words">
+					{ p.Title }
+				</h3>
+			</a>
+
+			<div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1 sm:mb-2 text-[9px] sm:text-[11px] font-mono text-muted uppercase tracking-wider">
+				<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
+				<span class="hidden sm:inline">·</span>
+				<span class="hidden sm:inline">{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+			</div>
+
+			if p.Description != "" {
+				<p class="hidden sm:block text-sm text-muted line-clamp-2 leading-relaxed mb-3.5 break-words">
+					{ p.Description }
+				</p>
+			}
+
+			if !hideTag && len(p.Tags) > 0 {
+				<div class="hidden sm:flex flex-wrap gap-2 mt-auto pt-1">
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + p.Tags[0]) } class="text-[10px] font-bold text-accent uppercase tracking-wider hover:underline">{ p.Tags[0] }</a>
+				</div>
+			}
+		</div>
+	</article>
+}
+
+templ blogListItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]int) {
+	@blogCardItem(ui, p, lang, viewCounts, false)
+}
+
+// BlogPostItems is a partial template for HTMX Infinite Scroll (returns grid cards + OOB load-more update).
+templ BlogPostItems(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int, nextPage int, hasMore bool, currentTag string) {
+	for _, p := range posts {
+		@blogCardItem(ui, p, lang, viewCounts, currentTag != "")
+	}
+	<div id="load-more-wrap" class="mt-12 mb-8 text-center" hx-swap-oob="true">
+		if hasMore {
+			<button
+				hx-get={ fmt.Sprintf("/blog/posts?page=%d&lang=%s&tag=%s", nextPage, lang, currentTag) }
+				hx-trigger="click"
+				hx-target="#blog-grid"
+				hx-swap="beforeend"
+				class="px-6 py-2.5 border-2 border-border text-xs font-mono font-bold uppercase tracking-widest text-text hover:bg-hover transition-colors cursor-pointer inline-flex items-center justify-center min-w-[200px]"
+			>
+				if lang == "id" {
+					TAMPILKAN LEBIH BANYAK
+				} else {
+					LOAD MORE
+				}
+			</button>
+		}
+	</div>
+}

@@ -1,0 +1,82 @@
+package templates
+
+import (
+	"daemontalk/internal/project"
+	"strings"
+)
+
+templ ProjectCard(p project.Project, lang string) {
+	<div class="relative border border-border rounded-none p-4 hover:bg-surface hover:border-[var(--c-link)] transition-colors bg-bg">
+		if p.Slug != "" {
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/projects/" + p.Slug) }
+				class="absolute inset-0 z-0"
+				aria-label={ p.Name }
+			></a>
+		}
+		<div class="flex items-start justify-between gap-2 mb-2">
+			<h3 class="text-sm font-medium text-text font-mono">{ p.Name }</h3>
+			@statusBadge(p.Status)
+		</div>
+		<p class="text-sm text-muted mb-3 leading-relaxed line-clamp-2">
+			if lang == "id" && p.DescriptionID != "" {
+				{ p.DescriptionID }
+			} else {
+				{ p.Description }
+			}
+		</p>
+		<div class="flex flex-wrap gap-1 mb-3">
+			for _, tech := range p.TechStack {
+				<span class="text-xs px-2 py-0.5 bg-chip text-muted rounded-none font-mono">{ tech }</span>
+			}
+		</div>
+		<div class="relative z-10 flex gap-3">
+			if p.Slug != "" {
+				<a href={ templ.SafeURL(prefix(lang) + "/projects/" + p.Slug) } class="inline-flex items-center gap-1 text-xs text-link hover:underline font-medium">
+					<span>Details</span>
+					@iconArrowRight()
+				</a>
+			}
+			if p.RepoURL != "" {
+				<a href={ templ.SafeURL(p.RepoURL) } target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs text-link hover:underline">
+					<span>GitHub</span>
+					@iconArrowUpRight()
+				</a>
+			}
+			if p.DemoURL != "" {
+				<a href={ templ.SafeURL(p.DemoURL) } target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs text-link hover:underline">
+					<span>{ demoLabel(p.DemoURL) }</span>
+					@iconArrowUpRight()
+				</a>
+			}
+		</div>
+	</div>
+}
+
+templ statusBadge(s project.Status) {
+	switch s {
+		case project.StatusActive:
+			<span class="text-xs px-2 py-0.5 bg-[var(--c-ok-bg)] text-[var(--c-ok)] rounded-none shrink-0">active</span>
+		case project.StatusCompleted:
+			<span class="text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none shrink-0">completed</span>
+		case project.StatusArchived:
+			<span class="text-xs px-2 py-0.5 bg-chip text-muted rounded-none shrink-0">archived</span>
+	}
+}
+
+// demoLabel picks a fitting CTA label based on the demo URL target.
+func demoLabel(url string) string {
+	if strings.Contains(url, "/releases") {
+		return "Releases"
+	}
+	return "Demo"
+}
+
+func containsTag(tags []string, tag string) bool {
+	for _, t := range tags {
+		if strings.EqualFold(t, tag) {
+			return true
+		}
+	}
+	return false
+}

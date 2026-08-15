@@ -1,0 +1,74 @@
+package templates
+
+import (
+	"daemontalk/internal/comment"
+	"daemontalk/internal/i18n"
+)
+
+templ GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorName string) {
+	<section class="container-page py-8 sm:py-12">
+		<div class="max-w-3xl">
+		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-1">{ ui.Guestbook_Title }</h1>
+		<p class="text-sm text-muted mb-8">Say hi! Your message is visible to everyone.</p>
+		<form
+			class="mb-10 flex flex-col gap-3"
+			hx-post={ prefix(lang) + "/guestbook" }
+			hx-target="#guestbook-list"
+			hx-swap="outerHTML"
+			hx-disabled-elt="find button[type='submit']"
+			hx-on::after-request="if(event.detail.successful){ this.reset(); var ta = this.querySelector('textarea'); if(ta) ta.value = ''; }"
+		>
+			<!-- Honeypot: bots fill this, humans never see it -->
+			<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
+			<p class="text-xs text-muted font-mono px-1">
+				Posting as <span class="font-bold">{ visitorName }</span>
+			</p>
+			<textarea
+				name="body"
+				required
+				maxlength="500"
+				rows="3"
+				placeholder={ ui.Guestbook_BodyLabel }
+				class="w-full sm:max-w-lg px-3 py-2 text-sm rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-[var(--c-link)] transition-colors resize-y"
+			></textarea>
+			<div>
+				<button
+					type="submit"
+					class="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+				>
+					<span class="htmx-indicator spinner"></span>
+					{ ui.Guestbook_Submit }
+				</button>
+			</div>
+		</form>
+		@GuestbookList(ui, entries)
+		</div>
+	</section>
+}
+
+// GuestbookList is exported so the POST handler can render just the list via HTMX.
+templ GuestbookList(ui i18n.UI, entries []comment.Comment) {
+	<div id="guestbook-list" class="flex flex-col gap-4">
+		if len(entries) == 0 {
+			<p class="text-sm text-muted">{ ui.Guestbook_Empty }</p>
+		} else {
+			for _, g := range groupComments(entries) {
+				@guestbookGroupItem(g)
+			}
+		}
+	</div>
+}
+
+templ guestbookGroupItem(g CommentGroup) {
+	<div class="py-3 border-b border-border/40 last:border-0 last:pb-0">
+		<div class="flex items-baseline gap-2 flex-wrap mb-2">
+			<span class="text-sm font-semibold font-mono text-text">{ g.Name }</span>
+			<time datetime={ g.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time text-xs text-muted font-mono">{ fmtCommentTime(g.CreatedAt) }</time>
+		</div>
+		<div class="space-y-2">
+			for _, e := range g.Comments {
+				<p class="text-sm text-text whitespace-pre-wrap break-words leading-relaxed">{ e.Body }</p>
+			}
+		</div>
+	</div>
+}

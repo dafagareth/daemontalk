@@ -1,0 +1,224 @@
+package handler
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"path/filepath"
+	"strings"
+	"testing"
+	"time"
+
+	"daemontalk/internal/post"
+	"daemontalk/internal/postdb"
+)
+
+func TestIsAdmin(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	// No cookie → not admin
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	if h.isAdmin(req) {
+		t.Error("no cookie should not be admin")
+	}
+
+	// Wrong token → not admin
+	req = httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "wrong"})
+	if h.isAdmin(req) {
+		t.Error("wrong token should not be admin")
+	}
+
+	// Correct token → admin
+	req = httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
+	if !h.isAdmin(req) {
+		t.Error("correct token should be admin")
+	}
+}
+
+func TestIsAdminDisabledWhenNoToken(t *testing.T) {
+	h := &Handler{AdminToken: ""} // moderation disabled
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "anything"})
+	if h.isAdmin(req) {
+		t.Error("when AdminToken is empty, nobody should be admin")
+	}
+}
+
+func TestAdminForbiddenWithoutAuth(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Errorf("unauthenticated /admin: got %d, want 404", rec.Code)
+	}
+}
+
+func TestAdminLoginSetsCookie(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin?admin=secret", nil)
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	if rec.Code != http.StatusSeeOther {
+		t.Errorf("login should redirect (303), got %d", rec.Code)
+	}
+	var found bool
+	for _, c := range rec.Result().Cookies() {
+		if c.Name == "admin_token" && c.Value == "secret" {
+			found = true
+		}
+	}
+	if !found {
+		t.Error("login with correct token should set admin_token cookie")
+	}
+}
+
+func TestAdminDeleteForbiddenWithoutAuth(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	req := httptest.NewRequest(http.MethodPost, "/admin/comments/1/delete", nil)
+	rec := httptest.NewRecorder()
+	h.AdminDeleteComment(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Errorf("unauthenticated delete: got %d, want 404", rec.Code)
+	}
+}
+
+func TestConfirmModalMarkupPresent(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	// Halaman 403 pun dibungkus Layout() yang sama — cukup buat pastikan
+	// modal konfirmasi global (dipakai admin & blog) benar-benar terpasang.
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	body := rec.Body.String()
+	for _, want := range []string{
+		`id="confirm-overlay"`,
+		`id="confirm-message"`,
+		"data-confirm-ok",
+		"data-confirm-cancel",
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("halaman harus memuat modal konfirmasi global, tidak ditemukan %q", want)
+		}
+	}
+}
+
+func TestAdminPageIsHumanized(t *testing.T) {
+	pdb, err := postdb.Open(filepath.Join(t.TempDir(), "posts.db"))
+	if err != nil {
+		t.Fatalf("open postdb: %v", err)
+	}
+	if _, err := pdb.Create(postdb.WebPost{
+		Slug: "tulisan-web", Title: "Tulisan dari Web", BodyMD: "isi",
+		Lang: "id", Date: "2026-07-01",
+	}); err != nil {
+		t.Fatalf("create webpost: %v", err)
+	}
+
+	h := &Handler{
+		AdminToken: "secret",
+		PostDB:     pdb,
+		FilePosts: []post.Post{
+			{Title: "Belajar Go dari Nol", Slug: "belajar-go-dari-nol", Date: time.Date(2026, 7, 2, 0, 0, 0, 0, time.UTC)},
+		},
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("GET /admin authenticated: got %d, want 200", rec.Code)
+	}
+	body := rec.Body.String()
+	for _, want := range []string{
+		"Channel Dashboard",
+		"Channel Content",
+		"Belajar Go dari Nol",
+		"No comments yet.",
+		`data-confirm="Delete this post? This action cannot be undone."`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("dashboard body missing %q", want)
+		}
+	}
+	for _, notWant := range []string{"Halo, Dafa", "Semua tulisan", "Belum ada komentar"} {
+		if strings.Contains(body, notWant) {
+			t.Errorf("dashboard body should not contain %q", notWant)
+		}
+	}
+}
+
+func TestAdminPageDoesNotIncludePublicNav(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	body := rec.Body.String()
+	for _, notWant := range []string{`href="/til"`, `href="/behind"`, `href="/search"`, "buymeacoffee.com"} {
+		if strings.Contains(body, notWant) {
+			t.Errorf("admin shell should not include public nav/footer, found %q", notWant)
+		}
+	}
+}
+
+func TestAdminPageIncludesMinimalShell(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	body := rec.Body.String()
+	for _, want := range []string{"View Site", "toggleTheme()", `name="robots" content="noindex,nofollow"`, `data-tab="dashboard"`, `data-tab="content"`} {
+		if !strings.Contains(body, want) {
+			t.Errorf("admin shell body missing %q", want)
+		}
+	}
+}
+
+func TestPublicPageStillHasPublicNavAndFooter(t *testing.T) {
+	h := &Handler{}
+
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	h.BlogIndex(rec, req)
+
+	body := rec.Body.String()
+	for _, want := range []string{`href="/til"`, `href="/behind"`, "github.com", `hreflang="en"`} {
+		if !strings.Contains(body, want) {
+			t.Errorf("public page should still include %q after headTags() extraction", want)
+		}
+	}
+	if strings.Contains(body, `name="robots" content="noindex,nofollow"`) {
+		t.Error("public page should not be noindex")
+	}
+}
+
+func TestAdminUnauthorizedReturnsNotFoundPage(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	rec := httptest.NewRecorder()
+	h.Admin(rec, req)
+
+	body := rec.Body.String()
+	if !strings.Contains(body, "404") {
+		t.Error("Unauthorized admin access should return 404 error page")
+	}
+}

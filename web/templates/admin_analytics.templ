@@ -1,0 +1,269 @@
+package templates
+
+import (
+	"fmt"
+	"strings"
+
+	"daemontalk/internal/comment"
+	"daemontalk/internal/post"
+	"daemontalk/internal/postdb"
+)
+
+type AdminStats struct {
+	Posts     []post.Post
+	WebPosts  []postdb.WebPost
+	Views     map[string]int
+	Comments  []comment.Comment
+	TopPages  []comment.PageView
+	TotalHits int
+}
+
+type CategoryViewsGroup struct {
+	Category   string
+	TotalViews int
+	Posts      []post.Post
+}
+
+templ adminAnalyticsTab(stats AdminStats) {
+	<!-- TAB 3: ANALYTICS -->
+	<div id="tab-analytics" class="hidden space-y-6">
+		<h1 class="text-lg font-semibold text-text">Analytics</h1>
+
+		<dl class="flex flex-wrap gap-x-8 gap-y-2 text-sm border-b border-border pb-4">
+			<div>
+				<dt class="text-muted text-xs">Total hits</dt>
+				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", stats.TotalHits) }</dd>
+			</div>
+			<div>
+				<dt class="text-muted text-xs">Article views</dt>
+				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", adminTotalViews(stats.Views)) }</dd>
+			</div>
+			<div>
+				<dt class="text-muted text-xs">Avg views/post</dt>
+				<dd class="font-mono font-semibold text-text">
+					if len(stats.Posts) > 0 {
+						{ fmt.Sprintf("%.1f", float64(adminTotalViews(stats.Views)) / float64(len(stats.Posts))) }
+					} else {
+						0
+					}
+				</dd>
+			</div>
+		</dl>
+
+		<!-- Top pages -->
+		if len(stats.TopPages) > 0 {
+			<div>
+				<h2 class="text-xs text-muted uppercase tracking-wider mb-2">Top pages</h2>
+				<div class="border border-border rounded-none overflow-hidden">
+					<table class="w-full text-sm text-left">
+						<thead class="border-b border-border text-xs text-muted bg-surface">
+							<tr>
+								<th class="px-4 py-2.5 font-medium">Path</th>
+								<th class="px-4 py-2.5 font-medium text-right">Visits</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[var(--c-border)]">
+							for _, pv := range stats.TopPages {
+								<tr class="hover:bg-hover transition-colors">
+									<td class="px-4 py-2 font-mono text-xs">
+										<a href={ templ.SafeURL(pv.Path) } target="_blank" class="text-link hover:underline">{ pv.Path }</a>
+									</td>
+									<td class="px-4 py-2 text-right font-mono text-xs text-muted">{ fmt.Sprintf("%d", pv.Count) }</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		}
+
+		<!-- Views by Category -->
+		if len(stats.Posts) > 0 {
+			<div class="space-y-4">
+				<div class="flex items-baseline justify-between border-b border-border pb-2">
+					<h2 class="text-xs text-muted uppercase tracking-wider">Views by Category</h2>
+					<span class="text-xs font-mono text-muted">
+						{ fmt.Sprintf("%d categories", len(adminGroupPostsByCategory(stats.Posts, stats.Views))) }
+					</span>
+				</div>
+
+				<div class="space-y-4">
+					for _, group := range adminGroupPostsByCategory(stats.Posts, stats.Views) {
+						<div class="border border-border rounded-none overflow-hidden">
+							<!-- Category Header -->
+							<div class="flex items-center justify-between px-4 py-2 bg-surface border-b border-border">
+								<div class="flex items-center gap-2">
+									<span class="font-semibold text-xs text-text uppercase tracking-wider">{ group.Category }</span>
+									<span class="text-xs font-mono text-muted font-mono">({ fmt.Sprintf("%d posts", len(group.Posts)) })</span>
+								</div>
+								<span class="text-xs font-mono font-semibold text-text">{ fmt.Sprintf("%d views", group.TotalViews) }</span>
+							</div>
+
+							<!-- Post Rows -->
+							<table class="w-full text-sm text-left">
+								<tbody class="divide-y divide-[var(--c-border)]/60">
+									for _, p := range group.Posts {
+										<tr class="hover:bg-hover transition-colors">
+											<td class="px-4 py-2">
+												<a href={ templ.SafeURL("/blog/" + p.Slug) } target="_blank" class="text-sm text-text hover:text-link font-medium">
+													{ p.Title }
+												</a>
+												<span class="text-xs font-mono text-muted ml-2">/{ p.Slug }</span>
+											</td>
+											<td class="px-4 py-2 text-right font-mono text-xs text-muted whitespace-nowrap">
+												{ fmt.Sprintf("%d views", stats.Views[p.Slug]) }
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
+					}
+				</div>
+			</div>
+		}
+	</div>
+}
+
+func adminTotalViews(views map[string]int) int {
+	total := 0
+	for _, v := range views {
+		total += v
+	}
+	return total
+}
+
+func adminCommentCount(comments []comment.Comment, slug string) int {
+	count := 0
+	for _, c := range comments {
+		if c.PostSlug == slug {
+			count++
+		}
+	}
+	return count
+}
+
+func adminMaxViews(posts []post.Post, views map[string]int) int {
+	max := 0
+	for _, p := range posts {
+		if v := views[p.Slug]; v > max {
+			max = v
+		}
+	}
+	return max
+}
+
+func adminViewPct(views, maxViews int) float64 {
+	if maxViews == 0 {
+		return 0
+	}
+	return float64(views) * 100 / float64(maxViews)
+}
+
+func adminSortedByViews(posts []post.Post, views map[string]int) []post.Post {
+	sorted := make([]post.Post, len(posts))
+	copy(sorted, posts)
+	for i := 0; i < len(sorted)-1; i++ {
+		for j := i + 1; j < len(sorted); j++ {
+			if views[sorted[j].Slug] > views[sorted[i].Slug] {
+				sorted[i], sorted[j] = sorted[j], sorted[i]
+			}
+		}
+	}
+	if len(sorted) > 15 {
+		sorted = sorted[:15]
+	}
+	return sorted
+}
+
+func formatCategoryName(tag string) string {
+	tag = strings.TrimSpace(strings.ToLower(tag))
+	switch tag {
+	case "go", "golang":
+		return "Go"
+	case "linux":
+		return "Linux"
+	case "archlinux":
+		return "Arch Linux"
+	case "bash":
+		return "Bash"
+	case "git":
+		return "Git"
+	case "docker":
+		return "Docker"
+	case "neovim":
+		return "Neovim"
+	case "nginx":
+		return "Nginx"
+	case "sqlite":
+		return "SQLite"
+	case "ssh":
+		return "SSH"
+	case "systemd":
+		return "Systemd"
+	case "tmux":
+		return "Tmux"
+	case "curl":
+		return "cURL"
+	case "make":
+		return "Make"
+	case "til":
+		return "TIL"
+	case "awk":
+		return "Awk"
+	case "":
+		return "General"
+	default:
+		if len(tag) > 0 {
+			return strings.ToUpper(tag[:1]) + tag[1:]
+		}
+		return "General"
+	}
+}
+
+func adminGroupPostsByCategory(posts []post.Post, views map[string]int) []CategoryViewsGroup {
+	groupMap := make(map[string]*CategoryViewsGroup)
+	var order []string
+
+	for _, p := range posts {
+		catTag := "General"
+		if len(p.Tags) > 0 {
+			catTag = p.Tags[0]
+		}
+		catName := formatCategoryName(catTag)
+
+		grp, exists := groupMap[catName]
+		if !exists {
+			grp = &CategoryViewsGroup{
+				Category: catName,
+			}
+			groupMap[catName] = grp
+			order = append(order, catName)
+		}
+		grp.Posts = append(grp.Posts, p)
+		grp.TotalViews += views[p.Slug]
+	}
+
+	var groups []CategoryViewsGroup
+	for _, name := range order {
+		grp := groupMap[name]
+		for i := 0; i < len(grp.Posts)-1; i++ {
+			for j := i + 1; j < len(grp.Posts); j++ {
+				if views[grp.Posts[j].Slug] > views[grp.Posts[i].Slug] {
+					grp.Posts[i], grp.Posts[j] = grp.Posts[j], grp.Posts[i]
+				}
+			}
+		}
+		groups = append(groups, *grp)
+	}
+
+	for i := 0; i < len(groups)-1; i++ {
+		for j := i + 1; j < len(groups); j++ {
+			if groups[j].TotalViews > groups[i].TotalViews {
+				groups[i], groups[j] = groups[j], groups[i]
+			}
+		}
+	}
+
+	return groups
+}

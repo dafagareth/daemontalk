@@ -1,0 +1,264 @@
+package templates
+
+import "daemontalk/internal/i18n"
+
+templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
+	<header class="sticky top-0 md:relative z-30 bg-bg border-b-2 border-border transition-all">
+		<!-- Brand & Utilities Row -->
+		<div class="container-page py-5 sm:py-8 flex items-center justify-between gap-4 min-w-0">
+			<div class="flex items-center gap-4 min-w-0">
+				<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center gap-2.5 shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+					@BrandIcon("h-7 sm:h-8 w-auto")
+					<span class="text-2xl sm:text-3xl font-bold tracking-tight text-text leading-none mt-1" style="font-family: Georgia, serif;">daemontalk</span>
+				</a>
+			</div>
+			<!-- Desktop Utilities -->
+			<div class="hidden md:flex items-center gap-2 shrink-0">
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/graph") }
+					aria-label="Systems Knowledge Radar & Graph"
+					class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono border border-border text-muted hover:text-text hover:bg-hover transition-colors"
+				>
+					<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+					<span>radar</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/terminal") }
+					aria-label="Interactive Terminal"
+					class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono border border-border text-muted hover:text-text hover:bg-hover transition-colors"
+				>
+					<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+					<span>terminal</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/search") }
+					aria-label="Search"
+					class="w-8 h-8 flex items-center justify-center rounded-none hover:bg-hover transition-colors text-muted"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+				</a>
+				<button
+					type="button"
+					onclick="openShortcuts()"
+					aria-label="Keyboard Shortcuts (?)"
+					class="w-8 h-8 flex items-center justify-center rounded-none hover:bg-hover transition-colors text-muted hover:text-text cursor-pointer"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+				</button>
+				<button
+					onclick="toggleTheme()"
+					aria-label="Toggle theme"
+					class="w-8 h-8 flex items-center justify-center rounded-none hover:bg-hover transition-colors text-muted"
+				>
+					@sunIcon()
+					@moonIcon()
+				</button>
+				<a
+					href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
+					class="text-xs font-medium text-link border border-border rounded-none px-3 py-1 hover:bg-hover transition-colors"
+				>
+					{ ui.Lang_Switch }
+				</a>
+			</div>
+
+			<!-- Mobile Top-Right Hamburger Button -->
+			<div class="flex md:hidden items-center gap-2 shrink-0">
+				<button
+					type="button"
+					onclick="toggleMobileMenu()"
+					aria-label="Open mobile navigation menu"
+					class="w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:bg-hover transition-colors cursor-pointer"
+				>
+					<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+					</svg>
+				</button>
+			</div>
+		</div>
+
+	</header>
+
+	<!-- Secondary Sub-Navigation Bar (Desktop Only) -->
+	<div class="hidden md:block border-b-2 border-border bg-bg sticky top-0 z-40 shadow-sm">
+		<div class="container-page h-12 flex items-center justify-between gap-4 min-w-0 overflow-x-auto scrollbar-none text-xs font-mono uppercase tracking-wider font-semibold">
+			<div id="subnav-tags" class="flex items-center gap-4 sm:gap-6 shrink-0">
+				<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-text hover:text-link transition-colors">ALL</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=linux") } data-tag="linux" class="subnav-tag text-text hover:text-link transition-colors">Linux</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=ai") } data-tag="ai" class="subnav-tag text-text hover:text-link transition-colors">AI</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=systems") } data-tag="systems" class="subnav-tag text-text hover:text-link transition-colors">Systems</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=backend") } data-tag="backend" class="subnav-tag text-text hover:text-link transition-colors">Backend</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=docker") } data-tag="docker" class="subnav-tag text-text hover:text-link transition-colors">Docker</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=devops") } data-tag="devops" class="subnav-tag text-text hover:text-link transition-colors">DevOps</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=security") } data-tag="security" class="subnav-tag text-text hover:text-link transition-colors">Security</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/?tag=tools") } data-tag="tools" class="subnav-tag text-text hover:text-link transition-colors">Tools</a>
+			</div>
+			<div class="flex items-center gap-2 text-muted text-[11px] shrink-0 font-mono">
+				<span class="user-live-time tabular-nums font-medium">--:--:--</span>
+			</div>
+		</div>
+	</div>
+}
+
+// mobileMenu renders a full-screen slide-in mobile navigation drawer.
+templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
+	<div
+		id="mobile-menu-overlay"
+		class="fixed inset-0 z-50 bg-bg flex flex-col justify-between p-6 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+	>
+		<!-- Top Bar: Brand & Close Button -->
+		<div class="flex items-center justify-between border-b border-border pb-4 mb-6">
+			<a href={ templ.SafeURL(prefix(lang) + "/") } onclick="toggleMobileMenu()" class="flex items-center gap-2.5 shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+				@BrandIcon("h-6 w-auto")
+				<span class="text-xl font-bold tracking-tight text-text leading-none mt-1" style="font-family: Georgia, serif;">daemontalk</span>
+			</a>
+			<button
+				type="button"
+				onclick="toggleMobileMenu()"
+				aria-label="Close mobile menu"
+				class="w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:bg-hover transition-colors cursor-pointer"
+			>
+				<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
+
+		<!-- Nav Links Section -->
+		<div class="flex-1 flex flex-col gap-6 py-2">
+			<div class="flex flex-col gap-2 font-mono text-base font-semibold">
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/") }
+					onclick="toggleMobileMenu()"
+					class="flex items-center gap-2 py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+				>
+					<span>Live Dispatch</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/graph") }
+					onclick="toggleMobileMenu()"
+					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+				>
+					<span>Systems Radar & Graph</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/terminal") }
+					onclick="toggleMobileMenu()"
+					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+				>
+					<span>Terminal Shell</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/til") }
+					onclick="toggleMobileMenu()"
+					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+				>
+					{ ui.Nav_TIL }
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/behind") }
+					onclick="toggleMobileMenu()"
+					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+				>
+					{ ui.Nav_Behind }
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/search") }
+					onclick="toggleMobileMenu()"
+					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+				>
+					<span>Search</span>
+				</a>
+				<button
+					type="button"
+					onclick="toggleMobileMenu(); openShortcuts();"
+					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors text-left cursor-pointer w-full font-mono font-semibold"
+				>
+					<span>Keyboard Shortcuts</span>
+					<kbd class="ml-auto px-1.5 py-0.5 border border-border bg-chip text-[11px] text-muted font-mono">?</kbd>
+				</button>
+			</div>
+
+			<!-- Topic Tags -->
+			<div class="pt-2">
+				<p class="text-xs font-mono font-bold text-muted uppercase tracking-wider mb-3">Topic Streams</p>
+				<div class="flex flex-wrap gap-2">
+					for _, tg := range []string{"linux", "ai", "systems", "backend", "devops", "docker", "security", "tools"} {
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/?tag=" + tg) }
+							onclick="toggleMobileMenu()"
+							class="text-xs font-mono px-3 py-1.5 rounded-none bg-chip hover:bg-hover text-text border border-border transition-colors uppercase"
+						>
+							{ tg }
+						</a>
+					}
+				</div>
+			</div>
+		</div>
+
+		<!-- Bottom Controls: Theme, Language, Edition -->
+		<div class="pt-6 border-t border-border flex items-center justify-between gap-4">
+			<div class="flex items-center gap-3">
+				<button
+					onclick="toggleTheme()"
+					aria-label="Toggle theme"
+					class="text-xs font-mono px-3 py-2 border border-border bg-surface text-text cursor-pointer"
+				>
+					<span>Theme</span>
+				</button>
+				<a
+					href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
+					class="text-xs font-mono px-3 py-2 rounded-none border border-border bg-surface text-link font-semibold"
+				>
+					{ ui.Lang_Switch }
+				</a>
+			</div>
+			<div class="flex items-center gap-2 text-muted text-[11px] font-mono">
+				<span class="user-live-time tabular-nums">--:--</span>
+			</div>
+		</div>
+	</div>
+}
+
+templ topNavItem(href string, label string, active bool) {
+	if active {
+		<a href={ templ.SafeURL(href) } class="font-mono text-sm font-medium text-text underline underline-offset-4 decoration-[var(--c-link)]">
+			{ label }
+		</a>
+	} else {
+		<a href={ templ.SafeURL(href) } class="font-mono text-sm text-muted hover:text-text transition-colors">
+			{ label }
+		</a>
+	}
+}
+
+templ sunIcon() {
+	<svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		<circle cx="12" cy="12" r="4"></circle>
+		<line x1="12" y1="2" x2="12" y2="6"></line>
+		<line x1="12" y1="18" x2="12" y2="22"></line>
+		<line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+		<line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+		<line x1="2" y1="12" x2="6" y2="12"></line>
+		<line x1="18" y1="12" x2="22" y2="12"></line>
+		<line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+		<line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+	</svg>
+}
+
+templ moonIcon() {
+	<svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+	</svg>
+}
+
+templ iconArrowLeft() {
+	<svg class="w-3.5 h-3.5 inline-block shrink-0 stroke-[2.5]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7 7-7-7 7-7"/></svg>
+}
+
+templ iconArrowRight() {
+	<svg class="w-3.5 h-3.5 inline-block shrink-0 stroke-[2.5]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+}
+
+templ iconArrowUpRight() {
+	<svg class="w-3.5 h-3.5 inline-block shrink-0 stroke-[2.5]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7m0 0H7m10 0v10"/></svg>
+}

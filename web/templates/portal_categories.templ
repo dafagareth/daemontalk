@@ -1,0 +1,75 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+)
+
+templ portalStrictCategoryGrid(ui i18n.UI, categories []CategorySection, lang string) {
+	<div class="border-0 sm:border-2 sm:border-border mb-12 sm:my-8 max-w-6xl 2xl:max-w-7xl mx-auto bg-bg">
+		<div class={ "grid grid-cols-1 sm:grid-cols-2 lg:divide-x divide-border/40 sm:divide-border", templ.KV("lg:grid-cols-3", len(categories) == 3), templ.KV("lg:grid-cols-4", len(categories) != 3) }>
+			for i, cat := range categories {
+				<div class={
+					"py-4 sm:p-4 lg:p-5 flex flex-col border-border/40 sm:border-border",
+					// Mobile: 1 col
+					templ.KV("border-t", i > 0),
+					// Tablet: 2 cols
+					templ.KV("sm:border-t-0", i < 2),
+					templ.KV("sm:border-t", i >= 2),
+					templ.KV("sm:border-l-0", i%2 == 0),
+					templ.KV("sm:border-l", i%2 != 0),
+					// Desktop: 3 or 4 cols (borders handled by lg:divide-x on parent)
+					templ.KV("lg:border-t-0", true),
+					templ.KV("lg:border-l-0", true),
+				}>
+					// Category Header
+					<div class="flex items-center justify-between pb-2 mb-4 border-b-0 sm:border-b-4 border-[var(--c-text)]">
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-sm font-black uppercase tracking-widest text-text hover:text-link pr-2">
+							{ categoryTitle(cat, lang) }
+						</a>
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap">
+							if lang == "id" {
+								<span>Lihat Semua</span>
+								@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+							} else {
+								<span>See More</span>
+								@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+							}
+						</a>
+					</div>
+					
+					// Lead Post
+					<article class="group mb-5">
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 overflow-hidden">
+							@postThumbnailImg(cat.LeadPost)
+						</a>
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } data-slug={ cat.LeadPost.Slug } class="block">
+							<h4 class="text-base font-extrabold text-text group-hover:text-link leading-tight line-clamp-3">
+								{ cat.LeadPost.Title }
+							</h4>
+						</a>
+					</article>
+					
+					// Sub Posts list (List Item Format)
+					if len(cat.SubPosts) > 0 {
+						<div class="flex flex-col sm:divide-y sm:divide-[var(--c-border)]/60 sm:border-t sm:border-border/60 mt-2 sm:mt-4">
+							for _, sub := range cat.SubPosts {
+								// Single Responsive DOM Node: List on Mobile, Stacked on Desktop
+								<article class="group py-3 lg:py-4 flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch">
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-2 overflow-hidden">
+										@postThumbnailImg(sub)
+									</a>
+									<div class="flex-1 min-w-0 flex flex-col justify-between lg:justify-start h-full lg:h-auto">
+
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } data-slug={ sub.Slug } class="display block text-sm sm:text-base font-bold text-text lg:text-muted group-hover:text-link lg:group-hover:text-text transition-colors line-clamp-3 leading-snug">
+											{ sub.Title }
+										</a>
+									</div>
+								</article>
+							}
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</div>
+}

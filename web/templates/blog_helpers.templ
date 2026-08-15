@@ -1,0 +1,174 @@
+package templates
+
+import (
+	"fmt"
+	"sort"
+	"strings"
+	"time"
+
+	"daemontalk/internal/post"
+)
+
+type tagStat struct {
+	Tag   string
+	Count int
+}
+
+// PostNav holds the previous/next post links for blog post navigation.
+type PostNav struct {
+	HasPrev bool
+	HasNext bool
+	Prev    post.Post // older post (published earlier)
+	Next    post.Post // newer post (published later)
+}
+
+func postDifficulty(p post.Post) string {
+	for _, t := range p.Tags {
+		tl := strings.ToLower(t)
+		if tl == "architecture" || tl == "debugging" || tl == "storage" || tl == "cgroups" || tl == "profiling" || tl == "concurrency" || tl == "performance" {
+			return "DEEP DIVE"
+		}
+	}
+	if p.ReadTime >= 5 {
+		return "DEEP DIVE"
+	}
+	if p.ReadTime >= 3 {
+		return "INTERMEDIATE"
+	}
+	return "BEGINNER"
+}
+
+func sortedTags(m map[string]int) []tagStat {
+	out := make([]tagStat, 0, len(m))
+	for t, c := range m {
+		out = append(out, tagStat{Tag: t, Count: c})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Count != out[j].Count {
+			return out[i].Count > out[j].Count
+		}
+		return out[i].Tag < out[j].Tag
+	})
+	return out
+}
+
+// Minimalist Monochrome / Accent SVG icons for technical tags
+templ tagIcon(t string, sizeClass string) {
+	switch strings.ToLower(t) {
+		case "go":
+			@IconGo(sizeClass + " text-cyan-500 shrink-0")
+		case "rust":
+			@IconRust(sizeClass + " text-orange-500 shrink-0")
+		case "linux", "kernel", "cgroups":
+			@IconLinux(sizeClass + " text-amber-500 shrink-0")
+		case "performance", "profiling":
+			@IconPerformance(sizeClass + " text-rose-500 shrink-0")
+		case "security":
+			@IconSecurity(sizeClass + " text-emerald-500 shrink-0")
+		case "database", "sqlite", "storage":
+			@IconDatabase(sizeClass + " text-blue-500 shrink-0")
+		default:
+			<span class={ sizeClass + " flex items-center justify-center font-bold" }>#</span>
+	}
+}
+
+func fmtDate(p post.Post) string {
+	if p.Lang == "id" {
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		d := p.Date
+		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+	}
+	return p.Date.Format("02 January 2006")
+}
+
+func timeAgoOrDate(d time.Time, lang string) string {
+	dur := time.Since(d)
+	if dur < 0 {
+		dur = 0
+	}
+	days := int(dur.Hours() / 24)
+	if days == 0 {
+		hrs := int(dur.Hours())
+		if hrs <= 1 {
+			if lang == "id" {
+				return "Baru saja"
+			}
+			return "Just now"
+		}
+		if lang == "id" {
+			return fmt.Sprintf("%d jam lalu", hrs)
+		}
+		return fmt.Sprintf("%d hrs ago", hrs)
+	}
+	if days < 7 {
+		if lang == "id" {
+			return fmt.Sprintf("%d hari lalu", days)
+		}
+		return fmt.Sprintf("%d days ago", days)
+	}
+	if lang == "id" {
+		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
+		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+	}
+	return d.Format("02 Jan 2006")
+}
+
+// searchIndex builds the haystack used by the client-side blog search.
+func searchIndex(p post.Post) string {
+	return strings.ToLower(p.Title + " " + strings.Join(p.Tags, " ") + " " + p.Description)
+}
+
+func blogPrefix(lang string) string {
+	if lang == "id" {
+		return "/id"
+	}
+	return ""
+}
+
+// homeURL mengarah ke daftar tulisan (halaman utama setelah pivot blog-first).
+func homeURL(lang string) string {
+	if lang == "id" {
+		return "/id"
+	}
+	return "/"
+}
+
+// postThumbnail renders the post cover image if available, or a clean minimalist "No Photo" fallback box.
+templ postThumbnail(p post.Post, linkURL string) {
+	if linkURL != "" {
+		<a href={ templ.SafeURL(linkURL) } class="block w-full h-full">
+			@postThumbnailImg(p)
+		</a>
+	} else {
+		@postThumbnailImg(p)
+	}
+}
+
+// postThumbnailImg renders pure thumbnail image/placeholder without outer link wrapper.
+templ postThumbnailImg(p post.Post) {
+	if p.Cover != "" {
+		<img
+			src={ p.Cover }
+			alt={ p.Title }
+			loading="lazy"
+			class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+		/>
+	} else {
+		<div class="w-full h-full flex flex-col items-center justify-center bg-muted/10 text-muted p-2 text-center select-none group-hover:bg-muted/20 transition-colors">
+			@BrandIcon("w-12 h-12 sm:w-16 sm:h-16 opacity-20 grayscale group-hover:grayscale-0 transition-all")
+		</div>
+	}
+}
+
+func postCover(p post.Post) string {
+	return p.Cover
+}
+
+templ langBadge(lang string) {
+	if lang == "id" {
+		<span class="text-xs px-2 py-0.5 bg-[var(--c-warn-bg)] text-[var(--c-warn)] rounded-none font-mono">ID</span>
+	} else if lang == "en" {
+		<span class="text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-mono">EN</span>
+	}
+}
+

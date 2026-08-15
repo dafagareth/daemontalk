@@ -1,0 +1,106 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/internal/project"
+)
+
+templ ProjectDetailPage(ui i18n.UI, p project.Project, lang string, toc []post.TOCEntry) {
+	<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+		<a
+			href={ templ.SafeURL(prefix(lang) + "/behind#projects") }
+			class="text-sm text-link hover:underline inline-flex items-center gap-1.5 mb-8"
+		>
+			@iconArrowLeft()
+			<span>{ ui.Nav_Behind }</span>
+		</a>
+		<div class="mb-8">
+			<div class="flex items-start gap-3 mb-3">
+				<h1 class="display text-2xl sm:text-3xl font-semibold text-text font-mono flex-1">{ p.Name }</h1>
+				@statusBadge(p.Status)
+			</div>
+			<p class="text-sm text-muted leading-relaxed mb-4">
+				if lang == "id" && p.DescriptionID != "" {
+					{ p.DescriptionID }
+				} else {
+					{ p.Description }
+				}
+			</p>
+			if len(p.TechStack) > 0 {
+				<div class="flex flex-wrap gap-1.5 mb-4">
+					for _, tech := range p.TechStack {
+						<span class="text-xs px-2 py-0.5 bg-chip text-muted rounded-none font-mono">{ tech }</span>
+					}
+				</div>
+			}
+			<div class="flex flex-wrap gap-3">
+				if p.RepoURL != "" {
+					<a
+						href={ templ.SafeURL(p.RepoURL) }
+						target="_blank"
+						rel="noopener"
+						class="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+						GitHub
+					</a>
+				}
+				if p.DemoURL != "" {
+					<a
+						href={ templ.SafeURL(p.DemoURL) }
+						target="_blank"
+						rel="noopener"
+						class="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono"
+					>
+						<span>{ demoLabel(p.DemoURL) }</span>
+						@iconArrowUpRight()
+					</a>
+				}
+			</div>
+		</div>
+		if p.Body != "" {
+			<div class="pt-8 lg:grid lg:grid-cols-[1fr_200px] lg:gap-16 lg:items-start">
+				<div>
+					if len(toc) > 0 {
+						<details id="mobile-toc" class="lg:hidden mb-8 border border-border rounded-none">
+							<summary class="px-4 py-3 text-sm font-medium text-text cursor-pointer select-none list-none flex items-center justify-between">
+								<span>
+									if lang == "id" {
+										Daftar isi
+									} else {
+										Table of contents
+									}
+								</span>
+								<svg class="toc-chevron w-4 h-4 text-muted transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+							</summary>
+							<nav class="px-4 pb-4">
+								@tocList(toc)
+							</nav>
+						</details>
+					}
+					<div id="prose-body" class="prose">
+						@templ.Raw(string(p.Body))
+					</div>
+				</div>
+				if len(toc) > 0 {
+					<aside class="hidden lg:block">
+						<div class="sticky top-24">
+							<p class="text-xs font-medium text-muted uppercase tracking-wide mb-3">
+								if lang == "id" {
+									Daftar isi
+								} else {
+									On this page
+								}
+							</p>
+							<nav>
+								@tocList(toc)
+							</nav>
+						</div>
+					</aside>
+				}
+			</div>
+			<script src="/static/js/project.js" defer></script>
+		}
+	</div>
+}

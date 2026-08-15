@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      PORT: "8080"
+      # Comment moderation: login via /admin?admin=TOKEN
+      ADMIN_TOKEN: "${ADMIN_TOKEN:-}"
+      # SMTP for contact form (optional; form still works without it — messages get logged)
+      # Gmail example: SMTP_HOST=smtp.gmail.com SMTP_PORT=587 SMTP_USER=you@gmail.com SMTP_PASS=app-password
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-587}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_TO:   "${SMTP_TO:-}"
+    volumes:
+      # Named volume keeps the comments/views SQLite DB across recreations.
+      - comments-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  comments-data:

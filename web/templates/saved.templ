@@ -1,0 +1,18 @@
+package templates
+
+import "daemontalk/internal/i18n"
+
+templ SavedPage(ui i18n.UI, lang string) {
+	<section class="container-page py-8 sm:py-12">
+		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">Reading List</h1>
+		<p class="text-sm text-muted mb-8">Posts you've bookmarked. Saved locally in your browser.</p>
+		<div id="saved-list">
+			<p class="text-sm text-muted">Loading...</p>
+		</div>
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog") } class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-8 font-mono">
+			@iconArrowLeft()
+			<span>{ ui.Post_Back }</span>
+		</a>
+	</section>
+	<script src="/static/js/saved.js" defer></script>
+}

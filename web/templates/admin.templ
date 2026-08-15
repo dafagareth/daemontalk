@@ -1,0 +1,333 @@
+package templates
+
+import (
+	"fmt"
+)
+
+
+templ AdminPage(stats AdminStats) {
+	<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-10 sm:space-y-12">
+		<!-- TAB 1: DASHBOARD -->
+		<div id="tab-dashboard" class="space-y-8 sm:space-y-10">
+			<h1 class="text-lg font-semibold text-text">Channel Dashboard</h1>
+
+			<!-- Stats row -->
+			<dl class="flex flex-wrap gap-x-8 gap-y-2 text-sm border-b border-border pb-4">
+				<div>
+					<dt class="text-muted text-xs">Posts</dt>
+					<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", len(stats.Posts)) }</dd>
+				</div>
+				<div>
+					<dt class="text-muted text-xs">Views</dt>
+					<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", adminTotalViews(stats.Views)) }</dd>
+				</div>
+				<div>
+					<dt class="text-muted text-xs">Hits</dt>
+					<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", stats.TotalHits) }</dd>
+				</div>
+				<div>
+					<dt class="text-muted text-xs">Comments</dt>
+					<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", len(stats.Comments)) }</dd>
+				</div>
+			</dl>
+
+			<!-- Latest post -->
+			if len(stats.Posts) > 0 {
+				{{ latest := stats.Posts[0] }}
+				<div class="text-sm">
+					<span class="text-xs text-muted uppercase tracking-wider">Latest</span>
+					<div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+						<a href={ templ.SafeURL("/blog/" + latest.Slug) } class="font-medium text-text hover:text-link">{ latest.Title }</a>
+						if latest.Draft {
+							<span class="badge badge-draft">Draft</span>
+						}
+						<span class="text-xs font-mono text-muted">{ fmtDate(latest) }</span>
+						<span class="text-xs font-mono text-muted">{ fmt.Sprintf("%d", stats.Views[latest.Slug]) } views</span>
+					</div>
+				</div>
+			}
+
+			<!-- Top 5 posts -->
+			{{ sorted := adminSortedByViews(stats.Posts, stats.Views) }}
+			if len(sorted) > 0 {
+				{{ maxV := adminMaxViews(stats.Posts, stats.Views) }}
+				<div>
+					<span class="text-xs text-muted uppercase tracking-wider">Top posts</span>
+					<div class="mt-2 divide-y divide-[var(--c-border)]">
+						for _, p := range sorted[:minInt(5, len(sorted))] {
+							<div class="py-2.5 flex items-center justify-between gap-4 text-sm">
+								<div class="min-w-0 flex-1">
+									<a href={ templ.SafeURL("/blog/" + p.Slug) } class="font-medium text-text hover:text-link truncate block">{ p.Title }</a>
+									<div class="mt-1 h-1 rounded-none bg-[var(--c-border)] overflow-hidden max-w-xs">
+										<div class="h-full bg-[var(--c-link)] rounded-none" style={ fmt.Sprintf("width: %.1f%%", adminViewPct(stats.Views[p.Slug], maxV)) }></div>
+									</div>
+								</div>
+								<div class="flex items-center gap-3 text-xs font-mono text-muted shrink-0">
+									<span class="text-text font-medium">{ fmt.Sprintf("%d", stats.Views[p.Slug]) }</span>
+									<span class="text-muted">views</span>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			}
+
+			<!-- Recent comments -->
+			if len(stats.Comments) > 0 {
+				<div>
+					<span class="text-xs text-muted uppercase tracking-wider">Recent comments</span>
+					<div class="mt-2 divide-y divide-[var(--c-border)]">
+						for _, c := range stats.Comments[:minInt(5, len(stats.Comments))] {
+							<div class="py-2.5 text-sm">
+								<div class="flex items-baseline justify-between gap-2">
+									<span class="font-medium text-text">{ c.Name }</span>
+									<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt) }</span>
+								</div>
+								<a href={ templ.SafeURL("/blog/" + c.PostSlug) } class="text-xs font-mono text-link hover:underline">/{ c.PostSlug }</a>
+								<p class="text-xs text-muted mt-1 line-clamp-1">{ c.Body }</p>
+							</div>
+						}
+					</div>
+				</div>
+			}
+		</div>
+
+		<!-- TAB 2: CONTENT -->
+		<div id="tab-content" class="hidden space-y-6">
+			<!-- Header with Actions -->
+			<div class="flex items-center justify-between gap-4">
+				<h1 class="text-lg font-semibold text-text">Channel Content</h1>
+				<a
+					href="/admin/posts/new"
+					class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-[var(--c-text)] text-[var(--c-bg)] text-xs font-medium transition-colors hover:opacity-90"
+				>
+					+ New Post
+				</a>
+			</div>
+
+			<!-- Web Posts Section (Created via Web Editor) -->
+			if len(stats.WebPosts) > 0 {
+				<div class="space-y-3">
+					<div class="flex items-center justify-between">
+						<h2 class="text-xs font-semibold text-text uppercase tracking-wider flex items-center gap-2">
+							<span class="w-2 h-2 rounded-none bg-[var(--c-ok)]"></span>
+							<span>Studio Articles ({ fmt.Sprintf("%d", len(stats.WebPosts)) })</span>
+						</h2>
+						<span class="text-xs text-muted">Saved in SQLite PostDB</span>
+					</div>
+					<div class="border border-border rounded-none overflow-hidden">
+						<table class="w-full text-sm text-left">
+							<thead class="border-b border-border text-xs text-muted bg-surface">
+								<tr>
+									<th class="px-4 py-2.5 font-medium">Title</th>
+									<th class="px-4 py-2.5 font-medium">Status</th>
+									<th class="px-4 py-2.5 font-medium">Language</th>
+									<th class="px-4 py-2.5 font-medium">Last Modified</th>
+									<th class="px-4 py-2.5 font-medium text-right">Views</th>
+									<th class="px-4 py-2.5 font-medium text-right">Actions</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-[var(--c-border)]">
+								for _, wp := range stats.WebPosts {
+									<tr class="hover:bg-hover transition-colors">
+										<td class="px-4 py-3">
+											<div class="font-medium text-text">{ wp.Title }</div>
+											<div class="text-xs font-mono text-muted mt-0.5">/{ wp.Slug }</div>
+										</td>
+										<td class="px-4 py-3 whitespace-nowrap">
+											if wp.Draft {
+												<span class="badge badge-draft">Draft</span>
+											} else {
+												<span class="badge badge-ok">Public</span>
+											}
+										</td>
+										<td class="px-4 py-3 whitespace-nowrap">
+											<span class="text-xs uppercase font-mono text-muted">{ wp.Lang }</span>
+										</td>
+										<td class="px-4 py-3 text-xs font-mono text-muted whitespace-nowrap">
+											{ wp.UpdatedAt.Format("2006-01-02 15:04") }
+										</td>
+										<td class="px-4 py-3 text-right font-mono text-xs text-text">
+											{ fmt.Sprintf("%d", stats.Views[wp.Slug]) }
+										</td>
+										<td class="px-4 py-3 text-right text-xs whitespace-nowrap">
+											<div class="flex items-center justify-end gap-3">
+												<a
+													href={ templ.SafeURL(fmt.Sprintf("/admin/posts/%d/edit", wp.ID)) }
+													class="text-link hover:underline"
+												>
+													Edit
+												</a>
+												if !wp.Draft {
+													<a
+														href={ templ.SafeURL("/blog/" + wp.Slug) }
+														target="_blank"
+														class="inline-flex items-center gap-0.5 text-muted hover:text-text"
+													>
+														<span>View</span>
+														@iconArrowUpRight()
+													</a>
+												}
+												<form method="post" action={ templ.SafeURL(fmt.Sprintf("/admin/posts/%d/delete", wp.ID)) } data-confirm="Delete this post? This action cannot be undone." class="inline">
+													<button type="submit" class="text-red-500 hover:underline">Delete</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			}
+
+			<!-- File-based Markdown Posts -->
+			<div class="space-y-3">
+				<div class="flex items-center justify-between">
+					<h2 class="text-xs font-semibold text-text uppercase tracking-wider flex items-center gap-2">
+						<span class="w-2 h-2 rounded-none bg-[var(--c-muted)]"></span>
+						<span>Markdown Posts ({ fmt.Sprintf("%d", len(stats.Posts)) })</span>
+					</h2>
+					<span class="text-xs text-muted">{ "From content/posts/*.md" }</span>
+				</div>
+				<div class="border border-border rounded-none overflow-hidden">
+					<table class="w-full text-sm text-left">
+						<thead class="border-b border-border text-xs text-muted bg-surface">
+							<tr>
+								<th class="px-4 py-2.5 font-medium">Title</th>
+								<th class="px-4 py-2.5 font-medium">Status</th>
+								<th class="px-4 py-2.5 font-medium">Date</th>
+								<th class="px-4 py-2.5 font-medium text-right">Views</th>
+								<th class="px-4 py-2.5 font-medium text-right">Comments</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[var(--c-border)]">
+							for _, p := range stats.Posts {
+								<tr class="hover:bg-hover transition-colors">
+									<td class="px-4 py-2.5">
+										<a href={ templ.SafeURL("/blog/" + p.Slug) } class="font-medium text-text hover:text-link">{ p.Title }</a>
+										<span class="text-xs font-mono text-muted ml-2">/{ p.Slug }</span>
+									</td>
+									<td class="px-4 py-2.5 whitespace-nowrap">
+										if p.Draft {
+											<span class="badge badge-draft">Draft</span>
+										} else {
+											<span class="badge badge-ok">Public</span>
+										}
+									</td>
+									<td class="px-4 py-2.5 text-xs font-mono text-muted whitespace-nowrap">{ fmtDate(p) }</td>
+									<td class="px-4 py-2.5 text-right font-mono text-xs text-text">{ fmt.Sprintf("%d", stats.Views[p.Slug]) }</td>
+									<td class="px-4 py-2.5 text-right font-mono text-xs text-muted">{ fmt.Sprintf("%d", adminCommentCount(stats.Comments, p.Slug)) }</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- TAB 3: ANALYTICS -->
+		@adminAnalyticsTab(stats)
+
+		<!-- TAB 4: COMMENTS -->
+		<div id="tab-comments" class="hidden space-y-6">
+			<div class="flex items-baseline justify-between gap-4">
+				<h1 class="text-lg font-semibold text-text">Comments</h1>
+				<span class="text-xs font-mono text-muted">{ fmt.Sprintf("%d", len(stats.Comments)) } total</span>
+			</div>
+
+			if len(stats.Comments) == 0 {
+				<p class="text-sm text-muted">No comments yet.</p>
+			} else {
+				<div class="divide-y divide-[var(--c-border)]">
+					for _, c := range stats.Comments {
+						<div class="py-4">
+							<div class="flex items-baseline justify-between gap-2 mb-1">
+								<div class="flex items-baseline gap-2 min-w-0">
+									<span class="text-sm font-medium text-text">{ c.Name }</span>
+									<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt) }</span>
+								</div>
+								<button
+									class="text-xs text-muted hover:text-red-500 shrink-0 transition-colors"
+									hx-post={ "/admin/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
+									hx-target="closest div.py-4"
+									hx-swap="outerHTML"
+									data-confirm="Delete this comment? This action cannot be undone."
+								>
+									Delete
+								</button>
+							</div>
+							<a href={ templ.SafeURL("/blog/" + c.PostSlug) } target="_blank" class="text-xs font-mono text-link hover:underline">/{ c.PostSlug }</a>
+							<p class="text-sm text-muted mt-1.5 whitespace-pre-wrap break-words leading-relaxed">{ c.Body }</p>
+						</div>
+					}
+				</div>
+			}
+		</div>
+
+		<!-- TAB 5: WEEKLY DIGEST GENERATOR -->
+		<div id="tab-digest" class="hidden space-y-6">
+			<div class="flex items-center justify-between gap-4 border-b border-[var(--c-border)] pb-4">
+				<div>
+					<h1 class="text-lg font-semibold text-text">Weekly Systems Digest Generator</h1>
+					<p class="text-xs text-muted mt-0.5">Automated markdown newsletter & dispatch summary for subscribers.</p>
+				</div>
+				<button onclick="copyDigestMarkdown()" id="copy-digest-btn" class="px-3 py-1.5 bg-[var(--c-text)] text-[var(--c-bg)] text-xs font-medium hover:opacity-90 transition-opacity">
+					Copy Markdown
+				</button>
+			</div>
+
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+				<!-- Markdown Output -->
+				<div class="space-y-2">
+					<label class="block text-xs font-mono text-muted uppercase tracking-wider">Raw Markdown Digest</label>
+					<textarea id="digest-markdown" readonly class="w-full h-[460px] p-3 text-xs font-mono bg-[var(--c-surface)] border border-[var(--c-border)] text-[var(--c-text)] resize-none focus:outline-none">{ generateDigestText(stats.Posts) }</textarea>
+				</div>
+
+				<!-- Live Visual Preview -->
+				<div class="space-y-2">
+					<label class="block text-xs font-mono text-muted uppercase tracking-wider">Digest Live Breakdown</label>
+					<div class="h-[460px] p-4 bg-[var(--c-surface)] border border-[var(--c-border)] overflow-y-auto space-y-4 text-xs">
+						<div class="border-b border-[var(--c-border)] pb-3">
+							<span class="text-[11px] font-mono text-[var(--c-muted)]">daemontalk Weekly Issue</span>
+							<h3 class="text-base font-serif font-bold text-[var(--c-text)] mt-1">Systems Engineering & Linux Dispatch</h3>
+						</div>
+						<div class="space-y-3">
+							<span class="font-mono text-muted uppercase tracking-wider text-[11px] block">Dispatches Included:</span>
+							for i, p := range stats.Posts {
+								if !p.Draft && i < 5 {
+									<div class="p-2.5 border border-[var(--c-border)] bg-[var(--c-bg)]">
+										<div class="font-medium text-[var(--c-text)] line-clamp-1">{ p.Title }</div>
+										<div class="text-muted text-[11px] mt-0.5">{ p.Date.Format("02 Jan 2006") } · { fmt.Sprintf("%d min", p.ReadTime) }</div>
+									</div>
+								}
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+		function copyDigestMarkdown() {
+			var copyText = document.getElementById("digest-markdown");
+			if (!copyText) return;
+			copyText.select();
+			navigator.clipboard.writeText(copyText.value);
+			var btn = document.getElementById("copy-digest-btn");
+			if (btn) {
+				var old = btn.innerText;
+				btn.innerText = "✓ Copied!";
+				setTimeout(function() { btn.innerText = old; }, 2000);
+			}
+		}
+		</script>
+	</div>
+}
+
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}

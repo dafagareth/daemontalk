@@ -1,0 +1,61 @@
+# Binaries & Build Output
+daemontalk
+bin/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+
+# Dependencies & Package Managers
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Live Reload & Temp Files
+tmp/
+.air.tmp
+.cache/
+.temp/
+*.tmp
+*.temp
+
+# Runtime Data & Databases (SQLite comments + analytics)
+data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# IDEs & Editor Metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# AI Assistant & Agent Scratchpads
+.agents/
+.gemini/
+.claude/
+.cursor/
+.windsurf/
+
+# Legacy / Scratch Documents
+claude.md
+CLAUDE.md
+Portfolio.prd.md
+teks.txt
+web/static/css/output.css
+web/static/css/styles.css

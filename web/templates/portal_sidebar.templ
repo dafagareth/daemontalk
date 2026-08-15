@@ -1,0 +1,207 @@
+package templates
+
+import (
+	"fmt"
+
+	"daemontalk/internal/i18n"
+)
+
+templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCounts map[string]int, lang string) {
+	<div class="border-0 sm:border-2 sm:border-border max-w-6xl 2xl:max-w-7xl mx-auto mb-12 sm:mb-0 sm:my-8 bg-bg">
+		<div class="flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
+
+		// LEFT BOX: Sidebar cards stacked vertically
+		<div class="hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]">
+			
+			// Card 1: Popular Tags
+			<div class="p-5 flex flex-col">
+				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+					<svg class="w-3.5 h-3.5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+					if lang == "id" {
+						5 TAG POPULER
+					} else {
+						5 POPULAR TAGS
+					}
+				</h3>
+				<div class="flex flex-col gap-3">
+					for _, tag := range getPopularTags(tagCounts, 5) {
+						<div class="flex items-center justify-between border-b border-border/40 pb-2 last:border-b-0 last:pb-0">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + tag) } class="text-xs font-mono text-text hover:text-link transition-colors uppercase tracking-wider">
+								#{ tag }
+							</a>
+							<span class="text-xs font-mono text-muted bg-surface border border-border/50 px-1.5 py-0.5 rounded-none-none">{ fmt.Sprintf("%d", tagCounts[tag]) }</span>
+						</div>
+					}
+				</div>
+			</div>
+
+			// Card 2: curl terminal
+			<div class="p-5 flex flex-col">
+				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+					<svg class="w-3.5 h-3.5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+					CURL TERMINAL
+				</h3>
+				<p class="text-xs text-muted mb-3 leading-relaxed">
+					if lang == "id" {
+						Baca blog langsung dari terminal Anda dengan perintah curl.
+					} else {
+						Read this blog directly from your terminal using curl.
+					}
+				</p>
+				<div class="relative bg-zinc-900 text-[#10b981] font-mono text-xs p-3.5 pr-10 border border-border overflow-hidden mb-3 group">
+					<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
+						<span class="text-zinc-500 mr-1.5">$</span>curl -sL daemontalk.com
+					</div>
+					<button 
+						onclick="navigator.clipboard.writeText('curl -sL daemontalk.com'); var i=this.querySelector('svg'); i.style.color='#10b981'; setTimeout(()=>i.style.color='', 1000);" 
+						title="Copy command" 
+						aria-label="Copy command" 
+						class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+					>
+						<svg class="w-4 h-4 transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+						</svg>
+					</button>
+				</div>
+				<div class="flex flex-col gap-2">
+					<div class="flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5">
+						<span>/daily</span>
+						<span>Daily brief</span>
+					</div>
+					<div class="flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5">
+						<span>/recipes</span>
+						<span>eBPF recipes</span>
+					</div>
+					<div class="flex items-center justify-between text-[11px] font-mono text-muted">
+						<span>/p/:slug</span>
+						<span>Read article</span>
+					</div>
+				</div>
+			</div>
+
+			// Card 3: RSS Feed
+			<div class="p-5 flex flex-col">
+				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+					<svg class="w-3.5 h-3.5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+					if lang == "id" {
+						BERLANGGANAN FEED
+					} else {
+						SUBSCRIBE FEED
+					}
+				</h3>
+				<p class="text-xs text-muted mb-4 leading-relaxed">
+					if lang == "id" {
+						Tetap terupdate menggunakan RSS Reader favorit Anda.
+					} else {
+						Stay updated using your favorite RSS Reader feed.
+					}
+				</p>
+				<div class="flex flex-col gap-2">
+					<a href="/rss.xml" class="flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full">
+						<span>RSS XML</span>
+						<span class="text-muted text-[10px]">&rarr;</span>
+					</a>
+					<a href="/feed.json" class="flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full">
+						<span>JSON Feed</span>
+						<span class="text-muted text-[10px]">&rarr;</span>
+					</a>
+				</div>
+			</div>
+
+			// Card 4: About
+			<div class="p-5 flex flex-col">
+				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+					<svg class="w-3.5 h-3.5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+					if lang == "id" {
+						TENTANG DAEMONTALK
+					} else {
+						ABOUT DAEMONTALK
+					}
+				</h3>
+				<p class="text-xs text-muted leading-relaxed mb-4">
+					if lang == "id" {
+						Daemontalk adalah buku catatan rekayasa dan portofolio teknik seputar Go backend, sistem Linux, dan sistem terdistribusi.
+					} else {
+						Daemontalk is an open engineering notebook and tech portfolio focusing on Go backend, Linux systems, and distributed systems.
+					}
+				</p>
+				<a href={ templ.SafeURL(prefix(lang) + "/about") } class="text-[10px] font-bold uppercase tracking-widest text-accent hover:text-link flex items-center gap-1 transition-colors">
+					if lang == "id" {
+						BACA SELENGKAPNYA &rarr;
+					} else {
+						READ MORE &rarr;
+					}
+				</a>
+			</div>
+
+
+		</div>
+
+		// RIGHT BOX: Categories
+		<div class="flex-1 min-w-0">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 lg:divide-x divide-border/40 sm:divide-border h-full">
+				for i, cat := range categories {
+					<div class={
+						"py-4 sm:p-4 lg:p-5 flex flex-col border-border/40 sm:border-border",
+						templ.KV("border-t", i > 0),
+						templ.KV("sm:border-t-0", i < 2),
+						templ.KV("sm:border-t", i >= 2),
+						templ.KV("sm:border-l-0", i%2 == 0),
+						templ.KV("sm:border-l", i%2 != 0),
+						templ.KV("lg:border-l-0", true), // Handled by lg:divide-x
+					}>
+						// Category Header
+						<div class="flex items-center justify-between pb-2 mb-4 border-b-0 sm:border-b-4 border-[var(--c-text)]">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-sm font-black uppercase tracking-widest text-text hover:text-link pr-2">
+								{ categoryTitle(cat, lang) }
+							</a>
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap">
+								if lang == "id" {
+									<span>Lihat Semua</span>
+									@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+								} else {
+									<span>See More</span>
+									@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+								}
+							</a>
+						</div>
+
+						// Lead Post
+						<article class="group mb-5">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 overflow-hidden">
+								@postThumbnailImg(cat.LeadPost)
+							</a>
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block">
+								<h4 class="text-base font-extrabold text-text group-hover:text-link leading-tight line-clamp-3">
+									{ cat.LeadPost.Title }
+								</h4>
+							</a>
+						</article>
+
+						// Sub Posts
+						if len(cat.SubPosts) > 0 {
+							<div class="flex flex-col sm:divide-y sm:divide-[var(--c-border)]/60 sm:border-t sm:border-border/60 mt-2 sm:mt-4">
+								for _, sub := range cat.SubPosts {
+									// Single Responsive DOM Node: List on Mobile, Stacked on Desktop
+									<article class="group py-3 lg:py-4 flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-2 overflow-hidden">
+											@postThumbnailImg(sub)
+										</a>
+										<div class="flex-1 min-w-0 flex flex-col justify-between lg:justify-start h-full lg:h-auto">
+
+											<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } data-slug={ sub.Slug } class="display block text-sm sm:text-base font-bold text-text lg:text-muted group-hover:text-link lg:group-hover:text-text transition-colors line-clamp-3 leading-snug">
+												{ sub.Title }
+											</a>
+										</div>
+									</article>
+								}
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+
+		</div>
+	</div>
+}

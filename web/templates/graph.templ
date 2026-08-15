@@ -1,0 +1,282 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"fmt"
+)
+
+templ GraphPage(ui i18n.UI, lang string, posts []post.Post) {
+	<div class="max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		<!-- Header -->
+		<div class="border-b border-[var(--c-border)] pb-6 mb-8">
+			<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--c-muted)] mb-2">
+				<span>Systems Radar</span>
+				<span>·</span>
+				<span>Interactive Knowledge Graph</span>
+			</div>
+			if lang == "id" {
+				<h1 class="text-3xl sm:text-4xl font-serif font-black text-[var(--c-text)] tracking-tight">
+					Peta Konsep & Tech Stack
+				</h1>
+				<p class="mt-2 text-sm sm:text-base text-[var(--c-muted)] max-w-3xl leading-relaxed">
+					Visualisasi interaktif jejaring konsep rekayasa sistem, kernel Linux, runtime bahasa pemrograman, dan storage engine yang dibahas dalam DaemonTalk.
+				</p>
+			} else {
+				<h1 class="text-3xl sm:text-4xl font-serif font-black text-[var(--c-text)] tracking-tight">
+					Knowledge Graph & Tech Stack
+				</h1>
+				<p class="mt-2 text-sm sm:text-base text-[var(--c-muted)] max-w-3xl leading-relaxed">
+					Interactive visualization of systems engineering, kernel architectures, language runtimes, and storage engines covered in DaemonTalk dispatches.
+				</p>
+			}
+		</div>
+
+		<!-- Interactive Graph Container -->
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+			<!-- Canvas Panel -->
+			<div class="lg:col-span-2 border border-[var(--c-border)] bg-[var(--c-surface)] relative overflow-hidden h-[540px] flex flex-col">
+				<div class="flex items-center justify-between px-4 py-2.5 border-b border-[var(--c-border)] bg-[var(--c-bg)] text-xs font-mono text-[var(--c-muted)]">
+					<span>Interactive Network Canvas</span>
+					<span>Drag nodes · Click to inspect</span>
+				</div>
+				<div class="relative flex-1">
+					<canvas id="knowledge-canvas" class="w-full h-full cursor-grab active:cursor-grabbing block"></canvas>
+					<div id="canvas-overlay" class="absolute bottom-3 left-3 pointer-events-none text-[11px] font-mono text-[var(--c-muted)] bg-[var(--c-bg)]/80 px-2 py-1 border border-[var(--c-border)] backdrop-blur">
+						Nodes: 7 domains · 108 dispatches
+					</div>
+				</div>
+			</div>
+
+			<!-- Topic Inspector / Article List -->
+			<div class="border border-[var(--c-border)] bg-[var(--c-surface)] p-6 flex flex-col h-[540px]">
+				<div class="border-b border-[var(--c-border)] pb-4 mb-4">
+					<span id="inspector-tag" class="text-xs font-mono uppercase tracking-wider text-[var(--c-muted)] block mb-1">
+						if lang == "id" {
+							Pilih sebuah domain
+						} else {
+							Select a domain
+						}
+					</span>
+					<h2 id="inspector-title" class="text-xl font-serif font-bold text-[var(--c-text)]">
+						if lang == "id" {
+							Ikhtisar
+						} else {
+							Overview
+						}
+					</h2>
+					<p id="inspector-desc" class="text-xs text-[var(--c-muted)] mt-1">
+						if lang == "id" {
+							Klik salah satu simpul di grafik untuk melihat artikel teknis terkait.
+						} else {
+							Click any node in the graph to filter related engineering dispatches.
+						}
+					</p>
+				</div>
+
+				<div id="inspector-list" class="flex-1 overflow-y-auto space-y-3 pr-1">
+					for _, p := range posts {
+						if !p.Draft {
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block p-3 border border-[var(--c-border)] hover:border-[var(--c-text)] bg-[var(--c-bg)] transition-colors group">
+								<div class="text-[11px] font-mono text-[var(--c-muted)] mb-1">
+									{ p.Date.Format("02 Jan 2006") } · { fmt.Sprintf("%d min", p.ReadTime) }
+								</div>
+								<h3 class="text-sm font-semibold text-[var(--c-text)] group-hover:underline line-clamp-2 leading-snug">
+									{ p.Title }
+								</h3>
+							</a>
+						}
+					}
+				</div>
+			</div>
+		</div>
+
+		<!-- Topic Matrix / Directory Breakdown -->
+		<div class="mt-12 border-t border-[var(--c-border)] pt-8">
+			<h2 class="text-xl font-serif font-bold text-[var(--c-text)] mb-6">
+				if lang == "id" {
+					Indeks Domain & Taksonomi
+				} else {
+					Domain Index & Taxonomy
+				}
+			</h2>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+				<div class="border-l-2 border-[var(--c-border)] pl-4">
+					<h3 class="font-mono text-sm font-bold text-[var(--c-text)] mb-2">Linux & Kernel</h3>
+					<p class="text-xs text-[var(--c-muted)] leading-relaxed mb-3">eBPF tracing, io_uring asynchronous I/O, Landlock LSM security, cgroups v2 resource accounting, and Btrfs snapshots.</p>
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/tag/linux") } class="text-xs font-mono text-[var(--c-link)] hover:underline">Explore tag/linux →</a>
+				</div>
+				<div class="border-l-2 border-[var(--c-border)] pl-4">
+					<h3 class="font-mono text-sm font-bold text-[var(--c-text)] mb-2">Language Runtimes</h3>
+					<p class="text-xs text-[var(--c-muted)] leading-relaxed mb-3">Go runtime GC pacing, goroutine concurrency, memory alignment, Rust formal verification, and async Tokio runtime.</p>
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/tag/go") } class="text-xs font-mono text-[var(--c-link)] hover:underline">Explore tag/go →</a>
+				</div>
+				<div class="border-l-2 border-[var(--c-border)] pl-4">
+					<h3 class="font-mono text-sm font-bold text-[var(--c-text)] mb-2">Containers & Storage</h3>
+					<p class="text-xs text-[var(--c-muted)] leading-relaxed mb-3">OCI container layer caching, runc internals, SQLite FTS5 search, Litestream replication, and distributed storage.</p>
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/tag/storage") } class="text-xs font-mono text-[var(--c-link)] hover:underline">Explore tag/storage →</a>
+				</div>
+				<div class="border-l-2 border-[var(--c-border)] pl-4">
+					<h3 class="font-mono text-sm font-bold text-[var(--c-text)] mb-2">Security & Networks</h3>
+					<p class="text-xs text-[var(--c-muted)] leading-relaxed mb-3">Zero Trust Network Architecture (ZTNA), zero-day mitigation with LSM BPF, WireGuard tunnels, and open-weight AI pipelines.</p>
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/tag/security") } class="text-xs font-mono text-[var(--c-link)] hover:underline">Explore tag/security →</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	(function() {
+		const canvas = document.getElementById('knowledge-canvas');
+		if (!canvas) return;
+		const ctx = canvas.getContext('2d');
+
+		// Resize canvas to high DPI
+		function resize() {
+			const rect = canvas.getBoundingClientRect();
+			canvas.width = rect.width * window.devicePixelRatio;
+			canvas.height = rect.height * window.devicePixelRatio;
+			ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+		}
+		window.addEventListener('resize', resize);
+		resize();
+
+		// Graph Nodes Definition
+		const nodes = [
+			{ id: 'linux', label: 'Linux Kernel & eBPF', x: 180, y: 140, vx: 0, vy: 0, r: 24, tag: 'linux', color: '#88c0d0' },
+			{ id: 'go', label: 'Go Runtimes & GC', x: 380, y: 120, vx: 0, vy: 0, r: 22, tag: 'go', color: '#81a1c1' },
+			{ id: 'rust', label: 'Rust Memory Safety', x: 340, y: 280, vx: 0, vy: 0, r: 20, tag: 'rust', color: '#d08770' },
+			{ id: 'storage', label: 'Storage & Btrfs/DB', x: 160, y: 320, vx: 0, vy: 0, r: 20, tag: 'storage', color: '#a3be8c' },
+			{ id: 'security', label: 'Zero Trust & LSM', x: 500, y: 220, vx: 0, vy: 0, r: 22, tag: 'security', color: '#bf616a' },
+			{ id: 'docker', label: 'Containers & OCI', x: 260, y: 440, vx: 0, vy: 0, r: 18, tag: 'docker', color: '#b48ead' },
+			{ id: 'ai', label: 'AI Open-Weight', x: 520, y: 380, vx: 0, vy: 0, r: 18, tag: 'ai', color: '#ebcb8b' }
+		];
+
+		const links = [
+			{ source: 'linux', target: 'go' },
+			{ source: 'linux', target: 'rust' },
+			{ source: 'linux', target: 'storage' },
+			{ source: 'linux', target: 'security' },
+			{ source: 'linux', target: 'docker' },
+			{ source: 'go', target: 'security' },
+			{ source: 'rust', target: 'security' },
+			{ source: 'rust', target: 'linux' },
+			{ source: 'docker', target: 'storage' },
+			{ source: 'ai', target: 'go' },
+			{ source: 'ai', target: 'rust' }
+		];
+
+		let selectedNode = null;
+		let hoveredNode = null;
+		let isDragging = false;
+		let dragNode = null;
+
+		function getMousePos(evt) {
+			const rect = canvas.getBoundingClientRect();
+			return {
+				x: evt.clientX - rect.left,
+				y: evt.clientY - rect.top
+			};
+		}
+
+		canvas.addEventListener('mousedown', (e) => {
+			const pos = getMousePos(e);
+			for (const n of nodes) {
+				const dx = pos.x - n.x;
+				const dy = pos.y - n.y;
+				if (dx * dx + dy * dy < n.r * n.r) {
+					isDragging = true;
+					dragNode = n;
+					selectNode(n);
+					return;
+				}
+			}
+		});
+
+		window.addEventListener('mousemove', (e) => {
+			const pos = getMousePos(e);
+			if (isDragging && dragNode) {
+				dragNode.x = pos.x;
+				dragNode.y = pos.y;
+			} else {
+				let found = null;
+				for (const n of nodes) {
+					const dx = pos.x - n.x;
+					const dy = pos.y - n.y;
+					if (dx * dx + dy * dy < n.r * n.r) {
+						found = n;
+						break;
+					}
+				}
+				if (hoveredNode !== found) {
+					hoveredNode = found;
+					canvas.style.cursor = found ? 'pointer' : 'grab';
+				}
+			}
+		});
+
+		window.addEventListener('mouseup', () => {
+			isDragging = false;
+			dragNode = null;
+		});
+
+		function selectNode(node) {
+			selectedNode = node;
+			document.getElementById('inspector-tag').innerText = 'Domain: ' + node.tag.toUpperCase();
+			document.getElementById('inspector-title').innerText = node.label;
+			document.getElementById('inspector-desc').innerText = 'Filtered engineering dispatches under #' + node.tag;
+		}
+
+		// Animation loop
+		function draw() {
+			const rect = canvas.getBoundingClientRect();
+			const w = rect.width;
+			const h = rect.height;
+
+			ctx.clearRect(0, 0, w, h);
+
+			const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+			const lineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.1)';
+			const textColor = isDark ? '#eceff4' : '#1a202c';
+
+			// Draw Links
+			ctx.lineWidth = 1.5;
+			for (const link of links) {
+				const src = nodes.find(n => n.id === link.source);
+				const tgt = nodes.find(n => n.id === link.target);
+				if (!src || !tgt) continue;
+
+				ctx.beginPath();
+				ctx.moveTo(src.x, src.y);
+				ctx.lineTo(tgt.x, tgt.y);
+				ctx.strokeStyle = lineColor;
+				ctx.stroke();
+			}
+
+			// Draw Nodes
+			for (const n of nodes) {
+				ctx.beginPath();
+				ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+				ctx.fillStyle = n.color;
+				ctx.fill();
+
+				if (n === selectedNode || n === hoveredNode) {
+					ctx.lineWidth = 3;
+					ctx.strokeStyle = '#ffffff';
+					ctx.stroke();
+				}
+
+				// Label
+				ctx.font = '600 11px system-ui, sans-serif';
+				ctx.fillStyle = textColor;
+				ctx.textAlign = 'center';
+				ctx.fillText(n.label, n.x, n.y + n.r + 14);
+			}
+
+			requestAnimationFrame(draw);
+		}
+
+		draw();
+	})();
+	</script>
+}

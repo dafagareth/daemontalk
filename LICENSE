@@ -1,0 +1,46 @@
+Copyright (c) 2026 @dafagareth. All rights reserved.
+
+1. SOURCE CODE LICENSE (Non-Commercial / Source-Available)
+
+Permission is hereby granted to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to inspect, modify, run,
+and use the Software for PERSONAL, EDUCATIONAL, AND NON-COMMERCIAL PURPOSES ONLY,
+subject to the following conditions:
+
+- NO COMMERCIAL USE OR SALE:
+  You may NOT sell, resell, rent, lease, sublicense, commercialize, or monetize
+  the Software or any derivative work based upon it, whether as source code,
+  binary distributions, website templates, or hosted Software-as-a-Service (SaaS),
+  without prior explicit written authorization from the copyright holder.
+
+- ATTRIBUTION:
+  The original copyright notice and this permission notice must be retained in
+  all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+2. TRADEMARK & BRAND POLICY (Strict Reservation)
+
+The name "daemontalk", domain names, visual designs, logos, and personal brand
+identifiers are the exclusive intellectual property of @dafagareth.
+
+This license does NOT grant any permission to use the name "daemontalk", official
+logos, or any confusingly similar branding for any public forks, personal forks,
+or deployments.
+
+ANY PUBLIC FORK, RE-HOSTED INSTANCE, OR DERIVATIVE WORK MUST BE FULLY REBRANDED
+UNDER A DIFFERENT NAME AND LOGO.
+
+3. CONTENT & WRITTEN ARTICLES (All Rights Reserved)
+
+All articles, technical posts, guides (under content/posts/), and personal media
+are the original intellectual property of @dafagareth.
+
+Unauthorized reproduction, automated scraping for AI dataset training, commercial
+syndication, or uncredited re-publishing of written articles is strictly prohibited.

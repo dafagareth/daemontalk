@@ -1,0 +1,69 @@
+package templates
+
+templ shortcutsModal() {
+	<!-- Keyboard shortcuts overlay & modal -->
+	<div
+		class="shortcuts-overlay"
+		id="shortcuts-overlay"
+		onclick="if(event.target===this)this.classList.remove('open')"
+	>
+		<div class="shortcuts-modal">
+			<div class="flex items-center justify-between mb-5">
+				<p class="text-sm font-medium text-text">Keyboard Shortcuts</p>
+				<button
+					onclick="document.getElementById('shortcuts-overlay').classList.remove('open')"
+					class="text-lg leading-none text-muted hover:text-text bg-none border-none cursor-pointer"
+				>×</button>
+			</div>
+			<div class="flex flex-col gap-2.5">
+				@shortcutRow("?", "Show this help")
+				@shortcutRow("/", "Search posts")
+				@shortcutRow("~ / `", "Open Terminal")
+				@shortcutRow("j / k", "Navigate blog list")
+				@shortcutRow("Enter", "Open focused item")
+				@shortcutRow("g h", "Go to Home")
+				@shortcutRow("g b", "Go to Blog")
+				@shortcutRow("g p", "Go to Projects")
+				@shortcutRow("g t", "Go to Terminal")
+				@shortcutRow("g l", "Go to TIL")
+				@shortcutRow("g u", "Go to Uses")
+				@shortcutRow("Esc", "Close / unfocus")
+			</div>
+		</div>
+	</div>
+}
+
+templ shortcutRow(key string, description string) {
+	<div class="flex items-center justify-between gap-4">
+		<kbd class="text-xs font-mono px-2 py-0.5 border border-border rounded-none bg-bg text-muted shrink-0">{ key }</kbd>
+		<span class="text-xs text-muted text-right">{ description }</span>
+	</div>
+}
+
+// confirmModal is the custom confirm dialog that replaces the browser's
+// window.confirm() (reused by both public pages (blog comment delete) and
+// the admin shell (post delete, comment delete) via hx-confirm/data-confirm).
+templ confirmModal() {
+	<div
+		class="shortcuts-overlay"
+		id="confirm-overlay"
+		onclick="if(event.target===this)this.querySelector('[data-confirm-cancel]').click()"
+	>
+		<div class="shortcuts-modal">
+			<p id="confirm-message" class="text-sm text-text mb-5"></p>
+			<div class="flex items-center justify-end gap-3">
+				<button type="button" data-confirm-cancel class="text-sm px-4 py-2 rounded-none border border-border text-muted hover:bg-hover transition-colors">Batal</button>
+				<button type="button" data-confirm-ok class="text-sm px-4 py-2 rounded-none bg-[var(--c-warn)] text-white font-medium hover:brightness-110 transition-all">Hapus</button>
+			</div>
+		</div>
+	</div>
+	
+}
+
+templ layoutScripts() {
+	<script src="/static/js/layout.js" defer></script>
+	
+	
+	<!-- Scroll-reveal via Intersection Observer -->
+	
+}

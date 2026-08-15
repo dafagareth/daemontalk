@@ -1,0 +1,119 @@
+@theme {
+  --font-serif: Lora, Merriweather, "PT Serif", serif;
+}
+/* Semantic color tokens — Warm Neutral palette */
+:root {
+  --c-bg:        #fafafa;
+  --c-surface:   #ffffff;
+  --c-nav:       #ffffff;
+  --c-footer:    #f4f4f5;
+  --c-text:      #18181b;
+  --c-muted:     #71717a;
+  --c-border:    #e4e4e7;
+  --c-hover:     #f4f4f5;
+  --c-chip:      #f4f4f5;
+  --c-link:      #1d6fa4;
+  --c-link-bg:   #ddeef8;
+  --c-link-text: #1d6fa4;
+  --c-ok:        #276a45;
+  --c-ok-bg:     #e0f0e8;
+  --c-warn:      #b03a2e;
+  --c-warn-bg:   #faeae8;
+  --c-accent:    #e11d48;
+
+  /* GitHub Light Terminal Theme */
+  --term-bg:       #ffffff;
+  --term-title-bg: #f6f8fa;
+  --term-border:   #d0d7de;
+  --term-text:     #24292f;
+  --term-muted:    #57606a;
+  --term-prompt:   #1a7f37;
+  --term-link:     #0969da;
+  --term-chip-bg:  #eaeef2;
+  --term-cursor:   #1a7f37;
+}
+
+/* System dark preference (fallback when no manual toggle) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="sepia"]) {
+    --c-bg:        #09090b;
+    --c-surface:   #121214;
+    --c-nav:       #121214;
+    --c-footer:    #09090b;
+    --c-text:      #f4f4f5;
+    --c-muted:     #a1a1aa;
+    --c-border:    #27272a;
+    --c-hover:     #18181b;
+    --c-chip:      #18181b;
+    --c-link:      #60a5fa;
+    --c-link-bg:   #1a2d45;
+    --c-link-text: #60a5fa;
+    --c-ok:        #4ade80;
+    --c-ok-bg:     #1a3525;
+    --c-warn:      #f87171;
+    --c-warn-bg:   #3d1515;
+    --c-accent:    #fb7185;
+
+    /* GitHub Dark Terminal Theme */
+    --term-bg:       #0d1117;
+    --term-title-bg: #161b22;
+    --term-border:   #30363d;
+    --term-text:     #c9d1d9;
+    --term-muted:    #8b949e;
+    --term-prompt:   #7ee787;
+    --term-link:     #58a6ff;
+    --term-chip-bg:  #21262d;
+    --term-cursor:   #7ee787;
+  }
+}
+
+/* Manual dark toggle */
+[data-theme="dark"] {
+    --c-bg:        #09090b;
+    --c-surface:   #121214;
+    --c-nav:       #121214;
+    --c-footer:    #09090b;
+    --c-text:      #f4f4f5;
+    --c-muted:     #a1a1aa;
+    --c-border:    #27272a;
+    --c-hover:     #18181b;
+    --c-chip:      #18181b;
+  --c-link:      #60a5fa;
+  --c-link-bg:   #1a2d45;
+  --c-link-text: #60a5fa;
+  --c-ok:        #4ade80;
+  --c-ok-bg:     #1a3525;
+  --c-warn:      #f28b82;
+  --c-warn-bg:   #4a1c1a;
+  --c-accent:    #fb7185;
+
+  /* GitHub Dark Terminal Theme */
+  --term-bg:       #0d1117;
+  --term-title-bg: #161b22;
+  --term-border:   #30363d;
+  --term-text:     #c9d1d9;
+  --term-muted:    #8b949e;
+  --term-prompt:   #7ee787;
+  --term-link:     #58a6ff;
+  --term-chip-bg:  #21262d;
+  --term-cursor:   #7ee787;
+}
+
+/* Manual sepia toggle for reading */
+[data-theme="sepia"] {
+  --c-bg:        #fbf0d9;
+  --c-surface:   #f2e5c8;
+  --c-nav:       #f2e5c8;
+  --c-footer:    #ebdcb9;
+  --c-text:      #433422;
+  --c-muted:     #7a6345;
+  --c-border:    #d9c8a9;
+  --c-hover:     #ebdcb9;
+  --c-chip:      #ebdcb9;
+}
+
+/* Colorize SVG icons to dark brown (#433422) in sepia mode (logo stays black) */
+[data-theme="sepia"] .icon-moon,
+[data-theme="sepia"] .icon-sun {
+  filter: sepia(100%) hue-rotate(340deg) saturate(50%) brightness(30%);
+}

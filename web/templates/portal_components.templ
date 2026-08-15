@@ -1,0 +1,133 @@
+package templates
+
+import (
+	"fmt"
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) {
+	<article class="group">
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-5 overflow-hidden">
+			@postThumbnailImg(p)
+		</a>
+		if !hideTag && len(p.Tags) > 0 {
+			<span class="text-accent text-xs font-bold uppercase tracking-wider mb-2 block">{ p.Tags[0] }</span>
+		}
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } data-slug={ p.Slug } class="block mb-3">
+			<h2 class="display text-3xl sm:text-4xl lg:text-5xl font-black text-text group-hover:text-link transition-colors leading-[1.1] tracking-tight">
+				{ p.Title }
+			</h2>
+		</a>
+		if p.Description != "" {
+			<p class="text-sm sm:text-base text-muted line-clamp-3 leading-relaxed mb-4">
+				{ p.Description }
+			</p>
+		}
+		<div class="flex items-center gap-2 text-xs font-mono text-muted mt-4">
+			<span class="font-bold text-text">
+				if p.Author != "" {
+					{ p.Author }
+				} else {
+					daemontalk team
+				}
+			</span>
+			<span>·</span>
+			<span>{ p.Date.Format("02 Jan 2006") }</span>
+		</div>
+	</article>
+}
+
+templ portalStrictSubStory(ui i18n.UI, p post.Post, lang string, hideTag bool) {
+	<article class="group flex flex-col h-full">
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-4 overflow-hidden">
+			@postThumbnailImg(p)
+		</a>
+		if !hideTag && len(p.Tags) > 0 {
+			<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1.5 block">{ p.Tags[0] }</span>
+		}
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } data-slug={ p.Slug } class="block mb-2">
+			<h3 class="display text-xl sm:text-2xl font-extrabold text-text group-hover:text-link transition-colors leading-tight tracking-tight line-clamp-3">
+				{ p.Title }
+			</h3>
+		</a>
+		if p.Description != "" {
+			<p class="text-xs sm:text-sm text-muted line-clamp-2 leading-relaxed mb-4">
+				{ p.Description }
+			</p>
+		}
+		<div class="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-3">
+			<span class="font-bold text-text">
+				if p.Author != "" {
+					{ p.Author }
+				} else {
+					daemontalk team
+				}
+			</span>
+			<span>·</span>
+			<span>{ p.Date.Format("02 Jan 2006") }</span>
+		</div>
+	</article>
+}
+
+templ portalStrictFeatureStory(ui i18n.UI, p post.Post, lang string) {
+	<article class="group relative aspect-[16/9] w-full bg-surface overflow-hidden">
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block w-full h-full">
+			@postThumbnailImg(p)
+			// Gradient overlay
+			<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+			// Text at bottom
+			<div class="absolute bottom-0 left-0 w-full p-3 sm:p-4">
+				<h4 class="display text-white text-sm sm:text-base font-extrabold leading-snug line-clamp-2 shadow-sm">
+					{ p.Title }
+				</h4>
+			</div>
+		</a>
+	</article>
+}
+
+templ portalStrictListItem(ui i18n.UI, p post.Post, lang string) {
+	<article class="group flex items-start gap-4">
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block w-24 sm:w-32 aspect-[16/9] bg-surface shrink-0 overflow-hidden">
+			@postThumbnailImg(p)
+		</a>
+		<div class="flex-1 flex flex-col justify-between h-full py-0.5 min-w-0">
+			if len(p.Tags) > 0 {
+				<span class="text-accent text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-1 block truncate">{ p.Tags[0] }</span>
+			}
+			<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } data-slug={ p.Slug } class="block mb-1">
+				<h5 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors line-clamp-3 leading-snug">
+					{ p.Title }
+				</h5>
+			</a>
+		</div>
+	</article>
+}
+
+templ portalResponsiveTagSubStory(ui i18n.UI, p post.Post, lang string) {
+	<article class="group flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch h-full">
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-4 overflow-hidden">
+			@postThumbnailImg(p)
+		</a>
+		<div class="flex-1 min-w-0 flex flex-col justify-center lg:justify-start">
+			<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } data-slug={ p.Slug } class="block mb-1 lg:mb-2">
+				<h3 class="display text-sm sm:text-base lg:text-xl sm:lg:text-2xl font-extrabold text-text group-hover:text-link transition-colors leading-tight tracking-tight line-clamp-3">
+					{ p.Title }
+				</h3>
+			</a>
+
+			<!-- Meta Row -->
+			<div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1 sm:mb-2 text-[9px] sm:text-[11px] font-mono text-muted uppercase tracking-wider">
+				<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
+				<span class="hidden sm:inline">·</span>
+				<span class="hidden sm:inline">{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+			</div>
+
+			if p.Description != "" {
+				<p class="hidden lg:block text-xs sm:text-sm text-muted line-clamp-2 leading-relaxed mb-4">
+					{ p.Description }
+				</p>
+			}
+		</div>
+	</article>
+}

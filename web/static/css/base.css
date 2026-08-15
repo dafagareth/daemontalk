@@ -1,0 +1,55 @@
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Offset anchor targets so sticky navbar never overlaps headings */
+  :target,
+  [id],
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    scroll-margin-top: 5.5rem;
+  }
+
+  code, kbd, pre, .font-mono {
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+
+  /* Display face untuk judul halaman & artikel */
+  .display {
+    font-family: 'Bricolage Grotesque', 'DM Sans', ui-sans-serif, sans-serif;
+    letter-spacing: -0.015em;
+  }
+
+  /* Theme toggle icons */
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* Theme logo switching */
+  .logo-light { display: block; }
+  .logo-dark  { display: none; }
+
+  [data-theme="dark"] .logo-light { display: none; }
+  [data-theme="dark"] .logo-dark  { display: block; }
+
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) .icon-sun  { display: block; }
+    html:not([data-theme="light"]) .icon-moon { display: none; }
+    html:not([data-theme="light"]) .logo-light { display: none; }
+    html:not([data-theme="light"]) .logo-dark  { display: block; }
+  }
+}

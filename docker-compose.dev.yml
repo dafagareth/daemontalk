@@ -1,0 +1,31 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      ADMIN_TOKEN: "${ADMIN_TOKEN:-change-me-in-dotenv}"
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-587}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_TO:   "${SMTP_TO:-}"
+    volumes:
+      # Bind-mount the entire project folder to allow hot-reloading
+      - .:/app
+      # Avoid mounting host node_modules to keep container node_modules isolated
+      - /app/node_modules
+      # Avoid mounting host tmp / build files if needed
+      - /app/bin
+      # Persist SQLite database
+      - comments-data:/app/data
+    # Run as host user so container process owns its own bind-mounted files.
+    # No chmod 777 needed — the container user IS the file owner.
+    user: "${UID:-1000}:${GID:-1000}"
+    restart: unless-stopped
+
+volumes:
+  comments-data:

@@ -1,0 +1,131 @@
+package templates
+
+import (
+	"fmt"
+	"time"
+
+	"daemontalk/internal/comment"
+	"daemontalk/internal/i18n"
+)
+
+func fmtCommentTime(t time.Time) string {
+	return t.Local().Format("2 Jan 2006, 15:04")
+}
+
+// CommentGroup groups consecutive comments posted by the same user.
+type CommentGroup struct {
+	Name      string
+	CreatedAt time.Time
+	Comments  []comment.Comment
+}
+
+func groupComments(comments []comment.Comment) []CommentGroup {
+	var groups []CommentGroup
+	for _, c := range comments {
+		if len(groups) > 0 && groups[len(groups)-1].Name == c.Name {
+			last := &groups[len(groups)-1]
+			last.Comments = append(last.Comments, c)
+		} else {
+			groups = append(groups, CommentGroup{
+				Name:      c.Name,
+				CreatedAt: c.CreatedAt,
+				Comments:  []comment.Comment{c},
+			})
+		}
+	}
+	return groups
+}
+
+// commentsSection is the whole block: the live list plus the submit form.
+templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.Comment, isAdmin bool, visitorName string) {
+	<section class="mt-12 pt-8">
+		@commentList(ui, comments, isAdmin, slug, lang, visitorName)
+		<form
+			class="mt-6 flex flex-col gap-3"
+			hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments" }
+			hx-target="#comment-list"
+			hx-swap="outerHTML"
+			hx-disabled-elt="find button[type='submit']"
+			hx-on::after-request="if(event.detail.successful){ this.reset(); var ta = this.querySelector('textarea'); if(ta) ta.value = ''; }"
+		>
+			<!-- Honeypot: bots fill this, humans never see it -->
+			<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
+			<p class="text-xs text-muted font-mono px-1">
+				Posting as <span class="font-bold">{ visitorName }</span>
+			</p>
+			<textarea
+				name="body"
+				required
+				maxlength="2000"
+				rows="3"
+				placeholder={ ui.Comments_BodyLabel }
+				class="w-full px-3 py-2 text-sm rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-[var(--c-link)] transition-colors resize-y"
+			></textarea>
+			<div class="flex justify-end">
+				<button
+					type="submit"
+					class="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+				>
+					<span class="htmx-indicator spinner"></span>
+					{ ui.Comments_Submit }
+				</button>
+			</div>
+		</form>
+	</section>
+}
+
+// CommentList is the exported entrypoint the POST handler renders to swap the
+// list in-place via HTMX.
+templ CommentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string) {
+	@commentList(ui, comments, isAdmin, slug, lang, visitorName)
+}
+
+// commentList renders the heading + all comments. It is swapped on POST.
+templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string) {
+	<div id="comment-list">
+		<h2 class="text-base font-medium text-text mb-5">
+			{ ui.Comments_Heading }
+			if len(comments) > 0 {
+				<span class="text-muted font-normal">({ fmt.Sprintf("%d", len(comments)) })</span>
+			}
+		</h2>
+		if len(comments) == 0 {
+			<p class="text-sm text-muted">{ ui.Comments_Empty }</p>
+		} else {
+			<div class="flex flex-col gap-4">
+				for _, g := range groupComments(comments) {
+					@commentGroupItem(ui, g, isAdmin, slug, lang)
+				}
+			</div>
+		}
+	</div>
+}
+
+templ commentGroupItem(ui i18n.UI, g CommentGroup, isAdmin bool, slug string, lang string) {
+	<div class="py-3 border-b border-border/40 last:border-0 last:pb-0">
+		<div class="flex items-baseline gap-2 flex-wrap mb-2">
+			<span class="text-sm font-semibold font-mono text-text">{ g.Name }</span>
+			<time datetime={ g.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time text-xs text-muted font-mono">{ fmtCommentTime(g.CreatedAt) }</time>
+		</div>
+		<div class="space-y-2">
+			for _, c := range g.Comments {
+				<div class="flex items-start justify-between gap-4 group">
+					<div class="text-sm text-text break-words leading-relaxed flex-1">
+						@templ.Raw(string(renderCommentBody(c.Body)))
+					</div>
+					if isAdmin {
+						<button
+							class="text-xs text-[var(--c-warn)] hover:underline cursor-pointer font-mono shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+							hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
+							hx-target="#comment-list"
+							hx-swap="outerHTML"
+							hx-confirm="Hapus komentar ini?"
+						>
+							{ ui.Comments_Delete }
+						</button>
+					}
+				</div>
+			}
+		</div>
+	</div>
+}

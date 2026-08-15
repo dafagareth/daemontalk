@@ -1,0 +1,163 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, lang string, viewCounts map[string]int) {
+	{{
+		mainCats, midCats, otherCats := getPortalCategories(posts)
+	}}
+	@portalHeroTop(ui, posts, lang, viewCounts, true)
+
+	// SIDEBAR CARDS + MAIN CATEGORIES: side-by-side, separate boxes
+	@portalSidebarWithCategories(ui, mainCats, tagCounts, lang)
+
+	// MIDDLE CATEGORIES (DEVOPS, BACKEND, DATA & AI) — 3 Columns below
+	@portalStrictCategoryGrid(ui, midCats, lang)
+
+	// OTHER TOPICS (Secondary)
+	@portalStrictCategoryGrid(ui, otherCats, lang)
+}
+
+templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int, showSidebarTabs bool) {
+	// STRICT WIREFRAME HERO SECTION
+	<div class="border-0 sm:border-2 sm:border-border max-w-6xl 2xl:max-w-7xl mx-auto mb-12 sm:mt-4 sm:mb-8 bg-bg">
+		<div class="w-full">
+			<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
+			
+			// LEFT COLUMN (65% -> 8 cols)
+			<div class="lg:col-span-8 flex flex-col">
+				// Lead Story
+				if len(posts) > 0 {
+					<div class="py-4 sm:p-4 lg:p-5 border-b border-border">
+						@portalStrictLeadStory(ui, posts[0], lang, false)
+					</div>
+				}
+				
+				// 4 Sub Stories (1 col mobile, 2x2 grid sm)
+				if len(posts) > 4 {
+					<div class="grid grid-cols-1 sm:grid-cols-2 flex-1">
+						for i := 1; i <= 4 && i < len(posts); i++ {
+							<div class="py-4 sm:p-4 lg:p-5 border-t border-border [&:nth-child(n+3)]:border-t sm:[&:nth-child(even)]:border-l">
+								@portalStrictSubStory(ui, posts[i], lang, false)
+							</div>
+						}
+					</div>
+				} else if len(posts) > 2 {
+					<div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[var(--c-border)] flex-1 border-t border-border">
+						for i := 1; i <= 2 && i < len(posts); i++ {
+							<div class="py-4 sm:p-4 lg:p-5">
+								@portalStrictSubStory(ui, posts[i], lang, false)
+							</div>
+						}
+					</div>
+				}
+			</div>
+
+			// RIGHT COLUMN (35% -> 4 cols)
+			<div class="lg:col-span-4 flex flex-col">
+				// 2 Stacked Feature Stories (Text below image as requested)
+				for i := 5; i <= 6 && i < len(posts); i++ {
+					<div class="py-4 sm:p-5 border-b border-border">
+						@portalStrictSubStory(ui, posts[i], lang, false)
+					</div>
+				}
+
+				if showSidebarTabs {
+					// Latest News Tabs
+					<div class="flex border-b border-border bg-surface">
+						<button onclick="document.getElementById('tab-latest').classList.remove('hidden'); document.getElementById('tab-popular').classList.add('hidden'); this.classList.add('text-accent'); this.classList.remove('text-text'); this.nextElementSibling.classList.remove('text-accent'); this.nextElementSibling.classList.add('text-text');" class="flex-1 py-3 text-center text-xs font-bold text-accent border-r border-border uppercase tracking-wider cursor-pointer">
+							if lang == "id" {
+								TERBARU
+							} else {
+								LATEST NEWS
+							}
+						</button>
+						<button onclick="document.getElementById('tab-popular').classList.remove('hidden'); document.getElementById('tab-latest').classList.add('hidden'); this.classList.add('text-accent'); this.classList.remove('text-text'); this.previousElementSibling.classList.remove('text-accent'); this.previousElementSibling.classList.add('text-text');" class="flex-1 py-3 text-center text-xs font-bold text-text uppercase tracking-wider cursor-pointer transition-colors">
+							if lang == "id" {
+								TERPOPULER
+							} else {
+								MOST POPULAR
+							}
+						</button>
+					</div>
+
+					// News List
+					<div class="p-4 sm:p-5 flex flex-col gap-5 flex-1 bg-surface">
+						// TAB LATEST
+						<div id="tab-latest" class="flex flex-col divide-y divide-[var(--c-border)]/50">
+							for i := 7; i < len(posts) && i < 14; i++ {
+								<div class="py-3 first:pt-0">
+									@portalStrictListItem(ui, posts[i], lang)
+								</div>
+							}
+						</div>
+
+						// TAB POPULAR
+						<div id="tab-popular" class="hidden flex flex-col divide-y divide-[var(--c-border)]/50">
+							for _, p := range getPopularPosts(posts, viewCounts, 7) {
+								<div class="py-3 first:pt-0">
+									@portalStrictListItem(ui, p, lang)
+								</div>
+							}
+						</div>
+					</div>
+				} else {
+					// Plain News List (No Tabs) to fill vertical space
+					<div class="p-4 sm:p-5 flex flex-col divide-y divide-[var(--c-border)]/50 flex-1 bg-surface">
+						for i := 7; i < len(posts) && i < 14; i++ {
+							<div class="py-3 first:pt-0">
+								@portalStrictListItem(ui, posts[i], lang)
+							</div>
+						}
+					</div>
+				}
+			</div>
+
+		</div>
+	</div>
+	</div>
+}
+
+templ portalTagHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int) {
+	<div class="border-0 sm:border-2 sm:border-border max-w-6xl 2xl:max-w-7xl mx-auto mb-4 sm:mb-8 sm:mt-4 bg-bg flex flex-col">
+		
+		// ROW 1: 1 Big Left, 2 Stacked Right
+		if len(posts) > 0 {
+			<div class="w-full border-b border-border">
+				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
+					
+					// LEFT COLUMN (65% -> 8 cols) - 1 Big Post
+					<div class="lg:col-span-8 py-4 sm:p-4 lg:p-5 flex flex-col">
+						@portalStrictLeadStory(ui, posts[0], lang, true)
+					</div>
+
+					// RIGHT COLUMN (35% -> 4 cols) - 2 Posts
+					<div class="lg:col-span-4 flex flex-col divide-y divide-[var(--c-border)]">
+						for i := 1; i <= 2 && i < len(posts); i++ {
+							<div class="py-4 sm:p-4 lg:p-5 flex-1 flex flex-col justify-center">
+								@portalResponsiveTagSubStory(ui, posts[i], lang)
+							</div>
+						}
+					</div>
+
+				</div>
+			</div>
+		}
+
+		// ROW 2: 3 Posts (Kotak dari kiri ke kanan)
+		if len(posts) > 3 {
+			<div class="w-full">
+				<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]">
+					for i := 3; i <= 5 && i < len(posts); i++ {
+						<div class="py-4 sm:p-4 lg:p-5">
+							@portalResponsiveTagSubStory(ui, posts[i], lang)
+						</div>
+					}
+				</div>
+			</div>
+		}
+	</div>
+}

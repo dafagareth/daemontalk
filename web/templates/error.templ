@@ -1,0 +1,70 @@
+package templates
+
+import (
+	"fmt"
+
+	"daemontalk/internal/i18n"
+)
+
+// NotFound renders a clean, minimal 404 Not Found page.
+templ NotFound(ui i18n.UI, lang string) {
+	@ErrorPage(404, ui.NotFound_Title, ui.NotFound_Body, ui.NotFound_Home, ui, lang)
+}
+
+// Forbidden renders a clean, minimal 403 Forbidden page.
+templ Forbidden(ui i18n.UI, lang string, reason string) {
+	@ErrorPage(403, ui.Forbidden_Title, ui.Forbidden_Body, ui.Forbidden_Home, ui, lang)
+}
+
+// ServerError renders a clean, minimal 500 Internal Server Error page.
+templ ServerError(ui i18n.UI, lang string, detail string) {
+	@ErrorPage(500, ui.ServerError_Title, ui.ServerError_Body, ui.ServerError_Home, ui, lang)
+}
+
+// CustomError renders a custom HTTP status error page.
+templ CustomError(code int, title string, message string, ui i18n.UI, lang string) {
+	@ErrorPage(code, title, message, ui.NotFound_Home, ui, lang)
+}
+
+// ErrorPage renders a simple, clean, minimalist error page.
+templ ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) {
+	<div class="max-w-3xl mx-auto px-6 py-20 sm:py-32">
+		<div class="space-y-6 max-w-lg">
+			<div class="flex items-center gap-6 mb-2">
+				<div class="glitch-wrapper">
+					<div class="glitch-text" data-text={ fmt.Sprintf("%d", code) }>
+						{ fmt.Sprintf("%d", code) }
+					</div>
+				</div>
+				<!-- Animated terminal monitor SVG -->
+				@IconMonitor("w-16 h-16 text-link animate-pulse")
+			</div>
+			<h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-text">
+				{ title }
+			</h1>
+			<p class="text-sm sm:text-base text-muted leading-relaxed">
+				{ message }
+			</p>
+			<div class="pt-2 flex flex-wrap items-center gap-3">
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/") }
+					class="text-xs font-medium px-4 py-2 bg-[var(--c-link)] text-white hover:brightness-110 transition-all shadow-sm"
+				>
+					{ homeLabel }
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/til") }
+					class="text-xs font-medium px-4 py-2 border border-border text-muted hover:text-text hover:bg-hover transition-colors"
+				>
+					{ ui.Nav_TIL }
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/behind") }
+					class="text-xs font-medium px-4 py-2 border border-border text-muted hover:text-text hover:bg-hover transition-colors"
+				>
+					{ ui.Nav_Behind }
+				</a>
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,20 @@
+package templates
+
+import "html/template"
+
+templ ChangelogPage(body template.HTML, lang string) {
+	<section class="container-page py-8 sm:py-12">
+		<div class="max-w-5xl">
+		if lang == "id" {
+			<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">Catatan Perubahan</h1>
+			<p class="text-sm text-muted mb-10">Daftar fitur dan perubahan yang dirilis untuk situs ini.</p>
+		} else {
+			<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">Changelog</h1>
+			<p class="text-sm text-muted mb-10">A running log of features and changes shipped to this site.</p>
+		}
+		<div class="prose">
+			@templ.Raw(string(body))
+		</div>
+		</div>
+	</section>
+}
