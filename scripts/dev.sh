@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Helper buat ngembangin daemontalk. Jalankan: ./dev.sh <perintah>
+# DaemonTalk Local Development Helper
+# Usage: ./scripts/dev.sh <command>
 #
-#   ./dev.sh up        build penuh (templ + css + go) lalu jalankan server
-#   ./dev.sh run       sama dengan 'up'
-#   ./dev.sh watch     build penuh lalu watch perubahan file secara otomatis
-#   ./dev.sh build     build penuh tanpa menjalankan server
-#   ./dev.sh css       rebuild Tailwind CSS saja
-#   ./dev.sh templ     generate templ saja
-#   ./dev.sh restart   jalankan ulang server (refresh cache GitHub, tanpa build)
-#   ./dev.sh stop      matikan server
-#   ./dev.sh logs      lihat log server (live)
-#   ./dev.sh help      tampilkan bantuan ini
+# Commands:
+#   up / run       Full build (templ + css + go) and start server
+#   watch          Full build and start file watcher for auto-reload
+#   build          Full build without starting server
+#   css            Rebuild Tailwind CSS bundle only
+#   templ          Run templ generate only
+#   restart        Restart server process
+#   stop           Terminate running development server
+#   logs           Stream server logs
+#   help           Show usage help
 
 set -euo pipefail
 
-# Selalu kerja dari root project (parent dari folder scripts/).
 cd "$(dirname "$(dirname "$0")")"
 
 PORT=8080
@@ -23,22 +23,22 @@ LOG=/tmp/daemontalk.log
 CSS_IN=web/static/css/input.css
 CSS_OUT=web/static/css/main.css
 
-say()  { printf '\033[1;36m=> %s\033[0m\n' "$*"; }
-ok()   { printf '\033[1;32m=> %s\033[0m\n' "$*"; }
-warn() { printf '\033[1;33m=> %s\033[0m\n' "$*"; }
+say()  { printf '\033[1;36m[info] %s\033[0m\n' "$*"; }
+ok()   { printf '\033[1;32m[ok] %s\033[0m\n' "$*"; }
+warn() { printf '\033[1;33m[warn] %s\033[0m\n' "$*"; }
 
 gen_templ() {
-	say "templ generate"
+	say "Running templ generate..."
 	templ generate
 }
 
 build_css() {
-	say "rebuild Tailwind CSS"
+	say "Rebuilding Tailwind CSS..."
 	npx @tailwindcss/cli -i "$CSS_IN" -o "$CSS_OUT" --minify 2>/dev/null
 }
 
 build_go() {
-	say "go build -> $BIN"
+	say "Compiling Go binary -> $BIN"
 	go build -o "$BIN" .
 }
 
@@ -48,9 +48,9 @@ stop_server() {
 }
 
 start_server() {
-	say "jalankan server di http://localhost:${PORT}"
+	say "Starting development server at http://localhost:${PORT}"
 	if [ ! -f .env ]; then
-		warn "peringatan: .env tidak ada, GITHUB_TOKEN tidak dimuat"
+		warn ".env file not found, running with default environment"
 	fi
 	set -a
 	# shellcheck disable=SC1091
@@ -58,24 +58,14 @@ start_server() {
 	set +a
 	nohup "$BIN" >"$LOG" 2>&1 &
 	sleep 0.5
-	ok "server jalan  (log: $LOG)"
+	ok "Server running (logs: $LOG)"
 }
 
-# ---------------------------------------------------------------------------
-# watch: hot-rebuild saat file berubah
-# Strategi: pakai inotifywait jika ada, fallback ke polling checksum sha1sum.
-# Klasifikasi perubahan:
-#   .templ          -> templ generate + go build + restart
-#   .go             -> go build + restart
-#   input.css / web/static/**  -> css rebuild saja, restart
-#   content/posts/** (markdown) -> restart saja (tidak perlu rebuild)
-# ---------------------------------------------------------------------------
 watch_loop() {
 	local changed=""
 	local last_hash=""
 	local cur_hash=""
 
-	# Kumpulkan semua file yang ingin dipantau.
 	_collect_hash() {
 		find web internal main.go \
 			-type f \( -name "*.go" -o -name "*.templ" -o -name "*.css" \) \
@@ -84,32 +74,29 @@ watch_loop() {
 	}
 
 	if command -v inotifywait &>/dev/null; then
-		say "menggunakan inotifywait untuk deteksi perubahan"
+		say "Using inotifywait for filesystem change detection"
 		_watch_inotify
 	else
-		warn "inotifywait tidak ditemukan, memakai polling setiap 1 detik"
-		warn "(install inotify-tools untuk respons yang lebih cepat)"
+		warn "inotifywait not found, falling back to 1s interval polling"
 		_watch_poll
 	fi
 }
 
 _watch_inotify() {
-	say "memantau perubahan... (Ctrl+C untuk berhenti)"
+	say "Watching for filesystem changes... (Press Ctrl+C to stop)"
 	while true; do
-		# Tunggu event dari inotifywait, tangkap nama file yang berubah.
 		changed=$(inotifywait -q -r \
 			--event modify,create,delete,move \
 			--format '%w%f' \
 			web internal main.go content/posts 2>/dev/null | head -1) || true
 
 		[ -z "$changed" ] && continue
-
 		_handle_change "$changed"
 	done
 }
 
 _watch_poll() {
-	say "memantau perubahan... (Ctrl+C untuk berhenti)"
+	say "Watching for filesystem changes via polling... (Press Ctrl+C to stop)"
 	local last_hash=""
 	local cur_hash=""
 
@@ -120,7 +107,6 @@ _watch_poll() {
 		cur_hash=$(_collect_hash)
 
 		if [ "$cur_hash" != "$last_hash" ]; then
-			# Temukan file mana yang berubah.
 			changed=$(diff <(echo "$last_hash") <(echo "$cur_hash") \
 				| grep '^[<>]' | awk '{print $NF}' | head -1)
 			last_hash="$cur_hash"
@@ -131,12 +117,11 @@ _watch_poll() {
 
 _handle_change() {
 	local file="$1"
-	say "perubahan terdeteksi: $file"
+	say "Change detected: $file"
 
 	local rebuild_templ=0
 	local rebuild_go=0
 	local rebuild_css=0
-	local restart_only=0
 
 	case "$file" in
 		*.templ)
@@ -150,7 +135,7 @@ _handle_change() {
 			rebuild_css=1
 			;;
 		content/posts/*)
-			restart_only=1
+			# Markdown content reload handled at startup or in-memory
 			;;
 		*)
 			rebuild_go=1
@@ -160,15 +145,15 @@ _handle_change() {
 	local failed=0
 
 	if [ "$rebuild_templ" = 1 ]; then
-		gen_templ || { warn "templ generate gagal, skip restart"; failed=1; }
+		gen_templ || { warn "templ generate failed, skipping restart"; failed=1; }
 	fi
 
 	if [ "$failed" = 0 ] && [ "$rebuild_go" = 1 ]; then
-		build_go || { warn "go build gagal, server tidak direstart"; failed=1; }
+		build_go || { warn "go build failed, server not restarted"; failed=1; }
 	fi
 
 	if [ "$rebuild_css" = 1 ]; then
-		build_css || warn "css build gagal"
+		build_css || warn "css build failed"
 	fi
 
 	if [ "$failed" = 0 ]; then
@@ -176,15 +161,6 @@ _handle_change() {
 		start_server
 	fi
 }
-
-_collect_hash() {
-	find web internal main.go \
-		-type f \( -name "*.go" -o -name "*.templ" -o -name "*.css" \) \
-		2>/dev/null | sort | xargs sha1sum 2>/dev/null
-	find content/posts -type f -name "*.md" 2>/dev/null | sort | xargs sha1sum 2>/dev/null
-}
-
-# ---------------------------------------------------------------------------
 
 cmd="${1:-up}"
 case "$cmd" in
@@ -207,11 +183,11 @@ case "$cmd" in
 		gen_templ
 		build_css
 		build_go
-		say "selesai build (server tidak dijalankan)"
+		ok "Build completed."
 		;;
 	css)
 		build_css
-		ok "CSS selesai. Hard refresh browser (Ctrl+Shift+R)"
+		ok "CSS build completed."
 		;;
 	templ)
 		gen_templ
@@ -222,18 +198,17 @@ case "$cmd" in
 		;;
 	stop)
 		stop_server
-		ok "server dimatikan"
+		ok "Server stopped."
 		;;
 	logs)
-		say "log live (Ctrl+C untuk keluar)"
+		say "Streaming live logs (Ctrl+C to exit)..."
 		tail -f "$LOG"
 		;;
 	help | -h | --help)
 		grep '^#' "$0" | grep -v '^#!' | sed 's/^# \{0,1\}//'
 		;;
 	*)
-		echo "perintah tidak dikenal: $cmd" >&2
-		echo "jalankan: ./dev.sh help" >&2
+		echo "[error] Unknown command: '$cmd'. Run './scripts/dev.sh help' for usage." >&2
 		exit 1
 		;;
 esac
