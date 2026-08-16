@@ -10,6 +10,7 @@ import (
 
 	"daemontalk/internal/post"
 	"daemontalk/internal/postdb"
+	"daemontalk/web/templates"
 )
 
 func TestIsAdmin(t *testing.T) {
@@ -220,5 +221,48 @@ func TestAdminUnauthorizedReturnsNotFoundPage(t *testing.T) {
 	body := rec.Body.String()
 	if !strings.Contains(body, "404") {
 		t.Error("Unauthorized admin access should return 404 error page")
+	}
+}
+
+func TestAdminToggleRadar(t *testing.T) {
+	h := &Handler{AdminToken: "secret"}
+
+	// Initially disabled
+	templates.SetRadarEnabled(false)
+
+	// 1. Check Graph returns 404 when disabled
+	reqGraph := httptest.NewRequest(http.MethodGet, "/graph", nil)
+	recGraph := httptest.NewRecorder()
+	h.Graph(recGraph, reqGraph)
+	if recGraph.Code != http.StatusNotFound {
+		t.Fatalf("expected 404 when radar is disabled, got %d", recGraph.Code)
+	}
+
+	// 2. Toggle to enabled
+	reqToggle := httptest.NewRequest(http.MethodPost, "/admin/settings/toggle-radar", nil)
+	reqToggle.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
+	recToggle := httptest.NewRecorder()
+	h.AdminToggleRadar(recToggle, reqToggle)
+
+	if recToggle.Code != http.StatusSeeOther {
+		t.Fatalf("expected 303 on toggle, got %d", recToggle.Code)
+	}
+	if !templates.IsRadarEnabled() {
+		t.Fatal("expected radar to be enabled after toggle")
+	}
+
+	// 3. Check Graph returns 200 when enabled
+	reqGraph2 := httptest.NewRequest(http.MethodGet, "/graph", nil)
+	recGraph2 := httptest.NewRecorder()
+	h.Graph(recGraph2, reqGraph2)
+	if recGraph2.Code != http.StatusOK {
+		t.Fatalf("expected 200 when radar is enabled, got %d", recGraph2.Code)
+	}
+
+	// 4. Toggle back to disabled
+	recToggle2 := httptest.NewRecorder()
+	h.AdminToggleRadar(recToggle2, reqToggle)
+	if templates.IsRadarEnabled() {
+		t.Fatal("expected radar to be disabled after second toggle")
 	}
 }

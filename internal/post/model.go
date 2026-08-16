@@ -21,9 +21,11 @@ type Post struct {
 	Draft       bool
 	PublishAt   time.Time // future date = scheduled post
 	Type        string    // "til" or "" for regular blog posts
-	ReadTime    int
-	Cover       string
-	Body        template.HTML
+	ReadTime     int
+	Cover        string
+	CoverCaption string
+	CoverSource  string
+	Body         template.HTML
 	Description string
 	TOC         []TOCEntry
 	Series      string

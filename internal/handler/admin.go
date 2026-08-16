@@ -72,18 +72,32 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	stats := templates.AdminStats{
-		Posts:     h.AllPosts(),
-		WebPosts:  webPosts,
-		Views:     views,
-		Comments:  allComments,
-		TopPages:  topPages,
-		TotalHits: totalHits,
+		Posts:        h.AllPosts(),
+		WebPosts:     webPosts,
+		Views:        views,
+		Comments:     allComments,
+		TopPages:     topPages,
+		TotalHits:    totalHits,
+		RadarEnabled: templates.IsRadarEnabled(),
 	}
 
 	err := templates.AdminLayout("admin", r.URL.Path, templates.AdminPage(stats)).Render(r.Context(), w)
 	if err != nil {
 		log.Printf("render error: %v", err)
 	}
+}
+
+// AdminToggleRadar toggles the systems radar feature flag.
+func (h *Handler) AdminToggleRadar(w http.ResponseWriter, r *http.Request) {
+	if !h.isAdmin(r) {
+		h.NotFound(w, r)
+		return
+	}
+
+	newState := !templates.IsRadarEnabled()
+	templates.SetRadarEnabled(newState)
+
+	http.Redirect(w, r, "/admin#dashboard", http.StatusSeeOther)
 }
 
 // AdminDeleteComment deletes a comment and returns an empty response so HTMX

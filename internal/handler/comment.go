@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"strconv"
+	"sync"
 
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
@@ -14,6 +15,24 @@ import (
 
 	"github.com/go-chi/chi/v5"
 )
+
+var (
+	commentSubscribers   = make(map[chan string]string)
+	commentSubscribersMu sync.RWMutex
+)
+
+func broadcastNewComment(slug string) {
+	commentSubscribersMu.RLock()
+	defer commentSubscribersMu.RUnlock()
+	for ch, s := range commentSubscribers {
+		if s == slug {
+			select {
+			case ch <- slug:
+			default:
+			}
+		}
+	}
+}
 
 func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 	lang := langFromRequest(r)
@@ -82,8 +101,11 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 		// Still return the current list so the UI stays consistent.
-	} else if h.SMTPHost != "" && h.SMTPTo != "" {
-		go h.sendCommentNotification(slug, name, body)
+	} else {
+		broadcastNewComment(slug)
+		if h.SMTPHost != "" && h.SMTPTo != "" {
+			go h.sendCommentNotification(slug, name, body)
+		}
 	}
 	h.renderCommentList(w, r, ui, slug, h.isAdmin(r))
 }
@@ -114,4 +136,43 @@ func (h *Handler) sendCommentNotification(slug, name, body string) {
 	if err := smtp.SendMail(h.SMTPHost+":"+port, auth, h.SMTPUser, []string{h.SMTPTo}, msg); err != nil {
 		log.Printf("comment notification: %v", err)
 	}
+}
+
+func (h *Handler) StreamComments(w http.ResponseWriter, r *http.Request) {
+	slug := chi.URLParam(r, "slug")
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
+		return
+	}
+
+	ch := make(chan string, 1)
+	commentSubscribersMu.Lock()
+	commentSubscribers[ch] = slug
+	commentSubscribersMu.Unlock()
+
+	defer func() {
+		commentSubscribersMu.Lock()
+		delete(commentSubscribers, ch)
+		commentSubscribersMu.Unlock()
+	}()
+
+	notify := r.Context().Done()
+	for {
+		select {
+		case <-notify:
+			return
+		case s := <-ch:
+			fmt.Fprintf(w, "event: new_comment\ndata: %s\n\n", s)
+			flusher.Flush()
+		}
+	}
+}
+
+func (h *Handler) CommentsPartial(w http.ResponseWriter, r *http.Request) {
+	h.renderCommentList(w, r, i18n.Get(langFromRequest(r)), chi.URLParam(r, "slug"), h.isAdmin(r))
 }

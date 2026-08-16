@@ -35,6 +35,14 @@ func SecurityHeaders(next http.Handler) http.Handler {
 	})
 }
 
+// StaticCacheControl sets long-term caching headers for static assets.
+func StaticCacheControl(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		next.ServeHTTP(w, r)
+	})
+}
+
 // Analytics records a page hit for GET requests to HTML pages. Static assets,
 // generated images, feeds and the admin area are skipped. Recording happens in
 // a goroutine so it never adds latency to the response.

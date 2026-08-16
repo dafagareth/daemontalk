@@ -215,8 +215,8 @@ email: dafagareth@gmail.com
 	if !strings.Contains(bodyStr, "post-carousel-wrap") {
 		t.Errorf("expected post-carousel-wrap class in body, got: %s", bodyStr)
 	}
-	if !strings.Contains(bodyStr, "1 / 2") || !strings.Contains(bodyStr, "2 / 2") {
-		t.Errorf("expected carousel counter badges in body")
+	if !strings.Contains(bodyStr, "fig-count") {
+		t.Errorf("expected fig-count in body")
 	}
 	if !strings.Contains(bodyStr, "Caption 1") || !strings.Contains(bodyStr, "Caption 2") {
 		t.Errorf("expected carousel captions in body")
@@ -235,5 +235,107 @@ email: dafagareth@gmail.com
 	}
 }
 
+func TestDescriptionUnescape(t *testing.T) {
+	src := []byte(`---
+title: "Golang Concepts"
+slug: golang-concepts
+---
+
+Sebagian besar tutorial Go berhenti di "cara mencetak Hello World", padahal masalah nyata & solusi baru muncul.
+`)
+	p, err := Parse(src)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	expected := `Sebagian besar tutorial Go berhenti di "cara mencetak Hello World", padahal masalah nyata & solusi baru muncul.`
+	if p.Description != expected {
+		t.Errorf("got %q, want %q", p.Description, expected)
+	}
+	if strings.Contains(p.Description, "&quot;") || strings.Contains(p.Description, "&amp;") {
+		t.Errorf("description contains raw HTML entities: %q", p.Description)
+	}
+}
+
+func TestDescriptionFrontmatter(t *testing.T) {
+	src := []byte(`---
+title: "Golang Concepts"
+slug: golang-concepts
+description: "Deskripsi khusus dari frontmatter & \"quotes\""
+---
+
+Paragraf pertama yang seharusnya di-override.
+`)
+	p, err := Parse(src)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	expected := `Deskripsi khusus dari frontmatter & "quotes"`
+	if p.Description != expected {
+		t.Errorf("got %q, want %q", p.Description, expected)
+	}
+}
+
+func TestReferencesAndCalloutsParsing(t *testing.T) {
+	content := `---
+title: "Advanced Systems"
+slug: advanced-systems
+---
+
+> [!WARNING]
+> Pastikan mutex terkunci sebelum mengakses map!
+
+` + "```callout TIP\n" + "Gunakan sync.Pool untuk mengurangi beban alokasi memori GC.\n```\n\n" + "```references\n" + "- title: The Linux Programming Interface\n  author: Michael Kerrisk\n  year: 2010\n  url: https://man7.org/tlpi/\n```\n"
+
+	p, err := Parse([]byte(content))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	body := string(p.Body)
+
+	// Verify GitHub-style Alert Warning
+	if !strings.Contains(body, "post-callout") || !strings.Contains(body, "WARNING") || !strings.Contains(body, "Pastikan mutex terkunci") {
+		t.Error("GitHub alert warning not parsed properly")
+	}
+
+	// Verify Code-fence Callout Tip
+	if !strings.Contains(body, "TIP") || !strings.Contains(body, "sync.Pool") {
+		t.Error("Callout TIP not parsed properly")
+	}
+
+	// Verify References & Citations block
+	if !strings.Contains(body, "post-references") || !strings.Contains(body, "The Linux Programming Interface") || !strings.Contains(body, "Michael Kerrisk") || !strings.Contains(body, "man7.org/tlpi/") {
+		t.Error("References block not parsed properly")
+	}
+}
+
+func TestTabsLinkAndStatParsing(t *testing.T) {
+	content := `---
+title: "Advanced Systems Components"
+slug: advanced-systems-components
+---
+
+` + "```tabs\n=== main.go\npackage main\nfunc main() {}\n\n=== Dockerfile\nFROM alpine\n```\n\n" + "```link\nurl: https://kernel.org\ntitle: The Linux Kernel Archives\ndescription: Primary site for the Linux kernel source code.\nsite: kernel.org\n```\n\n" + "```stat\n- value: \"14.8x\"\n  label: \"Throughput Boost\"\n  description: \"vs baseline sync.Mutex\"\n- value: \"0.8 µs\"\n  label: \"P99 Latency\"\n```\n"
+
+	p, err := Parse([]byte(content))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	body := string(p.Body)
+
+	// Verify Code Tabs
+	if !strings.Contains(body, "data-code-tabs") || !strings.Contains(body, "main.go") || !strings.Contains(body, "Dockerfile") {
+		t.Error("Tabs block not parsed properly")
+	}
+
+	// Verify Link Card
+	if !strings.Contains(body, "https://kernel.org") || !strings.Contains(body, "The Linux Kernel Archives") || !strings.Contains(body, "kernel.org") {
+		t.Error("Link card block not parsed properly")
+	}
+
+	// Verify Stat Grid
+	if !strings.Contains(body, "post-stat-grid") || !strings.Contains(body, "14.8x") || !strings.Contains(body, "Throughput Boost") || !strings.Contains(body, "0.8 µs") {
+		t.Error("Stat block not parsed properly")
+	}
+}
 
 

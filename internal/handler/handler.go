@@ -54,6 +54,14 @@ func (h *Handler) AllPosts() []post.Post {
 	return nil
 }
 
+// ReloadFilePosts re-reads markdown posts from the content/posts directory.
+func (h *Handler) ReloadFilePosts() {
+	postsDir := h.getContentPath("posts")
+	if fps, err := post.LoadAllWithDrafts(postsDir); err == nil {
+		h.FilePosts = fps
+	}
+}
+
 // RefreshPosts merender ulang post dari DB, menggabungkannya dengan post file,
 // dan mengganti snapshot. Dipanggil saat startup dan setiap kali editor
 // menyimpan/menghapus post — post baru langsung tampil tanpa restart.
@@ -90,6 +98,11 @@ func langFromRequest(r *http.Request) string {
 		return "id"
 	}
 	return "en"
+}
+
+// IsRadarEnabled reports whether the systems knowledge graph/radar feature is enabled.
+func (h *Handler) IsRadarEnabled() bool {
+	return templates.IsRadarEnabled()
 }
 
 // isAdmin reports whether the request carries a valid admin token cookie.

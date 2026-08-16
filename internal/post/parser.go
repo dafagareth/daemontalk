@@ -3,11 +3,9 @@ package post
 import (
 	"bytes"
 	"fmt"
+	stdhtml "html"
 	"html/template"
-	"os"
-	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -16,7 +14,7 @@ import (
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
-	"github.com/yuin/goldmark-meta"
+	meta "github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
@@ -77,61 +75,7 @@ var md = goldmark.New(
 	),
 )
 
-func LoadAll(dir string) ([]Post, error) {
-	return loadDir(dir, false)
-}
-
 // LoadAllWithDrafts loads all posts including drafts, sorted by date descending.
-func LoadAllWithDrafts(dir string) ([]Post, error) {
-	return loadDir(dir, true)
-}
-
-func loadDir(dir string, includeDrafts bool) ([]Post, error) {
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, nil
-		}
-		return nil, fmt.Errorf("read dir: %w", err)
-	}
-
-	var posts []Post
-	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".md") {
-			continue
-		}
-		p, err := parseFile(filepath.Join(dir, e.Name()))
-		if err != nil {
-			return nil, fmt.Errorf("parse %s: %w", e.Name(), err)
-		}
-		if p.Draft && !includeDrafts {
-			continue
-		}
-		posts = append(posts, p)
-	}
-
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].Date.After(posts[j].Date)
-	})
-	return posts, nil
-}
-
-func parseFile(path string) (Post, error) {
-	src, err := os.ReadFile(path)
-	if err != nil {
-		return Post{}, fmt.Errorf("read file: %w", err)
-	}
-
-	p, err := Parse(src)
-	if err != nil {
-		return Post{}, err
-	}
-	if p.Slug == "" {
-		base := filepath.Base(path)
-		p.Slug = strings.TrimSuffix(base, ".md")
-	}
-	return p, nil
-}
 
 // Parse renders a markdown document (frontmatter + body) into a Post.
 // It is the shared pipeline for file-based posts and web-authored posts
@@ -173,6 +117,16 @@ func Parse(src []byte) (Post, error) {
 	if v, ok := fm["cover"].(string); ok {
 		p.Cover = v
 	}
+	if v, ok := fm["coverCaption"].(string); ok {
+		p.CoverCaption = v
+	} else if v, ok := fm["cover_caption"].(string); ok {
+		p.CoverCaption = v
+	}
+	if v, ok := fm["coverSource"].(string); ok {
+		p.CoverSource = v
+	} else if v, ok := fm["cover_source"].(string); ok {
+		p.CoverSource = v
+	}
 	if v, ok := fm["series"].(string); ok {
 		p.Series = v
 	}
@@ -190,6 +144,10 @@ func Parse(src []byte) (Post, error) {
 	if v, ok := fm["author"].(string); ok {
 		p.Author = v
 	}
+	if v, ok := fm["description"].(string); ok && strings.TrimSpace(v) != "" {
+		p.Description = stdhtml.UnescapeString(strings.TrimSpace(v))
+	}
+
 	if raw, ok := fm["tags"]; ok {
 		switch v := raw.(type) {
 		case []interface{}:
@@ -230,7 +188,9 @@ func Parse(src []byte) (Post, error) {
 	p.Body = template.HTML(rawHTML)
 	p.ReadTime = readTime(rendered)
 	p.TOC = extractTOC(rendered)
-	p.Description = extractDescription(rendered)
+	if p.Description == "" {
+		p.Description = extractDescription(rendered)
+	}
 	return p, nil
 }
 
@@ -253,6 +213,7 @@ func extractDescription(htmlStr string) string {
 		return ""
 	}
 	text := strings.TrimSpace(reTag.ReplaceAllString(m[1], ""))
+	text = stdhtml.UnescapeString(text)
 	if len([]rune(text)) > 160 {
 		runes := []rune(text)
 		return string(runes[:157]) + "..."
@@ -291,45 +252,8 @@ func readTime(html string) int {
 	return minutes
 }
 
-func FindBySlug(posts []Post, slug string) (Post, bool) {
-	for _, p := range posts {
-		if p.Slug == slug {
-			return p, true
-		}
-	}
-	for _, p := range posts {
-		for _, a := range p.Aliases {
-			if a == slug {
-				return p, true
-			}
-		}
-	}
-	return Post{}, false
-}
-
 // LoadBody renders a markdown file and returns its HTML body.
 // Unlike parseFile, frontmatter is not extracted (only body content is returned).
-func LoadBody(path string) (template.HTML, error) {
-	src, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-	processedSrc := preprocessMarkdown(src)
-	ctx := parser.NewContext()
-	var buf bytes.Buffer
-	if err := md.Convert(processedSrc, &buf, parser.WithContext(ctx)); err != nil {
-		return "", fmt.Errorf("render markdown: %w", err)
-	}
-	rawHTML := strings.ReplaceAll(buf.String(), "<img ", `<img loading="lazy" `)
-	return template.HTML(rawHTML), nil
-}
 
 // LoadBodyWithTOC renders a markdown file and returns its HTML body along with
 // a table of contents extracted from its headings.
-func LoadBodyWithTOC(path string) (template.HTML, []TOCEntry, error) {
-	body, err := LoadBody(path)
-	if err != nil {
-		return "", nil, err
-	}
-	return body, extractTOC(string(body)), nil
-}
