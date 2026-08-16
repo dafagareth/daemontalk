@@ -1,0 +1,153 @@
+@layer components {
+  /* ToC active link */
+  .toc-active {
+    color: var(--c-link) !important;
+    font-weight: 500;
+  }
+
+  /* Interactive Task Lists / Checklists */
+  .prose ul.task-list,
+  .prose ul:has(input[type="checkbox"]) {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+  }
+  .prose li:has(> input[type="checkbox"]),
+  .prose li.task-list-item {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin-bottom: 0.625rem;
+    line-height: 1.7;
+    display: flex;
+    align-items: flex-start;
+  }
+  .prose input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    touch-action: manipulation;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 1.5px solid var(--c-link);
+    background-color: var(--c-surface);
+    border-radius: 0;
+    margin: 0.28rem 0.625rem 0 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    background-size: 80% 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .prose input[type="checkbox"]:hover {
+    border-color: var(--c-link);
+  }
+  .prose input[type="checkbox"]:checked {
+    background-color: var(--c-link);
+    border-color: var(--c-link);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+  }
+  .prose li.task-checked {
+    color: var(--c-muted);
+  }
+
+  /* Footnotes & Popover Citations */
+  .prose .footnote-ref,
+  .prose .footnote-ref a {
+    text-decoration: none;
+    font-size: 0.75em;
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    color: var(--c-link);
+    padding: 0.05rem 0.35rem;
+    margin: 0 0.15rem;
+    border: 1px solid var(--c-border);
+    background: var(--c-chip);
+    font-weight: 600;
+    cursor: pointer;
+    vertical-align: super;
+    line-height: 1;
+    display: inline-block;
+    transition: all 0.15s ease;
+  }
+  .prose .footnote-ref:hover,
+  .prose .footnote-ref a:hover {
+    background: var(--c-hover);
+    border-color: var(--c-link);
+    color: var(--c-text);
+  }
+  .prose .footnotes {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--c-border);
+    font-size: 0.875rem;
+    color: var(--c-muted);
+  }
+  .prose .footnotes hr {
+    display: none;
+  }
+  .prose .footnotes ol {
+    padding-left: 1.25rem;
+    list-style-type: decimal;
+  }
+  .prose .footnotes li {
+    margin-bottom: 0.75rem;
+    line-height: 1.65;
+  }
+  .prose .footnotes li:target {
+    background-color: var(--c-chip);
+    outline: 2px solid var(--c-link);
+    padding: 0.25rem 0.5rem;
+  }
+  .prose .footnote-backref {
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: 0.35rem;
+    color: var(--c-link);
+    font-weight: bold;
+  }
+
+  /* Footnote Interactive Floating Popover */
+  .footnote-popover {
+    position: absolute;
+    z-index: 50;
+    max-width: 340px;
+    padding: 0.75rem 1rem;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--c-text);
+    pointer-events: auto;
+    animation: fadeInPopover 0.15s ease-out;
+  }
+  .footnote-popover p {
+    margin: 0;
+  }
+  @keyframes fadeInPopover {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Proportional Dynamic Font Scaling for Parsed Custom Blocks */
+  #prose-body .post-callout,
+  #prose-body .post-references,
+  #prose-body .post-faq,
+  #prose-body .post-author-card,
+  #prose-body .code-tabs-wrap,
+  #prose-body .post-stat-grid,
+  #prose-body .post-link-preview,
+  #prose-body .post-carousel-wrap,
+  #prose-body .post-gallery-wrap {
+    font-size: 1em;
+  }
+
+  #prose-body .post-link-preview a,
+  #prose-body .post-link-preview .link-title {
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+
+  /* Visited post title indicator */
+  .post-visited {
+    color: color-mix(in srgb, var(--c-link) 60%, transparent) !important;
+  }
+}

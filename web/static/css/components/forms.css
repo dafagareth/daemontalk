@@ -1,0 +1,6 @@
+@layer components {
+  /* Form components */
+  .form-input {
+    @apply w-full px-3 py-2 text-sm border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-link transition-colors;
+  }
+}

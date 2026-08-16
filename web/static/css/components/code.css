@@ -1,0 +1,212 @@
+@layer components {
+  .prose code {
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.875em;
+    background: var(--c-chip);
+    color: var(--c-text);
+    padding: 0.125em 0.375em;
+    border-radius: 0;
+    border: 1px solid var(--c-border);
+  }
+  /* Wrapper added by JS around each <pre>; anchors the copy button to the
+     visible top-right (the wrapper itself never scrolls). */
+  .prose .code-wrap {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  /* Both plain `<pre>` and Chroma-highlighted `<pre class="chroma">` share the
+     same surface background and border so code blocks look uniform. The .chroma
+     override beats chroma.css's own background by specificity. */
+  .prose pre,
+  .prose pre.chroma {
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+    background: var(--c-surface) !important;
+    color: var(--c-text);
+    border: 1px solid var(--c-border);
+    border-radius: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 0;
+  }
+  .prose pre code,
+  .prose pre.chroma code {
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.875em;
+    line-height: 1.65;
+  }
+  @media (max-width: 640px) {
+    .prose pre,
+    .prose pre.chroma {
+      padding: 0.875rem;
+    }
+    .prose pre code,
+    .prose pre.chroma code {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+  }
+
+  /* Code block action toolbar — pinned to wrapper top-right */
+  .code-toolbar {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    opacity: 0.85;
+    transition: opacity 0.15s ease;
+  }
+  .code-wrap:hover .code-toolbar {
+    opacity: 1;
+  }
+
+  .code-lang-badge {
+    padding: 0.125rem 0.375rem;
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--c-muted);
+    background: var(--c-bg);
+    border: 1px solid var(--c-border);
+    border-radius: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .code-run-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--c-ok);
+    background: var(--c-surface);
+    border: 1px solid var(--c-ok);
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .code-run-btn:hover {
+    background: var(--c-ok-bg);
+    color: var(--c-ok);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  .code-run-btn.running {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .copy-btn {
+    padding: 0.125rem 0.5rem;
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--c-muted);
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 0;
+    cursor: pointer;
+    transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover {
+    color: var(--c-text);
+    border-color: var(--c-text);
+  }
+
+  /* Attached In-Article Terminal Output Box */
+  .code-output-wrap {
+    margin-top: -0.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--c-border);
+    border-top: none;
+    border-radius: 0;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 0.8rem;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  .code-output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.375rem 0.75rem;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    font-size: 0.7rem;
+    color: #8b949e;
+  }
+  .code-output-body {
+    padding: 0.75rem 1rem;
+    max-height: 280px;
+    overflow-y: auto;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .code-output-stdout {
+    color: #7ee787;
+  }
+  .code-output-stderr {
+    color: #ff7b72;
+  }
+  .code-output-meta {
+    font-size: 0.7rem;
+    color: #8b949e;
+    margin-top: 0.5rem;
+    padding-top: 0.375rem;
+    border-top: 1px dashed #30363d;
+  }
+
+  @media (hover: none) {
+    .code-toolbar { opacity: 1; }
+  }
+
+  /* Code Line & Diff Highlighting */
+  .line-add {
+    background-color: rgba(34, 197, 94, 0.14);
+    border-left: 3px solid #22c55e;
+    margin: 0 -1.25rem;
+    padding: 0 1.25rem;
+    display: block;
+  }
+  .line-del {
+    background-color: rgba(239, 68, 68, 0.14);
+    border-left: 3px solid #ef4444;
+    margin: 0 -1.25rem;
+    padding: 0 1.25rem;
+    display: block;
+    opacity: 0.85;
+  }
+  .line-hl {
+    background-color: rgba(59, 130, 246, 0.14);
+    border-left: 3px solid var(--c-link);
+    margin: 0 -1.25rem;
+    padding: 0 1.25rem;
+    display: block;
+  }
+
+  /* Code Tabs Styling */
+  .code-tabs-wrap .tabs-nav-track {
+    -webkit-overflow-scrolling: touch;
+    user-select: none;
+  }
+  .code-tabs-wrap .chroma {
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+  .code-tabs-wrap .chroma pre {
+    margin: 0 !important;
+    padding: 1rem 1.25rem !important;
+    background: transparent !important;
+  }
+}

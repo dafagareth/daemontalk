@@ -1,0 +1,51 @@
+@layer components {
+  /* FAQ accordion & raw details */
+  .prose details {
+    border: 1px solid var(--c-border);
+    border-radius: 0;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+  }
+  .prose details summary {
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--c-text);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .prose details summary::-webkit-details-marker { display: none; }
+  .prose details summary::marker { display: none; content: ""; }
+  .prose details[open] > summary {
+    border-bottom: 1px solid var(--c-border);
+    background: var(--c-chip);
+    margin-bottom: 0.5rem;
+  }
+  .prose details[open] summary svg.toc-chevron,
+  .prose details[open] summary svg.faq-chevron {
+    transform: rotate(180deg);
+  }
+  .prose details summary:hover { background: var(--c-hover); }
+  .prose details > *:not(summary) {
+    padding: 0 1rem 1rem 1rem;
+    color: var(--c-muted);
+  }
+  .prose .faq-body {
+    padding: 0 1rem 1rem 1rem;
+    color: var(--c-muted);
+    font-size: 0.9375em;
+    line-height: 1.75;
+  }
+  .prose .faq-body p { margin-bottom: 0.5rem; }
+  .prose .faq-body code { font-size: 0.875em; }
+
+  /* FAQ Arrow Rotation */
+  details[open] > summary > svg {
+    transform: rotate(180deg);
+  }
+}
