@@ -1,283 +1,15 @@
+
 (function() {
-	function initDaemonTalkTerminal() {
-		var screenEl = document.getElementById("term-screen");
-		var historyEl = document.getElementById("term-history");
-		var inputEl = document.getElementById("term-input");
-		var promptLabel = document.getElementById("term-prompt-label");
-		var titleText = document.getElementById("term-title-text");
+	var DT = window.DaemonTerminal;
 
-		if (!screenEl || !inputEl || !historyEl) return;
-		if (inputEl.dataset.initialized === "true") return;
-		inputEl.dataset.initialized = "true";
-
-			var cmdHistory = [];
-			var histIndex = -1;
-			var currentInputBuffer = "";
-
-			var currentPath = "/home/visitor";
-			var envVars = {
-				"USER": "visitor",
-				"HOME": "/home/visitor",
-				"SHELL": "/bin/bash",
-				"PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-				"TERM": "xterm-256color",
-				"LANG": "en_US.UTF-8",
-				"HOSTNAME": "daemontalk.local",
-				"PWD": "/home/visitor",
-				"EDITOR": "nano",
-				"ARCH": "x86_64"
-			};
-			var aliases = {};
-
-			var activeIncidentState = {
-				currentId: null,
-				inodesFull: false,
-				port8080PID: null,
-				zombieParentPID: null,
-				solvedList: JSON.parse(localStorage.getItem("daemontalk_solved_incidents") || "[]")
-			};
-
-			var incidents = [
-				{
-					id: 1,
-					title: "The Mysterious 'No Space Left on Device'",
-					difficulty: "Medium",
-					symptom: "Production log pipeline fails with 'ENOSPC: No space left on device'. However, `df -h` shows the disk is only 38% full! Find the root cause and fix it.",
-					hint: "Check filesystem metadata limits: compare `df -h` (block usage) with `df -i` (inode usage). Inspect /var/spool/clientmqueue for abandoned zero-byte files.",
-					setup: function() {
-						vfs["/var/spool"] = { type: "dir", children: ["clientmqueue"] };
-						vfs["/var/spool/clientmqueue"] = { type: "dir", children: ["msg_10482.tmp", "msg_10483.tmp", "msg_10484.tmp", "msg_10485.tmp", "msg_10486.tmp", "abandoned_tokens.lock"] };
-						vfs["/var/spool/clientmqueue/msg_10482.tmp"] = { type: "file", content: "" };
-						vfs["/var/spool/clientmqueue/abandoned_tokens.lock"] = { type: "file", content: "LOCKED_INODES=6553600" };
-						activeIncidentState.inodesFull = true;
-					},
-					verify: function() {
-						if (!activeIncidentState.inodesFull || !vfs["/var/spool/clientmqueue"] || vfs["/var/spool/clientmqueue"].children.length === 0) {
-							activeIncidentState.inodesFull = false;
-							return { solved: true, message: "ROOT CAUSE CONFIRMED: Inode exhaustion! You cleaned up abandoned queue files, freeing 6.5M inodes. Filesystem writes restored." };
-						}
-						return { solved: false, message: "Issue still persists: Inodes on /dev/nvme0n1p2 are still 100% full. Try inspecting /var/spool/clientmqueue and cleaning up files with `rm -rf /var/spool/clientmqueue/*` or `incident solve inode`." };
-					}
-				},
-				{
-					id: 2,
-					title: "The Rogue Ghost Daemon on Port 8080",
-					difficulty: "Easy",
-					symptom: "New API deployment crashed on startup with `listen tcp :8080: bind: address already in use`. Find the culprit process holding port 8080 and terminate it.",
-					hint: "Use socket inspection tools: `ss -tulpn` or `lsof -i :8080` to locate the PID, then use `kill <PID>`.",
-					setup: function() {
-						activeIncidentState.port8080PID = 4192;
-					},
-					verify: function() {
-						if (activeIncidentState.port8080PID === null) {
-							return { solved: true, message: "PORT RELEASED: PID 4192 terminated. Port 8080 is now free for new deployments." };
-						}
-						return { solved: false, message: "Port 8080 is still locked by PID " + activeIncidentState.port8080PID + ". Use `ss -tulpn` or `lsof -i :8080` to find it, then `kill " + activeIncidentState.port8080PID + "`." };
-					}
-				},
-				{
-					id: 3,
-					title: "The Silent Midnight Crash (OOM-Killer)",
-					difficulty: "Medium",
-					symptom: "Redis cache server abruptly disappeared at 03:14:02 UTC with exit code 137. Application logs show no stack trace. Identify why Linux terminated the process.",
-					hint: "Kernel-level kills do not appear in user application logs. Check kernel ring buffer logs with `dmesg` or `dmesg | grep -i oom`.",
-					setup: function() {
-						vfs["/var/log/dmesg.log"].content += "\n[14829.102390] Out of memory: Killed process 8192 (redis-server) total-vm:4194304kB, anon-rss:2048512kB, file-rss:0kB\n[14829.102401] oom_reaper: reaped process 8192 (redis-server), now anon-rss:0kB\n";
-					},
-					verify: function(answer) {
-						if (answer && (answer.toLowerCase().indexOf("oom") !== -1 || answer.toLowerCase().indexOf("out of memory") !== -1 || answer.toLowerCase().indexOf("memory") !== -1)) {
-							return { solved: true, message: "DIAGNOSIS CORRECT: Linux kernel OOM-Killer sacrificed redis-server (PID 8192) due to cgroup memory exhaustion. Recommendation: Adjust vm.overcommit_memory=1 and configure maxmemory in redis.conf." };
-						}
-						return { solved: false, message: "Check kernel buffer messages with `dmesg` or `cat /var/log/dmesg.log | grep -i oom`, then type `incident solve oom` to submit your diagnosis." };
-					}
-				},
-				{
-					id: 4,
-					title: "Zombie Apocalypse & Fork Starvation",
-					difficulty: "Hard",
-					symptom: "System throwing `fork: retry: Resource temporarily unavailable`. The PID space is flooded with defunct child processes. Identify and kill the rogue parent supervisor.",
-					hint: "Inspect process states with `ps aux` or `ps -ef`. Notice which parent PID (PPID) spawned all the defunct workers, then kill that parent PID.",
-					setup: function() {
-						activeIncidentState.zombieParentPID = 1337;
-					},
-					verify: function() {
-						if (activeIncidentState.zombieParentPID === null) {
-							return { solved: true, message: "ZOMBIES REAPED: Parent supervisor PID 1337 killed. Init (PID 1) adopted and successfully reaped all defunct children. PID table capacity restored." };
-						}
-						return { solved: false, message: "Dozens of zombie processes still exist. Run `ps aux` to locate the rogue parent process (PID 1337 bad_supervisor.py) and execute `kill -9 1337`." };
-					}
-				},
-				{
-					id: 5,
-					title: "The DNS Blackhole",
-					difficulty: "Easy",
-					symptom: "Microservices cannot communicate: `curl api.internal` or `ping backend.local` fails with `Could not resolve host`. Fix the resolver configuration.",
-					hint: "Inspect `/etc/resolv.conf`. Look for invalid IP addresses, and write valid DNS servers like `nameserver 1.1.1.1` or `nameserver 8.8.8.8`.",
-					setup: function() {
-						vfs["/etc/resolv.conf"].content = "# Misconfigured by faulty provisioning script\nnameserver 192.168.1.999\nnameserver 0.0.0.0\n";
-					},
-					verify: function() {
-						var conf = vfs["/etc/resolv.conf"] ? vfs["/etc/resolv.conf"].content : "";
-						if (conf.indexOf("1.1.1.1") !== -1 || conf.indexOf("8.8.8.8") !== -1 || conf.indexOf("127.0.0.53") !== -1) {
-							return { solved: true, message: "DNS RESOLUTION RESTORED: /etc/resolv.conf repaired with valid nameservers. Hostname resolution functional." };
-						}
-						return { solved: false, message: "Resolver configuration in /etc/resolv.conf is still invalid. Inspect with `cat /etc/resolv.conf` and update it with `echo 'nameserver 1.1.1.1' > /etc/resolv.conf`." };
-					}
-				}
-			];
-
-			var vfs = {
-				"/": { type: "dir", children: ["home", "bin", "etc", "var", "proc", "tmp", "dev"] },
-				"/bin": {
-					type: "dir",
-					children: [
-						"alias", "arch", "awk", "base64", "basename", "cal", "cat", "cd", "challenge", "cheat", "clear", "cp", "curl", "cut",
-						"date", "df", "diff", "dig", "dirname", "dmesg", "du", "ebpf", "echo", "env", "exit", "export", "file",
-						"find", "free", "grep", "groups", "head", "help", "history", "hostname", "htop", "id", "ifconfig", "incident",
-						"ip", "kill", "less", "ls", "lsof", "man", "mkdir", "more", "mv", "netstat", "nslookup", "ping", "printenv", "ps",
-						"pwd", "rca", "recipes", "rev", "rm", "run", "sed", "seq", "sleep", "sort", "ss", "stat", "tail", "tar", "top",
-						"touch", "tr", "tree", "uname", "unalias", "uniq", "uptime", "warstory", "wc", "which", "whoami", "yes"
-					]
-				},
-				"/etc": { type: "dir", children: ["os-release", "hostname", "passwd", "hosts", "resolv.conf"] },
-				"/etc/os-release": { type: "file", content: "NAME=\"daemontalk Linux\"\nVERSION=\"2026.8 LTS (Codename Tumbleweed)\"\nID=daemontalk\nID_LIKE=arch\nPRETTY_NAME=\"daemontalk Linux 6.12.8 LTS\"\nHOME_URL=\"https://daemontalk.com\"\n" },
-				"/etc/hostname": { type: "file", content: "daemontalk.local\n" },
-				"/etc/passwd": { type: "file", content: "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\nvisitor:x:1000:1000:Visitor User,,,:/home/visitor:/bin/bash\npostgres:x:114:120:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash\ncaddy:x:998:998:Caddy web server:/var/lib/caddy:/usr/sbin/nologin\n" },
-				"/etc/hosts": { type: "file", content: "127.0.0.1\tlocalhost\n127.0.1.1\tdaemontalk.local daemontalk\n::1\t\tlocalhost ip6-localhost ip6-loopback\nff02::1\t\tip6-allnodes\nff02::2\t\tip6-allrouters\n" },
-				"/etc/resolv.conf": { type: "file", content: "# Generated by systemd-resolved\nnameserver 1.1.1.1\nnameserver 8.8.8.8\nsearch daemontalk.local\n" },
-				"/proc": { type: "dir", children: ["cpuinfo", "meminfo", "version", "uptime", "loadavg"] },
-				"/proc/cpuinfo": { type: "file", content: "processor\t: 0\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 33\nmodel name\t: AMD Ryzen 9 5950X 16-Core Processor\nstepping\t: 0\nmicrocode\t: 0xa201016\ncpu MHz\t\t: 3400.000\ncache size\t: 512 KB\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core invpcid ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid_single rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr rdpru wbnoinvd arat\nbogomips\t: 6799.98\nTLB size\t: 2560 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 48 bits physical, 48 bits virtual\n" },
-				"/proc/meminfo": { type: "file", content: "MemTotal:       32768000 kB\nMemFree:        18245120 kB\nMemAvailable:   24912040 kB\nBuffers:          541200 kB\nCached:          6125720 kB\nSwapCached:            0 kB\nActive:          7845120 kB\nInactive:        4821000 kB\nSwapTotal:       8388608 kB\nSwapFree:        8388608 kB\nDirty:               120 kB\nWriteback:             0 kB\nAnonPages:       6000400 kB\nMapped:           892400 kB\nShmem:            240100 kB\nSlab:             720400 kB\n" },
-				"/proc/version": { type: "file", content: "Linux version 6.12.8-generic (buildd@buildhost) (gcc version 14.2.0 (Debian 14.2.0-8)) #1 SMP PREEMPT_DYNAMIC\n" },
-				"/proc/uptime": { type: "file", content: "3648120.45 58369927.20\n" },
-				"/proc/loadavg": { type: "file", content: "0.14 0.08 0.05 1/412 18920\n" },
-				"/var": { type: "dir", children: ["log"] },
-				"/var/log": { type: "dir", children: ["syslog.log", "dmesg.log"] },
-				"/var/log/syslog.log": { type: "file", content: "systemd[1]: Started daemontalk web server daemon.\nsystemd[1]: Started PostgreSQL database server.\nsystemd[1]: Started Caddy reverse proxy & TLS manager.\nkernel: [ 0.000000] Linux version 6.12.8-generic (root@buildhost) #1 SMP PREEMPT\nkernel: [ 0.000004] Command line: BOOT_IMAGE=/vmlinuz-6.12.8-generic root=UUID=5e18b273 ro quiet splash\n" },
-				"/var/log/dmesg.log": { type: "file", content: "[    0.000000] Linux version 6.12.8-generic (gcc version 14.2.0)\n[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-6.12.8-generic root=/dev/nvme0n1p2 rw\n[    0.000000] BIOS-provided physical RAM map:\n[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable\n[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000007ffffffff] usable\n[    0.001420] smpboot: CPU0: AMD Ryzen 9 5950X 16-Core Processor (family: 0x19, model: 0x21, stepping: 0x0)\n[    0.021940] io_uring: enabling fast unprivileged asynchronous I/O subsystem\n[    0.038100] Landlock: LSM initialized successfully\n[    0.042100] Btrfs loaded, crc32c=crc32c-generic\n[    0.081200] Netfilter: nf_conntrack version 0.5.0 (65536 buckets, 262144 max)\n" },
-				"/tmp": { type: "dir", children: [] },
-				"/dev": { type: "dir", children: ["null", "zero", "urandom", "stdout", "stderr", "stdin"] },
-				"/home": { type: "dir", children: ["visitor"] },
-				"/home/visitor": { type: "dir", children: ["posts", "projects", "about.txt", "contact.txt", "README.md", ".bashrc"] },
-				"/home/visitor/about.txt": { type: "file", content: "Dafa Gareth\nSoftware Developer & Systems Enthusiast\nFocus: Linux internals, Go concurrency, eBPF, distributed storage, and high-performance minimalist web systems.\n" },
-				"/home/visitor/contact.txt": { type: "file", content: "GitHub:   https://github.com/dafagareth\nDiscord:  https://discord.gg/daemontalk\nWebsite:  https://daemontalk.com\nEmail:    dafagareth@gmail.com\n" },
-				"/home/visitor/README.md": { type: "file", content: "# Welcome to daemontalk Shell\nA fully interactive, educational UNIX sandbox running in your browser.\n\nQuick Tips:\n- Browse articles: `cd posts && ls -l`\n- Read an article: `cat posts/ghostty-terminal-emulator.md`\n- Search topics: `grep -i \"ebpf\" posts/*`\n- Try piping: `ls posts | sort -r | head -n 5`\n- Run code: `run go fmt.Println(\"Hello from daemontalk\")`\n- View manual: `man grep` or `man find`\n" },
-				"/home/visitor/.bashrc": { type: "file", content: "# ~/.bashrc: executed by bash(1) for non-login shells.\nexport PS1='\\u@\\h:\\w\\$ '\nalias ll='ls -la'\nalias la='ls -A'\nalias l='ls -CF'\n" },
-				"/home/visitor/posts": { type: "dir", children: [] },
-				"/home/visitor/projects": { type: "dir", children: [] }
-			};
-
-			var rawPosts = [];
-			var rawProjects = [];
-
-			// Manuals Dictionary
-			var manPages = {
-				"ls": "NAME\n    ls - list directory contents\n\nSYNOPSIS\n    ls [OPTION]... [FILE]...\n\nDESCRIPTION\n    List information about the FILEs (the current directory by default).\n    Sort entries alphabetically.\n\nOPTIONS\n    -l     use a long listing format (permissions, size, date)\n    -a     do not ignore entries starting with .\n    -la    combination of -l and -a\n\nEXAMPLES\n    ls\n    ls -l posts\n    ls -la ~",
-				"cd": "NAME\n    cd - change the shell working directory\n\nSYNOPSIS\n    cd [DIRECTORY]\n\nDESCRIPTION\n    Change the current directory to DIRECTORY. The default DIRECTORY is the value of the HOME shell variable (~).\n\nEXAMPLES\n    cd posts\n    cd ..\n    cd ~/\n    cd /etc",
-				"cat": "NAME\n    cat - concatenate files and print on the standard output\n\nSYNOPSIS\n    cat [OPTION]... [FILE]...\n\nDESCRIPTION\n    Concatenate FILE(s) to standard output. With no FILE, or when FILE is -, read standard input.\n\nEXAMPLES\n    cat about.txt\n    cat posts/ghostty-terminal-emulator.md\n    cat /etc/passwd | grep visitor",
-				"grep": "NAME\n    grep - print lines that match patterns\n\nSYNOPSIS\n    grep [OPTION]... PATTERNS [FILE]...\n\nOPTIONS\n    -i     ignore case distinctions in patterns and input data\n    -n     prefix each line of output with the 1-based line number\n    -v     invert the sense of matching, to select non-matching lines\n    -c     print only a count of selected lines per FILE\n\nEXAMPLES\n    grep -i \"ebpf\" posts/*\n    grep visitor /etc/passwd\n    ps aux | grep daemontalk",
-				"head": "NAME\n    head - output the first part of files\n\nSYNOPSIS\n    head [OPTION]... [FILE]...\n\nOPTIONS\n    -n NUM     print the first NUM lines instead of the first 10\n\nEXAMPLES\n    head -n 5 posts/duckdb-analytical-queries.md\n    ls posts | head -n 8",
-				"tail": "NAME\n    tail - output the last part of files\n\nSYNOPSIS\n    tail [OPTION]... [FILE]...\n\nOPTIONS\n    -n NUM     output the last NUM lines, instead of the last 10\n\nEXAMPLES\n    tail -n 10 /var/log/syslog.log\n    cat posts/jujutsu-vcs-git-compatible.md | tail -n 5",
-				"find": "NAME\n    find - search for files in a directory hierarchy\n\nSYNOPSIS\n    find [path...] [expression]\n\nOPTIONS\n    -name PATTERN     Base of file name matches shell pattern PATTERN\n    -type f|d         File is of type: f (file), d (directory)\n\nEXAMPLES\n    find .\n    find posts -name \"*.md\"\n    find /etc",
-				"tree": "NAME\n    tree - list contents of directories in a tree-like format\n\nSYNOPSIS\n    tree [OPTION]... [DIRECTORY]\n\nOPTIONS\n    -L LEVEL     Max display depth of the directory tree\n\nEXAMPLES\n    tree\n    tree -L 2 /home/visitor",
-				"sort": "NAME\n    sort - sort lines of text files\n\nSYNOPSIS\n    sort [OPTION]... [FILE]...\n\nOPTIONS\n    -r     reverse the result of comparisons\n    -n     compare according to numerical value\n    -u     output only the first of an equal run\n\nEXAMPLES\n    ls posts | sort -r\n    cat numbers.txt | sort -n",
-				"uniq": "NAME\n    uniq - report or omit repeated lines\n\nSYNOPSIS\n    uniq [OPTION]... [INPUT [OUTPUT]]\n\nOPTIONS\n    -c     prefix lines by the number of occurrences\n    -d     only print duplicate lines, one for each group\n\nEXAMPLES\n    cat list.txt | sort | uniq -c",
-				"cut": "NAME\n    cut - remove sections from each line of files\n\nSYNOPSIS\n    cut OPTION... [FILE]...\n\nOPTIONS\n    -d DELIM     use DELIM instead of TAB for field delimiter\n    -f LIST      select only these fields\n\nEXAMPLES\n    cut -d: -f1 /etc/passwd\n    cat /etc/passwd | cut -d: -f1,7",
-				"tr": "NAME\n    tr - translate or delete characters\n\nSYNOPSIS\n    tr [OPTION]... SET1 [SET2]\n\nEXAMPLES\n    echo \"hello world\" | tr a-z A-Z\n    cat file.txt | tr ' ' '_'",
-				"diff": "NAME\n    diff - compare files line by line\n\nSYNOPSIS\n    diff [OPTION]... FILES\n\nOPTIONS\n    -u     output unified context diff\n\nEXAMPLES\n    diff file1.txt file2.txt\n    diff -u old.txt new.txt",
-				"ps": "NAME\n    ps - report a snapshot of the current processes\n\nSYNOPSIS\n    ps [OPTIONS]\n\nOPTIONS\n    aux    display all processes on the system with user, cpu, and memory stats\n    -ef    standard full format listing\n\nEXAMPLES\n    ps\n    ps aux\n    ps aux | grep daemontalk",
-				"df": "NAME\n    df - report file system disk space usage\n\nSYNOPSIS\n    df [OPTION]... [FILE]...\n\nOPTIONS\n    -h     print sizes in powers of 1024 (e.g., 1023M, 14G)\n\nEXAMPLES\n    df -h",
-				"du": "NAME\n    du - estimate file space usage\n\nSYNOPSIS\n    du [OPTION]... [FILE]...\n\nOPTIONS\n    -h     print sizes in human readable format\n    -s     display only a total for each argument\n    -sh    summary human-readable\n\nEXAMPLES\n    du -sh *\n    du -h posts",
-				"free": "NAME\n    free - display amount of free and used memory in the system\n\nSYNOPSIS\n    free [OPTION]\n\nOPTIONS\n    -h     show all output fields automatically scaled to shortest three digit unit\n    -m     show output in mebibytes\n\nEXAMPLES\n    free -h\n    free -m",
-				"run": "NAME\n    run - compile & execute code via backend runner\n\nSYNOPSIS\n    run <LANGUAGE> <CODE>\n\nSUPPORTED LANGUAGES\n    go, python, js, bash\n\nEXAMPLES\n    run go fmt.Println(\"Hello from Go\")\n    run js console.log(Array.from({length: 5}, (_, i) => i * 2))\n    run python print(sum([x**2 for x in range(10)]))\n    run bash echo \"Kernel: $(uname -r)\""
-			};
-
-			// Load real post and project data from backend
-			fetch("/api/terminal/data")
-				.then(function(r) { return r.json(); })
-				.then(function(data) {
-					if (!data) return;
-					if (data.posts && Array.isArray(data.posts)) {
-						rawPosts = data.posts;
-						data.posts.forEach(function(p) {
-							var fname = p.slug + ".md";
-							if (vfs["/home/visitor/posts"].children.indexOf(fname) === -1) {
-								vfs["/home/visitor/posts"].children.push(fname);
-							}
-							var content = "---\ntitle: " + p.title + "\ndate: " + p.date + "\nlang: " + p.lang + "\ntags: [" + (p.tags ? p.tags.join(", ") : "") + "]\nread_time: " + (p.min_read || 5) + " min\n---\n\n" + (p.description || "") + "\n\n" + (p.body_snippet || "");
-							vfs["/home/visitor/posts/" + fname] = { type: "file", content: content, slug: p.slug, title: p.title, date: p.date, tags: p.tags || [] };
-						});
-					}
-					if (data.projects && Array.isArray(data.projects)) {
-						rawProjects = data.projects;
-						data.projects.forEach(function(pr) {
-							var fname = pr.slug + ".txt";
-							if (vfs["/home/visitor/projects"].children.indexOf(fname) === -1) {
-								vfs["/home/visitor/projects"].children.push(fname);
-							}
-							var content = "Project: " + pr.title + "\nSlug: " + pr.slug + "\nURL: " + (pr.url || "-") + "\nTech: " + (pr.tech ? pr.tech.join(", ") : "-") + "\n\n" + (pr.description || "");
-							vfs["/home/visitor/projects/" + fname] = { type: "file", content: content };
-						});
-					}
-				})
-				.catch(function(err) {
-					console.warn("Failed to pre-populate terminal data:", err);
-				});
-
-			// Path helpers
-			function getDisplayPath(path) {
-				if (path === "/home/visitor") return "~";
-				if (path.indexOf("/home/visitor/") === 0) return "~/" + path.substring(14);
-				return path;
-			}
-
-			function updatePrompt() {
-				var disp = getDisplayPath(currentPath);
-				envVars["PWD"] = currentPath;
-				promptLabel.textContent = "visitor@daemontalk:" + disp + "$";
-				titleText.textContent = "visitor@daemontalk: " + disp;
-			}
-
-			function resolvePath(target) {
-				if (!target || target === "~") return "/home/visitor";
-				if (target.indexOf("~/") === 0) target = "/home/visitor/" + target.substring(2);
-				
-				var segments;
-				if (target.startsWith("/")) {
-					segments = target.split("/");
-				} else {
-					segments = (currentPath + "/" + target).split("/");
-				}
-
-				var stack = [];
-				for (var i = 0; i < segments.length; i++) {
-					var s = segments[i];
-					if (s === "" || s === ".") continue;
-					if (s === "..") {
-						if (stack.length > 0) stack.pop();
-					} else {
-						stack.push(s);
-					}
-				}
-				return "/" + stack.join("/");
-			}
-
-			function formatBytes(bytes) {
-				if (bytes < 1024) return bytes + "B";
-				if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + "K";
-				if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + "M";
-				return (bytes / (1024 * 1024 * 1024)).toFixed(1) + "G";
-			}
-
-			// Single Command Evaluator (supports stdin from pipes)
-			function evalSingleCommand(cmdLine, stdin) {
-				var args = parseArgs(cmdLine);
+	DT.cmd.evalSingleCommand = function (cmdLine, stdin) {
+				var args = DT.cmd.parseArgs(cmdLine);
 				var cmd = (args[0] || "").toLowerCase();
 
 				// Alias resolution
-				if (aliases[cmd]) {
-					var aliasedLine = aliases[cmd] + (args.length > 1 ? " " + args.slice(1).join(" ") : "");
-					args = parseArgs(aliasedLine);
+				if (DT.state.aliases[cmd]) {
+					var aliasedLine = DT.state.aliases[cmd] + (args.length > 1 ? " " + args.slice(1).join(" ") : "");
+					args = DT.cmd.parseArgs(aliasedLine);
 					cmd = (args[0] || "").toLowerCase();
 				}
 
@@ -341,7 +73,7 @@
 							"    curl [-s] <url>         Fetch URL or API data\n" +
 							"    run <lang> <code>       Execute Go, Python, JS, or Bash code\n" +
 							"    man <command>           View detailed manual pages\n" +
-							"    which <cmd>, alias      Locate binary or manage command aliases\n" +
+							"    which <cmd>, alias      Locate binary or manage command DT.state.aliases\n" +
 							"    cal, date, history      Calendar, clock, and command history\n" +
 							"    clear, exit             Clear screen or return to homepage\n\n" +
 							"  Piping & Redirection:\n" +
@@ -354,8 +86,8 @@
 							out = "What manual page do you want?\nFor example, try 'man ls', 'man grep', 'man cat', 'man find', 'man ps'.";
 						} else {
 							var targetCmd = args[1].toLowerCase();
-							if (manPages[targetCmd]) {
-								out = manPages[targetCmd];
+							if (DT.fs.manPages[targetCmd]) {
+								out = DT.fs.manPages[targetCmd];
 							} else {
 								out = "No manual entry for " + targetCmd + "\nType 'help' to see all available commands.";
 							}
@@ -363,26 +95,26 @@
 						break;
 
 					case "pwd":
-						out = currentPath;
+						out = DT.state.currentPath;
 						break;
 
 					case "cd":
 						var target = args[1] || "~";
-						var resolved = resolvePath(target);
-						if (!vfs[resolved]) {
+						var resolved = DT.fs.resolvePath(target);
+						if (!DT.fs.vfs[resolved]) {
 							out = "cd: no such file or directory: " + target;
-						} else if (vfs[resolved].type !== "dir") {
+						} else if (DT.fs.vfs[resolved].type !== "dir") {
 							out = "cd: not a directory: " + target;
 						} else {
-							currentPath = resolved;
-							updatePrompt();
+							DT.state.currentPath = resolved;
+							DT.ui.updatePrompt();
 						}
 						break;
 
 					case "ls":
 						var longFormat = false;
 						var showAll = false;
-						var targetDir = currentPath;
+						var targetDir = DT.state.currentPath;
 
 						for (var i = 1; i < args.length; i++) {
 							var a = args[i];
@@ -390,10 +122,10 @@
 							else if (a === "-a") showAll = true;
 							else if (a === "-la" || a === "-al") { longFormat = true; showAll = true; }
 							else if (a === "-lh" || a === "-lah" || a === "-hal") { longFormat = true; showAll = true; }
-							else if (!a.startsWith("-")) { targetDir = resolvePath(a); }
+							else if (!a.startsWith("-")) { targetDir = DT.fs.resolvePath(a); }
 						}
 
-						var node = vfs[targetDir];
+						var node = DT.fs.vfs[targetDir];
 						if (!node) {
 							out = "ls: cannot access '" + (args[1] || targetDir) + "': No such file or directory";
 						} else if (node.type === "file") {
@@ -407,9 +139,9 @@
 								var lines = ["total " + entries.length];
 								entries.forEach(function(name) {
 									var full = targetDir === "/" ? "/" + name : targetDir + "/" + name;
-									var isDir = (vfs[full] && vfs[full].type === "dir") || name === "." || name === "..";
+									var isDir = (DT.fs.vfs[full] && DT.fs.vfs[full].type === "dir") || name === "." || name === "..";
 									var perms = isDir ? "drwxr-xr-x" : "-rw-r--r--";
-									var size = isDir ? "4096" : String((vfs[full] && vfs[full].content ? vfs[full].content.length : 0));
+									var size = isDir ? "4096" : String((DT.fs.vfs[full] && DT.fs.vfs[full].content ? DT.fs.vfs[full].content.length : 0));
 									while (size.length < 6) size = " " + size;
 									lines.push(perms + " 1 visitor visitor " + size + " Aug  8 16:00 " + name);
 								});
@@ -430,8 +162,8 @@
 						} else {
 							var outputs = [];
 							for (var i = 1; i < args.length; i++) {
-								var fileTarget = resolvePath(args[i]);
-								var fnode = vfs[fileTarget];
+								var fileTarget = DT.fs.resolvePath(args[i]);
+								var fnode = DT.fs.vfs[fileTarget];
 								if (!fnode) {
 									outputs.push("cat: " + args[i] + ": No such file or directory");
 								} else if (fnode.type === "dir") {
@@ -458,8 +190,8 @@
 						}
 						var textData = "";
 						if (filename) {
-							var fileTarget = resolvePath(filename);
-							var fnode = vfs[fileTarget];
+							var fileTarget = DT.fs.resolvePath(filename);
+							var fnode = DT.fs.vfs[fileTarget];
 							if (!fnode || fnode.type !== "file") {
 								out = cmd + ": cannot open '" + filename + "': No such file";
 								break;
@@ -500,7 +232,7 @@
 							break;
 						}
 
-						var rx = new RegExp(escapeRegExp(pattern), caseInsensitive ? "i" : "");
+						var rx = new RegExp(DT.ui.escapeRegExp(pattern), caseInsensitive ? "i" : "");
 						var matches = [];
 
 						if (stdin !== undefined && stdin !== null && !targetFile) {
@@ -512,8 +244,8 @@
 							});
 							out = countOnly ? String(matches.length) : matches.join("\n");
 						} else if (targetFile) {
-							var resolvedFile = resolvePath(targetFile);
-							var fnode = vfs[resolvedFile];
+							var resolvedFile = DT.fs.resolvePath(targetFile);
+							var fnode = DT.fs.vfs[resolvedFile];
 							if (!fnode || fnode.type !== "file") {
 								out = "grep: " + targetFile + ": No such file";
 							} else {
@@ -525,10 +257,10 @@
 								out = countOnly ? String(matches.length) : matches.join("\n");
 							}
 						} else {
-							var cnode = vfs[currentPath];
+							var cnode = DT.fs.vfs[DT.state.currentPath];
 							(cnode.children || []).forEach(function(fname) {
-								var full = currentPath === "/" ? "/" + fname : currentPath + "/" + fname;
-								var f = vfs[full];
+								var full = DT.state.currentPath === "/" ? "/" + fname : DT.state.currentPath + "/" + fname;
+								var f = DT.fs.vfs[full];
 								if (f && f.type === "file") {
 									(f.content || "").split("\n").forEach(function(l, idx) {
 										var isMatch = rx.test(l);
@@ -543,16 +275,16 @@
 
 					case "tree":
 						var maxDepth = 3;
-						var startDir = currentPath;
+						var startDir = DT.state.currentPath;
 						for (var i = 1; i < args.length; i++) {
 							if (args[i] === "-L" && args[i+1]) {
 								maxDepth = parseInt(args[i+1], 10) || 3;
 								i++;
 							} else if (!args[i].startsWith("-")) {
-								startDir = resolvePath(args[i]);
+								startDir = DT.fs.resolvePath(args[i]);
 							}
 						}
-						if (!vfs[startDir]) {
+						if (!DT.fs.vfs[startDir]) {
 							out = "tree: '" + startDir + "': No such file or directory";
 							break;
 						}
@@ -562,14 +294,14 @@
 
 						function buildTree(dir, prefix, depth) {
 							if (depth > maxDepth) return;
-							var dNode = vfs[dir];
+							var dNode = DT.fs.vfs[dir];
 							if (!dNode || dNode.type !== "dir") return;
 							var kids = (dNode.children || []).slice().sort();
 							kids.forEach(function(childName, idx) {
 								var isLast = idx === kids.length - 1;
 								var pointer = isLast ? "└── " : "├── ";
 								var childPath = dir === "/" ? "/" + childName : dir + "/" + childName;
-								var cNode = vfs[childPath];
+								var cNode = DT.fs.vfs[childPath];
 								var isDir = cNode && cNode.type === "dir";
 
 								if (isDir) {
@@ -592,8 +324,8 @@
 						if (args.length < 2) {
 							out = "stat: missing operand";
 						} else {
-							var statPath = resolvePath(args[1]);
-							var sNode = vfs[statPath];
+							var statPath = DT.fs.resolvePath(args[1]);
+							var sNode = DT.fs.vfs[statPath];
 							if (!sNode) {
 								out = "stat: cannot statx '" + args[1] + "': No such file or directory";
 							} else {
@@ -619,8 +351,8 @@
 						} else {
 							var fResults = [];
 							for (var i = 1; i < args.length; i++) {
-								var fp = resolvePath(args[i]);
-								var fNode = vfs[fp];
+								var fp = DT.fs.resolvePath(args[i]);
+								var fNode = DT.fs.vfs[fp];
 								if (!fNode) {
 									fResults.push(args[i] + ": cannot open (No such file or directory)");
 								} else if (fNode.type === "dir") {
@@ -643,10 +375,10 @@
 						if (args.length < 3) {
 							out = "diff: missing operand after '" + (args[1] || "") + "'";
 						} else {
-							var p1 = resolvePath(args[1]);
-							var p2 = resolvePath(args[2]);
-							var n1 = vfs[p1];
-							var n2 = vfs[p2];
+							var p1 = DT.fs.resolvePath(args[1]);
+							var p2 = DT.fs.resolvePath(args[2]);
+							var n1 = DT.fs.vfs[p1];
+							var n2 = DT.fs.vfs[p2];
 							if (!n1) out = "diff: " + args[1] + ": No such file";
 							else if (!n2) out = "diff: " + args[2] + ": No such file";
 							else {
@@ -682,7 +414,7 @@
 						}
 						var sortText = "";
 						if (sortFile) {
-							var sfNode = vfs[resolvePath(sortFile)];
+							var sfNode = DT.fs.vfs[DT.fs.resolvePath(sortFile)];
 							if (!sfNode || sfNode.type !== "file") {
 								out = "sort: cannot read: " + sortFile;
 								break;
@@ -718,7 +450,7 @@
 						}
 						var uText = "";
 						if (uFile) {
-							var ufNode = vfs[resolvePath(uFile)];
+							var ufNode = DT.fs.vfs[DT.fs.resolvePath(uFile)];
 							if (!ufNode) { out = "uniq: " + uFile + ": No such file"; break; }
 							uText = ufNode.content || "";
 						} else if (stdin !== undefined && stdin !== null) {
@@ -760,7 +492,7 @@
 						}
 						var cutText = "";
 						if (cutFile) {
-							var cfn = vfs[resolvePath(cutFile)];
+							var cfn = DT.fs.vfs[DT.fs.resolvePath(cutFile)];
 							if (!cfn) { out = "cut: " + cutFile + ": No such file"; break; }
 							cutText = cfn.content || "";
 						} else if (stdin !== undefined && stdin !== null) {
@@ -798,7 +530,7 @@
 							var sedFile = args[2];
 							var sedText = "";
 							if (sedFile) {
-								var sn = vfs[resolvePath(sedFile)];
+								var sn = DT.fs.vfs[DT.fs.resolvePath(sedFile)];
 								if (!sn) { out = "sed: " + sedFile + ": No such file"; break; }
 								sedText = sn.content || "";
 							} else if (stdin !== undefined && stdin !== null) {
@@ -826,7 +558,7 @@
 						var awkFile = args[2];
 						var awkText = "";
 						if (awkFile) {
-							var an = vfs[resolvePath(awkFile)];
+							var an = DT.fs.vfs[DT.fs.resolvePath(awkFile)];
 							if (!an) { out = "awk: " + awkFile + ": No such file"; break; }
 							awkText = an.content || "";
 						} else if (stdin !== undefined && stdin !== null) {
@@ -854,7 +586,7 @@
 						}
 						var wcText = "";
 						if (targetFile) {
-							var wNode = vfs[resolvePath(targetFile)];
+							var wNode = DT.fs.vfs[DT.fs.resolvePath(targetFile)];
 							if (!wNode || wNode.type !== "file") {
 								out = "wc: " + targetFile + ": No such file";
 								break;
@@ -889,8 +621,8 @@
 							else if (!b64Payload) b64Payload = args[i];
 						}
 						if (!b64Payload && stdin) b64Payload = stdin.trim();
-						if (vfs[resolvePath(b64Payload)]) {
-							b64Payload = vfs[resolvePath(b64Payload)].content || "";
+						if (DT.fs.vfs[DT.fs.resolvePath(b64Payload)]) {
+							b64Payload = DT.fs.vfs[DT.fs.resolvePath(b64Payload)].content || "";
 						}
 						try {
 							if (decode) out = atob(b64Payload);
@@ -903,7 +635,7 @@
 					case "rev":
 						var revInput = "";
 						if (args[1]) {
-							var rn = vfs[resolvePath(args[1])];
+							var rn = DT.fs.vfs[DT.fs.resolvePath(args[1])];
 							revInput = rn ? (rn.content || "") : args.slice(1).join(" ");
 						} else if (stdin) {
 							revInput = stdin;
@@ -956,22 +688,22 @@
 						if (args.length < 3) {
 							out = "cp: missing destination file operand";
 						} else {
-							var srcPath = resolvePath(args[1]);
-							var destPath = resolvePath(args[2]);
-							var srcNode = vfs[srcPath];
+							var srcPath = DT.fs.resolvePath(args[1]);
+							var destPath = DT.fs.resolvePath(args[2]);
+							var srcNode = DT.fs.vfs[srcPath];
 							if (!srcNode) {
 								out = "cp: cannot stat '" + args[1] + "': No such file or directory";
 							} else {
 								var destParent = destPath.substring(0, destPath.lastIndexOf("/")) || "/";
 								var destName = destPath.split("/").pop();
-								if (vfs[destPath] && vfs[destPath].type === "dir") {
+								if (DT.fs.vfs[destPath] && DT.fs.vfs[destPath].type === "dir") {
 									destPath = destPath === "/" ? "/" + args[1].split("/").pop() : destPath + "/" + args[1].split("/").pop();
 									destParent = destPath.substring(0, destPath.lastIndexOf("/")) || "/";
 									destName = destPath.split("/").pop();
 								}
-								vfs[destPath] = JSON.parse(JSON.stringify(srcNode));
-								if (vfs[destParent] && vfs[destParent].children.indexOf(destName) === -1) {
-									vfs[destParent].children.push(destName);
+								DT.fs.vfs[destPath] = JSON.parse(JSON.stringify(srcNode));
+								if (DT.fs.vfs[destParent] && DT.fs.vfs[destParent].children.indexOf(destName) === -1) {
+									DT.fs.vfs[destParent].children.push(destName);
 								}
 							}
 						}
@@ -981,9 +713,9 @@
 						if (args.length < 3) {
 							out = "mv: missing destination file operand";
 						} else {
-							var srcPath = resolvePath(args[1]);
-							var destPath = resolvePath(args[2]);
-							var srcNode = vfs[srcPath];
+							var srcPath = DT.fs.resolvePath(args[1]);
+							var destPath = DT.fs.resolvePath(args[2]);
+							var srcNode = DT.fs.vfs[srcPath];
 							if (!srcNode) {
 								out = "mv: cannot stat '" + args[1] + "': No such file or directory";
 							} else {
@@ -992,21 +724,21 @@
 								var destParent = destPath.substring(0, destPath.lastIndexOf("/")) || "/";
 								var destName = destPath.split("/").pop();
 
-								if (vfs[destPath] && vfs[destPath].type === "dir") {
+								if (DT.fs.vfs[destPath] && DT.fs.vfs[destPath].type === "dir") {
 									destPath = destPath === "/" ? "/" + srcName : destPath + "/" + srcName;
 									destParent = destPath.substring(0, destPath.lastIndexOf("/")) || "/";
 									destName = destPath.split("/").pop();
 								}
 
-								vfs[destPath] = srcNode;
-								delete vfs[srcPath];
+								DT.fs.vfs[destPath] = srcNode;
+								delete DT.fs.vfs[srcPath];
 
-								if (vfs[srcParent]) {
-									var sIdx = vfs[srcParent].children.indexOf(srcName);
-									if (sIdx !== -1) vfs[srcParent].children.splice(sIdx, 1);
+								if (DT.fs.vfs[srcParent]) {
+									var sIdx = DT.fs.vfs[srcParent].children.indexOf(srcName);
+									if (sIdx !== -1) DT.fs.vfs[srcParent].children.splice(sIdx, 1);
 								}
-								if (vfs[destParent] && vfs[destParent].children.indexOf(destName) === -1) {
-									vfs[destParent].children.push(destName);
+								if (DT.fs.vfs[destParent] && DT.fs.vfs[destParent].children.indexOf(destName) === -1) {
+									DT.fs.vfs[destParent].children.push(destName);
 								}
 							}
 						}
@@ -1017,15 +749,15 @@
 							out = "touch: missing file operand";
 						} else {
 							for (var i = 1; i < args.length; i++) {
-								var newPath = resolvePath(args[i]);
+								var newPath = DT.fs.resolvePath(args[i]);
 								var parentDir = newPath.substring(0, newPath.lastIndexOf("/")) || "/";
 								var fname = newPath.split("/").pop();
-								if (!vfs[parentDir] || vfs[parentDir].type !== "dir") {
+								if (!DT.fs.vfs[parentDir] || DT.fs.vfs[parentDir].type !== "dir") {
 									out = "touch: cannot touch '" + args[i] + "': No such directory";
-								} else if (!vfs[newPath]) {
-									vfs[newPath] = { type: "file", content: "" };
-									if (vfs[parentDir].children.indexOf(fname) === -1) {
-										vfs[parentDir].children.push(fname);
+								} else if (!DT.fs.vfs[newPath]) {
+									DT.fs.vfs[newPath] = { type: "file", content: "" };
+									if (DT.fs.vfs[parentDir].children.indexOf(fname) === -1) {
+										DT.fs.vfs[parentDir].children.push(fname);
 									}
 								}
 							}
@@ -1038,17 +770,17 @@
 						} else {
 							for (var i = 1; i < args.length; i++) {
 								if (args[i] === "-p") continue;
-								var newDir = resolvePath(args[i]);
+								var newDir = DT.fs.resolvePath(args[i]);
 								var parentDir = newDir.substring(0, newDir.lastIndexOf("/")) || "/";
 								var dname = newDir.split("/").pop();
-								if (!vfs[parentDir] || vfs[parentDir].type !== "dir") {
+								if (!DT.fs.vfs[parentDir] || DT.fs.vfs[parentDir].type !== "dir") {
 									out = "mkdir: cannot create directory '" + args[i] + "': No such parent directory";
-								} else if (vfs[newDir]) {
+								} else if (DT.fs.vfs[newDir]) {
 									out = "mkdir: cannot create directory '" + args[i] + "': File exists";
 								} else {
-									vfs[newDir] = { type: "dir", children: [] };
-									if (vfs[parentDir].children.indexOf(dname) === -1) {
-										vfs[parentDir].children.push(dname);
+									DT.fs.vfs[newDir] = { type: "dir", children: [] };
+									if (DT.fs.vfs[parentDir].children.indexOf(dname) === -1) {
+										DT.fs.vfs[parentDir].children.push(dname);
 									}
 								}
 							}
@@ -1061,16 +793,16 @@
 						} else {
 							var rmArgs = args.slice(1).filter(function(a) { return !a.startsWith("-"); });
 							rmArgs.forEach(function(target) {
-								var rmPath = resolvePath(target);
-								if (!vfs[rmPath]) {
+								var rmPath = DT.fs.resolvePath(target);
+								if (!DT.fs.vfs[rmPath]) {
 									out = "rm: cannot remove '" + target + "': No such file or directory";
 								} else {
 									var parentDir = rmPath.substring(0, rmPath.lastIndexOf("/")) || "/";
 									var name = rmPath.split("/").pop();
-									delete vfs[rmPath];
-									if (vfs[parentDir]) {
-										var idx = vfs[parentDir].children.indexOf(name);
-										if (idx !== -1) vfs[parentDir].children.splice(idx, 1);
+									delete DT.fs.vfs[rmPath];
+									if (DT.fs.vfs[parentDir]) {
+										var idx = DT.fs.vfs[parentDir].children.indexOf(name);
+										if (idx !== -1) DT.fs.vfs[parentDir].children.splice(idx, 1);
 									}
 								}
 							});
@@ -1078,7 +810,7 @@
 						break;
 
 					case "find":
-						var startDir = args[1] && !args[1].startsWith("-") ? resolvePath(args[1]) : currentPath;
+						var startDir = args[1] && !args[1].startsWith("-") ? DT.fs.resolvePath(args[1]) : DT.state.currentPath;
 						var namePattern = null;
 						for (var i = 1; i < args.length; i++) {
 							if (args[i] === "-name" && args[i+1]) { namePattern = args[i+1]; i++; }
@@ -1086,11 +818,11 @@
 						var results = [];
 						function walk(dir) {
 							results.push(dir);
-							var node = vfs[dir];
+							var node = DT.fs.vfs[dir];
 							if (node && node.type === "dir") {
 								(node.children || []).forEach(function(c) {
 									var childPath = dir === "/" ? "/" + c : dir + "/" + c;
-									if (vfs[childPath] && vfs[childPath].type === "dir") {
+									if (DT.fs.vfs[childPath] && DT.fs.vfs[childPath].type === "dir") {
 										walk(childPath);
 									} else {
 										if (!namePattern || childPath.indexOf(namePattern.replace(/\*/g, "")) !== -1) {
@@ -1100,7 +832,7 @@
 								});
 							}
 						}
-						if (vfs[startDir]) walk(startDir);
+						if (DT.fs.vfs[startDir]) walk(startDir);
 						else out = "find: '" + startDir + "': No such file or directory";
 						if (!out) out = results.join("\n");
 						break;
@@ -1117,10 +849,10 @@
 							"450  ?        00:00:08 ./portfolio (daemontalk web)",
 							"892  pts/0    00:00:00 bash"
 						];
-						if (activeIncidentState.port8080PID !== null) {
+						if (DT.state.activeIncidentState.port8080PID !== null) {
 							psLines.push("4192 ?        00:04:12 python3 -m http.server 8080");
 						}
-						if (activeIncidentState.zombieParentPID !== null) {
+						if (DT.state.activeIncidentState.zombieParentPID !== null) {
 							psLines.push("1337 ?        00:00:15 python3 bad_supervisor.py");
 							psLines.push("1338 ?        00:00:00 [worker.py] <defunct>");
 							psLines.push("1339 ?        00:00:00 [worker.py] <defunct>");
@@ -1137,11 +869,11 @@
 							out = "kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]";
 						} else {
 							var targetPID = parseInt(args[args.length - 1], 10);
-							if (targetPID === 4192 && activeIncidentState.port8080PID === 4192) {
-								activeIncidentState.port8080PID = null;
+							if (targetPID === 4192 && DT.state.activeIncidentState.port8080PID === 4192) {
+								DT.state.activeIncidentState.port8080PID = null;
 								out = "[4192]+  Terminated              python3 -m http.server 8080";
-							} else if (targetPID === 1337 && activeIncidentState.zombieParentPID === 1337) {
-								activeIncidentState.zombieParentPID = null;
+							} else if (targetPID === 1337 && DT.state.activeIncidentState.zombieParentPID === 1337) {
+								DT.state.activeIncidentState.zombieParentPID = null;
 								out = "[1337]+  Killed                  python3 bad_supervisor.py\nInit (PID 1) reaped 5 defunct child processes.";
 							} else if (targetPID === 1) {
 								out = "kill: (1) - Operation not permitted";
@@ -1173,7 +905,7 @@
 							if (args[i] === "-i" || args[i] === "--inodes") showInodes = true;
 						}
 						if (showInodes) {
-							if (activeIncidentState.inodesFull) {
+							if (DT.state.activeIncidentState.inodesFull) {
 								out = "Filesystem       Inodes   IUsed   IFree IUse% Mounted on\n" +
 									"devtmpfs        2048000     450 2047550    1% /dev\n" +
 									"tmpfs           2048000       1 2047999    1% /run\n" +
@@ -1189,7 +921,7 @@
 									"/dev/nvme0n1p1   131072     320  130752    1% /boot/efi";
 							}
 						} else {
-							if (activeIncidentState.inodesFull) {
+							if (DT.state.activeIncidentState.inodesFull) {
 								out = "Filesystem      Size  Used Avail Use% Mounted on\n" +
 									"devtmpfs         16G     0   16G   0% /dev\n" +
 									"tmpfs            16G  240M   16G   2% /run\n" +
@@ -1209,7 +941,7 @@
 						break;
 
 					case "du":
-						var duDir = args[1] ? resolvePath(args[1]) : currentPath;
+						var duDir = args[1] ? DT.fs.resolvePath(args[1]) : DT.state.currentPath;
 						out = "4.0K\t" + duDir + "/README.md\n" +
 							"4.0K\t" + duDir + "/about.txt\n" +
 							"4.0K\t" + duDir + "/contact.txt\n" +
@@ -1227,24 +959,24 @@
 					case "env":
 					case "printenv":
 						if (args[1]) {
-							out = envVars[args[1]] || "";
+							out = DT.state.envVars[args[1]] || "";
 						} else {
 							var envList = [];
-							for (var k in envVars) envList.push(k + "=" + envVars[k]);
+							for (var k in DT.state.envVars) envList.push(k + "=" + DT.state.envVars[k]);
 							out = envList.join("\n");
 						}
 						break;
 
 					case "export":
 						if (args.length < 2) {
-							for (var k in envVars) out += "declare -x " + k + "=\"" + envVars[k] + "\"\n";
+							for (var k in DT.state.envVars) out += "declare -x " + k + "=\"" + DT.state.envVars[k] + "\"\n";
 						} else {
 							var pair = args.slice(1).join(" ");
 							var eqIdx = pair.indexOf("=");
 							if (eqIdx !== -1) {
 								var varK = pair.substring(0, eqIdx).trim();
 								var varV = pair.substring(eqIdx + 1).trim().replace(/^["']|["']$/g, "");
-								envVars[varK] = varV;
+								DT.state.envVars[varK] = varV;
 							}
 						}
 						break;
@@ -1258,11 +990,11 @@
 						break;
 
 					case "whoami":
-						out = envVars["USER"] || "visitor";
+						out = DT.state.envVars["USER"] || "visitor";
 						break;
 
 					case "hostname":
-						out = envVars["HOSTNAME"] || "daemontalk.local";
+						out = DT.state.envVars["HOSTNAME"] || "daemontalk.local";
 						break;
 
 					case "uname":
@@ -1272,7 +1004,7 @@
 						break;
 
 					case "arch":
-						out = envVars["ARCH"] || "x86_64";
+						out = DT.state.envVars["ARCH"] || "x86_64";
 						break;
 
 					case "date":
@@ -1284,7 +1016,7 @@
 						break;
 
 					case "dmesg":
-						out = vfs["/var/log/dmesg.log"].content || "";
+						out = DT.fs.vfs["/var/log/dmesg.log"].content || "";
 						break;
 
 					case "ping":
@@ -1344,13 +1076,13 @@
 					case "ss":
 					case "netstat":
 					case "lsof":
-						if (activeIncidentState.port8080PID !== null) {
+						if (DT.state.activeIncidentState.port8080PID !== null) {
 							out = "Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process\n" +
 								"tcp   LISTEN 0      128          0.0.0.0:22         0.0.0.0:*    users:((\"sshd\",pid=104,fd=3))\n" +
 								"tcp   LISTEN 0      511          0.0.0.0:80         0.0.0.0:*    users:((\"caddy\",pid=312,fd=7))\n" +
 								"tcp   LISTEN 0      511          0.0.0.0:443        0.0.0.0:*    users:((\"caddy\",pid=312,fd=8))\n" +
 								"tcp   LISTEN 0      128          0.0.0.0:5432       0.0.0.0:*    users:((\"postgres\",pid=240,fd=5))\n" +
-								"tcp   LISTEN 0      128        127.0.0.1:8080       0.0.0.0:*    users:((\"python3\",pid=" + activeIncidentState.port8080PID + ",fd=4))";
+								"tcp   LISTEN 0      128        127.0.0.1:8080       0.0.0.0:*    users:((\"python3\",pid=" + DT.state.activeIncidentState.port8080PID + ",fd=4))";
 						} else {
 							out = "Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process\n" +
 								"tcp   LISTEN 0      128          0.0.0.0:22         0.0.0.0:*    users:((\"sshd\",pid=104,fd=3))\n" +
@@ -1371,8 +1103,8 @@
 								"║               LINUX WAR STORIES & INCIDENT RCA CHALLENGES                    ║\n" +
 								"║  Investigate real production failures using standard Linux diagnostic tools. ║\n" +
 								"╚══════════════════════════════════════════════════════════════════════════════╝\n\n";
-							incidents.forEach(function(inc) {
-								var isSolved = activeIncidentState.solvedList.indexOf(inc.id) !== -1;
+							DT.fs.incidents.forEach(function(inc) {
+								var isSolved = DT.state.activeIncidentState.solvedList.indexOf(inc.id) !== -1;
 								var statusBadge = isSolved ? "[✓ SOLVED]" : "[PENDING ]";
 								listOut += "  " + statusBadge + " incident " + inc.id + " (" + inc.difficulty + ")\n" +
 									"             Title: " + inc.title + "\n\n";
@@ -1384,33 +1116,33 @@
 								"  incident status   : Show score and progress\n";
 							out = listOut;
 						} else if (sub === "status") {
-							var solvedCount = activeIncidentState.solvedList.length;
-							out = "Incident Progress: " + solvedCount + " / " + incidents.length + " Solved\n" +
-								"Active Incident: " + (activeIncidentState.currentId ? "Incident " + activeIncidentState.currentId : "None (type `incident 1` to start)");
+							var solvedCount = DT.state.activeIncidentState.solvedList.length;
+							out = "Incident Progress: " + solvedCount + " / " + DT.fs.incidents.length + " Solved\n" +
+								"Active Incident: " + (DT.state.activeIncidentState.currentId ? "Incident " + DT.state.activeIncidentState.currentId : "None (type `incident 1` to start)");
 						} else if (sub === "hint") {
-							if (!activeIncidentState.currentId) {
+							if (!DT.state.activeIncidentState.currentId) {
 								out = "No incident active. Type `incident 1` to start a challenge.";
 							} else {
-								var curInc = incidents.find(function(i) { return i.id === activeIncidentState.currentId; });
+								var curInc = DT.fs.incidents.find(function(i) { return i.id === DT.state.activeIncidentState.currentId; });
 								out = "💡 HINT (Incident " + curInc.id + "):\n" + curInc.hint;
 							}
 						} else if (sub === "verify" || sub === "solve" || sub === "check") {
-							if (!activeIncidentState.currentId) {
+							if (!DT.state.activeIncidentState.currentId) {
 								out = "No active incident. Type `incident 1` to start.";
 							} else {
-								var activeInc = incidents.find(function(i) { return i.id === activeIncidentState.currentId; });
+								var activeInc = DT.fs.incidents.find(function(i) { return i.id === DT.state.activeIncidentState.currentId; });
 								var answerParam = args.slice(2).join(" ");
 								var checkRes = activeInc.verify(answerParam);
 								if (checkRes.solved) {
-									if (activeIncidentState.solvedList.indexOf(activeInc.id) === -1) {
-										activeIncidentState.solvedList.push(activeInc.id);
-										localStorage.setItem("daemontalk_solved_incidents", JSON.stringify(activeIncidentState.solvedList));
+									if (DT.state.activeIncidentState.solvedList.indexOf(activeInc.id) === -1) {
+										DT.state.activeIncidentState.solvedList.push(activeInc.id);
+										localStorage.setItem("daemontalk_solved_incidents", JSON.stringify(DT.state.activeIncidentState.solvedList));
 									}
 									out = "╔══════════════════════════════════════════════════════════════════════════════╗\n" +
 										"║  🎉 CHALLENGE SOLVED: " + activeInc.title.toUpperCase() + "\n" +
 										"╚══════════════════════════════════════════════════════════════════════════════╝\n\n" +
 										checkRes.message + "\n\n" +
-										"Progress: " + activeIncidentState.solvedList.length + "/" + incidents.length + " completed.\n" +
+										"Progress: " + DT.state.activeIncidentState.solvedList.length + "/" + DT.fs.incidents.length + " completed.\n" +
 										"Type `incident list` to select the next incident!";
 								} else {
 									out = "❌ NOT RESOLVED YET\n" + checkRes.message + "\n\nType `incident hint` if you need guidance.";
@@ -1418,9 +1150,9 @@
 							}
 						} else {
 							var incId = parseInt(sub, 10);
-							var targetInc = incidents.find(function(i) { return i.id === incId; });
+							var targetInc = DT.fs.incidents.find(function(i) { return i.id === incId; });
 							if (targetInc) {
-								activeIncidentState.currentId = targetInc.id;
+								DT.state.activeIncidentState.currentId = targetInc.id;
 								targetInc.setup();
 								out = "╔══════════════════════════════════════════════════════════════════════════════╗\n" +
 									"║  🚨 INCIDENT #" + targetInc.id + ": " + targetInc.title.toUpperCase() + "\n" +
@@ -1462,7 +1194,7 @@
 						if (args.length < 2) out = "which: missing argument";
 						else {
 							var cmdName = args[1];
-							if (vfs["/bin"].children.indexOf(cmdName) !== -1) {
+							if (DT.fs.vfs["/bin"].children.indexOf(cmdName) !== -1) {
 								out = "/bin/" + cmdName;
 							} else {
 								out = cmdName + " not found in PATH";
@@ -1473,22 +1205,22 @@
 					case "alias":
 						if (args.length < 2) {
 							var aList = [];
-							for (var k in aliases) aList.push("alias " + k + "='" + aliases[k] + "'");
-							out = aList.join("\n") || "alias: no aliases defined";
+							for (var k in DT.state.aliases) aList.push("alias " + k + "='" + DT.state.aliases[k] + "'");
+							out = aList.join("\n") || "alias: no DT.state.aliases defined";
 						} else {
 							var aStr = args.slice(1).join(" ");
 							var aEq = aStr.indexOf("=");
 							if (aEq !== -1) {
 								var aK = aStr.substring(0, aEq).trim();
 								var aV = aStr.substring(aEq + 1).trim().replace(/^['"]|['"]$/g, "");
-								aliases[aK] = aV;
+								DT.state.aliases[aK] = aV;
 							}
 						}
 						break;
 
 					case "unalias":
-						if (args[1] && aliases[args[1]]) {
-							delete aliases[args[1]];
+						if (args[1] && DT.state.aliases[args[1]]) {
+							delete DT.state.aliases[args[1]];
 						}
 						break;
 
@@ -1519,7 +1251,7 @@
 						break;
 
 					case "history":
-						out = cmdHistory.map(function(c, i) { return "  " + (i + 1) + "  " + c; }).join("\n");
+						out = DT.state.cmdHistory.map(function(c, i) { return "  " + (i + 1) + "  " + c; }).join("\n");
 						break;
 
 					case "clear":
@@ -1539,46 +1271,47 @@
 			}
 
 			// Main Command Dispatcher with Piping and Redirection
-			function execute(rawCmd) {
+			
+	DT.cmd.execute = function (rawCmd) {
 				var trimmed = rawCmd.trim();
 				if (!trimmed) {
-					appendHistory(rawCmd, "");
+					DT.ui.appendHistory(rawCmd, "");
 					return;
 				}
 
-				cmdHistory.push(rawCmd);
-				histIndex = cmdHistory.length;
+				DT.state.cmdHistory.push(rawCmd);
+				DT.state.histIndex = DT.state.cmdHistory.length;
 
 				// Handle async special commands like curl / run
 				var firstWord = trimmed.split(/\s+/)[0].toLowerCase();
 				if (firstWord === "curl") {
-					var cArgs = parseArgs(trimmed);
+					var cArgs = DT.cmd.parseArgs(trimmed);
 					if (cArgs.length < 2) {
-						appendHistory(rawCmd, "curl: try 'curl <url>' (e.g. curl /api/terminal/data)");
+						DT.ui.appendHistory(rawCmd, "curl: try 'curl <url>' (e.g. curl /api/terminal/data)");
 						return;
 					}
 					var url = cArgs[1];
-					appendHistory(rawCmd, "Connecting to " + url + "...");
+					DT.ui.appendHistory(rawCmd, "Connecting to " + url + "...");
 					fetch(url)
 						.then(function(r) { return r.text(); })
 						.then(function(text) {
-							appendHistory("", text.substring(0, 1500) + (text.length > 1500 ? "\n... [truncated]" : ""));
+							DT.ui.appendHistory("", text.substring(0, 1500) + (text.length > 1500 ? "\n... [truncated]" : ""));
 						})
 						.catch(function(err) {
-							appendHistory("", "curl: (7) Failed to connect: " + err.toString());
+							DT.ui.appendHistory("", "curl: (7) Failed to connect: " + err.toString());
 						});
 					return;
 				}
 
 				if (firstWord === "run") {
-					var rArgs = parseArgs(trimmed);
+					var rArgs = DT.cmd.parseArgs(trimmed);
 					if (rArgs.length < 3) {
-						appendHistory(rawCmd, "Usage: run <go|js|python|bash> <code>\nExample: run go fmt.Println(\"Hello from daemontalk\")");
+						DT.ui.appendHistory(rawCmd, "Usage: run <go|js|python|bash> <code>\nExample: run go fmt.Println(\"Hello from daemontalk\")");
 						return;
 					}
 					var lang = rArgs[1];
 					var code = rArgs.slice(2).join(" ");
-					appendHistory(rawCmd, "Executing code (" + lang + ")...");
+					DT.ui.appendHistory(rawCmd, "Executing code (" + lang + ")...");
 					fetch("/api/run", {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
@@ -1591,10 +1324,10 @@
 						if (data.stderr) result += (result ? "\n" : "") + "[stderr] " + data.stderr;
 						if (data.error) result += (result ? "\n" : "") + "[error] " + data.error;
 						if (!result) result = "Program completed with exit code 0 (no output)";
-						appendHistory("", result);
+						DT.ui.appendHistory("", result);
 					})
 					.catch(function(err) {
-						appendHistory("", "Execution error: " + err.toString());
+						DT.ui.appendHistory("", "Execution error: " + err.toString());
 					});
 					return;
 				}
@@ -1622,7 +1355,7 @@
 
 				for (var i = 0; i < pipeSegments.length; i++) {
 					var segment = pipeSegments[i];
-					var segOut = evalSingleCommand(segment, currentPipeOut);
+					var segOut = DT.cmd.evalSingleCommand(segment, currentPipeOut);
 					if (segOut === null) return; // handled by clear/exit
 					currentPipeOut = segOut;
 				}
@@ -1631,17 +1364,17 @@
 
 				// Handle File Redirection
 				if (redirectFile && finalOut !== null) {
-					var rfPath = resolvePath(redirectFile);
+					var rfPath = DT.fs.resolvePath(redirectFile);
 					var rfParent = rfPath.substring(0, rfPath.lastIndexOf("/")) || "/";
 					var rfName = rfPath.split("/").pop();
-					if (vfs[rfParent] && vfs[rfParent].type === "dir") {
-						if (!vfs[rfPath]) {
-							vfs[rfPath] = { type: "file", content: finalOut + "\n" };
-							if (vfs[rfParent].children.indexOf(rfName) === -1) vfs[rfParent].children.push(rfName);
+					if (DT.fs.vfs[rfParent] && DT.fs.vfs[rfParent].type === "dir") {
+						if (!DT.fs.vfs[rfPath]) {
+							DT.fs.vfs[rfPath] = { type: "file", content: finalOut + "\n" };
+							if (DT.fs.vfs[rfParent].children.indexOf(rfName) === -1) DT.fs.vfs[rfParent].children.push(rfName);
 						} else if (redirectAppend) {
-							vfs[rfPath].content = (vfs[rfPath].content || "") + finalOut + "\n";
+							DT.fs.vfs[rfPath].content = (DT.fs.vfs[rfPath].content || "") + finalOut + "\n";
 						} else {
-							vfs[rfPath].content = finalOut + "\n";
+							DT.fs.vfs[rfPath].content = finalOut + "\n";
 						}
 						finalOut = "";
 					} else {
@@ -1649,38 +1382,11 @@
 					}
 				}
 
-				appendHistory(rawCmd, finalOut);
+				DT.ui.appendHistory(rawCmd, finalOut);
 			}
 
-			function appendHistory(cmd, output) {
-				var item = document.createElement("div");
-				item.className = "space-y-1";
-
-				if (cmd !== "") {
-					var pLine = document.createElement("div");
-					pLine.className = "flex items-baseline gap-2";
-					var disp = getDisplayPath(currentPath);
-					pLine.innerHTML = '<span class="text-[var(--term-prompt)] font-semibold select-none">visitor@daemontalk:' + disp + '$</span> ' +
-						'<span class="text-[var(--term-text)]">' + escapeHTML(cmd) + '</span>';
-					item.appendChild(pLine);
-				}
-
-				if (output) {
-					var outEl = document.createElement("pre");
-					outEl.className = "text-[var(--term-text)] whitespace-pre-wrap break-words leading-relaxed pl-2 text-xs sm:text-sm font-mono select-text";
-					outEl.style.background = "transparent";
-					outEl.style.border = "none";
-					outEl.style.padding = "0";
-					outEl.style.margin = "0";
-					outEl.textContent = output;
-					item.appendChild(outEl);
-				}
-
-				historyEl.appendChild(item);
-				screenEl.scrollTop = screenEl.scrollHeight;
-			}
-
-			function parseArgs(str) {
+			
+	DT.cmd.parseArgs = function (str) {
 				var match = str.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g);
 				if (!match) return [];
 				return match.map(function(m) {
@@ -1691,143 +1397,5 @@
 				});
 			}
 
-			function escapeRegExp(string) {
-				return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-			}
-
-			function escapeHTML(str) {
-				return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-			}
-
-			// Tab Auto-Completion Engine
-			function handleTabComplete() {
-				var val = inputEl.value;
-				var cursor = inputEl.selectionStart;
-				var beforeCursor = val.substring(0, cursor);
-				var tokens = beforeCursor.split(/\s+/);
-				var lastToken = tokens[tokens.length - 1] || "";
-
-				// If completing command name
-				if (tokens.length <= 1) {
-					var cmds = vfs["/bin"].children || [];
-					var matches = cmds.filter(function(c) { return c.startsWith(lastToken); });
-					if (matches.length === 1) {
-						inputEl.value = matches[0] + " ";
-					} else if (matches.length > 1) {
-						appendHistory(val, matches.join("  "));
-					}
-					return;
-				}
-
-				// Completing files or directories
-				var dirPath = currentPath;
-				var prefix = lastToken;
-				if (lastToken.indexOf("/") !== -1) {
-					var lastSlash = lastToken.lastIndexOf("/");
-					var dirPart = lastToken.substring(0, lastSlash + 1);
-					prefix = lastToken.substring(lastSlash + 1);
-					dirPath = resolvePath(dirPart);
-				}
-
-				var node = vfs[dirPath];
-				if (node && node.type === "dir") {
-					var entries = (node.children || []).filter(function(c) { return c.startsWith(prefix); });
-					if (entries.length === 1) {
-						var match = entries[0];
-						var full = dirPath === "/" ? "/" + match : dirPath + "/" + match;
-						var isDir = vfs[full] && vfs[full].type === "dir";
-						var replaceStr = (lastToken.indexOf("/") !== -1 ? lastToken.substring(0, lastToken.lastIndexOf("/") + 1) : "") + match + (isDir ? "/" : " ");
-						tokens[tokens.length - 1] = replaceStr;
-						inputEl.value = tokens.join(" ");
-					} else if (entries.length > 1) {
-						appendHistory(val, entries.join("  "));
-					}
-				}
-			}
-
-			// Key Event Listeners
-			inputEl.addEventListener("keydown", function(e) {
-				if (e.key === "Enter") {
-					e.preventDefault();
-					var val = inputEl.value;
-					inputEl.value = "";
-					execute(val);
-				} else if (e.key === "Tab") {
-					e.preventDefault();
-					handleTabComplete();
-				} else if (e.key === "ArrowUp") {
-					e.preventDefault();
-					if (cmdHistory.length === 0) return;
-					if (histIndex === cmdHistory.length) {
-						currentInputBuffer = inputEl.value;
-					}
-					if (histIndex > 0) {
-						histIndex--;
-						inputEl.value = cmdHistory[histIndex];
-					}
-				} else if (e.key === "ArrowDown") {
-					e.preventDefault();
-					if (histIndex < cmdHistory.length - 1) {
-						histIndex++;
-						inputEl.value = cmdHistory[histIndex];
-					} else if (histIndex === cmdHistory.length - 1) {
-						histIndex = cmdHistory.length;
-						inputEl.value = currentInputBuffer;
-					}
-				} else if (e.ctrlKey && e.key === "l") {
-					e.preventDefault();
-					window.termClear();
-				} else if (e.ctrlKey && e.key === "c") {
-					e.preventDefault();
-					var val = inputEl.value;
-					inputEl.value = "";
-					appendHistory(val + "^C", "");
-				} else if (e.ctrlKey && e.key === "u") {
-					e.preventDefault();
-					inputEl.value = "";
-				}
-			});
-
-			window.termClear = function() {
-				historyEl.innerHTML = "";
-				inputEl.value = "";
-				inputEl.focus();
-			};
-
-			window.termExec = function(cmd) {
-				inputEl.value = cmd;
-				inputEl.focus();
-				execute(cmd);
-			};
-
-			window.termToggleFullscreen = function() {
-				var win = document.getElementById("term-window");
-				if (!document.fullscreenElement) {
-					win.requestFullscreen().catch(function(e) { console.warn(e); });
-				} else {
-					document.exitFullscreen();
-				}
-			};
-
-			function renderMotd() {
-				var motd = document.createElement("div");
-				motd.className = "mb-4 text-xs text-[var(--term-muted)] space-y-1 font-mono pb-3 border-b border-[var(--term-border)]/50";
-				motd.innerHTML = "<div class='text-[var(--term-text)] font-semibold'>daemontalk Linux 6.12.8-generic (x86_64) &bull; bash 5.2.26</div>" +
-					"<div>Press <kbd class='px-1.5 py-0.5 rounded border border-[var(--term-border)] bg-[var(--term-chip-bg)] text-[var(--term-text)] text-[11px]'>Tab</kbd> to auto-complete &bull; Type <span class='text-[var(--term-link)] font-semibold cursor-pointer underline hover:text-[var(--term-text)]' onclick=\"window.termExec('help')\">help</span> &bull; Try <span class='text-[var(--term-prompt)] font-bold cursor-pointer underline hover:text-[var(--term-text)]' onclick=\"window.termExec('incident list')\">incident list</span></div>";
-				historyEl.appendChild(motd);
-			}
-
-			// Initial Setup
-			renderMotd();
-			updatePrompt();
-			setTimeout(function() { inputEl.focus(); }, 100);
-		}
-
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", initDaemonTalkTerminal);
-		} else {
-			initDaemonTalkTerminal();
-		}
-		document.addEventListener("htmx:afterSwap", initDaemonTalkTerminal);
-		document.addEventListener("htmx:load", initDaemonTalkTerminal);
-	})();
+			
+})();
