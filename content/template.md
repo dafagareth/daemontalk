@@ -1,53 +1,52 @@
 ---
-# ==============================================================================
-# DAEMONTALK DISPATCH FRONTMATTER TEMPLATE
-# ==============================================================================
-# title: (Required) Technical dispatch title without '#' heading symbols.
+# Document Metadata & Dispatch Specification
+# ----------------------------------------------------------------------------
+# title: Primary headline of the dispatch. Avoid leading '#' markdown symbols.
 title: "Distributed Systems Architecture and Linux Kernel Internals"
 
-# slug: (Required) Unique URL identifier (/blog/{slug}). Can be text or 8-char hex UID.
+# slug: Canonical URI route (/blog/{slug}). Supports alphanumeric text or 8-byte hex UIDs.
 slug: distributed-systems-architecture
 
-# aliases: (Optional) Legacy URLs that 301 redirect to this canonical article.
+# aliases: Historical URIs that issue automatic HTTP 301 Permanent Redirects to this slug.
 aliases: [systems-arch-draft, legacy-systems-guide]
 
-# date: (Required) Release publication date (Format: YYYY-MM-DD).
+# date: ISO 8601 publication timestamp (YYYY-MM-DD).
 date: 2026-08-17
 
-# author: (Optional) Article author name.
+# author: Contributor or author attribution name.
 author: "Write your name here"
 
-# tags: (Required) Indexing categories (e.g. [systems, linux, go, kernel]).
+# tags: Taxonomic indexing classification (e.g., [systems, linux, architecture]).
 tags: [systems, linux, backend]
 
-# lang: (Required) Language code ('en' for English, 'id' for Bahasa Indonesia).
+# lang: BCP 47 language identifier ('en' for English, 'id' for Indonesian).
 lang: en
 
-# draft: (Optional) Set 'false' for public release, or 'true' for internal draft.
+# draft: Visibility state ('false' publishes immediately; 'true' restricts to preview).
 draft: false
 
-# type: (Optional) 'post' for standard dispatch or 'til' for Today I Learned.
+# type: Content classification schema ('post' for technical articles, 'til' for bite-sized notes).
 type: post
 
-# cover: (Optional) Main hero cover image path or external URL.
+# cover: Primary hero visual asset (Absolute static asset path or external URL).
 cover: "/static/images/posts/welcome-to-daemontalk/wallpaper1.jpg"
 
-# coverCaption: (Optional) Image attribution text shown below cover photo.
+# coverCaption: Attribution label and descriptive caption rendered beneath the cover image.
 coverCaption: "Cover photograph by NASA via Unsplash"
 
-# coverSource: (Optional) Clickable hyperlink to image original source or photographer.
+# coverSource: Canonical hyperlink referencing the original asset repository or photographer.
 coverSource: "https://unsplash.com"
 
-# readTime: (Optional) Estimated read time in minutes. Calculated automatically if omitted.
+# readTime: Explicit reading duration in minutes. If omitted, calculated dynamically at ~200 WPM.
 readTime: 6
 
-# description: (Optional) Summary for search engines (SEO) and OpenGraph social cards.
+# description: Meta summary for search engine indexing (SEO) and Open Graph / Twitter cards.
 description: "A comprehensive deep dive into distributed systems architecture, Linux io_uring asynchronous pipelines, and Go runtime scheduler internals."
 
-# series: (Optional) Grouping dispatches into a multi-part series with automatic navigation.
+# series: Optional collection identifier for grouping multi-part architectural publications.
 series: "Distributed Systems Engineering"
 
-# series_part: (Optional) Sequence part number in the series (1, 2, 3, etc.).
+# series_part: Monotonically increasing numerical index within the declared series.
 series_part: 1
 ---
 

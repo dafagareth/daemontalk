@@ -1,42 +1,44 @@
 ---
-# ==============================================================================
-# DAEMONTALK ARTICLE FRONTMATTER SPECIFICATION
-# ==============================================================================
-# title: (Wajib) Judul artikel yang jelas, lugas, dan bebas karakter `#`.
-title: "Panduan Lengkap Arsitektur Sistem Terdistribusi dan Fitur Markdown"
+# Document Metadata & Dispatch Specification
+# ----------------------------------------------------------------------------
+# title: Primary headline of the dispatch. Avoid leading '#' markdown symbols.
+title: "Distributed Systems Architecture and Markdown Engineering Guide"
 
-# slug: (Wajib) Identifikator URL unik (/blog/{slug}). Gunakan huruf kecil & strip.
-slug: panduan-arsitektur-sistem
+# slug: Canonical URI route (/blog/{slug}). Supports alphanumeric text or 8-byte hex UIDs.
+slug: distributed-systems-guide
 
-# aliases: (Opsional) URL lama yang otomatis dialihkan (redirect 301) ke artikel ini.
-aliases: [arsitektur-sistem-modern, draft-rekayasa-kernel]
+# aliases: Historical URIs that issue automatic HTTP 301 Permanent Redirects to this slug.
+aliases: [systems-architecture-draft, legacy-kernel-guide]
 
-# date: (Wajib) Tanggal rilis artikel (Format: YYYY-MM-DD) untuk pengurutan linimasa.
-date: 2026-08-14
+# date: ISO 8601 publication timestamp (YYYY-MM-DD).
+date: 2026-08-17
 
-# tags: (Wajib) Kategori artikel untuk indexing dan pencarian.
+# author: Contributor or author attribution name.
+author: "Write your name here"
+
+# tags: Taxonomic indexing classification (e.g., [systems, linux, architecture]).
 tags: [architecture, linux, go, performance]
 
-# lang: (Wajib) Bahasa artikel ('id' untuk Indonesia, 'en' untuk English).
-lang: id
+# lang: BCP 47 language identifier ('en' for English, 'id' for Indonesian).
+lang: en
 
-# draft: (Opsional) Set 'false' untuk rilis publik, atau 'true' untuk mode draft internal.
+# draft: Visibility state ('false' publishes immediately; 'true' restricts to preview).
 draft: false
 
-# type: (Opsional) 'post' untuk artikel standar atau 'til' untuk Today I Learned.
+# type: Content classification schema ('post' for technical articles, 'til' for bite-sized notes).
 type: post
 
-# cover: (Opsional) Gambar sampul utama artikel.
+# cover: Primary hero visual asset (Absolute static asset path or external URL).
 cover: "/static/logo/logo-dark.png"
 
-# series: (Opsional) Mengelompokkan postingan ke dalam rangkaian seri topik.
+# series: Optional collection identifier for grouping multi-part architectural publications.
 series: "Distributed Systems Engineering"
 
-# series_part: (Opsional) Urutan nomor bab dalam seri (1, 2, 3, dst).
+# series_part: Monotonically increasing numerical index within the declared series.
 series_part: 1
 
-# summary: Ringkasan singkat untuk SEO dan kartu pratinjau.
-summary: "Panduan komprehensif penulisan artikel rekayasa sistem, pemanfaatan carousel, galeri gambar, diagram ASCII, FAQ interaktif, dan kartu profil penulis."
+# description: Meta summary for search engine indexing (SEO) and Open Graph / Twitter cards.
+description: "A comprehensive guide on systems engineering dispatches, image carousels, responsive galleries, ASCII architecture diagrams, interactive FAQs, and author attribution cards."
 ---
 
 Paragraf pembuka berfungsi sebagai intisari teknis dari keseluruhan dokumen[^1]. Kalimat pertama ini dirancang ringkas dan padat karena otomatis diekstraksi oleh parser sebagai *meta description* untuk mesin pencari (SEO) dan preview kartu media sosial.
