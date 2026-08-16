@@ -12,9 +12,8 @@ templ footer(ui i18n.UI, lang string) {
 			<!-- Brand and Social Row -->
 			<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border/60 pb-8 mb-10">
 				<div>
-					<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center gap-2 shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-						@BrandIcon("h-5 w-auto")
-						<span class="text-lg font-bold tracking-tight text-text" style="font-family: Georgia, serif;">daemontalk</span>
+					<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+						@BrandLogo("h-6 w-auto")
 					</a>
 					<p class="text-[13px] text-muted leading-relaxed max-w-[400px]">
 						{ ui.Footer_Bio }

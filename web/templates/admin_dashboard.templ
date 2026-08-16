@@ -1,0 +1,121 @@
+package templates
+
+import (
+	"fmt"
+)
+
+templ adminDashboardTab(stats AdminStats) {
+	<div id="tab-dashboard" class="space-y-8 sm:space-y-10">
+		<h1 class="text-lg font-semibold text-text">Channel Dashboard</h1>
+
+		<!-- Stats row -->
+		<dl class="flex flex-wrap gap-x-8 gap-y-2 text-sm border-b border-border pb-4">
+			<div>
+				<dt class="text-muted text-xs">Posts</dt>
+				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", len(stats.Posts)) }</dd>
+			</div>
+			<div>
+				<dt class="text-muted text-xs">Views</dt>
+				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", adminTotalViews(stats.Views)) }</dd>
+			</div>
+			<div>
+				<dt class="text-muted text-xs">Hits</dt>
+				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", stats.TotalHits) }</dd>
+			</div>
+			<div>
+				<dt class="text-muted text-xs">Comments</dt>
+				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", len(stats.Comments)) }</dd>
+			</div>
+		</dl>
+
+		<!-- Latest post -->
+		if len(stats.Posts) > 0 {
+			{{ latest := stats.Posts[0] }}
+			<div class="text-sm">
+				<span class="text-xs text-muted uppercase tracking-wider">Latest</span>
+				<div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+					<a href={ templ.SafeURL("/blog/" + latest.Slug) } class="font-medium text-text hover:text-link">{ latest.Title }</a>
+					if latest.Draft {
+						<span class="badge badge-draft">Draft</span>
+					}
+					<span class="text-xs font-mono text-muted">{ fmtDate(latest) }</span>
+					<span class="text-xs font-mono text-muted">{ fmt.Sprintf("%d", stats.Views[latest.Slug]) } views</span>
+				</div>
+			</div>
+		}
+
+		<!-- Top 5 posts -->
+		{{ sorted := adminSortedByViews(stats.Posts, stats.Views) }}
+		if len(sorted) > 0 {
+			{{ maxV := adminMaxViews(stats.Posts, stats.Views) }}
+			<div>
+				<span class="text-xs text-muted uppercase tracking-wider">Top posts</span>
+				<div class="mt-2 divide-y divide-[var(--c-border)]">
+					for _, p := range sorted[:minInt(5, len(sorted))] {
+						<div class="py-2.5 flex items-center justify-between gap-4 text-sm">
+							<div class="min-w-0 flex-1">
+								<a href={ templ.SafeURL("/blog/" + p.Slug) } class="font-medium text-text hover:text-link truncate block">{ p.Title }</a>
+								<div class="mt-1 h-1 rounded-none bg-[var(--c-border)] overflow-hidden max-w-xs">
+									<div class="h-full bg-[var(--c-link)] rounded-none" style={ fmt.Sprintf("width: %.1f%%", adminViewPct(stats.Views[p.Slug], maxV)) }></div>
+								</div>
+							</div>
+							<div class="flex items-center gap-3 text-xs font-mono text-muted shrink-0">
+								<span class="text-text font-medium">{ fmt.Sprintf("%d", stats.Views[p.Slug]) }</span>
+								<span class="text-muted">views</span>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		}
+
+		<!-- Recent comments -->
+		if len(stats.Comments) > 0 {
+			<div>
+				<span class="text-xs text-muted uppercase tracking-wider">Recent comments</span>
+				<div class="mt-2 divide-y divide-[var(--c-border)]">
+					for _, c := range stats.Comments[:minInt(5, len(stats.Comments))] {
+						<div class="py-2.5 text-sm">
+							<div class="flex items-baseline justify-between gap-2">
+								<span class="font-medium text-text">{ c.Name }</span>
+								<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt) }</span>
+							</div>
+							<a href={ templ.SafeURL("/blog/" + c.PostSlug) } class="text-xs font-mono text-link hover:underline">/{ c.PostSlug }</a>
+							<p class="text-xs text-muted mt-1 line-clamp-1">{ c.Body }</p>
+						</div>
+					}
+				</div>
+			</div>
+		}
+
+		<!-- System Feature Modules Control -->
+		<div class="border border-border bg-surface p-5 space-y-3">
+			<div class="flex flex-wrap items-center justify-between gap-4">
+				<div>
+					<div class="font-mono text-xs font-bold text-text uppercase tracking-wider flex items-center gap-2">
+						<span>Systems Radar & Knowledge Graph (/graph)</span>
+						if stats.RadarEnabled {
+							<span class="badge badge-ok">Active</span>
+						} else {
+							<span class="badge badge-draft">Disabled</span>
+						}
+					</div>
+					<p class="text-xs text-muted mt-1">
+						Interactive canvas network graph connecting engineering domains and topics.
+					</p>
+				</div>
+				<form method="post" action="/admin/settings/toggle-radar">
+					if stats.RadarEnabled {
+						<button type="submit" class="px-3.5 py-1.5 text-xs font-mono border border-border bg-chip hover:bg-hover text-text transition-colors cursor-pointer">
+							Disable Radar
+						</button>
+					} else {
+						<button type="submit" class="px-3.5 py-1.5 text-xs font-mono font-bold bg-[var(--c-text)] text-[var(--c-bg)] hover:opacity-90 transition-opacity shadow-sm cursor-pointer">
+							Enable Radar
+						</button>
+					}
+				</form>
+			</div>
+		</div>
+	</div>
+}

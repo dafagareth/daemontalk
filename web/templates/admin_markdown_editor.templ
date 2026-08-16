@@ -1,0 +1,247 @@
+package templates
+
+import (
+	"daemontalk/internal/post"
+)
+
+// AdminMarkdownEditor is a distraction-free raw Markdown editor for repository dispatches.
+templ AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool, errMsg string) {
+	<section
+		id="md-editor-root"
+		data-slug={ slug }
+		class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6"
+	>
+		<!-- Top Action Header -->
+		<div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-border/60">
+			<div class="flex items-center gap-3">
+				<a
+					href="/admin#content"
+					class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text px-2.5 py-1.5 border border-border bg-surface hover:bg-hover transition-colors"
+				>
+					@iconArrowLeft()
+					<span>Content</span>
+				</a>
+				<div class="flex items-center gap-2">
+					<span class="font-mono text-xs font-bold text-text">content/posts/{ slug }.md</span>
+					if isArchived {
+						<span class="badge badge-draft">Archived</span>
+					} else if p.Draft {
+						<span class="badge badge-draft">Draft</span>
+					} else {
+						<span class="badge badge-ok">Public</span>
+					}
+				</div>
+			</div>
+
+			<div class="flex items-center gap-2">
+				if isArchived {
+					<form method="post" action={ templ.SafeURL("/admin/posts/file-restore?slug=" + slug) } class="inline">
+						<button type="submit" class="inline-flex items-center text-xs font-mono text-text px-3 py-1.5 border border-border bg-surface hover:bg-hover transition-colors cursor-pointer">
+							<span>Restore</span>
+						</button>
+					</form>
+				} else {
+					<form method="post" action={ templ.SafeURL("/admin/posts/file-archive?slug=" + slug) } data-confirm="Archive this post? It will be hidden from public feeds." class="inline">
+						<button type="submit" class="inline-flex items-center text-xs font-mono text-muted hover:text-text px-3 py-1.5 border border-border bg-surface hover:bg-hover transition-colors cursor-pointer">
+							<span>Archive</span>
+						</button>
+					</form>
+				}
+				<form method="post" action={ templ.SafeURL("/admin/posts/file-delete?slug=" + slug) } data-confirm="Permanently delete this markdown file and assets? This cannot be undone." class="inline">
+					<button type="submit" class="inline-flex items-center text-xs font-mono text-red-500 hover:text-red-600 px-3 py-1.5 border border-border bg-surface hover:bg-hover transition-colors cursor-pointer">
+						<span>Delete</span>
+					</button>
+				</form>
+				<a
+					href={ templ.SafeURL("/admin/posts/export?slug=" + slug) }
+					class="inline-flex items-center gap-1 text-xs font-mono text-muted hover:text-text px-3 py-1.5 border border-border hover:bg-hover transition-colors"
+					download
+				>
+					<span>Export .md</span>
+				</a>
+				if !p.Draft && !isArchived {
+					<a
+						href={ templ.SafeURL("/blog/" + slug) }
+						target="_blank"
+						class="inline-flex items-center gap-1 text-xs font-mono text-link hover:underline px-3 py-1.5 border border-border bg-surface hover:bg-hover transition-colors"
+					>
+						<span>View Live</span>
+						@iconArrowUpRight()
+					</a>
+				}
+			</div>
+		</div>
+
+		if errMsg != "" {
+			<div class="px-4 py-3 border border-[var(--c-warn)] bg-[var(--c-warn-bg)] text-xs text-[var(--c-warn)] font-mono flex items-center gap-2">
+				@IconError("w-4 h-4 shrink-0")
+				<span>{ errMsg }</span>
+			</div>
+		}
+
+		<!-- Editor & Controls Form -->
+		<form method="post" action="/admin/posts/file-save" class="space-y-4">
+			<input type="hidden" id="md-slug-val" name="slug" value={ slug }/>
+
+			<!-- Toolbar: Image Uploader, Markdown Helpers, Character Count -->
+			<div class="flex flex-wrap items-center justify-between gap-3 p-2.5 bg-surface border border-border text-xs font-mono">
+				<div class="flex items-center gap-2">
+					<button
+						type="button"
+						onclick="document.getElementById('md-img-file').click()"
+						class="px-2.5 py-1 bg-chip border border-border text-text hover:bg-hover transition-colors cursor-pointer flex items-center gap-1.5"
+					>
+						<span>Upload Image</span>
+					</button>
+					<input
+						type="file"
+						id="md-img-file"
+						accept="image/*"
+						class="hidden"
+						onchange="uploadMarkdownImage(this)"
+					/>
+					<span id="img-upload-status" class="text-muted text-[11px]"></span>
+				</div>
+
+				<div class="flex items-center gap-4 text-muted text-[11px]">
+					<span id="md-char-count">0 chars</span>
+					<span>·</span>
+					<span id="md-word-count">0 words</span>
+				</div>
+			</div>
+
+			<!-- Raw Markdown Textarea -->
+			<div class="relative border border-border bg-bg">
+				<textarea
+					id="md-editor-textarea"
+					name="content"
+					rows="28"
+					spellcheck="false"
+					required
+					class="w-full p-4 font-mono text-sm leading-relaxed text-text bg-transparent border-0 outline-none resize-y focus:ring-0"
+					placeholder="---
+title: Post Title
+slug: custom-slug
+date: 2026-08-16
+author: Write your name here
+tags: [tag1, tag2]
+lang: en
+draft: false
+description: Write a brief description of this dispatch.
+---
+
+Write content here..."
+				>{ rawMD }</textarea>
+			</div>
+
+			<!-- Bottom Actions -->
+			<div class="flex items-center justify-between gap-4 pt-2">
+				<a href="/admin#content" class="text-xs font-mono text-muted hover:text-text">
+					Cancel
+				</a>
+				<div class="flex items-center gap-3">
+					<button
+						type="submit"
+						name="action"
+						value="save"
+						class="px-4 py-2 text-xs font-mono font-bold bg-chip border border-border text-text hover:bg-hover transition-colors cursor-pointer"
+					>
+						Save Changes
+					</button>
+					<button
+						type="submit"
+						name="action"
+						value="view"
+						class="px-5 py-2 text-xs font-mono font-bold bg-[var(--c-text)] text-[var(--c-bg)] hover:opacity-90 transition-all cursor-pointer shadow-sm"
+					>
+						Save & View Post
+					</button>
+				</div>
+			</div>
+		</form>
+	</section>
+
+	<script>
+		// Tab key indent & statistics
+		(function() {
+			var tx = document.getElementById('md-editor-textarea');
+			var charCount = document.getElementById('md-char-count');
+			var wordCount = document.getElementById('md-word-count');
+
+			function updateCounts() {
+				var val = tx.value || "";
+				charCount.textContent = val.length + " chars";
+				var words = val.trim().split(/\s+/).filter(Boolean).length;
+				wordCount.textContent = words + " words";
+			}
+
+			if (tx) {
+				tx.addEventListener('keydown', function(e) {
+					if (e.key === 'Tab') {
+						e.preventDefault();
+						var start = this.selectionStart;
+						var end = this.selectionEnd;
+						this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+						this.selectionStart = this.selectionEnd = start + 1;
+					}
+				});
+				tx.addEventListener('input', updateCounts);
+				updateCounts();
+			}
+
+			// Image upload helper with dynamic YAML frontmatter slug/UID detection
+			window.uploadMarkdownImage = function(input) {
+				if (!input.files || !input.files[0]) return;
+				var file = input.files[0];
+				var status = document.getElementById('img-upload-status');
+				status.textContent = "Uploading " + file.name + "...";
+
+				// 1. Detect slug or hex UID from YAML frontmatter in textarea (e.g. slug: "7f4a9b2c")
+				var targetSlug = "";
+				if (tx && tx.value) {
+					var match = tx.value.match(/^slug:\s*["']?([a-zA-Z0-9_-]+)["']?/m);
+					if (match && match[1]) {
+						targetSlug = match[1];
+					}
+				}
+
+				// 2. Fallback to container data-slug, hidden input, or URL param
+				if (!targetSlug) {
+					var rootEl = document.getElementById('md-editor-root');
+					targetSlug = (rootEl ? rootEl.getAttribute('data-slug') : "") || 
+								 (document.getElementById('md-slug-val') || {}).value || 
+								 new URLSearchParams(window.location.search).get('slug') || 
+								 "uploads";
+				}
+
+				var formData = new FormData();
+				formData.append("image", file);
+				formData.append("slug", targetSlug);
+
+				fetch("/admin/upload-image", {
+					method: "POST",
+					body: formData
+				})
+				.then(function(res) {
+					if (!res.ok) throw new Error("Upload failed");
+					return res.json();
+				})
+				.then(function(data) {
+					if (data.markdown && tx) {
+						var start = tx.selectionStart;
+						var end = tx.selectionEnd;
+						var text = tx.value;
+						var insert = "\n" + data.markdown + "\n";
+						tx.value = text.substring(0, start) + insert + text.substring(end);
+						tx.selectionStart = tx.selectionEnd = start + insert.length;
+						status.textContent = "✓ Uploaded to /" + targetSlug + ": " + data.filename;
+						updateCounts();
+					}
+				})
+				.catch(function(err) {
+					status.textContent = "Error: " + err.message;
+				});
+			};
+		})();
+	</script>
+}

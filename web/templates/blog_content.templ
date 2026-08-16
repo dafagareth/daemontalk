@@ -1,0 +1,46 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ blogContent(ui i18n.UI, p post.Post) {
+	<!-- Mobile Reading Tools -->
+	<div class="lg:hidden flex flex-wrap items-center justify-between gap-3 mb-8 p-4 border border-border rounded-none-none bg-surface">
+		<div class="flex items-center rounded-none-none border border-border overflow-hidden text-xs font-mono">
+			<button onclick="adjustProseSize(-1)" aria-label="Decrease font size" class="px-3 py-1.5 hover:bg-hover text-text transition-colors border-r border-border">A-</button>
+			<button onclick="adjustProseSize(1)" aria-label="Increase font size" class="px-3 py-1.5 hover:bg-hover text-text transition-colors border-r border-border">A+</button>
+			<button onclick="toggleSerif()" aria-label="Toggle serif font" class="serif-toggle-btn px-3 py-1.5 font-serif hover:bg-hover text-muted transition-colors">Serif</button>
+		</div>
+		<div class="flex items-center gap-2">
+			<span class="text-[10px] font-mono text-muted uppercase tracking-wider shrink-0">Warm</span>
+			<input
+				type="range"
+				id="warm-slider-mobile"
+				min="0" max="100" step="5"
+				value="0"
+				oninput="setWarmTint(this.value)"
+				class="warm-slider w-20 h-1 accent-amber-500 cursor-pointer"
+				aria-label="Warm tint intensity"
+			/>
+		</div>
+		<button onclick="toggleBookmark(this)" data-slug={ p.Slug } data-title={ p.Title } data-date={ p.Date.Format("2006-01-02") } class="bookmark-btn border border-border px-3 py-1 rounded-none-none bg-bg text-text">☆</button>
+	</div>
+	if len(p.TOC) > 0 {
+		<details open class="mb-8 border border-border rounded-none-none bg-surface p-4 sm:p-5">
+			<summary class="text-sm sm:text-base font-bold text-text cursor-pointer select-none list-none flex items-center justify-between">
+				<span class="font-mono text-xs sm:text-sm uppercase tracking-wider text-text font-bold">
+					{ ui.Post_TOC }
+				</span>
+				@IconChevronDown("toc-chevron w-4 h-4 sm:w-5 sm:h-5 text-muted transition-transform")
+			</summary>
+			<nav class="mt-3 pt-3 border-t border-border/60">
+				@tocList(p.TOC)
+			</nav>
+		</details>
+	}
+	<div id="prose-body" class="prose md:prose-lg max-w-none">
+		@templ.Raw(string(p.Body))
+	</div>
+}

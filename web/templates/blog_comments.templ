@@ -82,7 +82,7 @@ templ CommentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug str
 
 // commentList renders the heading + all comments. It is swapped on POST.
 templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string) {
-	<div id="comment-list">
+	<div id="comment-list" data-slug={ slug }>
 		<h2 class="text-base font-medium text-text mb-5">
 			{ ui.Comments_Heading }
 			if len(comments) > 0 {

@@ -1,0 +1,68 @@
+package templates
+
+import (
+	"fmt"
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ blogHeader(ui i18n.UI, p post.Post, lang string, seriesParts []post.Post) {
+	<header class="mb-8">
+		<div class="flex items-center justify-between gap-4 mb-4">
+			<a href={ templ.SafeURL(homeURL(lang)) } class="text-xs font-mono text-muted hover:text-link transition-colors inline-flex items-center gap-1">
+				@iconArrowLeft()
+				<span>{ ui.Post_Back }</span>
+			</a>
+		</div>
+		<!-- Series navigation (if part of a series) -->
+		if len(seriesParts) > 1 {
+			@seriesNav(seriesParts, p, lang)
+		}
+		<div class="mb-4">
+			<h1 class="font-sans font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight text-text leading-[1.15]">{ p.Title }</h1>
+		</div>
+		<div class="flex flex-wrap items-center gap-2 text-xs font-mono text-muted mt-4">
+			<span class="font-bold text-text">
+				if p.Author != "" {
+					{ p.Author }
+				} else {
+					daemontalk team
+				}
+			</span>
+			<span>·</span>
+			<span>{ fmtDate(p) }</span>
+			<span>·</span>
+			<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+		</div>
+		if len(p.Tags) > 0 {
+			<div class="flex flex-wrap gap-2 mt-3">
+				for _, t := range p.Tags {
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + t) } class="text-xs px-2 py-0.5 bg-chip text-muted rounded-none-none font-mono hover:text-text transition-colors">{ t }</a>
+				}
+			</div>
+		}
+	</header>
+	if p.Cover != "" {
+		<figure class="mb-8 w-full max-w-full overflow-hidden">
+			<div class="w-full border border-border bg-surface overflow-hidden flex items-center justify-center">
+				<img
+					src={ p.Cover }
+					alt={ p.Title }
+					loading="lazy"
+					class="w-full h-auto max-h-[460px] object-cover block"
+				/>
+			</div>
+			if p.CoverCaption != "" {
+				<figcaption class="text-[11px] font-mono text-muted mt-2 text-center">
+					if p.CoverSource != "" {
+						<a href={ templ.SafeURL(p.CoverSource) } target="_blank" rel="noopener noreferrer" class="text-muted hover:text-link transition-colors">
+							{ p.CoverCaption }
+						</a>
+					} else {
+						{ p.CoverCaption }
+					}
+				</figcaption>
+			}
+		</figure>
+	}
+}

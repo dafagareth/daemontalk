@@ -7,21 +7,22 @@ templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
 		<!-- Brand & Utilities Row -->
 		<div class="container-page py-5 sm:py-8 flex items-center justify-between gap-4 min-w-0">
 			<div class="flex items-center gap-4 min-w-0">
-				<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center gap-2.5 shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-					@BrandIcon("h-7 sm:h-8 w-auto")
-					<span class="text-2xl sm:text-3xl font-bold tracking-tight text-text leading-none mt-1" style="font-family: Georgia, serif;">daemontalk</span>
+				<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+					@BrandLogo("h-8 sm:h-10 md:h-11 w-auto")
 				</a>
 			</div>
 			<!-- Desktop Utilities -->
 			<div class="hidden md:flex items-center gap-2 shrink-0">
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/graph") }
-					aria-label="Systems Knowledge Radar & Graph"
-					class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono border border-border text-muted hover:text-text hover:bg-hover transition-colors"
-				>
-					<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-					<span>radar</span>
-				</a>
+				if IsRadarEnabled() {
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/graph") }
+						aria-label="Systems Knowledge Radar & Graph"
+						class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono border border-border text-muted hover:text-text hover:bg-hover transition-colors"
+					>
+						<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+						<span>radar</span>
+					</a>
+				}
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/terminal") }
 					aria-label="Interactive Terminal"
@@ -107,9 +108,8 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 	>
 		<!-- Top Bar: Brand & Close Button -->
 		<div class="flex items-center justify-between border-b border-border pb-4 mb-6">
-			<a href={ templ.SafeURL(prefix(lang) + "/") } onclick="toggleMobileMenu()" class="flex items-center gap-2.5 shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-				@BrandIcon("h-6 w-auto")
-				<span class="text-xl font-bold tracking-tight text-text leading-none mt-1" style="font-family: Georgia, serif;">daemontalk</span>
+			<a href={ templ.SafeURL(prefix(lang) + "/") } onclick="toggleMobileMenu()" class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+				@BrandLogo("h-8 sm:h-9 w-auto")
 			</a>
 			<button
 				type="button"
@@ -133,13 +133,15 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 				>
 					<span>Live Dispatch</span>
 				</a>
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/graph") }
-					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
-				>
-					<span>Systems Radar & Graph</span>
-				</a>
+				if IsRadarEnabled() {
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/graph") }
+						onclick="toggleMobileMenu()"
+						class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+					>
+						<span>Systems Radar & Graph</span>
+					</a>
+				}
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/terminal") }
 					onclick="toggleMobileMenu()"

@@ -1,0 +1,42 @@
+package templates
+
+import (
+	"fmt"
+)
+
+templ adminCommentsTab(stats AdminStats) {
+	<div id="tab-comments" class="hidden space-y-6">
+		<div class="flex items-baseline justify-between gap-4">
+			<h1 class="text-lg font-semibold text-text">Comments</h1>
+			<span class="text-xs font-mono text-muted">{ fmt.Sprintf("%d", len(stats.Comments)) } total</span>
+		</div>
+
+		if len(stats.Comments) == 0 {
+			<p class="text-sm text-muted">No comments yet.</p>
+		} else {
+			<div class="divide-y divide-[var(--c-border)]">
+				for _, c := range stats.Comments {
+					<div class="py-4">
+						<div class="flex items-baseline justify-between gap-2 mb-1">
+							<div class="flex items-baseline gap-2 min-w-0">
+								<span class="text-sm font-medium text-text">{ c.Name }</span>
+								<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt) }</span>
+							</div>
+							<button
+								class="text-xs text-muted hover:text-red-500 shrink-0 transition-colors"
+								hx-post={ "/admin/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
+								hx-target="closest div.py-4"
+								hx-swap="outerHTML"
+								data-confirm="Delete this comment? This action cannot be undone."
+							>
+								Delete
+							</button>
+						</div>
+						<a href={ templ.SafeURL("/blog/" + c.PostSlug) } target="_blank" class="text-xs font-mono text-link hover:underline">/{ c.PostSlug }</a>
+						<p class="text-sm text-muted mt-1.5 whitespace-pre-wrap break-words leading-relaxed">{ c.Body }</p>
+					</div>
+				}
+			</div>
+		}
+	</div>
+}
