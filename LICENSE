@@ -1,4 +1,4 @@
-Copyright (c) 2026 @dafagareth. All rights reserved.
+Copyright (c) 2026 Dafa Gareth (https://daemontalk.com). All rights reserved.
 
 1. SOURCE CODE LICENSE (Non-Commercial / Source-Available)
 
@@ -7,7 +7,7 @@ and associated documentation files (the "Software"), to inspect, modify, run,
 and use the Software for PERSONAL, EDUCATIONAL, AND NON-COMMERCIAL PURPOSES ONLY,
 subject to the following conditions:
 
-- NO COMMERCIAL USE OR SALE:
+- NO COMMERCIAL USE OR MONETIZATION:
   You may NOT sell, resell, rent, lease, sublicense, commercialize, or monetize
   the Software or any derivative work based upon it, whether as source code,
   binary distributions, website templates, or hosted Software-as-a-Service (SaaS),
@@ -27,8 +27,9 @@ SOFTWARE.
 
 2. TRADEMARK & BRAND POLICY (Strict Reservation)
 
-The name "daemontalk", domain names, visual designs, logos, and personal brand
-identifiers are the exclusive intellectual property of @dafagareth.
+The name "daemontalk", domain names ("daemontalk.com"), visual designs, logos,
+and personal brand identifiers are the exclusive intellectual property of
+Dafa Gareth.
 
 This license does NOT grant any permission to use the name "daemontalk", official
 logos, or any confusingly similar branding for any public forks, personal forks,
@@ -37,10 +38,12 @@ or deployments.
 ANY PUBLIC FORK, RE-HOSTED INSTANCE, OR DERIVATIVE WORK MUST BE FULLY REBRANDED
 UNDER A DIFFERENT NAME AND LOGO.
 
-3. CONTENT & WRITTEN ARTICLES (All Rights Reserved)
+3. WRITTEN ARTICLES & EDITORIAL CONTENT (CC BY-NC-SA 4.0)
 
-All articles, technical posts, guides (under content/posts/), and personal media
-are the original intellectual property of @dafagareth.
+All written articles, laboratory notes, and educational documentation published
+on this site (under content/posts/) are licensed under Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0).
 
-Unauthorized reproduction, automated scraping for AI dataset training, commercial
-syndication, or uncredited re-publishing of written articles is strictly prohibited.
+You are free to share and adapt these writings for non-commercial and educational
+purposes, provided you give appropriate attribution and include a direct link
+back to the original article on daemontalk.com.

@@ -1,11 +1,34 @@
-node_modules/
-tmp/
+# Version control and editor
 .git/
-portfolio
+.gitignore
+.vscode/
+.idea/
+
+# Dependencies and build outputs
+node_modules/
+bin/
 dist/
+tmp/
+daemontalk
+*.exe
+*.tmp
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Runtime SQLite data and backups
+data/
+backups/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+
+# Scratchpads and local logs
+*.log
+*.bak
 claude.md
 Portfolio.prd.md
-*.bak
-
-# Runtime SQLite data — must never leak into the image
-data/
+teks.txt

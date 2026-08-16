@@ -1,6 +1,29 @@
 {
+  "name": "daemontalk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Systems engineering publication, interactive knowledge graph, and UNIX terminal playground",
+  "author": "Dafa Gareth <dafagareth@gmail.com>",
+  "homepage": "https://daemontalk.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dafagareth/daemontalk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dafagareth/daemontalk/issues"
+  },
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css --minify",
+    "dev:css": "npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css --watch",
+    "dev": "make dev",
+    "build": "make build",
+    "test": "make test"
+  },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.0",
     "tailwindcss": "^4.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

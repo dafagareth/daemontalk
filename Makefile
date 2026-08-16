@@ -31,28 +31,26 @@ deploy: build
 	fly deploy
 
 new-post:
-	@SLUG=$$(openssl rand -hex 4); \
-	FILE="content/posts/$$SLUG.md"; \
-	IMG_DIR="web/static/images/posts/$$SLUG"; \
-	mkdir -p $$IMG_DIR; \
-	echo "---" > $$FILE; \
-	echo "title: \"Judul Postingan Baru\"" >> $$FILE; \
-	echo "slug: $$SLUG" >> $$FILE; \
-	echo "aliases: []" >> $$FILE; \
-	echo "date: $$(date +%Y-%m-%d)" >> $$FILE; \
-	echo "tags: []" >> $$FILE; \
-	echo "lang: id" >> $$FILE; \
-	echo "draft: true" >> $$FILE; \
-	echo "---" >> $$FILE; \
-	echo "Postingan baru (draft) berhasil dibuat di: $$FILE"; \
-	echo "Folder aset gambar berhasil dibuat di: $$IMG_DIR/"
+	@./scripts/post.sh new
+
+new-uid:
+	@./scripts/post.sh new --uid
+
+list-posts:
+	@./scripts/post.sh list
+
+stats-posts:
+	@./scripts/post.sh stats
+
+validate-posts:
+	@./scripts/post.sh validate
 
 archive-post:
-	@./scripts/manage-post.sh archive $(SLUG)
+	@./scripts/post.sh archive $(SLUG)
 
 restore-post:
-	@./scripts/manage-post.sh restore $(SLUG)
+	@./scripts/post.sh restore $(SLUG)
 
 delete-post:
-	@./scripts/manage-post.sh delete $(SLUG)
+	@./scripts/post.sh delete $(SLUG)
 

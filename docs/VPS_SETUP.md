@@ -1,79 +1,92 @@
-# 🚀 Panduan Deployment DaemonTalk ke VPS Debian (Rumahweb)
+# Production VPS Deployment Guide
 
-Panduan langkah demi langkah untuk melakukan deploy **daemontalk.com** pada VPS Debian menggunakan **Docker** dan **Caddy Web Server** (Automatic SSL/HTTPS).
+Step-by-step instructions for deploying `daemontalk.com` to a Debian VPS using Docker, Caddy (automated TLS/HTTPS), and systemd.
 
 ---
 
-## 1. Setup DNS Domain di Rumahweb / Cloudflare
+## 1. Configure DNS Records
 
-Masuk ke panel DNS Domain Anda (Rumahweb / Cloudflare) dan tambahkan 2 record berikut:
+In your domain registrar DNS management panel (Cloudflare, Namecheap, or Rumahweb), configure the following records:
 
-| Type | Name / Host | Target / IP Address | TTL |
+| Type | Host / Name | Target / IP Address | TTL |
 | :--- | :--- | :--- | :--- |
-| **A** | `@` (atau kosong) | `IP_PUBLIC_VPS_ANDA` | Auto / 300 |
-| **CNAME** | `www` | `daemontalk.com` | Auto / 300 |
+| **A** | `@` (root) | `YOUR_SERVER_PUBLIC_IP` | 300 / Auto |
+| **CNAME** | `www` | `daemontalk.com` | 300 / Auto |
 
-*Tunggu 5–15 menit hingga DNS terpropagasi ke seluruh dunia.*
+DNS changes typically propagate within 5 to 15 minutes.
 
 ---
 
-## 2. Setup Awal VPS Debian
+## 2. Server Provisioning (Debian 12 Bookworm)
 
-Login ke VPS Anda via terminal:
+SSH into your remote server as root:
+
 ```bash
-ssh root@IP_PUBLIC_VPS_ANDA
+ssh root@YOUR_SERVER_PUBLIC_IP
 ```
 
-Jalankan script setup otomatis yang sudah disiapkan:
+Run the automated provisioning script to install Docker, Docker Compose, Caddy, and configure the UFW firewall:
+
 ```bash
 curl -sL https://raw.githubusercontent.com/dafagareth/daemontalk/main/scripts/setup-vps.sh | bash
 ```
 
-*Script di atas akan otomatis menginstal Docker, Docker Compose, Caddy Server, dan mengaktifkan Firewall UFW.*
+The script automatically executes the following:
+- Updates system packages (`apt update && apt upgrade`).
+- Installs Docker Engine and Docker Compose plugin.
+- Installs the Caddy web server from the official Cloudsmith repository.
+- Configures UFW firewall rules: allows ports `22` (SSH), `80` (HTTP), `443` (HTTPS), and `2222` (TUI SSH).
 
 ---
 
-## 3. Clone Repository & Konfigurasi Lingkungan
+## 3. Clone Repository and Set Environment Variables
 
 ```bash
-# Clone repository ke VPS
+# Clone repository
 git clone https://github.com/dafagareth/daemontalk.git /opt/daemontalk
 cd /opt/daemontalk
 
-# Buat file .env dari template
+# Initialize environment configuration
 cp .env.example .env
 nano .env
 ```
 
-Isi variabel penting di `.env`:
+Configure the production environment parameters:
+
 ```env
 PORT=8080
+SSH_PORT=2222
 ENV=production
-ADMIN_TOKEN=ganti_dengan_token_rahasia_anda_disini
+ADMIN_TOKEN=generate_a_secure_random_token_here
+BASE_URL=https://daemontalk.com
 ```
 
 ---
 
-## 4. Konfigurasi Caddy (Automatic SSL/HTTPS)
+## 4. Configure Caddy for Automated HTTPS
 
-Salin `Caddyfile` DaemonTalk ke direktori Caddy sistem:
+Copy the bundled `Caddyfile` to the system configuration path and reload Caddy:
+
 ```bash
 sudo cp /opt/daemontalk/Caddyfile /etc/caddy/Caddyfile
 sudo systemctl reload caddy
 ```
 
-*Caddy akan otomatis meminta sertifikat SSL dari Let's Encrypt / ZeroSSL untuk `daemontalk.com` dan `www.daemontalk.com`.*
+Caddy will automatically obtain and renew TLS certificates from Let's Encrypt and ZeroSSL for `daemontalk.com` and `www.daemontalk.com`.
 
 ---
 
-## 5. Jalankan Aplikasi dengan Docker Compose
+## 5. Launch the Application Container
+
+Start the service using Docker Compose:
 
 ```bash
 cd /opt/daemontalk
 docker compose up -d --build
 ```
 
-Periksa status container:
+Verify that the container is running and healthy:
+
 ```bash
 docker compose ps
 docker compose logs -f
@@ -81,25 +94,57 @@ docker compose logs -f
 
 ---
 
-## 6. Update / Deployment Rutin (CI/CD atau Manual)
+## 6. Access Verification
 
-Jika di kemudian hari ada pembaruan kode atau artikel baru di GitHub, cukup jalankan perintah ini di VPS:
+Verify that all access endpoints are operational:
+
+- **Web Interface (HTTPS)**: Open `https://daemontalk.com` in your browser.
+- **SSH TUI Client**: Connect directly from your terminal:
+  ```bash
+  ssh daemontalk.com -p 2222
+  ```
+- **CLI Feed Stream**:
+  ```bash
+  curl -sL https://daemontalk.com/daily
+  ```
+
+---
+
+## 7. Operational Scripts and Automation
+
+The repository includes dedicated automation scripts for operational maintenance:
+
+| Script | Purpose and Usage |
+| :--- | :--- |
+| **`scripts/deploy.sh`** | **1-Click Production Update**: Automatically creates a pre-deploy safety backup, pulls git commits, rebuilds Docker containers, prunes stale images, and validates health status.<br>`./scripts/deploy.sh` (fast cached build)<br>`./scripts/deploy.sh --fresh` (100% clean rebuild without Docker cache) |
+| **`scripts/backup.sh`** | **Automated Database & Content Backup**: Creates timestamped `.tar.gz` archives of SQLite databases (safe for WAL mode) and markdown content with a 7-day retention policy.<br>`./scripts/backup.sh` |
+| **`scripts/restore.sh`** | **Disaster Recovery**: Safely restores databases and content from a backup archive with pre-restore safety snapshots.<br>`./scripts/restore.sh /opt/daemontalk/backups/daemontalk_backup_YYYYMMDD_HHMMSS.tar.gz` |
+| **`scripts/healthcheck.sh`** | **Watchdog and Auto-Recovery**: Monitors the `/healthz` endpoint and automatically restarts the service if it becomes unresponsive.<br>`./scripts/healthcheck.sh` |
+
+### Recommended Crontab Setup
+
+Open your system crontab (`crontab -e`) and add the following scheduled jobs:
+
 ```bash
-cd /opt/daemontalk
-git pull origin main
-docker compose up -d --build
+# Automated daily backup at 03:00 AM
+0 3 * * * /opt/daemontalk/scripts/backup.sh > /dev/null 2>&1
+
+# Health monitoring watchdog every 5 minutes (auto-restarts on failure)
+*/5 * * * * /opt/daemontalk/scripts/healthcheck.sh > /dev/null 2>&1
 ```
 
 ---
 
-## 7. Verifikasi Akses
+## 8. Continuous Deployment with GitHub Actions (Optional)
 
-- **Browser Web**: Buka `https://daemontalk.com` (cek gembok hijau SSL).
-- **Terminal CLI**: Buka terminal dan jalankan:
-  ```bash
-  curl -sL https://daemontalk.com/daily
-  ```
-- **TUI Client**:
-  ```bash
-  go run ./cmd/tui
-  ```
+To enable 100% automated deployment whenever you push code or new articles to GitHub:
+
+1. In your GitHub repository, go to **Settings > Secrets and variables > Actions**.
+2. Add the following repository secrets:
+   - `VPS_HOST`: Your server public IP (e.g. `103.xxx.xxx.xxx` or `daemontalk.com`).
+   - `VPS_USER`: `root` (or your sudo deploy user).
+   - `VPS_SSH_KEY`: Your private SSH key content (`~/.ssh/id_ed25519`).
+   - `VPS_PORT`: `22` (default).
+
+Whenever you push to the `main` branch, `.github/workflows/deploy.yml` will automatically trigger `./scripts/deploy.sh` on your VPS.
+

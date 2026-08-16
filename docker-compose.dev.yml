@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
+      - "2222:2222"
     environment:
       PORT: "8080"
       ADMIN_TOKEN: "${ADMIN_TOKEN:-change-me-in-dotenv}"
@@ -20,12 +21,7 @@ services:
       - /app/node_modules
       # Avoid mounting host tmp / build files if needed
       - /app/bin
-      # Persist SQLite database
-      - comments-data:/app/data
     # Run as host user so container process owns its own bind-mounted files.
     # No chmod 777 needed — the container user IS the file owner.
     user: "${UID:-1000}:${GID:-1000}"
     restart: unless-stopped
-
-volumes:
-  comments-data:

@@ -1,51 +1,54 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
-    branches: ["**"]
+    branches: [ main ]
   pull_request:
-    branches: [master, main]
+    branches: [ main ]
 
 jobs:
-  build:
+  validate-and-test:
+    name: Test and Build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: go.mod
+          go-version: '1.24'
           cache: true
 
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@v0.3.1020
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
 
-      - name: Generate templ components
+      - name: Install dependencies
+        run: |
+          npm ci || npm install
+          go install github.com/a-h/templ/cmd/templ@v0.3.1020
+
+      - name: Generate Templ components
         run: templ generate
 
-      - name: Verify generated code is up to date
-        run: |
-          if [ -n "$(git status --porcelain '*_templ.go')" ]; then
-            echo "::error::Generated *_templ.go files are out of date. Run 'templ generate' and commit."
-            git diff --stat
-            exit 1
-          fi
+      - name: Build Tailwind CSS bundle
+        run: npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css --minify
 
-      - name: Vet
+      - name: Run Go Vet
         run: go vet ./...
 
-      - name: Test
-        run: go test ./... -count=1
+      - name: Run Unit Tests
+        run: go test -v ./...
 
-      - name: Build
-        run: CGO_ENABLED=0 go build -o daemontalk .
+      - name: Verify Content Integrity
+        run: ./scripts/post.sh validate
 
-  docker:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
+      - name: Build Server Binary
+        run: CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/daemontalk .
 
-      - name: Build Docker image
-        run: docker build -t daemontalk:ci .
+      - name: Build TUI Client Binary
+        run: CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/daemontalk-tui ./cmd/tui

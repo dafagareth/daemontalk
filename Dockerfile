@@ -33,7 +33,9 @@ RUN mkdir -p data && chown -R app:app data web/static
 
 USER app
 EXPOSE 8080
+EXPOSE 2222
 ENV PORT=8080
+ENV SSH_PORT=2222
 # Persist the comments/views database across container recreations.
 VOLUME ["/app/data"]
 CMD ["./daemontalk"]

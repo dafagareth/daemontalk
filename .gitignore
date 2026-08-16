@@ -26,6 +26,8 @@ tmp/
 
 # Runtime Data & Databases (SQLite comments + analytics)
 data/
+backups/
+archive/
 *.db
 *.db-*
 *.sqlite

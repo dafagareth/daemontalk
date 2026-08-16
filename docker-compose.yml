@@ -2,22 +2,28 @@ services:
   web:
     build: .
     ports:
+      # Reverse-proxied via Caddy on localhost
       - "127.0.0.1:8080:8080"
+      # Exposed for direct Wish SSH TUI access
+      - "2222:2222"
     environment:
       PORT: "8080"
+      SSH_PORT: "2222"
+      ENV: "${ENV:-production}"
+      BASE_URL: "${BASE_URL:-https://daemontalk.com}"
       # Comment moderation: login via /admin?admin=TOKEN
       ADMIN_TOKEN: "${ADMIN_TOKEN:-}"
       # SMTP for contact form (optional; form still works without it — messages get logged)
-      # Gmail example: SMTP_HOST=smtp.gmail.com SMTP_PORT=587 SMTP_USER=you@gmail.com SMTP_PASS=app-password
       SMTP_HOST: "${SMTP_HOST:-}"
       SMTP_PORT: "${SMTP_PORT:-587}"
       SMTP_USER: "${SMTP_USER:-}"
       SMTP_PASS: "${SMTP_PASS:-}"
       SMTP_TO:   "${SMTP_TO:-}"
+      GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
     volumes:
-      # Named volume keeps the comments/views SQLite DB across recreations.
-      - comments-data:/app/data
+      # Persistent host directory mount for SQLite DBs (comments, views, posts) & SSH keys.
+      - ./data:/app/data
+      # Direct mount for markdown content & post images so article updates take effect immediately
+      - ./content:/app/content:ro
+      - ./web/static/images/posts:/app/web/static/images/posts:ro
     restart: unless-stopped
-
-volumes:
-  comments-data:
