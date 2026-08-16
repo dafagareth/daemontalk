@@ -1,92 +1,200 @@
 ---
 # ==============================================================================
-# DAEMONTALK ARTICLE FRONTMATTER SPECIFICATION
+# DAEMONTALK DISPATCH FRONTMATTER TEMPLATE
 # ==============================================================================
-# title: (Wajib) Judul artikel yang jelas, lugas, dan bebas karakter `#`.
-title: "Panduan Arsitektur Sistem Terdistribusi dan Rekayasa Kernel Linux"
+# title: (Required) Technical dispatch title without '#' heading symbols.
+title: "Distributed Systems Architecture and Linux Kernel Internals"
 
-# slug: (Wajib) Identifikator URL unik (/blog/{slug}). Gunakan huruf kecil & strip.
-slug: panduan-arsitektur-sistem
+# slug: (Required) Unique URL identifier (/blog/{slug}). Can be text or 8-char hex UID.
+slug: distributed-systems-architecture
 
-# aliases: (Opsional) URL lama yang otomatis dialihkan (redirect 301) ke artikel ini.
-aliases: [arsitektur-sistem-modern, draft-rekayasa-kernel]
+# aliases: (Optional) Legacy URLs that 301 redirect to this canonical article.
+aliases: [systems-arch-draft, legacy-systems-guide]
 
-# date: (Wajib) Tanggal rilis artikel (Format: YYYY-MM-DD) untuk pengurutan linimasa.
-date: 2026-08-09
+# date: (Required) Release publication date (Format: YYYY-MM-DD).
+date: 2026-08-17
 
-# tags: (Wajib) Kategori artikel untuk indexing dan pencarian.
-tags: [architecture, linux, go, performance]
+# author: (Optional) Article author name.
+author: "Write your name here"
 
-# lang: (Wajib) Bahasa artikel ('id' untuk Indonesia, 'en' untuk English).
-lang: id
+# tags: (Required) Indexing categories (e.g. [systems, linux, go, kernel]).
+tags: [systems, linux, backend]
 
-# draft: (Opsional) Set 'false' untuk rilis publik, atau 'true' untuk mode draft internal.
+# lang: (Required) Language code ('en' for English, 'id' for Bahasa Indonesia).
+lang: en
+
+# draft: (Optional) Set 'false' for public release, or 'true' for internal draft.
 draft: false
 
-# type: (Opsional) 'post' untuk artikel standar atau 'til' untuk Today I Learned.
+# type: (Optional) 'post' for standard dispatch or 'til' for Today I Learned.
 type: post
 
-# cover: (Opsional) Gambar sampul utama artikel.
-cover: "/static/logo/logo-dark.png"
+# cover: (Optional) Main hero cover image path or external URL.
+cover: "/static/images/posts/welcome-to-daemontalk/wallpaper1.jpg"
 
-# series: (Opsional) Mengelompokkan postingan ke dalam rangkaian seri topik.
+# coverCaption: (Optional) Image attribution text shown below cover photo.
+coverCaption: "Cover photograph by NASA via Unsplash"
+
+# coverSource: (Optional) Clickable hyperlink to image original source or photographer.
+coverSource: "https://unsplash.com"
+
+# readTime: (Optional) Estimated read time in minutes. Calculated automatically if omitted.
+readTime: 6
+
+# description: (Optional) Summary for search engines (SEO) and OpenGraph social cards.
+description: "A comprehensive deep dive into distributed systems architecture, Linux io_uring asynchronous pipelines, and Go runtime scheduler internals."
+
+# series: (Optional) Grouping dispatches into a multi-part series with automatic navigation.
 series: "Distributed Systems Engineering"
 
-# series_part: (Opsional) Urutan nomor bab dalam seri (1, 2, 3, dst).
+# series_part: (Optional) Sequence part number in the series (1, 2, 3, etc.).
 series_part: 1
-
-# publish_at: (Opsional) Penjadwalan tanggal tayang otomatis di masa depan.
-publish_at: 2026-08-09
 ---
 
-Paragraf pembuka berfungsi sebagai intisari teknis dari keseluruhan dokumen[^1]. Kalimat pertama ini dirancang ringkas dan padat karena otomatis diekstraksi oleh parser sebagai *meta description* untuk mesin pencari (SEO) dan preview kartu media sosial.
+The opening paragraph serves as the executive technical abstract of the dispatch. The first sentence or explicit `description:` frontmatter is automatically used for search engine snippets (SEO) and social media preview cards.
 
 ---
 
-## 1. Tipografi dan Penekanan Teks
+## 1. Typography & Text Emphasis
 
-Dokumen ini mendukung seluruh elemen tipografi standar dengan hierarki visual yang jelas:
+DaemonTalk supports standard GitHub Flavored Markdown with clean typographic contrast:
 
-- **Teks Tebal (*Bold*)**: Digunakan untuk menonjolkan terminologi penting seperti **Zero-Copy Memory**.
-- *Teks Miring (*Italic*)**: Digunakan untuk istilah asing atau variabel matematis seperti *throughput limit* $O(1)$.
-- ~~Teks Coret (*Strikethrough*)~~: Digunakan untuk menandai pendekatan lama yang sudah ditinggalkan.
-- `Kode Sebaris (*Inline Code*)`: Digunakan untuk nama fungsi, flag kernel, atau perintah CLI seperti `sysctl net.core.somaxconn` dan `epoll_create1()`.
-- [Tautan Eksternal (*Hyperlink*)](https://kernel.org): Tautan terisolasi yang aman dengan style kontras tinggi.
+- **Bold Text**: Use for key technical concepts such as **Zero-Copy Memory**.
+- *Italic Text*: Use for foreign terminology, mathematical variables like $O(1)$ complexity, or sub-captions.
+- ~~Strikethrough~~: Deprecated approaches or superseded protocols.
+- `Inline Code`: Kernel flags, functions, or CLI tools like `sysctl net.core.somaxconn` and `epoll_create1()`.
+- [External Hyperlinks](https://kernel.org): Sandboxed external links with security attributes.
+- Footnote References: Integrated with floating popovers and smooth return links[^1].
 
-> **Prinsip Rekayasa:** Hindari alokasi memori dinamis di dalam *hot path* pemrosesan paket data. Selalu manfaatkan pool memori lokal untuk meminimalkan jeda *garbage collection*.
+> **Engineering Principle:** Avoid dynamic heap allocations inside high-throughput hot paths. Reuse memory buffers through `sync.Pool` or registered `io_uring` rings.
 
 ---
 
-## 2. Penyisipan Gambar, Carousel, dan Galeri
+## 2. Callout & Alert Boxes (Zero Emojis, Pure Tech SVG)
 
-### Gambar Tunggal
-Gambar di dalam artikel otomatis mendapatkan optimasi pemuatan asinkron (*lazy-loading*) dan border editorial:
+Use GitHub-style alert blockquotes or ````callout```` code blocks to highlight essential technical notices. All alerts use minimalist SVG icons and clean semantic borders:
 
-![Logo Identitas DaemonTalk](/static/logo/logo-light.png)
-*Gambar 1: Logo identitas daemontalk dalam palet warna kontras tinggi.*
+> [!NOTE]
+> Background context, architecture trade-offs, and historical Unix decisions.
 
-### Carousel Gambar (Swipeable Slider)
-Untuk menampilkan banyak gambar secara bergantian (scroll/swipe horizontal) tanpa tag HTML:
+> [!TIP]
+> Use `sync.Pool` or zero-allocation parsers to drastically minimize garbage collector pressure.
 
-```carousel
-![Arsitektur io_uring](/static/images/io_uring.png "Gambar 1: Topologi kernel async I/O ring buffer")
-![Go Runtime Worker Engine](/static/images/golang.png "Gambar 2: Pipeline pemrosesan goroutine terdistribusi")
-![Arch Linux Environment](/static/images/archlinux.png "Gambar 3: Lingkungan pengujian kernel 6.12 LTS")
+> [!IMPORTANT]
+> Channel memory must always be drained properly to prevent uncollected goroutine leaks.
+
+> [!WARNING]
+> Beware of data races when sharing pointer receivers concurrently without mutex synchronization.
+
+> [!CAUTION]
+> Direct memory manipulation with `unsafe.Pointer` or custom kernel modules can cause kernel panics.
+
+---
+
+## 3. Key Metrics & Performance Statistics
+
+Render large, high-contrast performance metrics for benchmarking dispatches:
+
+```stat
+- value: "14.8x"
+  label: "Throughput Boost"
+  description: "vs baseline sync.Mutex"
+
+- value: "0 B/op"
+  label: "Zero Allocation"
+  description: "Heap allocation in critical path"
+
+- value: "0.8 µs"
+  label: "P99 Latency"
+  description: "Sub-microsecond request execution"
 ```
 
-### Galeri Gambar (Side-by-Side Grid)
-Untuk menampilkan perbandingan gambar secara berdampingan:
+---
 
-```gallery
-![Arch Linux Host](/static/images/archlinux.png "Arsitektur Host Kernel")
-![Go Performance](/static/images/golang.png "Throughput Profiling Go")
+## 4. Multi-File Code Tabs
+
+Present multi-file architectures in a single tabbed container with 1-click clipboard copying:
+
+```tabs
+=== main.go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Distributed node active on :8080")
+}
+
+=== Dockerfile
+FROM golang:1.24-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN CGO_ENABLED=0 go build -o server .
+
+FROM scratch
+COPY --from=builder /app/server /server
+CMD ["/server"]
+
+=== Makefile
+build:
+	go build -o bin/server main.go
+
+run:
+	go run main.go
 ```
 
 ---
 
-## 3. Diagram Arsitektur Interaktif
+## 5. Code Line Highlighting & Diff Annotations
 
-Blok diagram ASCII atau box-drawing otomatis dideteksi oleh sistem antarmuka dan dilengkapi dengan tombol interaktif **Expand/Zoom** untuk kenyamanan membaca di layar mobile maupun desktop:
+Highlight specific lines, additions, or deletions inside any code snippet using inline comments:
+
+```go
+package main
+
+import "sync"
+
+type SafeMap struct {
+	mu   sync.RWMutex
+	data map[string]string // [!code hl]
+}
+
+func (s *SafeMap) Set(k, v string) {
+	// [!code --] s.data[k] = v // Unsafe concurrent write
+	s.mu.Lock()                 // [!code ++]
+	defer s.mu.Unlock()           // [!code ++]
+	s.data[k] = v               // [!code ++]
+}
+```
+
+---
+
+## 6. Rich Link Previews
+
+Embed clean, uncarded link previews for external documentation, papers, or GitHub repositories without heavy borders or underlines:
+
+```link
+url: https://github.com/golang/go
+title: The Go Programming Language
+description: An open-source programming environment that makes it easy to build simple, reliable, and efficient software.
+site: github.com
+```
+
+---
+
+## 7. Interactive Checklists (Local Persistence)
+
+Readers can interactively toggle checkboxes. Checked progress is automatically saved to their browser's `localStorage` for this specific article:
+
+- [ ] Understand the fundamental difference between value receivers and pointer receivers.
+- [ ] Profile memory allocations using `go tool pprof` and heap flamegraphs.
+- [ ] Implement asynchronous I/O loops without causing deadlocks or resource leaks.
+
+---
+
+## 8. Architecture Diagrams & Schematics
+
+ASCII schematics and text diagrams are automatically detected and equipped with interactive **Expand / Zoom** controls and copy tools:
 
 ```text
 ┌─────────────────────────┐
@@ -108,120 +216,88 @@ Blok diagram ASCII atau box-drawing otomatis dideteksi oleh sistem antarmuka dan
 
 ---
 
-## 4. Implementasi Kode dan Snippet Beraneka Bahasa
+## 9. Performance Comparison Matrix
 
-Seluruh blok kode disorot menggunakan *syntax highlighting* Chroma dengan font **JetBrains Mono** dan dilengkapi tombol salin kode (*one-click copy*):
-
-### Contoh Implementasi Go (Worker Engine)
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"sync"
-	"time"
-)
-
-// Task merepresentasikan unit pekerjaan terisolasi.
-type Task struct {
-	ID        int
-	Payload   string
-	Timestamp time.Time
-}
-
-// Worker memproses antrean tugas secara non-blocking.
-func Worker(ctx context.Context, id int, tasks <-chan Task, wg *sync.WaitGroup) {
-	defer wg.Done()
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case t, ok := <-tasks:
-			if !ok {
-				return
-			}
-			fmt.Printf("[Worker-%d] Memproses tugas #%d (%s)\n", id, t.ID, t.Payload)
-		}
-	}
-}
-```
-
-### Contoh Konfigurasi Kernel Linux (`/etc/sysctl.d/99-network.conf`)
-
-```ini
-# Meningkatkan kapasitas antrean backlog koneksi masuk
-net.core.somaxconn = 65535
-net.ipv4.tcp_max_syn_backlog = 3240000
-
-# Optimasi buffer TCP read/write untuk throughput tinggi
-net.ipv4.tcp_rmem = 4096 87380 16777216
-net.ipv4.tcp_wmem = 4096 65536 16777216
-```
-
----
-
-## 5. Matriks Perbandingan Performa
-
-Gunakan tabel Markdown untuk menyajikan data kuantitatif atau benchmark perbandingan:
-
-| Metode Sinkronisasi | Latensi P95 | Latensi P99 | Alokasi Memori / Operasi | Throughput Relatif |
+| Synchronization Method | Latency P95 | Latency P99 | Memory Allocation / Op | Relative Throughput |
 | :--- | :--- | :--- | :--- | :--- |
-| `sync.Mutex` Standar | 12.4 µs | 48.2 µs | 32 B/op | 1.0x (Baseline) |
+| `sync.Mutex` | 12.4 µs | 48.2 µs | 32 B/op | 1.0x (Baseline) |
 | `sync/atomic.Value` | 3.1 µs | 8.6 µs | 0 B/op | 4.2x |
 | Lock-Free Ring Buffer | 0.8 µs | 1.4 µs | 0 B/op | 14.8x |
 
 ---
 
-## 6. Daftar Tugas Verifikasi Sistem (Task List)
+## 10. Media Components (Carousel & Gallery)
 
-- [x] Konfigurasi isolasi CPU core pada NUMA node 0.
-- [x] Validasi driver antarmuka jaringan dengan `ethtool -k eth0`.
-- [ ] Implementasi failover otomatis pada kluster multi-region.
+### Swipeable Image Carousel (Slider)
+```carousel
+![io_uring Architecture](/static/images/posts/welcome-to-daemontalk/wallpaper1.jpg "Figure 1: Asynchronous ring buffer topology")
+![Go Runtime Engine](/static/images/posts/welcome-to-daemontalk/wallpaper1.jpg "Figure 2: Distributed worker pipeline")
+```
+
+### Responsive Image Grid Gallery
+```gallery
+![Kernel Memory Layout](/static/images/posts/welcome-to-daemontalk/wallpaper1.jpg "Figure 1: Physical page mapping")
+![eBPF Verifier Flow](/static/images/posts/welcome-to-daemontalk/wallpaper1.jpg "Figure 2: Bytecode safety validation")
+```
 
 ---
 
-## 7. Pertanyaan Operasional (Interactive FAQ)
-
-Anda dapat membuat akordeon tanya-jawab interaktif menggunakan blok **` ```faq `** murni (tanpa tag HTML):
+## 11. Interactive FAQ Blocks (Chevron Accordion)
 
 ```faq
-Q: Kapan sebaiknya memilih channel vs mutex untuk sinkronisasi state di Go?
-A: Gunakan channel ketika Anda mentransfer kepemilikan data antar goroutine (*passing data ownership*). Gunakan `sync.Mutex` atau operasi `sync/atomic` saat Anda hanya memproteksi state internal pada struktur data tunggal dengan durasi lock yang sangat singkat.
+Q: When should I choose channels versus mutexes for concurrency in Go?
+A: Use channels when transferring data ownership between goroutines. Use mutexes or sync/atomic operations when protecting local state in shared data structures.
 
-Q: Apakah arsitektur io_uring aman digunakan pada lingkungan multi-tenant?
-A: Ya, dengan catatan kernel yang digunakan adalah versi 6.1 LTS ke atas dan pembatasan seccomp serta cgroups v2 telah diaktifkan untuk mengisolasi ring buffer per namespace.
+Q: Is io_uring safe for multi-tenant production environments?
+A: Yes, provided the host runs Linux Kernel 6.1 LTS or newer with proper seccomp filtering and cgroup v2 resource limits.
 ```
 
 ---
 
-## 8. Catatan Kaki (Footnotes)
+## 12. Structured References & Citations
 
-Sistem secara otomatis menghubungkan nomor catatan kaki di teks dengan daftar referensi berikut:
+Use the ````references```` block to render a clean, academic numbered bibliography without unnecessary card frames or icons:
 
-[^1]: Dokumentasi ini disusun berdasarkan hasil pengujian beban di lingkungan server Linux x86_64 dengan kernel versi 6.12 LTS.
+```references
+- title: The Linux Programming Interface
+  author: Michael Kerrisk
+  year: 2010
+  publisher: No Starch Press
+  url: https://man7.org/tlpi/
+
+- title: Systems Performance (Enterprise and the Cloud)
+  author: Brendan Gregg
+  year: 2020
+  publisher: Addison-Wesley Professional
+  url: https://www.brendangregg.com/systems-performance-2nd-edition-book.html
+
+- title: Effective Go Documentation
+  author: The Go Authors
+  url: https://go.dev/doc/effective_go
+```
 
 ---
 
-## 9. Bibliografi dan Referensi
+## 13. Author Card Component
 
-1. **Gregg, Brendan.** (2020). *Systems Performance: Enterprise and the Cloud (2nd Edition)*. Addison-Wesley Professional.
-2. **Love, Robert.** (2013). *Linux System Programming: Talking Directly to the Kernel and C Library*. O'Reilly Media.
-3. **Axboe, Jens.** (2019). *Efficient IO with io_uring*. Kernel Documentation Archive.
-
----
-
-## 10. Tentang Penulis (About Author)
-
-Gunakan blok **` ```author `** murni untuk menampilkan profil penulis artikel di akhir tulisan:
+The author card supports clean top-aligned avatars, role metadata, bio description, and a comprehensive row of icon-only social badges:
 
 ```author
-name: Nama Penulis
-role: Systems Engineer & Open Source Enthusiast
+name: Dafa Gareth
+role: Software Engineer
 avatar: /static/logo/logo-dark.png
-bio: Deskripsi singkat mengenai latar belakang teknis, fokus rekayasa, atau topik keahlian yang Anda bagikan.
-github: https://github.com/username
-email: author@example.com
+bio: Software Engineer focused on distributed systems, Linux kernel engineering, and high-performance backend infrastructure.
+github: @dafagareth
+x: @dafagareth
+linkedin: dafagareth
+email: realdaemontalk@gmail.com
+website: https://daemontalk.com
+youtube: @daemontalk
+telegram: @dafagareth
 ```
 
+---
+
+## Footnotes
+
+[^1]: Verified on Linux Kernel 6.12 LTS x86_64 host under sustained benchmarking tests. Hovering or clicking this footnote reference triggers an interactive popover preview directly in place.
