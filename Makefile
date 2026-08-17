@@ -27,8 +27,8 @@ clean:
 	rm -f daemontalk
 	rm -f web/static/css/main.css
 
-deploy: build
-	fly deploy
+deploy:
+	@./scripts/deploy.sh
 
 new-post:
 	@./scripts/post.sh new

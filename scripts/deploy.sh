@@ -32,7 +32,8 @@ git reset --hard origin/main
 
 # 3. Ensure persistent data directory and permissions
 mkdir -p data backups
-chmod 775 data || true
+chown -R 10001:10001 data 2>/dev/null || true
+chmod 750 data || true
 
 # 4. Synchronize Caddy configuration if changed
 if [ -f "Caddyfile" ]; then
