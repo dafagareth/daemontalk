@@ -10,7 +10,7 @@ Access daemontalk directly from the terminal without installing dependencies:
 
 ```bash
 # Launch interactive TUI over SSH
-ssh daemontalk.com -p 2222
+ssh ssh.daemontalk.com -p 2222
 
 # Stream daily engineering dispatches
 curl -sL daemontalk.com/daily
