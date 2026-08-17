@@ -17,7 +17,8 @@ if [ ! -f "${ARCHIVE}" ]; then
     exit 1
 fi
 
-DEST_DIR="${DEST_DIR:-/opt/daemontalk}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DEST_DIR="${DEST_DIR:-$SCRIPT_DIR}"
 TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
 
 echo "[restore] Target archive: ${ARCHIVE}"

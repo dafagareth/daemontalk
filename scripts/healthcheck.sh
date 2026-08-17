@@ -5,7 +5,8 @@
 
 set -euo pipefail
 
-APP_DIR="${APP_DIR:-/opt/daemontalk}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+APP_DIR="${APP_DIR:-$SCRIPT_DIR}"
 LOG_FILE="/var/log/daemontalk_health.log"
 HEALTH_URL="http://127.0.0.1:8080/healthz"
 MAX_RETRIES=2
