@@ -1,0 +1,42 @@
+/* j/k keyboard navigation focus on blog list items */
+.blog-item.kb-focus {
+  background: var(--c-hover);
+  border-radius: 0.5rem;
+  outline: 2px solid var(--c-link);
+  outline-offset: -2px;
+}
+
+/* Keyboard shortcuts & confirmation modals */
+.shortcuts-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.shortcuts-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.shortcuts-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 8px));
+  z-index: 201;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  width: calc(100vw - 2rem);
+  max-width: 420px;
+  transition: transform 0.2s, opacity 0.2s;
+  opacity: 0;
+}
+.shortcuts-overlay.open .shortcuts-modal {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}

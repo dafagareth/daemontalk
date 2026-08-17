@@ -2,7 +2,7 @@ package handler
 
 import (
 	"html/template"
-	"log"
+	"log/slog"
 	"net/http"
 	"path/filepath"
 	"sort"
@@ -72,12 +72,12 @@ func (h *Handler) RefreshPosts() {
 	if h.PostDB != nil {
 		webPosts, err := h.PostDB.List()
 		if err != nil {
-			log.Printf("refresh posts: list db: %v", err)
+			slog.Error("refresh posts list db failed", "error", err)
 		}
 		for _, wp := range webPosts {
 			p, err := post.Parse(wp.ToMarkdown())
 			if err != nil {
-				log.Printf("refresh posts: render %q: %v", wp.Slug, err)
+				slog.Error("refresh posts render failed", "slug", wp.Slug, "error", err)
 				continue
 			}
 			if wp.Description != "" {
@@ -110,7 +110,7 @@ func (h *Handler) isAdmin(r *http.Request) bool {
 	if h.AdminToken == "" {
 		return false
 	}
-	c, err := r.Cookie("admin_token")
+	c, err := r.Cookie(CookieAdminToken)
 	if err != nil {
 		return false
 	}
@@ -141,6 +141,13 @@ func (h *Handler) getContentPath(subpath string) string {
 	return filepath.Join(dir, subpath)
 }
 
+// Render executes a templ component and logs any rendering errors with structured metadata.
+func (h *Handler) Render(w http.ResponseWriter, r *http.Request, c templ.Component) {
+	if err := c.Render(r.Context(), w); err != nil {
+		slog.Error("render component failed", "error", err, "path", r.URL.Path, "method", r.Method)
+	}
+}
+
 // renderMarkdownPage renders a static markdown page with the given contentKey.
 func (h *Handler) renderMarkdownPage(w http.ResponseWriter, r *http.Request,
 	contentKey, title string, meta templates.PageMeta,
@@ -156,11 +163,8 @@ func (h *Handler) renderMarkdownPage(w http.ResponseWriter, r *http.Request,
 
 	body, err := post.LoadBody(filename)
 	if err != nil {
-		log.Printf("warn: load %s: %v", filename, err)
+		slog.Warn("load markdown page failed", "file", filename, "error", err)
 	}
 
-	if err := templates.Layout(ui, lang, title, r.URL.Path, meta,
-		render(ui, body, lang)).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, meta, render(ui, body, lang)))
 }

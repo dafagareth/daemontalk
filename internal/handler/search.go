@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -32,7 +32,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			if vc, err := h.Comments.AllViewCounts(); err == nil {
 				viewCounts = vc
 			} else {
-				log.Printf("search view counts: %v", err)
+				slog.Error("search all view counts failed", "error", err)
 			}
 		}
 	}
@@ -43,8 +43,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	}
 	meta := templates.PageMeta{Description: desc}
 
-	if err := templates.Layout(ui, lang, "search", r.URL.Path, meta,
-		templates.SearchPage(ui, query, results, lang, viewCounts)).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, "search", r.URL.Path, meta,
+		templates.SearchPage(ui, query, results, lang, viewCounts)))
 }
+

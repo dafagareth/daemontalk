@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"daemontalk/internal/github"
@@ -26,8 +25,6 @@ func (h *Handler) Behind(w http.ResponseWriter, r *http.Request) {
 	meta := templates.PageMeta{
 		Description: "Who writes this blog, what I'm building, and how this website works.",
 	}
-	err := templates.Layout(ui, lang, "behind", r.URL.Path, meta, templates.Behind(ui, lang, featured, ghStats)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, "behind", r.URL.Path, meta, templates.Behind(ui, lang, featured, ghStats)))
 }
+

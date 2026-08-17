@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -38,10 +38,8 @@ var editorMD = goldmark.New(goldmark.WithExtensions(extension.Strikethrough))
 
 func (h *Handler) renderEditor(w http.ResponseWriter, r *http.Request, p postdb.WebPost, errMsg string, status int) {
 	w.WriteHeader(status)
-	if err := templates.AdminLayout("admin", r.URL.Path,
-		templates.AdminPostEditor(p, mdToEditorHTML(p.BodyMD), errMsg)).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.AdminLayout("admin", r.URL.Path,
+		templates.AdminPostEditor(p, mdToEditorHTML(p.BodyMD), errMsg)))
 }
 
 // AdminPostNew displays an empty write page (draft created upon first autosave).
@@ -59,7 +57,7 @@ func (h *Handler) AdminPostNew(w http.ResponseWriter, r *http.Request) {
 	h.renderEditor(w, r, p, "", http.StatusOK)
 }
 
-// AdminPostEdit displays the editor for an existing DB post.
+// AdminPostEdit displays the editor prefilled with an existing post.
 func (h *Handler) AdminPostEdit(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -76,13 +74,14 @@ func (h *Handler) AdminPostEdit(w http.ResponseWriter, r *http.Request) {
 	}
 	p, err := h.PostDB.Get(id)
 	if err != nil {
-		http.NotFound(w, r)
+		h.NotFound(w, r)
 		return
 	}
 	h.renderEditor(w, r, p, "", http.StatusOK)
 }
 
-// AdminPostAutosave handles JSON autosave from Quill/title inputs.
+// AdminPostAutosave accepts JSON payload from the editor, silently creates a draft
+// if ID == 0 or updates an existing draft, and returns the assigned ID.
 func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -99,14 +98,17 @@ func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 		Body  string `json:"body"`
 		Slug  string `json:"slug"`
 	}
-	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 2<<20)).Decode(&req); err != nil {
-		http.Error(w, "bad request", http.StatusBadRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "bad json", http.StatusBadRequest)
 		return
 	}
 
 	var p postdb.WebPost
 	if req.ID == 0 {
 		title := strings.TrimSpace(req.Title)
+		if title == "" {
+			title = "Draft " + time.Now().Format("02 Jan 15:04")
+		}
 		slug := strings.TrimSpace(req.Slug)
 		if slug != "" {
 			slug = h.uniqueSlug(slugify(slug), 0)
@@ -123,7 +125,7 @@ func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 		}
 		id, err := h.PostDB.Create(p)
 		if err != nil {
-			log.Printf("autosave create: %v", err)
+			slog.Error("autosave create post failed", "error", err)
 			http.Error(w, "db error", http.StatusInternalServerError)
 			return
 		}
@@ -131,7 +133,7 @@ func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 	} else {
 		existing, err := h.PostDB.Get(req.ID)
 		if err != nil {
-			http.NotFound(w, r)
+			h.NotFound(w, r)
 			return
 		}
 		if reqTitle := strings.TrimSpace(req.Title); reqTitle != "" {
@@ -139,7 +141,7 @@ func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 		}
 		existing.BodyMD = req.Body
 		if err := h.PostDB.Update(existing); err != nil {
-			log.Printf("autosave update %d: %v", req.ID, err)
+			slog.Error("autosave update post failed", "id", req.ID, "error", err)
 			http.Error(w, "db error", http.StatusInternalServerError)
 			return
 		}
@@ -177,7 +179,7 @@ func (h *Handler) AdminPostPublish(w http.ResponseWriter, r *http.Request) {
 	}
 	p, err := h.PostDB.Get(id)
 	if err != nil {
-		http.NotFound(w, r)
+		h.NotFound(w, r)
 		return
 	}
 
@@ -218,7 +220,7 @@ func (h *Handler) AdminPostPublish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := h.PostDB.Update(p); err != nil {
-		log.Printf("publish post %d: %v", id, err)
+		slog.Error("publish post update failed", "id", id, "error", err)
 		h.renderEditor(w, r, p, "Failed to save to database.", http.StatusInternalServerError)
 		return
 	}
@@ -247,7 +249,7 @@ func (h *Handler) AdminPostDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := h.PostDB.Delete(id); err != nil {
-		log.Printf("admin delete post %d: %v", id, err)
+		slog.Error("admin delete post failed", "id", id, "error", err)
 	}
 	h.RefreshPosts()
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)

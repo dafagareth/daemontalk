@@ -11,19 +11,18 @@ import (
 // it generates one and sets it. It returns a consistent, pseudo-anonymous handle
 // (e.g., "anonym_a3f89c") deterministically hashed from that cookie.
 func GetVisitorIdentity(w http.ResponseWriter, r *http.Request) string {
-	cookieName := "visitor_id"
 	var visitorID string
 
-	cookie, err := r.Cookie(cookieName)
+	cookie, err := r.Cookie(CookieVisitorID)
 	if err != nil || cookie.Value == "" {
 		// Generate a new random visitor ID based on time and client IP
 		visitorID = fmt.Sprintf("%d-%s", time.Now().UnixNano(), clientIP(r))
 
 		http.SetCookie(w, &http.Cookie{
-			Name:     cookieName,
+			Name:     CookieVisitorID,
 			Value:    visitorID,
 			Path:     "/",
-			Expires:  time.Now().AddDate(10, 0, 0), // 10 years
+			Expires:  time.Now().AddDate(CookieVisitorExpiryYears, 0, 0),
 			HttpOnly: true,
 			SameSite: http.SameSiteLaxMode,
 		})

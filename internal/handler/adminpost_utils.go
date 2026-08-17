@@ -6,7 +6,7 @@ import (
 	"daemontalk/internal/postdb"
 	"encoding/hex"
 	"fmt"
-	"log"
+	"log/slog"
 	"strings"
 	"time"
 )
@@ -39,7 +39,7 @@ func slugify(title string) string {
 func mdToEditorHTML(md string) string {
 	var buf bytes.Buffer
 	if err := editorMD.Convert([]byte(md), &buf); err != nil {
-		log.Printf("editor html: %v", err)
+		slog.Error("editor markdown convert failed", "error", err)
 		return ""
 	}
 	return buf.String()

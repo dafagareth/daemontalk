@@ -140,7 +140,7 @@ func TestDaemontalkUIHTMXPartial(t *testing.T) {
 	}
 
 	body := rec.Body.String()
-	expectedPost := fmt.Sprintf("Post Number %d", postsPerPage+1)
+	expectedPost := fmt.Sprintf("Post Number %d", DefaultPostsPerPage+1)
 	if !strings.Contains(body, expectedPost) {
 		t.Errorf("expected %q in HTMX partial response", expectedPost)
 	}

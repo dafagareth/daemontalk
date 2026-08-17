@@ -21,6 +21,7 @@ func redirect301(target string) http.HandlerFunc {
 // New creates and configures the main HTTP router
 func New(h *handler.Handler) *chi.Mux {
 	r := chi.NewRouter()
+	r.Use(middleware.Compress(5))
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(handler.SecurityHeaders)

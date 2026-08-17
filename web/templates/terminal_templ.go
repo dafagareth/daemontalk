@@ -75,7 +75,15 @@ func terminalContent(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"hover:text-link transition-colors\">daemontalk</a> <span>/</span> <span class=\"text-text\">terminal</span></div></div><div id=\"term-window\" class=\"w-full border border-[var(--term-border)] bg-[var(--term-bg)] text-[var(--term-text)] shadow-2xl font-mono transition-colors\" style=\"border-radius: 24px; overflow: hidden; transform: translateZ(0);\"><!-- Standard Terminal Titlebar --><div class=\"flex items-center justify-between px-5 py-3 rounded-t-3xl bg-[var(--term-title-bg)] border-b border-[var(--term-border)] select-none text-xs text-[var(--term-muted)] transition-colors\"><div class=\"flex items-center gap-2\"><svg class=\"w-3.5 h-3.5 text-[var(--term-prompt)] shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"4 17 10 11 4 5\"></polyline><line x1=\"12\" y1=\"19\" x2=\"20\" y2=\"19\"></line></svg> <span id=\"term-title-text\" class=\"font-mono text-xs text-[var(--term-muted)]\">visitor@daemontalk: ~</span></div><div class=\"flex items-center gap-3\"><button type=\"button\" onclick=\"window.termClear()\" aria-label=\"Clear screen (Ctrl+L)\" class=\"text-[var(--term-muted)] hover:text-[var(--term-text)] transition-colors cursor-pointer\">clear</button></div></div><!-- Terminal Body Output & Input Area --><div id=\"term-screen\" onclick=\"document.getElementById('term-input').focus()\" class=\"p-4 sm:p-6 h-[400px] sm:h-[500px] rounded-b-3xl overflow-y-auto overflow-x-hidden text-sm leading-relaxed text-[var(--term-text)] cursor-text select-text bg-[var(--term-bg)] transition-colors\"><!-- History Buffer --><div id=\"term-history\" class=\"space-y-2\"></div><!-- Active Prompt Line --><div class=\"flex items-center gap-2 mt-2 pt-1 font-mono\"><span id=\"term-prompt-label\" class=\"text-[var(--term-prompt)] font-semibold shrink-0 select-none\">visitor@daemontalk:~$</span><div class=\"relative flex-1 flex items-center min-w-0\"><input id=\"term-input\" type=\"text\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" class=\"w-full bg-transparent text-[var(--term-text)] outline-none border-none p-0 m-0 font-mono text-sm caret-[var(--term-cursor)]\" placeholder=\"\" aria-label=\"Terminal command input\" autofocus></div></div></div></div></div><!-- Real UNIX Terminal Shell Script with 40+ Commands, Piping, Redirection & VFS --><script src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"hover:text-link transition-colors\">daemontalk</a> <span>/</span> <span class=\"text-text\">terminal</span></div></div><div id=\"term-window\" class=\"w-full border border-[var(--term-border)] bg-[var(--term-bg)] text-[var(--term-text)] shadow-2xl font-mono transition-colors\" style=\"border-radius: 24px; overflow: hidden; transform: translateZ(0);\"><!-- Standard Terminal Titlebar --><div class=\"flex items-center justify-between px-5 py-3 rounded-t-3xl bg-[var(--term-title-bg)] border-b border-[var(--term-border)] select-none text-xs text-[var(--term-muted)] transition-colors\"><div class=\"flex items-center gap-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconTerminalPrompt("w-3.5 h-3.5 text-[var(--term-prompt)] shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span id=\"term-title-text\" class=\"font-mono text-xs text-[var(--term-muted)]\">visitor@daemontalk: ~</span></div><div class=\"flex items-center gap-3\"><button type=\"button\" onclick=\"window.termClear()\" aria-label=\"Clear screen (Ctrl+L)\" class=\"text-[var(--term-muted)] hover:text-[var(--term-text)] transition-colors cursor-pointer\">clear</button></div></div><!-- Terminal Body Output & Input Area --><div id=\"term-screen\" onclick=\"document.getElementById('term-input').focus()\" class=\"p-4 sm:p-6 h-[400px] sm:h-[500px] rounded-b-3xl overflow-y-auto overflow-x-hidden text-sm leading-relaxed text-[var(--term-text)] cursor-text select-text bg-[var(--term-bg)] transition-colors\"><!-- History Buffer --><div id=\"term-history\" class=\"space-y-2\"></div><!-- Active Prompt Line --><div class=\"flex items-center gap-2 mt-2 pt-1 font-mono\"><span id=\"term-prompt-label\" class=\"text-[var(--term-prompt)] font-semibold shrink-0 select-none\">visitor@daemontalk:~$</span><div class=\"relative flex-1 flex items-center min-w-0\"><input id=\"term-input\" type=\"text\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" class=\"w-full bg-transparent text-[var(--term-text)] outline-none border-none p-0 m-0 font-mono text-sm caret-[var(--term-cursor)]\" placeholder=\"\" aria-label=\"Terminal command input\" autofocus></div></div></div></div></div><!-- Real UNIX Terminal Shell Script with 40+ Commands, Piping, Redirection & VFS --><script src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -88,7 +96,7 @@ func terminalContent(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"></script><script src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"></script><script src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -101,7 +109,7 @@ func terminalContent(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"></script><script src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"></script><script src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -114,7 +122,7 @@ func terminalContent(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"></script><script src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"></script><script src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -127,7 +135,7 @@ func terminalContent(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"></script><script src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\"></script><script src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -140,7 +148,7 @@ func terminalContent(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

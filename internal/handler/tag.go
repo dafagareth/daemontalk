@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -36,15 +36,14 @@ func (h *Handler) TagIndex(w http.ResponseWriter, r *http.Request) {
 	var viewCounts map[string]int
 	if h.Comments != nil {
 		if vc, err := h.Comments.AllViewCounts(); err != nil {
-			log.Printf("tag view counts: %v", err)
+			slog.Error("tag view counts query failed", "tag", tag, "error", err)
 		} else {
 			viewCounts = vc
 		}
 	}
 
-	if err := templates.Layout(ui, lang, "#"+tag, r.URL.Path, templates.PageMeta{
+	h.Render(w, r, templates.Layout(ui, lang, "#"+tag, r.URL.Path, templates.PageMeta{
 		Description: fmt.Sprintf("Posts tagged #%s on daemontalk.com", tag),
-	}, templates.TagPage(ui, tag, filtered, lang, viewCounts)).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	}, templates.TagPage(ui, tag, filtered, lang, viewCounts)))
 }
+

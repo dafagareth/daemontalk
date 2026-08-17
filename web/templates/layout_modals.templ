@@ -61,9 +61,9 @@ templ confirmModal() {
 }
 
 templ layoutScripts() {
-	<script src="/static/js/layout.js" defer></script>
-	
-	
-	<!-- Scroll-reveal via Intersection Observer -->
-	
+	<script src={ assetURL("/static/js/layout/theme.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/confirm.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/nav.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/shortcuts.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/observer.js") } defer></script>
 }

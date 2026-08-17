@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"daemontalk/internal/i18n"
-	"daemontalk/internal/post"
-	"daemontalk/web/templates"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates"
 )
 
 func (h *Handler) BlogPostsPartial(w http.ResponseWriter, r *http.Request) {
@@ -38,15 +39,15 @@ func (h *Handler) BlogPostsPartial(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	}
 	total := len(filtered)
-	totalPages := (total + postsPerPage - 1) / postsPerPage
+	totalPages := (total + DefaultPostsPerPage - 1) / DefaultPostsPerPage
 	if totalPages < 1 {
 		totalPages = 1
 	}
 	if page > totalPages {
 		page = totalPages
 	}
-	start := (page - 1) * postsPerPage
-	end := start + postsPerPage
+	start := (page - 1) * DefaultPostsPerPage
+	end := start + DefaultPostsPerPage
 	if end > total {
 		end = total
 	}
@@ -55,16 +56,14 @@ func (h *Handler) BlogPostsPartial(w http.ResponseWriter, r *http.Request) {
 	var viewCounts map[string]int
 	if h.Comments != nil {
 		if vc, err := h.Comments.AllViewCounts(); err != nil {
-			log.Printf("blog partial view counts: %v", err)
+			slog.Error("blog partial view counts query failed", "error", err)
 		} else {
 			viewCounts = vc
 		}
 	}
 
 	hasMore := page < totalPages
-	if err := templates.BlogPostItems(ui, pagePosts, lang, viewCounts, page+1, hasMore, tagFilter).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.BlogPostItems(ui, pagePosts, lang, viewCounts, page+1, hasMore, tagFilter))
 }
 
 func relatedPosts(posts []post.Post, current post.Post) []post.Post {

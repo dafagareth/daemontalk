@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"log"
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
@@ -32,12 +32,9 @@ func (h *Handler) Contribute(w http.ResponseWriter, r *http.Request) {
 		title = "Panduan Kontribusi · daemontalk"
 	}
 
-	err := templates.Layout(ui, lang, title, r.URL.Path, templates.PageMeta{
+	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, templates.PageMeta{
 		Description: "Editorial standards and submission guide for daemontalk technical writers and contributors.",
-	}, templates.ContributePage(body, lang)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	}, templates.ContributePage(body, lang)))
 }
 
 // DownloadTemplate handles GET /download/template.md and /template.md to serve the markdown template file.
@@ -65,7 +62,7 @@ func (h *Handler) CLIContribute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var b stringsBuilderWrapper
+	var b strings.Builder
 	b.WriteString(fmt.Sprintf("%s%s[ DAEMONTALK COMMUNITY CONTRIBUTOR GUIDE ]%s\n", ansiGreen, ansiBold, ansiReset))
 	b.WriteString(fmt.Sprintf("%s══════════════════════════════════════════════════════════════════════════%s\n\n", ansiDim, ansiReset))
 	b.WriteString(string(data))
@@ -76,14 +73,3 @@ func (h *Handler) CLIContribute(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte(applyColors(b.String(), color)))
 }
 
-type stringsBuilderWrapper struct {
-	content string
-}
-
-func (s *stringsBuilderWrapper) WriteString(str string) {
-	s.content += str
-}
-
-func (s *stringsBuilderWrapper) String() string {
-	return s.content
-}

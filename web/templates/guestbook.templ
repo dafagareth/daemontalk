@@ -21,7 +21,7 @@ templ GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorN
 			<!-- Honeypot: bots fill this, humans never see it -->
 			<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
 			<p class="text-xs text-muted font-mono px-1">
-				Posting as <span class="font-bold">{ visitorName }</span>
+				Posting as <span class="font-bold text-text">{ visitorName }</span>
 			</p>
 			<textarea
 				name="body"

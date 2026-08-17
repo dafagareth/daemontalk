@@ -43,13 +43,16 @@ type UI struct {
 	Post_Related string
 	Post_TOC     string
 
-	Comments_Heading   string
-	Comments_Empty     string
-	Comments_NameLabel string
-	Comments_BodyLabel string
-	Comments_Submit    string
-	Comments_Error     string
-	Comments_Delete    string
+	Comments_Heading    string
+	Comments_Empty      string
+	Comments_NameLabel  string
+	Comments_BodyLabel  string
+	Comments_Submit     string
+	Comments_Error      string
+	Comments_Delete     string
+	Comments_Reply      string
+	Comments_Cancel     string
+	Comments_ReplyingTo string
 
 	Post_Views string
 
@@ -167,13 +170,16 @@ var Strings = map[string]UI{
 		Post_Related: "Related posts",
 		Post_TOC:     "Table of Contents",
 
-		Comments_Heading:   "Comments",
-		Comments_Empty:     "No comments yet. Be the first to comment!",
-		Comments_NameLabel: "Your name",
-		Comments_BodyLabel: "Write a comment...",
-		Comments_Submit:    "Submit comment",
-		Comments_Error:     "Failed to post comment. Make sure name and body are filled.",
-		Comments_Delete:    "Delete",
+		Comments_Heading:    "Comments",
+		Comments_Empty:      "No comments yet. Be the first to comment!",
+		Comments_NameLabel:  "Your name",
+		Comments_BodyLabel:  "Write a comment...",
+		Comments_Submit:     "Submit comment",
+		Comments_Error:      "Failed to post comment. Make sure name and body are filled.",
+		Comments_Delete:     "Delete",
+		Comments_Reply:      "Reply",
+		Comments_Cancel:     "Cancel",
+		Comments_ReplyingTo: "Replying to",
 
 		Post_Views: "views",
 
@@ -289,13 +295,16 @@ var Strings = map[string]UI{
 		Post_Related: "Post terkait",
 		Post_TOC:     "Daftar Isi",
 
-		Comments_Heading:   "Komentar",
-		Comments_Empty:     "Belum ada komentar. Jadi yang pertama berkomentar!",
-		Comments_NameLabel: "Nama kamu",
-		Comments_BodyLabel: "Tulis komentar...",
-		Comments_Submit:    "Kirim komentar",
-		Comments_Error:     "Gagal mengirim komentar. Pastikan nama dan komentar terisi.",
-		Comments_Delete:    "Hapus",
+		Comments_Heading:    "Komentar",
+		Comments_Empty:      "Belum ada komentar. Jadi yang pertama berkomentar!",
+		Comments_NameLabel:  "Nama kamu",
+		Comments_BodyLabel:  "Tulis komentar...",
+		Comments_Submit:     "Kirim komentar",
+		Comments_Error:      "Gagal mengirim komentar. Pastikan nama dan komentar terisi.",
+		Comments_Delete:     "Hapus",
+		Comments_Reply:      "Balas",
+		Comments_Cancel:     "Batal",
+		Comments_ReplyingTo: "Membalas",
 
 		Post_Views: "dilihat",
 

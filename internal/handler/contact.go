@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"net/mail"
@@ -38,12 +38,12 @@ func (h *Handler) Contact(w http.ResponseWriter, r *http.Request) {
 
 	if h.SMTPHost != "" {
 		if err := h.sendContactEmail(name, email, message); err != nil {
-			log.Printf("contact email: %v", err)
+			slog.Error("send contact email failed", "error", err, "from_email", email)
 			fmt.Fprintf(w, `<p class="text-[var(--c-warn)]">%s</p>`, ui.Contact_Error)
 			return
 		}
 	} else {
-		log.Printf("contact [no SMTP configured] name=%q email=%q message=%q", name, email, message)
+		slog.Info("contact received [no SMTP configured]", "name", name, "email", email, "message", message)
 	}
 
 	fmt.Fprintf(w, `<p class="text-[var(--c-ok)]">%s</p>`, ui.Contact_Success)

@@ -28,8 +28,8 @@ func renderAuthorHTML(rawContent string) string {
 		role = "Software Engineer"
 	}
 	avatar := meta["avatar"]
-	if avatar == "" {
-		avatar = "/static/logo/logo-dark.png"
+	if avatar == "" || avatar == "/static/logo/logo-dark.png" || avatar == "/static/logo/logo-light.png" || avatar == "/static/logo/logo-dark.webp" || avatar == "/static/logo/logo-light.webp" {
+		avatar = "/static/logo/icon-dark.png"
 	}
 	bio := meta["bio"]
 	if bio == "" {
@@ -37,15 +37,20 @@ func renderAuthorHTML(rawContent string) string {
 	}
 
 	var buf bytes.Buffer
-	buf.WriteString("\n<div class=\"post-author-card my-8 not-prose p-4 sm:p-5 border border-border bg-surface rounded-none flex flex-row gap-4 sm:gap-5 items-start\">\n")
-	buf.WriteString(fmt.Sprintf(`  <img src="%s" alt="%s" class="w-12 h-12 sm:w-14 sm:h-14 rounded-none object-cover border border-border bg-black/10 shrink-0 block mt-0.5" loading="lazy" />
-  <div class="flex-1 min-w-0">
-    <div class="flex flex-wrap items-baseline gap-2 mb-1.5">
-      <h3 class="author-name text-[1.05em] font-bold text-text uppercase tracking-wider m-0 leading-snug">%s</h3>
-      <span class="author-role text-[0.8em] font-mono text-muted">%s</span>
+	buf.WriteString("\n<div class=\"post-author-card my-8 not-prose p-4 sm:p-5 border border-border bg-surface rounded-none flex flex-col gap-3.5\">\n")
+	buf.WriteString(fmt.Sprintf(`  <!-- Top row: Avatar (PFP) on left, Name & Role directly beside it -->
+  <div class="flex items-center gap-3.5 sm:gap-4">
+    <div class="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full border border-border bg-chip/40 overflow-hidden flex items-center justify-center p-1 shadow-sm">
+      <img src="%s" alt="%s" class="w-full h-full object-contain block" loading="lazy" />
     </div>
-    <p class="author-bio text-[0.88em] text-muted leading-relaxed mb-3 m-0">%s</p>
-    <div class="flex flex-wrap items-center gap-2 text-[0.8em] font-mono">
+    <div class="flex flex-col min-w-0">
+      <h3 class="author-name text-[1.05em] sm:text-[1.1em] font-bold text-text uppercase tracking-wider leading-tight truncate">%s</h3>
+      <span class="author-role text-[0.8em] sm:text-[0.82em] font-mono text-muted mt-0.5 truncate">%s</span>
+    </div>
+  </div>
+  <!-- Bottom row: Description spanning horizontally underneath -->
+  <p class="author-bio text-[0.88em] sm:text-[0.92em] text-muted leading-relaxed">%s</p>
+  <div class="flex flex-wrap items-center gap-2 text-[0.8em] font-mono pt-2 border-t border-border/40">
 `, html.EscapeString(avatar), html.EscapeString(name), html.EscapeString(name), html.EscapeString(role), html.EscapeString(bio)))
 
 	socialKeys := []string{"github", "gh", "x", "twitter", "linkedin", "li", "email", "mail", "website", "site", "blog", "youtube", "yt", "instagram", "ig", "threads", "bluesky", "bsky", "telegram", "tg", "gitlab", "discord"}
@@ -68,14 +73,13 @@ func renderAuthorHTML(rawContent string) string {
 			targetAttr = ` target="_blank"`
 			relAttr = ` rel="noopener noreferrer"`
 		}
-		buf.WriteString(fmt.Sprintf(`      <a href="%s"%s%s title="%s" aria-label="%s" class="w-7 h-7 inline-flex items-center justify-center border border-border bg-chip/40 text-muted hover:text-text hover:bg-hover hover:border-text transition-colors">
-        %s
-      </a>
+		buf.WriteString(fmt.Sprintf(`    <a href="%s"%s%s title="%s" aria-label="%s" class="w-7 h-7 inline-flex items-center justify-center border border-border bg-chip/40 text-muted hover:text-text hover:bg-hover hover:border-text transition-colors">
+      %s
+    </a>
 `, html.EscapeString(u), targetAttr, relAttr, html.EscapeString(label), html.EscapeString(label), icon))
 	}
 
-	buf.WriteString(`    </div>
-  </div>
+	buf.WriteString(`  </div>
 </div>
 `)
 	return buf.String()

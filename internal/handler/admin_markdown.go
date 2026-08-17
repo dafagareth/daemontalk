@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -23,28 +23,34 @@ var safeSlugRegex = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 func cleanSlug(s string) string {
 	s = strings.ToLower(strings.TrimSpace(s))
 	s = strings.ReplaceAll(s, " ", "-")
-	return slugCleanRe.ReplaceAllString(s, "")
+	var out []rune
+	for _, r := range s {
+		if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '-' || r == '_' {
+			out = append(out, r)
+		}
+	}
+	return string(out)
 }
 
-// AdminPostUploadMD handles direct multipart .md file uploads.
+// AdminPostUploadMD handles bulk / single .md file uploads directly to content/posts.
 func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
 		return
 	}
 
-	// Max 10MB per upload batch
-	if err := r.ParseMultipartForm(10 << 20); err != nil {
-		http.Error(w, "Upload payload too large (max 10MB)", http.StatusBadRequest)
+	// Max upload size
+	if err := r.ParseMultipartForm(MaxMarkdownUploadSize); err != nil {
+		http.Error(w, "File upload size exceeded", http.StatusBadRequest)
 		return
 	}
 
-	files := r.MultipartForm.File["file"]
+	files := r.MultipartForm.File["files"]
 	if len(files) == 0 {
-		files = r.MultipartForm.File["files"]
+		files = r.MultipartForm.File["file"]
 	}
 	if len(files) == 0 {
-		http.Error(w, "No .md file uploaded", http.StatusBadRequest)
+		http.Error(w, "No markdown files selected", http.StatusBadRequest)
 		return
 	}
 
@@ -59,7 +65,7 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 
 		file, err := fileHeader.Open()
 		if err != nil {
-			log.Printf("open uploaded file %s: %v", fileHeader.Filename, err)
+			slog.Error("open uploaded markdown file failed", "filename", fileHeader.Filename, "error", err)
 			continue
 		}
 
@@ -73,7 +79,7 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 		rawBytes := buf.Bytes()
 		p, err := post.Parse(rawBytes)
 		if err != nil {
-			log.Printf("parse uploaded markdown %s: %v", fileHeader.Filename, err)
+			slog.Error("parse uploaded markdown failed", "filename", fileHeader.Filename, "error", err)
 			continue
 		}
 
@@ -91,14 +97,14 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 
 		// Ensure content/posts directory exists
 		if err := os.MkdirAll("content/posts", 0755); err != nil {
-			log.Printf("mkdir content/posts: %v", err)
+			slog.Error("mkdir content/posts failed", "error", err)
 			http.Error(w, "Failed to create directory", http.StatusInternalServerError)
 			return
 		}
 
 		targetPath := filepath.Join("content/posts", slug+".md")
 		if err := os.WriteFile(targetPath, rawBytes, 0644); err != nil {
-			log.Printf("write uploaded markdown file %s: %v", targetPath, err)
+			slog.Error("write uploaded markdown file failed", "path", targetPath, "error", err)
 			http.Error(w, "Failed to save file to disk", http.StatusInternalServerError)
 			return
 		}
@@ -112,66 +118,56 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if uploadedCount == 0 {
-		http.Error(w, "No valid markdown files could be parsed and saved", http.StatusBadRequest)
+		http.Error(w, "No valid .md files could be parsed and uploaded", http.StatusBadRequest)
 		return
 	}
 
-	// Reload posts into memory atomically
+	// Reload all markdown posts and refresh the DB snapshot
 	h.ReloadFilePosts()
 	h.RefreshPosts()
 
-	if r.Header.Get("HX-Request") == "true" {
-		w.Header().Set("HX-Redirect", "/admin#content")
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
 	if uploadedCount == 1 && lastSlug != "" {
-		http.Redirect(w, r, "/blog/"+lastSlug, http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/posts/file/edit?slug="+lastSlug, http.StatusSeeOther)
 		return
 	}
 
 	http.Redirect(w, r, "/admin#content", http.StatusSeeOther)
 }
 
-// AdminUploadImage handles image uploads and saves them into the post's asset folder.
+// AdminUploadImage handles image uploads directly from the Markdown Editor UI.
 func (h *Handler) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
 		return
 	}
 
-	// Limit 15MB
-	if err := r.ParseMultipartForm(15 << 20); err != nil {
-		http.Error(w, "Image too large (max 15MB)", http.StatusBadRequest)
+	// Max image size
+	if err := r.ParseMultipartForm(MaxImageUploadSize); err != nil {
+		http.Error(w, "Image size exceeds limit", http.StatusBadRequest)
 		return
 	}
 
 	file, header, err := r.FormFile("image")
 	if err != nil {
-		http.Error(w, "No image file provided", http.StatusBadRequest)
+		http.Error(w, "No image file uploaded", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
 
 	ext := strings.ToLower(filepath.Ext(header.Filename))
-	validExts := map[string]bool{
-		".png": true, ".jpg": true, ".jpeg": true,
-		".webp": true, ".svg": true, ".gif": true,
-	}
-	if !validExts[ext] {
-		http.Error(w, "Unsupported file format (allowed: .png, .jpg, .webp, .svg, .gif)", http.StatusBadRequest)
+	if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".gif" && ext != ".webp" && ext != ".svg" {
+		http.Error(w, "Unsupported image type. Allowed: jpg, png, gif, webp, svg", http.StatusBadRequest)
 		return
 	}
 
 	slug := cleanSlug(r.FormValue("slug"))
 	if slug == "" {
-		slug = "uploads"
+		slug = "general"
 	}
 
 	destDir := filepath.Join("web/static/images/posts", slug)
 	if err := os.MkdirAll(destDir, 0755); err != nil {
-		log.Printf("mkdir image dest %s: %v", destDir, err)
+		slog.Error("mkdir image dest failed", "dir", destDir, "error", err)
 		http.Error(w, "Failed to create directory", http.StatusInternalServerError)
 		return
 	}
@@ -187,14 +183,14 @@ func (h *Handler) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
 
 	out, err := os.Create(destPath)
 	if err != nil {
-		log.Printf("create image file %s: %v", destPath, err)
+		slog.Error("create image file failed", "path", destPath, "error", err)
 		http.Error(w, "Failed to write image file", http.StatusInternalServerError)
 		return
 	}
 	defer out.Close()
 
 	if _, err := io.Copy(out, file); err != nil {
-		log.Printf("copy image data: %v", err)
+		slog.Error("copy image data failed", "error", err)
 		http.Error(w, "Failed to stream image content", http.StatusInternalServerError)
 		return
 	}
@@ -239,10 +235,8 @@ func (h *Handler) AdminPostFileEdit(w http.ResponseWriter, r *http.Request) {
 
 	p, _ := post.Parse(data)
 
-	if err := templates.AdminLayout("admin", r.URL.Path,
-		templates.AdminMarkdownEditor(slug, string(data), p, isArchived, "")).Render(r.Context(), w); err != nil {
-		log.Printf("render markdown editor error: %v", err)
-	}
+	h.Render(w, r, templates.AdminLayout("admin", r.URL.Path,
+		templates.AdminMarkdownEditor(slug, string(data), p, isArchived, "")))
 }
 
 // AdminPostFileSave saves edited Markdown content directly back to the disk file.
@@ -273,7 +267,7 @@ func (h *Handler) AdminPostFileSave(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
-		log.Printf("save markdown file %s: %v", filePath, err)
+		slog.Error("save markdown file failed", "path", filePath, "error", err)
 		http.Error(w, "Failed to save markdown file to disk", http.StatusInternalServerError)
 		return
 	}

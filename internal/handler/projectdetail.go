@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -50,10 +49,8 @@ func (h *Handler) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 		desc = found.DescriptionID
 	}
 
-	err := templates.Layout(ui, lang, found.Name+" · daemontalk", r.URL.Path, templates.PageMeta{
+	h.Render(w, r, templates.Layout(ui, lang, found.Name+" · daemontalk", r.URL.Path, templates.PageMeta{
 		Description: desc,
-	}, templates.ProjectDetailPage(ui, *found, lang, toc)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	}, templates.ProjectDetailPage(ui, *found, lang, toc)))
 }
+

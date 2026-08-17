@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"sort"
@@ -17,32 +17,31 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-const postsPerPage = 14
-
 func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 	if IsCLIRequest(r) {
 		if tag := r.URL.Query().Get("tag"); tag != "" {
 			h.CLITag(w, r)
 			return
 		}
-		h.CLIMain(w, r)
+		h.CLIDaily(w, r)
 		return
 	}
 
 	lang := langFromRequest(r)
 	ui := i18n.Get(lang)
+	isAdmin := h.isAdmin(r)
 
-	// Collect visible posts (filter drafts and scheduled for non-admin)
-	visible := h.VisiblePosts(h.isAdmin(r))
+	visible := h.VisiblePosts(isAdmin)
 
-	// Compute tag counts from all visible posts (not just the current page).
+	// Collect tag counts across all visible posts
 	tagCounts := make(map[string]int)
 	for _, p := range visible {
 		for _, t := range p.Tags {
-			tagCounts[t]++
+			tagCounts[strings.ToLower(t)]++
 		}
 	}
 
+	// Filter by tag if requested
 	tagFilter := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("tag")))
 	filtered := visible
 	if tagFilter != "" {
@@ -62,19 +61,20 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	}
 	total := len(filtered)
-	totalPages := (total + postsPerPage - 1) / postsPerPage
+	totalPages := (total + DefaultPostsPerPage - 1) / DefaultPostsPerPage
 	if totalPages < 1 {
 		totalPages = 1
 	}
 	if page > totalPages {
 		page = totalPages
 	}
+
 	var pagePosts []post.Post
-	if tagFilter == "" && page == 1 {
-		pagePosts = filtered
+	if total == 0 {
+		pagePosts = nil
 	} else {
-		start := (page - 1) * postsPerPage
-		end := start + postsPerPage
+		start := (page - 1) * DefaultPostsPerPage
+		end := start + DefaultPostsPerPage
 		if end > total {
 			end = total
 		}
@@ -84,7 +84,7 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 	var viewCounts map[string]int
 	if h.Comments != nil {
 		if vc, err := h.Comments.AllViewCounts(); err != nil {
-			log.Printf("blog index view counts: %v", err)
+			slog.Error("blog index view counts query failed", "error", err)
 		} else {
 			viewCounts = vc
 		}
@@ -98,9 +98,7 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 		pageName = "home"
 		meta.JSONLD = siteJSONLD()
 	}
-	if err := templates.Layout(ui, lang, pageName, r.URL.Path, meta, templates.BlogIndex(ui, pagePosts, lang, page, totalPages, viewCounts, tagCounts, tagFilter)).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, pageName, r.URL.Path, meta, templates.BlogIndex(ui, pagePosts, lang, page, totalPages, viewCounts, tagCounts, tagFilter)))
 }
 
 // BlogPostsPartial returns a partial HTML response (list items + updated Load More button)
@@ -123,7 +121,7 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// If accessed via alias (old slug), redirect 301 to canonical Short ID URL.
+	// If accessed via alias (old slug), redirect 301 to canonical URL.
 	if p.Slug != slug {
 		target := "/blog/" + p.Slug
 		if r.URL.RawQuery != "" {
@@ -133,7 +131,6 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Draft and scheduled posts are only visible to admins.
 	if p.Draft && !isAdmin {
 		h.NotFound(w, r)
 		return
@@ -143,41 +140,6 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Admin login via ?admin=TOKEN sets a cookie, then redirect to clean URL.
-	if h.AdminToken != "" {
-		if tok := r.URL.Query().Get("admin"); tok != "" {
-			if tok == h.AdminToken {
-				http.SetCookie(w, &http.Cookie{
-					Name:     "admin_token",
-					Value:    tok,
-					Path:     "/",
-					HttpOnly: true,
-					SameSite: http.SameSiteLaxMode,
-					MaxAge:   60 * 60 * 24 * 30,
-				})
-			}
-			http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
-			return
-		}
-	}
-
-	related := relatedPosts(h.AllPosts(), p)
-
-	// Series: collect all non-draft posts in the same series, sorted by part.
-	var seriesParts []post.Post
-	if p.Series != "" {
-		for _, sp := range h.AllPosts() {
-			if sp.Series == p.Series && !sp.Draft {
-				seriesParts = append(seriesParts, sp)
-			}
-		}
-		sort.Slice(seriesParts, func(i, j int) bool {
-			return seriesParts[i].SeriesPart < seriesParts[j].SeriesPart
-		})
-	}
-
-	// Compute prev/next navigation from the visible post list.
-	// h.AllPosts() is sorted newest-first, so index i+1 = older, i-1 = newer.
 	var nav templates.PostNav
 	visible := h.VisiblePosts(isAdmin)
 	for i, vp := range visible {
@@ -194,7 +156,21 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Per-post OG image: use the cover if set, else the auto-generated card.
+	// Series: collect all non-draft posts in the same series, sorted by part.
+	var seriesParts []post.Post
+	if p.Series != "" {
+		for _, sp := range h.AllPosts() {
+			if sp.Series == p.Series && !sp.Draft {
+				seriesParts = append(seriesParts, sp)
+			}
+		}
+		sort.Slice(seriesParts, func(i, j int) bool {
+			return seriesParts[i].SeriesPart < seriesParts[j].SeriesPart
+		})
+	}
+
+	related := relatedPosts(h.VisiblePosts(isAdmin), p)
+
 	meta := templates.PageMeta{
 		Description:   p.Description,
 		Type:          "article",
@@ -213,19 +189,19 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 	var reactions map[string]int
 	if h.Comments != nil {
 		if cs, err := h.Comments.ListBySlug(slug); err != nil {
-			log.Printf("load comments for %s: %v", slug, err)
+			slog.Error("load comments query failed", "slug", slug, "error", err)
 		} else {
 			comments = cs
 		}
 		if isAdmin {
 			views, _ = h.Comments.ViewCount(slug)
 		} else {
-			cookieKey := "v_post_" + slug
+			cookieKey := CookieViewCooldownPrefix + slug
 			if _, err := r.Cookie(cookieKey); err == nil {
 				views, _ = h.Comments.ViewCount(slug)
 			} else {
 				if n, err := h.Comments.IncrementView(slug); err != nil {
-					log.Printf("increment view for %s: %v", slug, err)
+					slog.Error("increment view count failed", "slug", slug, "error", err)
 				} else {
 					views = n
 				}
@@ -233,31 +209,32 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 					Name:     cookieKey,
 					Value:    "1",
 					Path:     "/",
-					MaxAge:   3600 * 12, // 12-hour cooldown per post
+					MaxAge:   CookieViewCooldownMaxAge,
 					HttpOnly: true,
 					SameSite: http.SameSiteLaxMode,
 				})
 			}
 		}
 		if rx, err := h.Comments.GetReactions(slug); err != nil {
-			log.Printf("load reactions for %s: %v", slug, err)
+			slog.Error("load reactions query failed", "slug", slug, "error", err)
 		} else {
 			reactions = rx
 		}
 	}
 
 	var userReaction string
-	if cookie, err := r.Cookie("reacted_" + slug); err == nil && cookie.Value != "" {
+	if cookie, err := r.Cookie(CookieReactedPrefix + slug); err == nil && cookie.Value != "" {
 		userReaction, _ = url.QueryUnescape(cookie.Value)
 	}
 
 	visitorName := GetVisitorIdentity(w, r)
-
-	if err := templates.Layout(ui, lang, p.Title+" · daemontalk", r.URL.Path, meta,
-		templates.BlogPostPage(ui, p, related, comments, views, isAdmin, lang, reactions, seriesParts, nav, userReaction, visitorName),
-	).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
+	if isAdmin {
+		visitorName = "daemontalk"
 	}
+
+	h.Render(w, r, templates.Layout(ui, lang, p.Title+" · daemontalk", r.URL.Path, meta,
+		templates.BlogPostPage(ui, p, related, comments, views, isAdmin, lang, reactions, seriesParts, nav, userReaction, visitorName),
+	))
 }
 
 // DeleteComment removes a comment (admin only) and returns the refreshed list.

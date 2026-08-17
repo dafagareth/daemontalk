@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"daemontalk/internal/i18n"
-	"daemontalk/internal/post"
-	"daemontalk/web/templates"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -39,11 +39,8 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 		meta := templates.PageMeta{
 			Description: "Daily executive technical briefing and terminal CLI endpoints for systems engineers.",
 		}
-		err := templates.Layout(ui, lang, "daily", r.URL.Path, meta,
-			templates.DailyPage(ui, lang, articles, tilPosts, r.Host)).Render(r.Context(), w)
-		if err != nil {
-			log.Printf("render error: %v", err)
-		}
+		h.Render(w, r, templates.Layout(ui, lang, "daily", r.URL.Path, meta,
+			templates.DailyPage(ui, lang, articles, tilPosts, r.Host)))
 		return
 	}
 

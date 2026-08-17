@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"daemontalk/internal/i18n"
@@ -15,10 +14,8 @@ func (h *Handler) Links(w http.ResponseWriter, r *http.Request) {
 
 	grouped := links.ByCategory(links.All)
 
-	err := templates.Layout(ui, lang, "Links · daemontalk", r.URL.Path, templates.PageMeta{
+	h.Render(w, r, templates.Layout(ui, lang, "Links · daemontalk", r.URL.Path, templates.PageMeta{
 		Description: "A curated list of tools, articles, and resources I find useful.",
-	}, templates.LinksPage(ui, grouped, links.CategoryOrder)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	}, templates.LinksPage(ui, grouped, links.CategoryOrder)))
 }
+

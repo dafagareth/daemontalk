@@ -12,65 +12,146 @@ func fmtCommentTime(t time.Time) string {
 	return t.Local().Format("2 Jan 2006, 15:04")
 }
 
-// CommentGroup groups consecutive comments posted by the same user.
-type CommentGroup struct {
-	Name      string
-	CreatedAt time.Time
-	Comments  []comment.Comment
-}
-
-func groupComments(comments []comment.Comment) []CommentGroup {
-	var groups []CommentGroup
-	for _, c := range comments {
-		if len(groups) > 0 && groups[len(groups)-1].Name == c.Name {
-			last := &groups[len(groups)-1]
-			last.Comments = append(last.Comments, c)
-		} else {
-			groups = append(groups, CommentGroup{
-				Name:      c.Name,
-				CreatedAt: c.CreatedAt,
-				Comments:  []comment.Comment{c},
-			})
-		}
-	}
-	return groups
-}
-
-// commentsSection is the whole block: the live list plus the submit form.
+// commentsSection is the whole block: the live tree list plus the single bottom submit form.
 templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.Comment, isAdmin bool, visitorName string) {
 	<section class="mt-12 pt-8">
 		@commentList(ui, comments, isAdmin, slug, lang, visitorName)
-		<form
-			class="mt-6 flex flex-col gap-3"
-			hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments" }
-			hx-target="#comment-list"
-			hx-swap="outerHTML"
-			hx-disabled-elt="find button[type='submit']"
-			hx-on::after-request="if(event.detail.successful){ this.reset(); var ta = this.querySelector('textarea'); if(ta) ta.value = ''; }"
-		>
-			<!-- Honeypot: bots fill this, humans never see it -->
-			<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
-			<p class="text-xs text-muted font-mono px-1">
-				Posting as <span class="font-bold">{ visitorName }</span>
-			</p>
-			<textarea
-				name="body"
-				required
-				maxlength="2000"
-				rows="3"
-				placeholder={ ui.Comments_BodyLabel }
-				class="w-full px-3 py-2 text-sm rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-[var(--c-link)] transition-colors resize-y"
-			></textarea>
-			<div class="flex justify-end">
-				<button
-					type="submit"
-					class="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-				>
-					<span class="htmx-indicator spinner"></span>
-					{ ui.Comments_Submit }
-				</button>
+		<div id="comment-form-container" class="mt-8 pt-6 border-t border-border/40 scroll-mt-24">
+			<div class="flex items-center justify-between mb-3">
+				<h3 class="text-sm font-semibold font-mono text-text">{ ui.Comments_Submit }</h3>
+				<!-- Replying indicator badge (hidden by default until reply is clicked) -->
+				<div id="reply-indicator" class="hidden items-center gap-2 bg-surface px-2.5 py-1 border border-[var(--c-link)] text-xs font-mono">
+					<span class="text-muted">
+						{ ui.Comments_ReplyingTo } <strong id="reply-author-name" class="text-[var(--c-link)]"></strong>
+					</span>
+					<button
+						type="button"
+						data-reply-cancel-btn
+						class="text-muted hover:text-[var(--c-warn)] cursor-pointer ml-1 font-bold p-1 touch-manipulation"
+						title={ ui.Comments_Cancel }
+					>
+						✕
+					</button>
+				</div>
 			</div>
-		</form>
+			<form
+				id="main-comment-form"
+				class="flex flex-col gap-3"
+				hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments" }
+				hx-target="#comment-list"
+				hx-swap="outerHTML"
+				hx-disabled-elt="find button[type='submit']"
+				hx-on::after-request="if(event.detail.successful){ this.reset(); var ta = this.querySelector('textarea'); if(ta) ta.value = ''; if(window.cancelCommentReply) window.cancelCommentReply(); }"
+			>
+				<input id="comment-parent-id" type="hidden" name="parent_id" value=""/>
+				<!-- Honeypot: bots fill this, humans never see it -->
+				<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
+				<p class="text-xs text-muted font-mono px-1">
+					Posting as <span class="font-bold text-text">{ visitorName }</span>
+				</p>
+				<textarea
+					id="comment-textarea"
+					name="body"
+					required
+					maxlength="2000"
+					rows="3"
+					placeholder={ ui.Comments_BodyLabel }
+					class="w-full px-3 py-2 text-sm rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-[var(--c-link)] transition-colors resize-y"
+				></textarea>
+				<div class="flex items-center justify-end gap-3">
+					<button
+						type="button"
+						id="reply-cancel-btn"
+						data-reply-cancel-btn
+						class="hidden text-xs font-mono text-muted hover:text-text cursor-pointer transition-colors p-1 touch-manipulation"
+					>
+						{ ui.Comments_Cancel }
+					</button>
+					<button
+						type="submit"
+						class="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer touch-manipulation"
+					>
+						<span class="htmx-indicator spinner"></span>
+						{ ui.Comments_Submit }
+					</button>
+				</div>
+			</form>
+		</div>
+		<script>
+		(function() {
+			window.setCommentReply = function(id, author) {
+				var parentInput = document.getElementById('comment-parent-id');
+				var indicator = document.getElementById('reply-indicator');
+				var authorEl = document.getElementById('reply-author-name');
+				var cancelBtn = document.getElementById('reply-cancel-btn');
+				var textarea = document.getElementById('comment-textarea');
+				var formContainer = document.getElementById('comment-form-container');
+
+				if (parentInput) parentInput.value = id;
+				if (authorEl) authorEl.textContent = '@' + author;
+				if (indicator) {
+					indicator.classList.remove('hidden');
+					indicator.classList.add('flex');
+				}
+				if (cancelBtn) {
+					cancelBtn.classList.remove('hidden');
+				}
+				if (textarea) {
+					if (!textarea.getAttribute('data-original-placeholder')) {
+						textarea.setAttribute('data-original-placeholder', textarea.placeholder);
+					}
+					textarea.placeholder = 'Reply to @' + author + '...';
+				}
+				if (formContainer) {
+					formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				}
+				if (textarea) {
+					setTimeout(function() { textarea.focus(); }, 150);
+				}
+			};
+
+			window.cancelCommentReply = function() {
+				var parentInput = document.getElementById('comment-parent-id');
+				var indicator = document.getElementById('reply-indicator');
+				var cancelBtn = document.getElementById('reply-cancel-btn');
+				var textarea = document.getElementById('comment-textarea');
+
+				if (parentInput) parentInput.value = '';
+				if (indicator) {
+					indicator.classList.add('hidden');
+					indicator.classList.remove('flex');
+				}
+				if (cancelBtn) {
+					cancelBtn.classList.add('hidden');
+				}
+				if (textarea) {
+					var orig = textarea.getAttribute('data-original-placeholder');
+					if (orig) textarea.placeholder = orig;
+				}
+			};
+
+			// Add resilient touch and click event listeners
+			if (!window._commentReplyListenerAttached) {
+				window._commentReplyListenerAttached = true;
+				document.addEventListener('click', function(e) {
+					var replyBtn = e.target.closest('[data-reply-btn]');
+					if (replyBtn) {
+						e.preventDefault();
+						var id = replyBtn.getAttribute('data-reply-id');
+						var author = replyBtn.getAttribute('data-reply-author');
+						window.setCommentReply(id, author);
+						return;
+					}
+					var cancelBtn = e.target.closest('[data-reply-cancel-btn]');
+					if (cancelBtn) {
+						e.preventDefault();
+						window.cancelCommentReply();
+						return;
+					}
+				});
+			}
+		})();
+		</script>
 	</section>
 }
 
@@ -80,7 +161,7 @@ templ CommentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug str
 	@commentList(ui, comments, isAdmin, slug, lang, visitorName)
 }
 
-// commentList renders the heading + all comments. It is swapped on POST.
+// commentList renders the heading + all hierarchical comments. It is swapped on POST.
 templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string) {
 	<div id="comment-list" data-slug={ slug }>
 		<h2 class="text-base font-medium text-text mb-5">
@@ -92,40 +173,57 @@ templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug str
 		if len(comments) == 0 {
 			<p class="text-sm text-muted">{ ui.Comments_Empty }</p>
 		} else {
-			<div class="flex flex-col gap-4">
-				for _, g := range groupComments(comments) {
-					@commentGroupItem(ui, g, isAdmin, slug, lang)
+			<div class="flex flex-col gap-5">
+				for _, root := range comment.BuildTree(comments) {
+					@commentTreeItem(ui, root, isAdmin, slug, lang, visitorName, 0)
 				}
 			</div>
 		}
 	</div>
 }
 
-templ commentGroupItem(ui i18n.UI, g CommentGroup, isAdmin bool, slug string, lang string) {
-	<div class="py-3 border-b border-border/40 last:border-0 last:pb-0">
-		<div class="flex items-baseline gap-2 flex-wrap mb-2">
-			<span class="text-sm font-semibold font-mono text-text">{ g.Name }</span>
-			<time datetime={ g.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time text-xs text-muted font-mono">{ fmtCommentTime(g.CreatedAt) }</time>
+templ commentTreeItem(ui i18n.UI, c comment.Comment, isAdmin bool, slug string, lang string, visitorName string, depth int) {
+	<div id={ fmt.Sprintf("comment-%d", c.ID) } class="py-2">
+		<div class="flex items-baseline gap-2 flex-wrap mb-1.5">
+			<span class="text-sm font-semibold font-mono text-text">{ c.Name }</span>
+			<time datetime={ c.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time text-xs text-muted font-mono">{ fmtCommentTime(c.CreatedAt) }</time>
 		</div>
-		<div class="space-y-2">
-			for _, c := range g.Comments {
-				<div class="flex items-start justify-between gap-4 group">
-					<div class="text-sm text-text break-words leading-relaxed flex-1">
-						@templ.Raw(string(renderCommentBody(c.Body)))
-					</div>
-					if isAdmin {
-						<button
-							class="text-xs text-[var(--c-warn)] hover:underline cursor-pointer font-mono shrink-0 opacity-60 hover:opacity-100 transition-opacity"
-							hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
-							hx-target="#comment-list"
-							hx-swap="outerHTML"
-							hx-confirm="Hapus komentar ini?"
-						>
-							{ ui.Comments_Delete }
-						</button>
-					}
-				</div>
+		<div class="text-sm text-text break-words leading-relaxed mb-2">
+			@templ.Raw(string(renderCommentBody(c.Body)))
+		</div>
+		
+		<!-- Action bar: Reply & Admin Delete with touch-friendly targets -->
+		<div class="flex items-center gap-4 text-xs font-mono">
+			<button
+				type="button"
+				data-reply-btn
+				data-reply-id={ fmt.Sprintf("%d", c.ID) }
+				data-reply-author={ c.Name }
+				class="text-[var(--c-link)] hover:underline cursor-pointer opacity-85 hover:opacity-100 transition-opacity inline-flex items-center gap-1.5 py-1.5 px-2 -ml-2 touch-manipulation select-none font-medium"
+			>
+				@IconReply("w-3.5 h-3.5 shrink-0")
+				<span>{ ui.Comments_Reply }</span>
+			</button>
+			if isAdmin {
+				<button
+					class="text-[var(--c-warn)] hover:underline cursor-pointer opacity-60 hover:opacity-100 transition-opacity py-1.5 px-2 touch-manipulation select-none"
+					hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
+					hx-target="#comment-list"
+					hx-swap="outerHTML"
+					hx-confirm="Hapus komentar ini beserta balasannya?"
+				>
+					{ ui.Comments_Delete }
+				</button>
 			}
 		</div>
+
+		<!-- Threaded child replies with clear distinct guide lines -->
+		if len(c.Replies) > 0 {
+			<div class="border-l-2 border-border/80 dark:border-border/90 hover:border-[var(--c-link)]/60 transition-colors pl-3.5 sm:pl-5 mt-2.5 space-y-3.5">
+				for _, reply := range c.Replies {
+					@commentTreeItem(ui, reply, isAdmin, slug, lang, visitorName, depth+1)
+				}
+			</div>
+		}
 	</div>
 }

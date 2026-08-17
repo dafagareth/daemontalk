@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"daemontalk/internal/i18n"
@@ -24,10 +23,8 @@ func (h *Handler) Graph(w http.ResponseWriter, r *http.Request) {
 		title = "Peta Konsep & Tech Stack · daemontalk"
 	}
 
-	err := templates.Layout(ui, lang, title, r.URL.Path, templates.PageMeta{
+	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, templates.PageMeta{
 		Description: "Interactive knowledge graph connecting Linux kernel architectures, language runtimes, memory models, and distributed storage engines.",
-	}, templates.GraphPage(ui, lang, posts)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	}, templates.GraphPage(ui, lang, posts)))
 }
+

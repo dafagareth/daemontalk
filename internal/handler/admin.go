@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -17,12 +17,12 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 		if tok := r.URL.Query().Get("admin"); tok != "" {
 			if tok == h.AdminToken {
 				http.SetCookie(w, &http.Cookie{
-					Name:     "admin_token",
+					Name:     CookieAdminToken,
 					Value:    tok,
 					Path:     "/",
 					HttpOnly: true,
 					SameSite: http.SameSiteLaxMode,
-					MaxAge:   60 * 60 * 24 * 30,
+					MaxAge:   CookieAdminMaxAge,
 				})
 			}
 			http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
@@ -41,22 +41,22 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 	totalHits := 0
 	if h.Comments != nil {
 		if v, err := h.Comments.AllViewCounts(); err != nil {
-			log.Printf("admin: view counts: %v", err)
+			slog.Error("admin view counts query failed", "error", err)
 		} else {
 			views = v
 		}
 		if cs, err := h.Comments.ListAll(); err != nil {
-			log.Printf("admin: list comments: %v", err)
+			slog.Error("admin list comments query failed", "error", err)
 		} else {
 			allComments = cs
 		}
 		if tp, err := h.Comments.TopPageViews(10); err != nil {
-			log.Printf("admin: top pages: %v", err)
+			slog.Error("admin top pages query failed", "error", err)
 		} else {
 			topPages = tp
 		}
 		if n, err := h.Comments.TotalPageViews(); err != nil {
-			log.Printf("admin: total hits: %v", err)
+			slog.Error("admin total hits query failed", "error", err)
 		} else {
 			totalHits = n
 		}
@@ -65,7 +65,7 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 	var webPosts []postdb.WebPost
 	if h.PostDB != nil {
 		if wp, err := h.PostDB.List(); err != nil {
-			log.Printf("admin: list web posts: %v", err)
+			slog.Error("admin list web posts failed", "error", err)
 		} else {
 			webPosts = wp
 		}
@@ -81,10 +81,7 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 		RadarEnabled: templates.IsRadarEnabled(),
 	}
 
-	err := templates.AdminLayout("admin", r.URL.Path, templates.AdminPage(stats)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.AdminLayout("admin", r.URL.Path, templates.AdminPage(stats)))
 }
 
 // AdminToggleRadar toggles the systems radar feature flag.
@@ -116,9 +113,10 @@ func (h *Handler) AdminDeleteComment(w http.ResponseWriter, r *http.Request) {
 
 	if h.Comments != nil {
 		if err := h.Comments.Delete(id); err != nil {
-			log.Printf("admin delete comment %d: %v", id, err)
+			slog.Error("admin delete comment failed", "id", id, "error", err)
 		}
 	}
 
 	w.WriteHeader(http.StatusOK)
 }
+

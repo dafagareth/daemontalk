@@ -8,7 +8,7 @@ css:
 		-o web/static/css/main.css --minify
 
 build: generate css
-	go build -o daemontalk .
+	go build -trimpath -ldflags="-s -w" -o daemontalk .
 
 dev: generate
 	npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css

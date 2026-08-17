@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
 
@@ -11,11 +11,11 @@ import (
 )
 
 var validEmojis = map[string]bool{
-	"👍": true,
-	"❤️": true,
-	"🔥": true,
-	"🤯": true,
-	"💡": true,
+	"like":       true,
+	"heart":      true,
+	"fire":       true,
+	"mindblown":  true,
+	"insightful": true,
 }
 
 func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +34,7 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Prevent multiple reactions from the same user for this post.
-	cookieName := "reacted_" + slug
+	cookieName := CookieReactedPrefix + slug
 	if cookie, err := r.Cookie(cookieName); err == nil && cookie.Value != "" {
 		oldEmoji, _ := url.QueryUnescape(cookie.Value)
 
@@ -42,7 +42,7 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 			// Undo reaction
 			reactions, err := h.Comments.DecrementReaction(slug, emoji)
 			if err != nil {
-				log.Printf("decrement reaction %s/%s: %v", slug, emoji, err)
+				slog.Error("decrement reaction failed", "slug", slug, "emoji", emoji, "error", err)
 				reactions = map[string]int{}
 			}
 			http.SetCookie(w, &http.Cookie{
@@ -53,9 +53,7 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 				HttpOnly: true,
 				SameSite: http.SameSiteLaxMode,
 			})
-			if err := templates.ReactionsBar(ui, reactions, slug, lang, "").Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-			}
+			h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, ""))
 			return
 		}
 
@@ -65,26 +63,24 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 		}
 		reactions, err := h.Comments.IncrementReaction(slug, emoji)
 		if err != nil {
-			log.Printf("increment reaction %s/%s: %v", slug, emoji, err)
+			slog.Error("increment reaction failed", "slug", slug, "emoji", emoji, "error", err)
 			reactions = map[string]int{}
 		}
 		http.SetCookie(w, &http.Cookie{
 			Name:     cookieName,
 			Value:    url.QueryEscape(emoji),
 			Path:     "/",
-			MaxAge:   86400 * 365,
+			MaxAge:   CookieReactionMaxAge,
 			HttpOnly: true,
 			SameSite: http.SameSiteLaxMode,
 		})
-		if err := templates.ReactionsBar(ui, reactions, slug, lang, emoji).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-		}
+		h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji))
 		return
 	}
 
 	reactions, err := h.Comments.IncrementReaction(slug, emoji)
 	if err != nil {
-		log.Printf("increment reaction %s/%s: %v", slug, emoji, err)
+		slog.Error("increment reaction failed", "slug", slug, "emoji", emoji, "error", err)
 		reactions = map[string]int{}
 	}
 
@@ -92,12 +88,11 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 		Name:     cookieName,
 		Value:    url.QueryEscape(emoji),
 		Path:     "/",
-		MaxAge:   86400 * 365,
+		MaxAge:   CookieReactionMaxAge,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
 
-	if err := templates.ReactionsBar(ui, reactions, slug, lang, emoji).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji))
 }
+

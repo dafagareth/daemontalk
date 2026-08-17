@@ -2,10 +2,11 @@ package handler
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"net/smtp"
 	"strconv"
+	"strings"
 	"sync"
 
 	"daemontalk/internal/comment"
@@ -54,7 +55,7 @@ func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := h.Comments.Delete(id); err != nil {
-		log.Printf("delete comment %d: %v", id, err)
+		slog.Error("delete comment failed", "id", id, "error", err)
 	}
 	h.renderCommentList(w, r, ui, slug, true)
 }
@@ -84,20 +85,31 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	isAdmin := h.isAdmin(r)
 	name := GetVisitorIdentity(w, r)
+	if isAdmin {
+		name = "daemontalk"
+	}
 	body := r.PostFormValue("body")
+
+	var parentID *int64
+	if pIDStr := strings.TrimSpace(r.PostFormValue("parent_id")); pIDStr != "" {
+		if pid, err := strconv.ParseInt(pIDStr, 10, 64); err == nil && pid > 0 {
+			parentID = &pid
+		}
+	}
 
 	// Spam check: score high-risk submissions silently.
 	if spamScore(name, body) > spamThreshold {
-		h.renderCommentList(w, r, ui, slug, h.isAdmin(r))
+		h.renderCommentList(w, r, ui, slug, isAdmin)
 		return
 	}
 
-	if _, err := h.Comments.Add(slug, name, body); err != nil {
+	if _, err := h.Comments.AddWithParent(slug, name, body, parentID); err != nil {
 		if err == comment.ErrInvalid {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		} else {
-			log.Printf("add comment for %s: %v", slug, err)
+			slog.Error("add comment failed", "slug", slug, "parent_id", parentID, "error", err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 		// Still return the current list so the UI stays consistent.
@@ -107,17 +119,18 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 			go h.sendCommentNotification(slug, name, body)
 		}
 	}
-	h.renderCommentList(w, r, ui, slug, h.isAdmin(r))
+	h.renderCommentList(w, r, ui, slug, isAdmin)
 }
 func (h *Handler) renderCommentList(w http.ResponseWriter, r *http.Request, ui i18n.UI, slug string, isAdmin bool) {
 	visitorName := GetVisitorIdentity(w, r)
+	if isAdmin {
+		visitorName = "daemontalk"
+	}
 	comments, err := h.Comments.ListBySlug(slug)
 	if err != nil {
-		log.Printf("load comments for %s: %v", slug, err)
+		slog.Error("load comments for slug failed", "slug", slug, "error", err)
 	}
-	if err := templates.CommentList(ui, comments, isAdmin, slug, langFromRequest(r), visitorName).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.CommentList(ui, comments, isAdmin, slug, langFromRequest(r), visitorName))
 }
 func (h *Handler) sendCommentNotification(slug, name, body string) {
 	port := h.SMTPPort
@@ -134,7 +147,7 @@ func (h *Handler) sendCommentNotification(slug, name, body string) {
 		msgBody)
 	auth := smtp.PlainAuth("", h.SMTPUser, h.SMTPPass, h.SMTPHost)
 	if err := smtp.SendMail(h.SMTPHost+":"+port, auth, h.SMTPUser, []string{h.SMTPTo}, msg); err != nil {
-		log.Printf("comment notification: %v", err)
+		slog.Error("send comment notification failed", "slug", slug, "error", err)
 	}
 }
 

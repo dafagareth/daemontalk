@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 
 	"daemontalk/internal/comment"
@@ -15,21 +15,21 @@ func (h *Handler) Guestbook(w http.ResponseWriter, r *http.Request) {
 
 	var entries []comment.Comment
 	if h.Comments != nil {
-		if cs, err := h.Comments.ListBySlug("__guestbook__"); err != nil {
-			log.Printf("guestbook list: %v", err)
+		if cs, err := h.Comments.ListBySlug(GuestbookSlug); err != nil {
+			slog.Error("guestbook list query failed", "error", err)
 		} else {
 			entries = cs
 		}
 	}
 
 	visitorName := GetVisitorIdentity(w, r)
+	if h.isAdmin(r) {
+		visitorName = "daemontalk"
+	}
 
 	meta := templates.PageMeta{Description: "Sign the guestbook and leave a message at daemontalk.com"}
-	err := templates.Layout(ui, lang, "guestbook", r.URL.Path, meta,
-		templates.GuestbookPage(ui, entries, lang, visitorName)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, "guestbook", r.URL.Path, meta,
+		templates.GuestbookPage(ui, entries, lang, visitorName)))
 }
 
 func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +52,9 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	name := GetVisitorIdentity(w, r)
+	if h.isAdmin(r) {
+		name = "daemontalk"
+	}
 	body := r.PostFormValue("body")
 
 	// Spam check: silently drop high-risk submissions.
@@ -60,11 +63,11 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := h.Comments.Add("__guestbook__", name, body); err != nil {
+	if _, err := h.Comments.Add(GuestbookSlug, name, body); err != nil {
 		if err == comment.ErrInvalid {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		} else {
-			log.Printf("add guestbook entry: %v", err)
+			slog.Error("add guestbook entry failed", "error", err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}
@@ -74,13 +77,12 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) renderGuestbookList(w http.ResponseWriter, r *http.Request, ui i18n.UI) {
 	var entries []comment.Comment
 	if h.Comments != nil {
-		if cs, err := h.Comments.ListBySlug("__guestbook__"); err != nil {
-			log.Printf("guestbook render list: %v", err)
+		if cs, err := h.Comments.ListBySlug(GuestbookSlug); err != nil {
+			slog.Error("guestbook render list query failed", "error", err)
 		} else {
 			entries = cs
 		}
 	}
-	if err := templates.GuestbookList(ui, entries).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.GuestbookList(ui, entries))
 }
+

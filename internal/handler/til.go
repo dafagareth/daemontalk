@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"daemontalk/internal/i18n"
@@ -23,8 +22,6 @@ func (h *Handler) TIL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	meta := templates.PageMeta{Description: "Short notes on things I've learned — TIL posts by Dafa."}
-	if err := templates.Layout(ui, lang, "til", r.URL.Path, meta,
-		templates.TILPage(ui, posts, lang)).Render(r.Context(), w); err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, "til", r.URL.Path, meta, templates.TILPage(ui, posts, lang)))
 }
+

@@ -146,3 +146,76 @@ func TestAllViewCounts(t *testing.T) {
 		t.Errorf("post-b: expected 1, got %d", counts["post-b"])
 	}
 }
+
+func TestThreadedRepliesAndBuildTree(t *testing.T) {
+	s := newTestStore(t)
+
+	// Root comment 1
+	c1, err := s.Add("post-tree", "Alice", "Root comment 1")
+	if err != nil {
+		t.Fatalf("Add root 1: %v", err)
+	}
+
+	// Reply to Root 1
+	c1Reply1, err := s.AddWithParent("post-tree", "Bob", "Reply 1 to Alice", &c1.ID)
+	if err != nil {
+		t.Fatalf("Add reply 1: %v", err)
+	}
+
+	// Nested reply to Reply 1 (grandchild)
+	c1Grandchild, err := s.AddWithParent("post-tree", "Carol", "Reply to Bob", &c1Reply1.ID)
+	if err != nil {
+		t.Fatalf("Add grandchild: %v", err)
+	}
+
+	// Root comment 2
+	c2, err := s.Add("post-tree", "Dave", "Root comment 2")
+	if err != nil {
+		t.Fatalf("Add root 2: %v", err)
+	}
+
+	list, err := s.ListBySlug("post-tree")
+	if err != nil {
+		t.Fatalf("ListBySlug: %v", err)
+	}
+	if len(list) != 4 {
+		t.Fatalf("expected 4 flat comments, got %d", len(list))
+	}
+
+	tree := BuildTree(list)
+	if len(tree) != 2 {
+		t.Fatalf("expected 2 root comments in tree, got %d", len(tree))
+	}
+
+	// Check root 1 (Alice)
+	if tree[0].ID != c1.ID || tree[0].Name != "Alice" {
+		t.Errorf("expected root 1 to be Alice, got %q", tree[0].Name)
+	}
+	if len(tree[0].Replies) != 1 {
+		t.Fatalf("expected 1 reply under Alice, got %d", len(tree[0].Replies))
+	}
+
+	// Check reply 1 (Bob)
+	bobReply := tree[0].Replies[0]
+	if bobReply.ID != c1Reply1.ID || bobReply.Name != "Bob" {
+		t.Errorf("expected reply to be Bob, got %q", bobReply.Name)
+	}
+	if len(bobReply.Replies) != 1 {
+		t.Fatalf("expected 1 grandchild reply under Bob, got %d", len(bobReply.Replies))
+	}
+
+	// Check grandchild (Carol)
+	carolReply := bobReply.Replies[0]
+	if carolReply.ID != c1Grandchild.ID || carolReply.Name != "Carol" {
+		t.Errorf("expected grandchild to be Carol, got %q", carolReply.Name)
+	}
+
+	// Check root 2 (Dave)
+	if tree[1].ID != c2.ID || tree[1].Name != "Dave" {
+		t.Errorf("expected root 2 to be Dave, got %q", tree[1].Name)
+	}
+	if len(tree[1].Replies) != 0 {
+		t.Errorf("expected 0 replies under Dave, got %d", len(tree[1].Replies))
+	}
+}
+

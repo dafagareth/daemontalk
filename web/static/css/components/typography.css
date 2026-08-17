@@ -1,5 +1,5 @@
 @layer components {
-  /* Blog post prose — Medium-style reading experience */
+  /* Blog post prose typography */
   /* Font sizes use `em` so A+/A- scales the TEXT, but all margins/padding use
      `rem` so the gaps between elements stay fixed regardless of font size.
      The column width is a fixed `rem` value too, so enlarging the font reflows
@@ -72,10 +72,20 @@
     text-align: center;
   }
   .prose .post-carousel-wrap img,
-  .prose .post-gallery-wrap img {
+  .prose .post-gallery-wrap img,
+  .prose .post-author-card img {
     border: none !important;
     margin: 0 !important;
     background: transparent !important;
+  }
+  .prose .post-author-card h3 {
+    margin: 0 !important;
+  }
+  .prose .post-author-card p {
+    margin: 0 !important;
+  }
+  .prose .post-author-card a {
+    text-decoration: none !important;
   }
 
   html[lang="id"] .fig-count::after { content: " Gambar"; }

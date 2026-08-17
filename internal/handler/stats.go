@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -48,14 +48,14 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 				data.TopPages = append(data.TopPages, templates.StatTopPage{Path: p.Path, Count: p.Count})
 			}
 		} else {
-			log.Printf("stats top pages: %v", err)
+			slog.Error("stats top pageviews query failed", "error", err)
 		}
 		if tv, err := h.Comments.TotalPageViews(); err == nil {
 			data.TotalViews = tv
 		}
 		if cs, err := h.Comments.ListAll(); err == nil {
 			for _, c := range cs {
-				if c.PostSlug != "__guestbook__" {
+				if c.PostSlug != GuestbookSlug {
 					data.TotalComments++
 				}
 			}
@@ -63,9 +63,6 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	meta := templates.PageMeta{Description: "Site statistics for daemontalk.com — posts, views, and more."}
-	err := templates.Layout(ui, lang, "stats", r.URL.Path, meta,
-		templates.StatsPage(ui, data)).Render(r.Context(), w)
-	if err != nil {
-		log.Printf("render error: %v", err)
-	}
+	h.Render(w, r, templates.Layout(ui, lang, "stats", r.URL.Path, meta, templates.StatsPage(ui, data)))
 }
+

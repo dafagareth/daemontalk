@@ -33,10 +33,10 @@
   }
 
   /* Theme toggle icons */
-  .icon-sun  { display: none; }
-  .icon-moon { display: block; }
+  .icon-sun  { display: none; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
+  .icon-moon { display: block; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
 
-  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
   [data-theme="dark"] .icon-moon { display: none; }
 
   /* Theme logo switching */
@@ -47,7 +47,7 @@
   [data-theme="dark"] .logo-dark  { display: block; }
 
   @media (prefers-color-scheme: dark) {
-    html:not([data-theme="light"]) .icon-sun  { display: block; }
+    html:not([data-theme="light"]) .icon-sun  { display: block; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
     html:not([data-theme="light"]) .icon-moon { display: none; }
     html:not([data-theme="light"]) .logo-light { display: none; }
     html:not([data-theme="light"]) .logo-dark  { display: block; }
