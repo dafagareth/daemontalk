@@ -31,7 +31,7 @@ func (m PageMeta) ogDesc() string {
 	if m.Description != "" {
 		return m.Description
 	}
-	return "Software developer building developer tools in Go."
+	return "Open engineering notebook and learning log. Exploring Go backend, Python, Linux systems, and distributed architecture."
 }
 
 func (m PageMeta) ogImage() string {

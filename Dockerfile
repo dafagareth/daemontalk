@@ -28,6 +28,7 @@ RUN apt-get update \
 # Runtime needs: the binary, blog content (read at startup), static assets
 # (served + chroma.css regenerated here), and a writable data dir for SQLite.
 COPY --from=builder /app/daemontalk .
+COPY --from=builder /app/google*.html ./
 COPY --from=builder /app/web/static/ web/static/
 COPY --from=builder /app/content/ content/
 RUN mkdir -p data && chown -R app:app data web/static

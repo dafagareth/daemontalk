@@ -2,6 +2,8 @@ package router
 
 import (
 	"net/http"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -34,6 +36,14 @@ func New(h *handler.Handler) *chi.Mux {
 	})
 	r.With(handler.StaticCacheControl).HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "web/static/logo/favicon.ico")
+	})
+	r.HandleFunc("/google*.html", func(w http.ResponseWriter, r *http.Request) {
+		file := filepath.Base(r.URL.Path)
+		if strings.HasPrefix(file, "google") && strings.HasSuffix(file, ".html") {
+			http.ServeFile(w, r, file)
+			return
+		}
+		http.NotFound(w, r)
 	})
 	r.Get("/og.png", h.SiteOGImage)
 
