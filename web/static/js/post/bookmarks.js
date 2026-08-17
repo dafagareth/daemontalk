@@ -7,7 +7,7 @@
     document.querySelectorAll(".bookmark-btn").forEach(function(btn) {
         if (saved[btn.dataset.slug]) {
             btn.textContent = "★";
-            btn.classList.add("text-link");
+            btn.classList.add("text-yellow-500");
         }
     });
 })();
@@ -22,11 +22,11 @@ window.toggleBookmark = function(btn) {
     if (idx >= 0) {
         bookmarks.splice(idx, 1);
         btn.textContent = "☆";
-        btn.classList.remove("text-link");
+        btn.classList.remove("text-yellow-500");
     } else {
         bookmarks.unshift({slug: slug, title: title, date: date});
         btn.textContent = "★";
-        btn.classList.add("text-link");
+        btn.classList.add("text-yellow-500");
     }
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 };
