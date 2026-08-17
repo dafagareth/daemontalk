@@ -6,9 +6,10 @@
 
 set -euo pipefail
 
-BACKUP_DIR="${BACKUP_DIR:-/opt/daemontalk/backups}"
-DATA_DIR="${DATA_DIR:-/opt/daemontalk/data}"
-CONTENT_DIR="${CONTENT_DIR:-/opt/daemontalk/content}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BACKUP_DIR="${BACKUP_DIR:-$SCRIPT_DIR/backups}"
+DATA_DIR="${DATA_DIR:-$SCRIPT_DIR/data}"
+CONTENT_DIR="${CONTENT_DIR:-$SCRIPT_DIR/content}"
 TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
 ARCHIVE_NAME="daemontalk_backup_${TIMESTAMP}.tar.gz"
 

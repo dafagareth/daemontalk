@@ -6,7 +6,8 @@
 
 set -euo pipefail
 
-APP_DIR="${APP_DIR:-/opt/daemontalk}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+APP_DIR="${APP_DIR:-$SCRIPT_DIR}"
 cd "${APP_DIR}"
 
 FRESH_BUILD="false"
