@@ -200,3 +200,17 @@ github: https://github.com/dafagareth/daemontalk
 email: team@daemontalk.dev
 website: https://daemontalk.com
 ```
+
+## 14. Mathematics (LaTeX)
+
+Daemontalk supports academic-standard LaTeX formatting via KaTeX. 
+
+You can write inline math using single dollar signs:
+The time complexity is $O(n \log n)$ and the space complexity is $O(n)$.
+
+For block math, use double dollar signs on their own lines or inline:
+$$
+f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi)\,e^{2 \pi i \xi x} \, d\xi
+$$
+
+Or inline block: $$\text{KV-Cache} = 2 \times n_{\text{layers}} \times d_{\text{head}}$$

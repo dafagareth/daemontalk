@@ -12,9 +12,9 @@ import (
 // htmx + fonts from their CDNs, inline styles/scripts (theme + page scripts),
 // and self for everything else. Adjust if a new CDN is introduced.
 const contentSecurityPolicy = "default-src 'self'; " +
-	"script-src 'self' 'unsafe-inline' https://unpkg.com; " +
-	"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-	"font-src 'self' https://fonts.gstatic.com; " +
+	"script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " +
+	"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; " +
+	"font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; " +
 	"img-src 'self' data: https:; " +
 	"connect-src 'self'; " +
 	"frame-ancestors 'none'; " +

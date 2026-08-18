@@ -67,7 +67,7 @@ func renderLinkHTML(rawContent string) string {
   <a href="%s" target="_blank" rel="noopener noreferrer" class="group block no-underline text-inherit hover:no-underline">
     <div class="link-title font-semibold text-text group-hover:text-link text-[0.95em] leading-snug no-underline flex items-center gap-2">
       %s
-      <svg class="w-4 h-4 text-muted group-hover:text-link transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+      ` + GetIcon(IconExternalLink, "w-4 h-4 text-muted group-hover:text-link transition-colors") + `
     </div>
     %s
     %s

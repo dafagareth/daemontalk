@@ -338,4 +338,34 @@ slug: advanced-systems-components
 	}
 }
 
+func TestLaTeXMathProtection(t *testing.T) {
+	content := `---
+title: "KV-Cache Math"
+slug: kv-cache-math
+---
+
+$$\text{KV-Cache Per Request} = 2 \times n_{\text{layers}} \times n_{\text{heads}} \times d_{\text{head}} \times \text{seq\_len} \times \text{bytes}$$
+
+Mari kita uji inline math: $n_{\text{layers}}$ dan $\text{seq\_len}$.
+`
+
+	p, err := Parse([]byte(content))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	body := string(p.Body)
+
+	if strings.Contains(body, "xDTUSCOREx") || strings.Contains(body, "xDTESCAPEDUSCOREx") || strings.Contains(body, "xDTASTx") {
+		t.Errorf("Leaked internal math placeholders in body: %s", body)
+	}
+
+	if !strings.Contains(body, `n_{\text{layers}}`) {
+		t.Errorf("Subscript n_{\\text{layers}} was mangled: %s", body)
+	}
+	if !strings.Contains(body, `\text{seq\_len}`) {
+		t.Errorf("Escaped seq\\_len was mangled: %s", body)
+	}
+}
+
+
 

@@ -74,6 +74,33 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 			}
 		}
 		<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+		<!-- KaTeX Math / LaTeX Rendering -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"/>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+		<script>
+			function dtRenderMath() {
+				if (typeof renderMathInElement === "function") {
+					renderMathInElement(document.body, {
+						delimiters: [
+							{left: "$$", right: "$$", display: true},
+							{left: "$", right: "$", display: false},
+							{left: "\\(", right: "\\)", display: false},
+							{left: "\\[", right: "\\]", display: true}
+						],
+						ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+						throwOnError: false
+					});
+				} else {
+					setTimeout(dtRenderMath, 60);
+				}
+			}
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", dtRenderMath);
+			} else {
+				dtRenderMath();
+			}
+		</script>
 	</head>
 }
 
@@ -215,6 +242,9 @@ templ visitedPostsScript() {
 			markVisited();
 			// Re-apply after HTMX swaps (load more, etc.)
 			document.addEventListener('htmx:afterSwap', markVisited);
+			document.addEventListener('htmx:afterSwap', function() {
+				if (typeof dtRenderMath === 'function') dtRenderMath();
+			});
 		})();
 	</script>
 }

@@ -52,4 +52,23 @@
     html:not([data-theme="light"]) .logo-light { display: none; }
     html:not([data-theme="light"]) .logo-dark  { display: block; }
   }
+
+  /* KaTeX / Math formula responsive wrapping */
+  .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding: 0.25rem 0;
+  }
+  .katex-display > .katex {
+    white-space: normal;
+    text-align: left;
+  }
+  .math.display,
+  .math-display,
+  span.math {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
 }

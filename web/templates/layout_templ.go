@@ -265,7 +265,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<script src=\"https://unpkg.com/htmx.org@2.0.2\" integrity=\"sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ\" crossorigin=\"anonymous\"></script></head>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<script src=\"https://unpkg.com/htmx.org@2.0.2\" integrity=\"sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ\" crossorigin=\"anonymous\"></script><!-- KaTeX Math / LaTeX Rendering --><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css\" crossorigin=\"anonymous\"><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js\" crossorigin=\"anonymous\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script><script>\n\t\t\tfunction dtRenderMath() {\n\t\t\t\tif (typeof renderMathInElement === \"function\") {\n\t\t\t\t\trenderMathInElement(document.body, {\n\t\t\t\t\t\tdelimiters: [\n\t\t\t\t\t\t\t{left: \"$$\", right: \"$$\", display: true},\n\t\t\t\t\t\t\t{left: \"$\", right: \"$\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\(\", right: \"\\\\)\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\[\", right: \"\\\\]\", display: true}\n\t\t\t\t\t\t],\n\t\t\t\t\t\tignoredTags: [\"script\", \"noscript\", \"style\", \"textarea\", \"pre\", \"code\"],\n\t\t\t\t\t\tthrowOnError: false\n\t\t\t\t\t});\n\t\t\t\t} else {\n\t\t\t\t\tsetTimeout(dtRenderMath, 60);\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (document.readyState === \"loading\") {\n\t\t\t\tdocument.addEventListener(\"DOMContentLoaded\", dtRenderMath);\n\t\t\t} else {\n\t\t\t\tdtRenderMath();\n\t\t\t}\n\t\t</script></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -301,7 +301,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(lang)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 82, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 109, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 		if templ_7745c5c3_Err != nil {
@@ -495,7 +495,7 @@ func visitedPostsScript() templ.Component {
 			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<script>\n\t\t(function() {\n\t\t\tvar read = [];\n\t\t\ttry { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}\n\t\t\tif (!read.length) return;\n\t\t\tvar set = {};\n\t\t\tread.forEach(function(s) { set[s] = true; });\n\t\t\tfunction markVisited() {\n\t\t\t\tdocument.querySelectorAll('a[data-slug]').forEach(function(a) {\n\t\t\t\t\tif (set[a.dataset.slug]) {\n\t\t\t\t\t\tvar h = a.querySelector('h1,h2,h3,h4,h5,h6');\n\t\t\t\t\t\tif (h) {\n\t\t\t\t\t\t\th.classList.add('post-visited');\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\ta.classList.add('post-visited');\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\tmarkVisited();\n\t\t\t// Re-apply after HTMX swaps (load more, etc.)\n\t\t\tdocument.addEventListener('htmx:afterSwap', markVisited);\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<script>\n\t\t(function() {\n\t\t\tvar read = [];\n\t\t\ttry { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}\n\t\t\tif (!read.length) return;\n\t\t\tvar set = {};\n\t\t\tread.forEach(function(s) { set[s] = true; });\n\t\t\tfunction markVisited() {\n\t\t\t\tdocument.querySelectorAll('a[data-slug]').forEach(function(a) {\n\t\t\t\t\tif (set[a.dataset.slug]) {\n\t\t\t\t\t\tvar h = a.querySelector('h1,h2,h3,h4,h5,h6');\n\t\t\t\t\t\tif (h) {\n\t\t\t\t\t\t\th.classList.add('post-visited');\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\ta.classList.add('post-visited');\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\tmarkVisited();\n\t\t\t// Re-apply after HTMX swaps (load more, etc.)\n\t\t\tdocument.addEventListener('htmx:afterSwap', markVisited);\n\t\t\tdocument.addEventListener('htmx:afterSwap', function() {\n\t\t\t\tif (typeof dtRenderMath === 'function') dtRenderMath();\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

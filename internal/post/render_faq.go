@@ -63,7 +63,7 @@ func renderFAQHTML(rawContent string) string {
 		buf.WriteString(fmt.Sprintf(`  <details class="border border-border bg-surface rounded-none overflow-hidden group">
     <summary class="p-4 text-[0.95em] font-semibold text-text cursor-pointer select-none list-none flex items-center justify-between gap-4 hover:bg-hover transition-colors">
       <span>%s</span>
-      <svg class="w-4 h-4 text-muted faq-chevron transition-transform shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      ` + GetIcon(IconChevronDown, "w-4 h-4 text-muted faq-chevron transition-transform shrink-0") + `
     </summary>
     <div class="px-4 pb-4 pt-1 text-[0.9em] text-muted leading-relaxed border-t border-border/40 bg-bg/40">
       %s

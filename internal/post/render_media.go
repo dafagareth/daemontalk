@@ -82,7 +82,7 @@ func renderCarouselHTML(items []mediaItem) string {
         aria-label="Previous slide"
         class="w-8 h-8 flex items-center justify-center border border-border bg-surface text-text hover:bg-hover hover:border-[var(--c-link)] transition-colors cursor-pointer"
       >
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        ` + GetIcon(IconChevronLeft, "w-4 h-4") + `
       </button>
       <button
         type="button"
@@ -90,7 +90,7 @@ func renderCarouselHTML(items []mediaItem) string {
         aria-label="Next slide"
         class="w-8 h-8 flex items-center justify-center border border-border bg-surface text-text hover:bg-hover hover:border-[var(--c-link)] transition-colors cursor-pointer"
       >
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        ` + GetIcon(IconChevronRight, "w-4 h-4") + `
       </button>
     </div>
   </div>

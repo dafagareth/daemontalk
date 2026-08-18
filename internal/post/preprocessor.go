@@ -17,13 +17,41 @@ var (
 	reLinkFenced       = regexp.MustCompile("(?s)```(?:link|bookmark|card)\\s*\\n(.*?)\\n```")
 	reStatFenced       = regexp.MustCompile("(?s)```(?:stat|stats|metrics)\\s*\\n(.*?)\\n```")
 	reMarkdownImage    = regexp.MustCompile(`!\[([^\]]*)\]\(([^)"\s]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)`)
+	reBlockMath        = regexp.MustCompile(`(?s)\$\$(.*?)\$\$`)
+	reInlineMath       = regexp.MustCompile(`\$([^\$\n]+?)\$`)
 )
 
 // preprocessMarkdown handles custom media blocks such as ```carousel, ```gallery, ```faq, ```author, ```references, ```callout, ```tabs, ```link, and ```stat.
 func preprocessMarkdown(src []byte) []byte {
 	srcStr := string(src)
 
-	// Replace GitHub style alert blockquotes: > [!NOTE] ...
+	// Protect block math ($$...$$) from markdown emphasis / underscore mangling
+	srcStr = reBlockMath.ReplaceAllStringFunc(srcStr, func(m string) string {
+		sub := reBlockMath.FindStringSubmatch(m)
+		if len(sub) < 2 {
+			return m
+		}
+		inner := sub[1]
+		inner = strings.ReplaceAll(inner, `\_`, `xDTESCAPEDUSCOREx`)
+		inner = strings.ReplaceAll(inner, "_", "xDTUSCOREx")
+		inner = strings.ReplaceAll(inner, "*", "xDTASTx")
+		return "$$" + inner + "$$"
+	})
+
+	// Protect inline math ($...$) from markdown emphasis / underscore mangling
+	srcStr = reInlineMath.ReplaceAllStringFunc(srcStr, func(m string) string {
+		sub := reInlineMath.FindStringSubmatch(m)
+		if len(sub) < 2 {
+			return m
+		}
+		inner := sub[1]
+		inner = strings.ReplaceAll(inner, `\_`, `xDTESCAPEDUSCOREx`)
+		inner = strings.ReplaceAll(inner, "_", "xDTUSCOREx")
+		inner = strings.ReplaceAll(inner, "*", "xDTASTx")
+		return "$" + inner + "$"
+	})
+
+	// Replace alert blockquotes: > [!NOTE] ...
 	srcStr = reGitHubAlert.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reGitHubAlert.FindStringSubmatch(m)
 		if len(sub) < 3 {

@@ -93,6 +93,11 @@ func Parse(src []byte) (Post, error) {
 	// Inject lazy loading for all images in the rendered HTML.
 	rawHTML := strings.ReplaceAll(buf.String(), "<img ", `<img loading="lazy" `)
 
+	// Restore protected math characters
+	rawHTML = strings.ReplaceAll(rawHTML, "xDTESCAPEDUSCOREx", `\_`)
+	rawHTML = strings.ReplaceAll(rawHTML, "xDTUSCOREx", "_")
+	rawHTML = strings.ReplaceAll(rawHTML, "xDTASTx", "*")
+
 	p := Post{
 		Body: template.HTML(rawHTML),
 	}
@@ -252,8 +257,3 @@ func readTime(html string) int {
 	return minutes
 }
 
-// LoadBody renders a markdown file and returns its HTML body.
-// Unlike parseFile, frontmatter is not extracted (only body content is returned).
-
-// LoadBodyWithTOC renders a markdown file and returns its HTML body along with
-// a table of contents extracted from its headings.
