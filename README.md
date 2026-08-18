@@ -195,6 +195,12 @@ go build -o bin/daemontalk-tui ./cmd/tui
 
 ---
 
+## Contributing
+
+We welcome technical articles, incident reconstructions, bug reports, and backend improvements. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for development workflows, post formatting specifications, and pull request guidelines.
+
+---
+
 ## License
 
 Source code is released under the terms of the Non-Commercial Source-Available License. The "daemontalk" name, trademark, and original written content are reserved. See [LICENSE](LICENSE) for details.
