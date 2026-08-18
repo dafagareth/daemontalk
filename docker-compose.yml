@@ -24,6 +24,6 @@ services:
       # Persistent host directory mount for SQLite DBs (comments, views, posts) & SSH keys.
       - ./data:/app/data
       # Direct mount for markdown content & post images so article updates take effect immediately
-      - ./content:/app/content:ro
-      - ./web/static/images/posts:/app/web/static/images/posts:ro
+      - ./content:/app/content
+      - ./web/static/images/posts:/app/web/static/images/posts
     restart: unless-stopped

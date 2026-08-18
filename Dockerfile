@@ -31,7 +31,7 @@ COPY --from=builder /app/daemontalk .
 COPY --from=builder /app/google*.html ./
 COPY --from=builder /app/web/static/ web/static/
 COPY --from=builder /app/content/ content/
-RUN mkdir -p data && chown -R app:app data web/static
+RUN mkdir -p data content/posts web/static/images/posts && chown -R app:app data content web/static
 
 USER app
 EXPOSE 8080

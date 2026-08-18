@@ -30,10 +30,11 @@ echo "[info] Pulling latest commits from git..."
 git fetch origin main
 git reset --hard origin/main
 
-# 3. Ensure persistent data directory and permissions
-mkdir -p data backups
-chown -R 10001:10001 data 2>/dev/null || true
+# 3. Ensure persistent data and content directories permissions
+mkdir -p data backups content/posts web/static/images/posts
+chown -R 10001:10001 data content web/static/images/posts 2>/dev/null || true
 chmod 750 data || true
+chmod -R 775 content web/static/images/posts || true
 
 # 4. Synchronize Caddy configuration if changed
 if [ -f "Caddyfile" ]; then
