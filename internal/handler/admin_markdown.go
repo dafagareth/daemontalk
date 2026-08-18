@@ -127,7 +127,7 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 	h.RefreshPosts()
 
 	if uploadedCount == 1 && lastSlug != "" {
-		http.Redirect(w, r, "/admin/posts/file/edit?slug="+lastSlug, http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/posts/file-edit?slug="+lastSlug, http.StatusSeeOther)
 		return
 	}
 

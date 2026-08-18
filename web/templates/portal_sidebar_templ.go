@@ -111,22 +111,22 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "CURL TERMINAL</h3><p class=\"text-xs text-muted mb-3 leading-relaxed\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "TERMINAL TUI INTERFACE</h3><p class=\"text-xs text-muted mb-3 leading-relaxed\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Baca blog langsung dari terminal Anda dengan perintah curl.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Baca artikel interaktif langsung dari terminal dengan antarmuka TUI.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Read this blog directly from your terminal using curl.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Read interactive dispatches directly from your terminal with a rich TUI.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</p><div class=\"relative bg-zinc-900 text-[#10b981] font-mono text-xs p-3.5 pr-10 border border-border overflow-hidden mb-3 group\"><div class=\"overflow-x-auto select-all scrollbar-none whitespace-nowrap\"><span class=\"text-zinc-500 mr-1.5\">$</span>curl -sL daemontalk.com</div><button onclick=\"navigator.clipboard.writeText('curl -sL daemontalk.com'); var i=this.querySelector('svg'); i.style.color='#10b981'; setTimeout(()=>i.style.color='', 1000);\" title=\"Copy command\" aria-label=\"Copy command\" class=\"absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100 cursor-pointer\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</p><div class=\"relative bg-zinc-900 text-[#10b981] font-mono text-xs p-3.5 pr-10 border border-border overflow-hidden mb-3 group\"><div class=\"overflow-x-auto select-all scrollbar-none whitespace-nowrap\"><span class=\"text-zinc-500 mr-1.5\">$</span>ssh ssh.daemontalk.com -p 2222</div><button onclick=\"navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#10b981'; setTimeout(()=>i.style.color='', 1000);\" title=\"Copy command\" aria-label=\"Copy command\" class=\"absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100 cursor-pointer\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -134,7 +134,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button></div><div class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><span>/daily</span> <span>Daily brief</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><span>/recipes</span> <span>eBPF recipes</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted\"><span>/p/:slug</span> <span>Read article</span></div></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button></div><div class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><span>Enter</span> <span>Full reader</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><span>t</span> <span>7 Color themes</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted\"><span>w / o</span> <span>Web & Image link</span></div></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

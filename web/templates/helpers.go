@@ -246,7 +246,7 @@ func generateDigestText(posts []post.Post) string {
 
 	sb.WriteString("## 💻 Read Terminal-First\n\n")
 	sb.WriteString("Access DaemonTalk directly in your terminal:\n")
-	sb.WriteString("```bash\n# Instant TUI over SSH\nssh daemontalk.com -p 2222\n\n# Daily dispatch stream\ncurl -sL daemontalk.com/daily\n```\n\n")
+	sb.WriteString("```bash\n# Instant TUI over SSH\nssh ssh.daemontalk.com -p 2222\n\n# Daily dispatch stream\ncurl -sL daemontalk.com/daily\n```\n\n")
 	sb.WriteString("---\n*Published by [DaemonTalk](https://daemontalk.com) · Independent Systems Journalism.*")
 
 	return sb.String()
