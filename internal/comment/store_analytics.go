@@ -40,11 +40,17 @@ func (s *Store) IncrementPageView(path string) error {
 	return err
 }
 
-// TopPageViews returns the most-visited paths, highest first.
+// TopPageViews returns the most-visited legitimate paths, highest first.
 func (s *Store) TopPageViews(limit int) ([]PageView, error) {
-	rows, err := s.db.Query(
-		`SELECT path, count FROM pageviews ORDER BY count DESC LIMIT ?`, limit,
-	)
+	rows, err := s.db.Query(`
+		SELECT path, count FROM pageviews 
+		WHERE path NOT LIKE '%.php%' 
+		  AND path NOT LIKE '%/comments%' 
+		  AND path NOT LIKE '%wp-%'
+		  AND path NOT LIKE '%.env%'
+		  AND path NOT LIKE '%/api/%'
+		ORDER BY count DESC LIMIT ?
+	`, limit)
 	if err != nil {
 		return nil, err
 	}

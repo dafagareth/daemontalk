@@ -56,24 +56,36 @@ func (h *Handler) Analytics(next http.Handler) http.Handler {
 	})
 }
 
-// countablePath reports whether a path represents a real page view worth
-// tracking (as opposed to an asset, image, feed, or admin route).
+// countablePath reports whether a path represents a real human page view worth
+// tracking (filtering out assets, bot scans, feeds, and background streams).
 func countablePath(p string) bool {
-	skipPrefixes := []string{"/static/", "/id/static/", "/admin"}
+	skipPrefixes := []string{
+		"/static/", "/id/static/", "/admin", "/api/",
+		"/wp-", "/wordpress", "/php", "/.env", "/.git",
+	}
 	for _, pre := range skipPrefixes {
 		if strings.HasPrefix(p, pre) {
 			return false
 		}
 	}
-	skipExact := []string{"/og.png", "/rss.xml", "/feed.xml", "/feed.json", "/sitemap.xml", "/robots.txt", "/healthz", "/favicon.ico", "/manifest.json", "/blog/posts"}
+	skipSuffixes := []string{
+		"/og.png", "/comments/stream", "/comments",
+		".php", ".env", ".git", ".bak", ".sql", ".asp", ".aspx", ".jsp",
+	}
+	for _, suf := range skipSuffixes {
+		if strings.HasSuffix(p, suf) {
+			return false
+		}
+	}
+	skipExact := []string{
+		"/og.png", "/rss.xml", "/feed.xml", "/feed.json",
+		"/sitemap.xml", "/sitemap-index.xml", "/sitemap-en.xml", "/sitemap-id.xml",
+		"/robots.txt", "/healthz", "/favicon.ico", "/manifest.json", "/blog/posts",
+	}
 	for _, e := range skipExact {
 		if p == e {
 			return false
 		}
-	}
-	// Skip generated per-post OG images (/blog/<slug>/og.png).
-	if strings.HasSuffix(p, "/og.png") {
-		return false
 	}
 	return true
 }
