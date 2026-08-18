@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/glamour"
+	"github.com/charmbracelet/lipgloss"
 	"daemontalk/internal/post"
 )
 
@@ -45,7 +46,7 @@ func FindPostFile(p post.Post) string {
 	return ""
 }
 
-// RenderPostMarkdown formats and renders the full markdown body using Glamour
+// RenderPostMarkdown formats and renders the full markdown body using Glamour and theme styling
 func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 	exactFile := FindPostFile(p)
 
@@ -82,38 +83,13 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		return match
 	})
 
-	// Build clean article header
-	var headerBuilder strings.Builder
-	headerBuilder.WriteString(fmt.Sprintf("# %s\n\n", p.Title))
-	headerBuilder.WriteString(fmt.Sprintf("**Date:** `%s`  •  **Read Time:** `%d min`", p.Date.Format("02 Jan 2006"), p.ReadTime))
-	if p.Author != "" {
-		headerBuilder.WriteString(fmt.Sprintf("  •  **Author:** `%s`", p.Author))
-	}
-	headerBuilder.WriteString("\n\n")
-
-	if p.Cover != "" {
-		headerBuilder.WriteString(fmt.Sprintf("**Cover Image:** 🖼️ `%s`  *(Press 'o' to open image, 'w' for web article)*\n\n", p.Cover))
-	}
-
-	if len(p.Tags) > 0 {
-		tagBadges := make([]string, len(p.Tags))
-		for i, t := range p.Tags {
-			tagBadges[i] = "`" + t + "`"
-		}
-		headerBuilder.WriteString(fmt.Sprintf("**Tags:** %s\n\n", strings.Join(tagBadges, " ")))
-	}
-	headerBuilder.WriteString("---\n\n")
-	headerBuilder.WriteString(content)
-
-	fullMarkdown := headerBuilder.String()
-
 	if wrapWidth < 20 {
 		wrapWidth = 20
 	}
 
-	// Glamour rendering with the active theme style
+	// 1. Glamour rendering for body
 	glamourStyle := theme.GlamourStyle
-	if glamourStyle == "" {
+	if glamourStyle == "" || glamourStyle == "tokyo-night" {
 		glamourStyle = "dark"
 	}
 
@@ -122,20 +98,81 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		glamour.WithWordWrap(wrapWidth),
 	)
 	if err != nil {
-		// Fallback to standard dark if custom style isn't found
-		r, err = glamour.NewTermRenderer(
+		r, _ = glamour.NewTermRenderer(
 			glamour.WithStandardStyle("dark"),
 			glamour.WithWordWrap(wrapWidth),
 		)
-		if err != nil {
-			return fullMarkdown
+	}
+
+	renderedBody := content
+	if r != nil {
+		if out, err := r.Render(content); err == nil {
+			renderedBody = out
 		}
 	}
 
-	out, err := r.Render(fullMarkdown)
-	if err != nil {
-		return fullMarkdown
+	// 2. Beautiful Theme-Aware Dynamic Header
+	titleStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(theme.TextNormal).
+		Background(theme.SelectedBg).
+		Padding(0, 1).
+		Border(lipgloss.NormalBorder(), false, false, false, true).
+		BorderForeground(theme.ActiveAccent)
+
+	metaLabelStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(theme.TextNormal)
+
+	metaBadgeStyle := lipgloss.NewStyle().
+		Foreground(theme.ActiveAccent).
+		Background(theme.SelectedBg).
+		Padding(0, 1)
+
+	dimStyle := lipgloss.NewStyle().
+		Foreground(theme.TextMuted)
+
+	dividerStyle := lipgloss.NewStyle().
+		Foreground(theme.BorderInactive)
+
+	var header strings.Builder
+	header.WriteString("\n" + titleStyle.Render(p.Title) + "\n\n")
+
+	dateBadge := metaBadgeStyle.Render(p.Date.Format("02 Jan 2006"))
+	readBadge := metaBadgeStyle.Render(fmt.Sprintf("%d min", p.ReadTime))
+	metaRow := fmt.Sprintf(" %s %s   •   %s %s",
+		metaLabelStyle.Render("Date:"), dateBadge,
+		metaLabelStyle.Render("Read Time:"), readBadge)
+
+	if p.Author != "" {
+		metaRow += fmt.Sprintf("   •   %s %s",
+			metaLabelStyle.Render("Author:"), metaBadgeStyle.Render(p.Author))
+	}
+	header.WriteString(metaRow + "\n\n")
+
+	if p.Cover != "" {
+		coverBadge := metaBadgeStyle.Render(p.Cover)
+		header.WriteString(fmt.Sprintf(" %s 🖼️  %s  %s\n\n",
+			metaLabelStyle.Render("Cover Image:"),
+			coverBadge,
+			dimStyle.Render("(Press 'o' to open, 'w' for web)")))
 	}
 
-	return out
+	if len(p.Tags) > 0 {
+		var tagBadges []string
+		for _, t := range p.Tags {
+			tagBadges = append(tagBadges, metaBadgeStyle.Render(t))
+		}
+		header.WriteString(fmt.Sprintf(" %s  %s\n\n",
+			metaLabelStyle.Render("Tags:"),
+			strings.Join(tagBadges, " ")))
+	}
+
+	divWidth := wrapWidth
+	if divWidth > 60 {
+		divWidth = 60
+	}
+	header.WriteString(dividerStyle.Render(strings.Repeat("─", divWidth)) + "\n\n")
+
+	return header.String() + renderedBody
 }

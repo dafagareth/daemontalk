@@ -5,6 +5,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/ssh"
 	"github.com/charmbracelet/wish"
 	"github.com/charmbracelet/wish/bubbletea"
@@ -19,6 +20,9 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 		wish.Fatalln(s, "no active terminal PTY")
 		return nil, nil
 	}
+
+	renderer := bubbletea.MakeRenderer(s)
+	lipgloss.SetColorProfile(renderer.ColorProfile())
 
 	m := tui.NewModel()
 	m.Width = pty.Window.Width
