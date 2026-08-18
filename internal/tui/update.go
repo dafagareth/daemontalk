@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
@@ -43,15 +44,21 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Open cover image in browser (or article if no cover)
 			if len(m.Posts) > 0 {
 				p := m.Posts[m.List.Index()]
+				baseURL := os.Getenv("BASE_URL")
+				if baseURL == "" {
+					baseURL = "https://daemontalk.com"
+				}
+				baseURL = strings.TrimSuffix(baseURL, "/")
+
 				var targetURL string
 				if p.Cover != "" {
 					coverPath := p.Cover
 					if !strings.HasPrefix(coverPath, "/") {
 						coverPath = "/" + coverPath
 					}
-					targetURL = fmt.Sprintf("http://127.0.0.1:8080%s", coverPath)
+					targetURL = fmt.Sprintf("%s%s", baseURL, coverPath)
 				} else {
-					targetURL = fmt.Sprintf("http://127.0.0.1:8080/blog/%s", p.Slug)
+					targetURL = fmt.Sprintf("%s/blog/%s", baseURL, p.Slug)
 				}
 				_ = openInBrowser(targetURL)
 				m.FlashMsg = fmt.Sprintf("✓ Opened Image: %s", targetURL)
@@ -62,7 +69,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Open full article in browser
 			if len(m.Posts) > 0 {
 				p := m.Posts[m.List.Index()]
-				targetURL := fmt.Sprintf("http://127.0.0.1:8080/blog/%s", p.Slug)
+				baseURL := os.Getenv("BASE_URL")
+				if baseURL == "" {
+					baseURL = "https://daemontalk.com"
+				}
+				baseURL = strings.TrimSuffix(baseURL, "/")
+
+				targetURL := fmt.Sprintf("%s/blog/%s", baseURL, p.Slug)
 				_ = openInBrowser(targetURL)
 				m.FlashMsg = fmt.Sprintf("✓ Opened Article: %s", targetURL)
 			}
