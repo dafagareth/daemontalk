@@ -61,7 +61,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					targetURL = fmt.Sprintf("%s/blog/%s", baseURL, p.Slug)
 				}
 				_ = openInBrowser(targetURL)
-				m.FlashMsg = fmt.Sprintf("✓ Opened Image: %s", targetURL)
+				clickable := OSC8Link(targetURL, targetURL)
+				m.FlashMsg = fmt.Sprintf("✓ Copied to clipboard & Clickable: %s", clickable)
+				return m, tea.Printf("%s", OSC52Copy(targetURL))
 			}
 			return m, nil
 
@@ -77,7 +79,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 				targetURL := fmt.Sprintf("%s/blog/%s", baseURL, p.Slug)
 				_ = openInBrowser(targetURL)
-				m.FlashMsg = fmt.Sprintf("✓ Opened Article: %s", targetURL)
+				clickable := OSC8Link(targetURL, targetURL)
+				m.FlashMsg = fmt.Sprintf("✓ Copied to clipboard & Clickable: %s", clickable)
+				return m, tea.Printf("%s", OSC52Copy(targetURL))
 			}
 			return m, nil
 
