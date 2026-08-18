@@ -104,7 +104,7 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 }
 
 // SitemapIndex serves a sitemap index referencing per-language sitemaps.
-func (h *Handler) robots.txtSitemapIndex(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SitemapIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	fmt.Fprintf(w, `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
