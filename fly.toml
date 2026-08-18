@@ -1,4 +1,4 @@
-app = 'dafa-portfolio'
+app = 'daemontalk'
 primary_region = 'sin'
 
 [build]
@@ -14,3 +14,7 @@ primary_region = 'sin'
   memory = '256mb'
   cpu_kind = 'shared'
   cpus = 1
+
+[mounts]
+  source = 'daemontalk_data'
+  destination = '/app/data'
