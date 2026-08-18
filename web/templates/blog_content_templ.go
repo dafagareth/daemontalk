@@ -78,7 +78,7 @@ func blogContent(ui i18n.UI, p post.Post) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if len(p.TOC) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<details open class=\"mb-8 border border-border rounded-none-none bg-surface p-4 sm:p-5\"><summary class=\"text-sm sm:text-base font-bold text-text cursor-pointer select-none list-none flex items-center justify-between\"><span class=\"font-mono text-xs sm:text-sm uppercase tracking-wider text-text font-bold\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<details class=\"mb-8 border border-border rounded-none-none bg-surface p-4 sm:p-5 group\"><summary class=\"text-sm sm:text-base font-bold text-text cursor-pointer select-none list-none flex items-center justify-between\"><span class=\"font-mono text-xs sm:text-sm uppercase tracking-wider text-text font-bold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

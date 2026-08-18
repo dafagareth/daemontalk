@@ -28,7 +28,7 @@ templ blogContent(ui i18n.UI, p post.Post) {
 		<button onclick="toggleBookmark(this)" data-slug={ p.Slug } data-title={ p.Title } data-date={ p.Date.Format("2006-01-02") } class="bookmark-btn border border-border px-3 py-1 rounded-none-none bg-bg text-text">☆</button>
 	</div>
 	if len(p.TOC) > 0 {
-		<details open class="mb-8 border border-border rounded-none-none bg-surface p-4 sm:p-5">
+		<details class="mb-8 border border-border rounded-none-none bg-surface p-4 sm:p-5 group">
 			<summary class="text-sm sm:text-base font-bold text-text cursor-pointer select-none list-none flex items-center justify-between">
 				<span class="font-mono text-xs sm:text-sm uppercase tracking-wider text-text font-bold">
 					{ ui.Post_TOC }
