@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/comment"
+	"daemontalk/internal/post"
 	"daemontalk/internal/postdb"
 	"daemontalk/web/templates"
 )
@@ -71,14 +72,21 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	var archivedPosts []post.Post
+	if arc, err := post.LoadArchived(h.getContentPath("posts")); err == nil {
+		archivedPosts = arc
+	}
+
 	stats := templates.AdminStats{
-		Posts:        h.AllPosts(),
-		WebPosts:     webPosts,
-		Views:        views,
-		Comments:     allComments,
-		TopPages:     topPages,
-		TotalHits:    totalHits,
-		RadarEnabled: templates.IsRadarEnabled(),
+		Posts:         h.AllPosts(),
+		FilePosts:     h.FilePosts,
+		ArchivedPosts: archivedPosts,
+		WebPosts:      webPosts,
+		Views:         views,
+		Comments:      allComments,
+		TopPages:      topPages,
+		TotalHits:     totalHits,
+		RadarEnabled:  templates.IsRadarEnabled(),
 	}
 
 	h.Render(w, r, templates.AdminLayout("admin", r.URL.Path, templates.AdminPage(stats)))

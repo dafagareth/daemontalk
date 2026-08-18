@@ -134,7 +134,7 @@ templ adminContentTab(stats AdminStats) {
 			<div class="flex items-center justify-between">
 				<h2 class="text-xs font-semibold text-text uppercase tracking-wider flex items-center gap-2">
 					<span class="w-2 h-2 rounded-none bg-[var(--c-muted)]"></span>
-					<span>Markdown Dispatches ({ fmt.Sprintf("%d", len(stats.Posts)) })</span>
+					<span>Markdown Dispatches ({ fmt.Sprintf("%d", len(stats.FilePosts)) })</span>
 				</h2>
 				<span class="text-xs font-mono text-muted">{ "content/posts/*.md" }</span>
 			</div>
@@ -151,7 +151,7 @@ templ adminContentTab(stats AdminStats) {
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-[var(--c-border)]">
-						for _, p := range stats.Posts {
+						for _, p := range stats.FilePosts {
 							<tr class="hover:bg-hover transition-colors">
 								<td class="px-4 py-2.5">
 									<a href={ templ.SafeURL("/blog/" + p.Slug) } class="font-medium text-text hover:text-link">{ p.Title }</a>
@@ -206,5 +206,67 @@ templ adminContentTab(stats AdminStats) {
 				</table>
 			</div>
 		</div>
+
+		<!-- Archived Posts Section -->
+		if len(stats.ArchivedPosts) > 0 {
+			<div class="space-y-3">
+				<div class="flex items-center justify-between">
+					<h2 class="text-xs font-semibold text-text uppercase tracking-wider flex items-center gap-2">
+						<span class="w-2 h-2 rounded-none bg-amber-500"></span>
+						<span>Archived Dispatches ({ fmt.Sprintf("%d", len(stats.ArchivedPosts)) })</span>
+					</h2>
+					<span class="text-xs font-mono text-muted">{ "content/posts/*.md.archive" }</span>
+				</div>
+				<div class="border border-border rounded-none overflow-hidden bg-surface/30">
+					<table class="w-full text-sm text-left">
+						<thead class="border-b border-border text-xs text-muted bg-surface">
+							<tr>
+								<th class="px-4 py-2.5 font-medium">Title</th>
+								<th class="px-4 py-2.5 font-medium">Status</th>
+								<th class="px-4 py-2.5 font-medium">Date</th>
+								<th class="px-4 py-2.5 font-medium text-right">Actions</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-[var(--c-border)]">
+							for _, p := range stats.ArchivedPosts {
+								<tr class="hover:bg-hover transition-colors">
+									<td class="px-4 py-2.5">
+										<div class="font-medium text-muted">{ p.Title }</div>
+										<div class="text-xs font-mono text-muted/80">/{ p.Slug }</div>
+									</td>
+									<td class="px-4 py-2.5 whitespace-nowrap">
+										<span class="badge border border-amber-500/40 text-amber-400 bg-amber-500/10">Archived</span>
+									</td>
+									<td class="px-4 py-2.5 text-xs font-mono text-muted whitespace-nowrap">{ fmtDate(p) }</td>
+									<td class="px-4 py-2.5 text-right text-xs whitespace-nowrap">
+										<div class="flex items-center justify-end gap-3 font-mono">
+											<a
+												href={ templ.SafeURL("/admin/posts/file-edit?slug=" + p.Slug) }
+												class="text-link hover:underline"
+											>
+												Edit
+											</a>
+											<form method="post" action={ templ.SafeURL("/admin/posts/file-restore?slug=" + p.Slug) } data-confirm={ fmt.Sprintf("Restore post '%s'? It will be published back to active dispatches.", p.Slug) } class="inline">
+												<button type="submit" class="text-emerald-400 hover:underline">Restore</button>
+											</form>
+											<form method="post" action={ templ.SafeURL("/admin/posts/file-delete?slug=" + p.Slug) } data-confirm={ fmt.Sprintf("Permanently delete archived post '%s'? This cannot be undone.", p.Slug) } class="inline">
+												<button type="submit" class="text-red-500 hover:underline">Delete</button>
+											</form>
+											<a
+												href={ templ.SafeURL("/admin/posts/export?slug=" + p.Slug) }
+												class="text-muted hover:text-text"
+												download
+											>
+												Export
+											</a>
+										</div>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		}
 	</div>
 }

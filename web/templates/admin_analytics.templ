@@ -10,13 +10,15 @@ import (
 )
 
 type AdminStats struct {
-	Posts        []post.Post
-	WebPosts     []postdb.WebPost
-	Views        map[string]int
-	Comments     []comment.Comment
-	TopPages     []comment.PageView
-	TotalHits    int
-	RadarEnabled bool
+	Posts         []post.Post
+	FilePosts     []post.Post
+	ArchivedPosts []post.Post
+	WebPosts      []postdb.WebPost
+	Views         map[string]int
+	Comments      []comment.Comment
+	TopPages      []comment.PageView
+	TotalHits     int
+	RadarEnabled  bool
 }
 
 type CategoryViewsGroup struct {

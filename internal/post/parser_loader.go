@@ -20,6 +20,37 @@ func LoadAllWithDrafts(dir string) ([]Post, error) {
 	return loadDir(dir, true)
 }
 
+// LoadArchived loads all .md.archive files from the directory.
+func LoadArchived(dir string) ([]Post, error) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("read dir: %w", err)
+	}
+
+	var posts []Post
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".md.archive") {
+			continue
+		}
+		p, err := parseFile(filepath.Join(dir, e.Name()))
+		if err != nil {
+			continue
+		}
+		if p.Slug == "" {
+			p.Slug = strings.TrimSuffix(e.Name(), ".md.archive")
+		}
+		posts = append(posts, p)
+	}
+
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].Date.After(posts[j].Date)
+	})
+	return posts, nil
+}
+
 func loadDir(dir string, includeDrafts bool) ([]Post, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
