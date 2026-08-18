@@ -37,29 +37,17 @@ Allow: /
 
 # Block AI Scrapers and Data Mining Bots
 User-agent: GPTBot
-Disallow: /
 User-agent: ChatGPT-User
-Disallow: /
 User-agent: Google-Extended
-Disallow: /
 User-agent: CCBot
-Disallow: /
 User-agent: Anthropic-ai
-Disallow: /
 User-agent: Claude-Web
-Disallow: /
 User-agent: Omgili
-Disallow: /
 User-agent: Omgilibot
-Disallow: /
 User-agent: FacebookBot
-Disallow: /
 User-agent: Diffbot
-Disallow: /
 User-agent: Bytespider
-Disallow: /
 User-agent: PerplexityBot
-Disallow: /
 User-agent: cohere-ai
 Disallow: /
 
@@ -116,7 +104,7 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 }
 
 // SitemapIndex serves a sitemap index referencing per-language sitemaps.
-func (h *Handler) SitemapIndex(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) robots.txtSitemapIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	fmt.Fprintf(w, `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
