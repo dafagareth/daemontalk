@@ -27,10 +27,6 @@ func renderAuthorHTML(rawContent string) string {
 	if role == "" {
 		role = "Software Engineer"
 	}
-	avatar := meta["avatar"]
-	if avatar == "" || avatar == "/static/logo/logo-dark.png" || avatar == "/static/logo/logo-light.png" || avatar == "/static/logo/logo-dark.webp" || avatar == "/static/logo/logo-light.webp" {
-		avatar = "/static/logo/icon-dark.png"
-	}
 	bio := meta["bio"]
 	if bio == "" {
 		bio = "Software Engineer yang berfokus pada sistem terdistribusi, rekayasa kernel Linux, dan optimasi performa backend Go/Rust."
@@ -38,20 +34,15 @@ func renderAuthorHTML(rawContent string) string {
 
 	var buf bytes.Buffer
 	buf.WriteString("\n<div class=\"post-author-card my-8 not-prose p-4 sm:p-5 border border-border bg-surface rounded-none flex flex-col gap-3.5\">\n")
-	buf.WriteString(fmt.Sprintf(`  <!-- Top row: Avatar (PFP) on left, Name & Role directly beside it -->
-  <div class="flex items-center gap-3.5 sm:gap-4">
-    <div class="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full border border-border bg-chip/40 overflow-hidden flex items-center justify-center p-1 shadow-sm">
-      <img src="%s" alt="%s" class="w-full h-full object-contain block" loading="lazy" />
-    </div>
-    <div class="flex flex-col min-w-0">
-      <h3 class="author-name text-[1.05em] sm:text-[1.1em] font-bold text-text uppercase tracking-wider leading-tight truncate">%s</h3>
-      <span class="author-role text-[0.8em] sm:text-[0.82em] font-mono text-muted mt-0.5 truncate">%s</span>
-    </div>
+	buf.WriteString(fmt.Sprintf(`  <!-- Top row: Name & Role -->
+  <div class="flex flex-col min-w-0">
+    <h3 class="author-name text-[1.05em] sm:text-[1.1em] font-bold text-text uppercase tracking-wider leading-tight truncate">%s</h3>
+    <span class="author-role text-[0.8em] sm:text-[0.82em] font-mono text-muted mt-0.5 truncate">%s</span>
   </div>
-  <!-- Bottom row: Description spanning horizontally underneath -->
+  <!-- Description -->
   <p class="author-bio text-[0.88em] sm:text-[0.92em] text-muted leading-relaxed">%s</p>
   <div class="flex flex-wrap items-center gap-2 text-[0.8em] font-mono pt-2 border-t border-border/40">
-`, html.EscapeString(avatar), html.EscapeString(name), html.EscapeString(name), html.EscapeString(role), html.EscapeString(bio)))
+`, html.EscapeString(name), html.EscapeString(role), html.EscapeString(bio)))
 
 	socialKeys := []string{"github", "gh", "x", "twitter", "linkedin", "li", "email", "mail", "website", "site", "blog", "youtube", "yt", "instagram", "ig", "threads", "bluesky", "bsky", "telegram", "tg", "gitlab", "discord"}
 	seen := make(map[string]bool)
