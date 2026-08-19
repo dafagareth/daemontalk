@@ -14,9 +14,9 @@
     position: relative;
     margin-bottom: 1.5rem;
   }
-  /* Both plain `<pre>` and Chroma-highlighted `<pre class="chroma">` share the
-     same surface background and border so code blocks look uniform. The .chroma
-     override beats chroma.css's own background by specificity. */
+  /* Plain and Chroma-highlighted code blocks.
+     Top padding 2.5rem leaves a clean header area for language badge & copy button
+     so single-line and multi-line code text is NEVER overlapped. */
   .prose pre,
   .prose pre.chroma {
     font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
@@ -24,9 +24,14 @@
     color: var(--c-text);
     border: 1px solid var(--c-border);
     border-radius: 0;
-    padding: 1.25rem;
+    padding: 1.1rem 1.25rem;
     overflow-x: auto;
     margin-bottom: 0;
+  }
+  /* Single code block with top toolbar header space */
+  .prose .code-wrap pre,
+  .prose .code-wrap pre.chroma {
+    padding: 2.5rem 1.25rem 1.1rem 1.25rem;
   }
   .prose pre code,
   .prose pre.chroma code {
@@ -42,6 +47,10 @@
     .prose pre.chroma {
       padding: 0.875rem;
     }
+    .prose .code-wrap pre,
+    .prose .code-wrap pre.chroma {
+      padding: 2.25rem 0.875rem 0.875rem 0.875rem;
+    }
     .prose pre code,
     .prose pre.chroma code {
       -webkit-text-size-adjust: 100%;
@@ -49,19 +58,15 @@
     }
   }
 
-  /* Code block action toolbar — pinned to wrapper top-right */
+  /* Code block action toolbar — pinned to header space at top-right */
   .code-toolbar {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 0.55rem;
+    right: 0.75rem;
     z-index: 5;
     display: flex;
     align-items: center;
     gap: 0.375rem;
-    opacity: 0.85;
-    transition: opacity 0.15s ease;
-  }
-  .code-wrap:hover .code-toolbar {
     opacity: 1;
   }
 
@@ -194,19 +199,34 @@
     display: block;
   }
 
-  /* Code Tabs Styling */
+  /* Code Tabs Styling — Clean layout & exact height fitting */
+  .code-tabs-wrap {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
   .code-tabs-wrap .tabs-nav-track {
     -webkit-overflow-scrolling: touch;
     user-select: none;
+  }
+  .code-tabs-wrap .code-tabs-content {
+    margin: 0;
+    padding: 0;
+  }
+  .code-tabs-wrap .tab-pane {
+    margin: 0;
+    padding: 0;
   }
   .code-tabs-wrap .chroma {
     margin: 0 !important;
     border: none !important;
     border-radius: 0 !important;
+    padding: 0 !important;
   }
-  .code-tabs-wrap .chroma pre {
+  .code-tabs-wrap .chroma pre,
+  .code-tabs-wrap pre {
     margin: 0 !important;
-    padding: 1rem 1.25rem !important;
+    padding: 2.2rem 1.25rem 1.1rem 1.25rem !important;
     background: transparent !important;
+    border: none !important;
   }
 }

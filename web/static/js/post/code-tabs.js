@@ -65,19 +65,27 @@
             });
         });
 
-        if (copyBtn) {
+        wrap.querySelectorAll(".copy-tab-code").forEach(function(copyBtn) {
             copyBtn.addEventListener("click", function() {
-                var activePane = wrap.querySelector(".tab-pane.active code") || wrap.querySelector(".tab-pane:not(.hidden) code") || wrap.querySelector(".tab-pane.active pre") || wrap.querySelector(".tab-pane:not(.hidden) pre");
-                if (activePane) {
-                    navigator.clipboard.writeText(activePane.textContent || "");
-                    var label = copyBtn.querySelector(".copy-label");
-                    if (label) {
-                        var oldText = label.textContent;
-                        label.textContent = "Copied!";
-                        setTimeout(function() { label.textContent = oldText; }, 1500);
+                var pane = copyBtn.closest(".tab-pane");
+                var codeEl = pane ? (pane.querySelector("code") || pane.querySelector("pre")) : null;
+                if (codeEl) {
+                    var text = codeEl.innerText || codeEl.textContent || "";
+                    if (window.copyText) {
+                        window.copyText(text, function() {
+                            var oldText = copyBtn.textContent;
+                            copyBtn.textContent = "copied!";
+                            setTimeout(function() { copyBtn.textContent = oldText; }, 2000);
+                        });
+                    } else if (navigator.clipboard) {
+                        navigator.clipboard.writeText(text).then(function() {
+                            var oldText = copyBtn.textContent;
+                            copyBtn.textContent = "copied!";
+                            setTimeout(function() { copyBtn.textContent = oldText; }, 2000);
+                        });
                     }
                 }
             });
-        }
+        });
     });
 })();

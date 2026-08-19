@@ -1,6 +1,7 @@
 (function() {
     // Enhanced Code block wrapper: adds language badges and copy button.
     document.querySelectorAll("#prose-body pre").forEach(function(pre) {
+        if (pre.closest(".code-tabs-wrap") || pre.closest(".code-output-wrap")) return;
         var wrap = document.createElement("div");
         wrap.className = "code-wrap";
         pre.parentNode.insertBefore(wrap, pre);
@@ -75,6 +76,11 @@
             var text = codeEl ? codeEl.innerText : pre.innerText;
             if (window.copyText) {
                 window.copyText(text, function() {
+                    copyBtn.textContent = "copied!";
+                    setTimeout(function() { copyBtn.textContent = "copy"; }, 2000);
+                });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
                     copyBtn.textContent = "copied!";
                     setTimeout(function() { copyBtn.textContent = "copy"; }, 2000);
                 });

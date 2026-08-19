@@ -88,8 +88,8 @@ func renderTabsHTML(rawContent string) string {
 
 	var buf bytes.Buffer
 	buf.WriteString("\n<div class=\"code-tabs-wrap my-6 border border-border bg-surface not-prose rounded-none overflow-hidden relative\" data-code-tabs>\n")
-	buf.WriteString("  <div class=\"code-tabs-header flex items-center justify-between bg-surface border-b border-border px-1 gap-2\">\n")
-	buf.WriteString("    <div class=\"tabs-nav-track flex items-center gap-1 overflow-x-auto scrollbar-none snap-x touch-pan-x whitespace-nowrap min-w-0 flex-1 py-1\" role=\"tablist\">\n")
+	buf.WriteString("  <div class=\"code-tabs-header flex items-center justify-between bg-surface border-b border-border px-3 sm:px-4 gap-2\">\n")
+	buf.WriteString("    <div class=\"tabs-nav-track flex items-center gap-1 overflow-x-auto scrollbar-none snap-x touch-pan-x whitespace-nowrap min-w-0 flex-1 -mb-px\" role=\"tablist\">\n")
 
 	for i, t := range tabs {
 		activeClass := ""
@@ -103,10 +103,6 @@ func renderTabsHTML(rawContent string) string {
 	}
 
 	buf.WriteString(`    </div>
-    <button type="button" class="copy-tab-code text-[0.85em] text-muted hover:text-text px-2.5 py-1.5 flex items-center gap-1.5 font-mono border border-border/70 bg-bg hover:bg-hover transition-colors cursor-pointer shrink-0 rounded-none" title="Copy code">
-      ` + GetIcon(IconCopy, "w-3.5 h-3.5") + `
-      <span class="copy-label text-[0.85em]">Copy</span>
-    </button>
   </div>
   <div class="code-tabs-content">
 `)
@@ -119,7 +115,8 @@ func renderTabsHTML(rawContent string) string {
 			activePaneClass = " active"
 		}
 		highlighted := highlightCode(t.Content, t.Lang, t.Name)
-		buf.WriteString(fmt.Sprintf(`    <div class="tab-pane%s%s overflow-x-auto" data-tab-pane="%d">
+		buf.WriteString(fmt.Sprintf(`    <div class="tab-pane%s%s relative overflow-x-auto" data-tab-pane="%d">
+      <button type="button" class="copy-tab-code copy-btn absolute top-2 right-3 z-10" title="Copy code">copy</button>
       %s
     </div>
 `, hiddenClass, activePaneClass, i, highlighted))
