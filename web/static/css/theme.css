@@ -1,6 +1,6 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Literata", Merriweather, Lora, "PT Serif", serif;
+  --font-serif: "Merriweather", "Literata", Georgia, serif;
 }
 /* Semantic color tokens — Warm Neutral palette */
 :root {

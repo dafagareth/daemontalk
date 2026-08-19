@@ -93,7 +93,7 @@ func renderReferencesHTML(rawContent string) string {
 
 	var buf bytes.Buffer
 	buf.WriteString("\n<div class=\"post-references my-8 not-prose\">\n")
-	buf.WriteString("  <ol class=\"space-y-2.5 my-4 p-0 list-decimal list-inside text-[0.92em] text-muted\">\n")
+	buf.WriteString("  <ol class=\"space-y-2.5 my-4 p-0 list-decimal list-inside text-[0.92em] text-muted break-words\">\n")
 
 	for _, it := range items {
 		titleEsc := html.EscapeString(it.Title)
@@ -101,7 +101,7 @@ func renderReferencesHTML(rawContent string) string {
 			titleEsc = html.EscapeString(it.URL)
 		}
 
-		buf.WriteString("    <li class=\"leading-relaxed pl-1\">\n")
+		buf.WriteString("    <li class=\"leading-relaxed pl-1 break-words\">\n")
 
 		if it.Author != "" {
 			buf.WriteString(fmt.Sprintf("      <strong class=\"text-text font-semibold\">%s</strong>", html.EscapeString(it.Author)))
@@ -131,7 +131,7 @@ func renderReferencesHTML(rawContent string) string {
 			} else if strings.HasPrefix(displayURL, "http://") {
 				displayURL = strings.TrimPrefix(displayURL, "http://")
 			}
-			buf.WriteString(fmt.Sprintf("<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-link underline hover:text-text font-mono text-[0.9em]\">%s</a>\n", html.EscapeString(it.URL), html.EscapeString(displayURL)))
+			buf.WriteString(fmt.Sprintf("<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-link underline hover:text-text font-mono text-[0.9em] break-all\">%s</a>\n", html.EscapeString(it.URL), html.EscapeString(displayURL)))
 		}
 
 		buf.WriteString("    </li>\n")
