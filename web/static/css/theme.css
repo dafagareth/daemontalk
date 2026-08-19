@@ -1,5 +1,6 @@
 @theme {
-  --font-serif: Lora, Merriweather, "PT Serif", serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Literata", Merriweather, Lora, "PT Serif", serif;
 }
 /* Semantic color tokens — Warm Neutral palette */
 :root {
@@ -36,23 +37,23 @@
 /* System dark preference (fallback when no manual toggle) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="sepia"]) {
-    --c-bg:        #09090b;
-    --c-surface:   #121214;
-    --c-nav:       #121214;
-    --c-footer:    #09090b;
-    --c-text:      #f4f4f5;
-    --c-muted:     #a1a1aa;
-    --c-border:    #27272a;
-    --c-hover:     #18181b;
-    --c-chip:      #18181b;
-    --c-link:      #60a5fa;
-    --c-link-bg:   #1a2d45;
-    --c-link-text: #60a5fa;
-    --c-ok:        #4ade80;
-    --c-ok-bg:     #1a3525;
-    --c-warn:      #f87171;
+    --c-bg:        #0d1117;
+    --c-surface:   #161b22;
+    --c-nav:       #161b22;
+    --c-footer:    #0d1117;
+    --c-text:      #e6edf3;
+    --c-muted:     #8b949e;
+    --c-border:    #30363d;
+    --c-hover:     #21262d;
+    --c-chip:      #21262d;
+    --c-link:      #58a6ff;
+    --c-link-bg:   #1f3a5c;
+    --c-link-text: #58a6ff;
+    --c-ok:        #3fb950;
+    --c-ok-bg:     #1b3a2a;
+    --c-warn:      #f85149;
     --c-warn-bg:   #3d1515;
-    --c-accent:    #fb7185;
+    --c-accent:    #f78166;
 
     /* GitHub Dark Terminal Theme */
     --term-bg:       #0d1117;
@@ -60,32 +61,32 @@
     --term-border:   #30363d;
     --term-text:     #c9d1d9;
     --term-muted:    #8b949e;
-    --term-prompt:   #7ee787;
+    --term-prompt:   #3fb950;
     --term-link:     #58a6ff;
     --term-chip-bg:  #21262d;
-    --term-cursor:   #7ee787;
+    --term-cursor:   #3fb950;
   }
 }
 
 /* Manual dark toggle */
 [data-theme="dark"] {
-    --c-bg:        #09090b;
-    --c-surface:   #121214;
-    --c-nav:       #121214;
-    --c-footer:    #09090b;
-    --c-text:      #f4f4f5;
-    --c-muted:     #a1a1aa;
-    --c-border:    #27272a;
-    --c-hover:     #18181b;
-    --c-chip:      #18181b;
-  --c-link:      #60a5fa;
-  --c-link-bg:   #1a2d45;
-  --c-link-text: #60a5fa;
-  --c-ok:        #4ade80;
-  --c-ok-bg:     #1a3525;
-  --c-warn:      #f28b82;
-  --c-warn-bg:   #4a1c1a;
-  --c-accent:    #fb7185;
+  --c-bg:        #0d1117;
+  --c-surface:   #161b22;
+  --c-nav:       #161b22;
+  --c-footer:    #0d1117;
+  --c-text:      #e6edf3;
+  --c-muted:     #8b949e;
+  --c-border:    #30363d;
+  --c-hover:     #21262d;
+  --c-chip:      #21262d;
+  --c-link:      #58a6ff;
+  --c-link-bg:   #1f3a5c;
+  --c-link-text: #58a6ff;
+  --c-ok:        #3fb950;
+  --c-ok-bg:     #1b3a2a;
+  --c-warn:      #f85149;
+  --c-warn-bg:   #3d1515;
+  --c-accent:    #f78166;
 
   /* GitHub Dark Terminal Theme */
   --term-bg:       #0d1117;
@@ -93,10 +94,10 @@
   --term-border:   #30363d;
   --term-text:     #c9d1d9;
   --term-muted:    #8b949e;
-  --term-prompt:   #7ee787;
+  --term-prompt:   #3fb950;
   --term-link:     #58a6ff;
   --term-chip-bg:  #21262d;
-  --term-cursor:   #7ee787;
+  --term-cursor:   #3fb950;
 }
 
 /* Manual sepia toggle for reading */
