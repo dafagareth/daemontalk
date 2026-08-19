@@ -18,8 +18,11 @@ templ blogHeader(ui i18n.UI, p post.Post, lang string, seriesParts []post.Post) 
 		if len(seriesParts) > 1 {
 			@seriesNav(seriesParts, p, lang)
 		}
-		<div class="mb-4">
-			<h1 class="font-sans font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight text-text leading-[1.15]">{ p.Title }</h1>
+		<div class="mb-5 sm:mb-6">
+			<h1 class="display font-extrabold text-2xl sm:text-3xl lg:text-4xl tracking-tight text-text leading-[1.15]">{ p.Title }</h1>
+			if p.Description != "" {
+				<p class="mt-3 sm:mt-4 text-base sm:text-lg text-muted leading-relaxed max-w-[90%]">{ p.Description }</p>
+			}
 		</div>
 		<div class="flex flex-wrap items-center gap-2 text-xs font-mono text-muted mt-4">
 			<span class="font-bold text-text">

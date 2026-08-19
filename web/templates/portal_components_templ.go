@@ -105,7 +105,7 @@ func portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) t
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" class=\"block mb-3\"><h2 class=\"display text-3xl sm:text-4xl lg:text-5xl font-black text-text group-hover:text-link transition-colors leading-[1.1] tracking-tight\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" class=\"block mb-3\"><h2 class=\"display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-text group-hover:text-link transition-colors leading-[1.1] tracking-tight\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

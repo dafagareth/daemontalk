@@ -15,7 +15,7 @@ templ portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) 
 			<span class="text-accent text-xs font-bold uppercase tracking-wider mb-2 block">{ p.Tags[0] }</span>
 		}
 		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } data-slug={ p.Slug } class="block mb-3">
-			<h2 class="display text-3xl sm:text-4xl lg:text-5xl font-black text-text group-hover:text-link transition-colors leading-[1.1] tracking-tight">
+			<h2 class="display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-text group-hover:text-link transition-colors leading-[1.1] tracking-tight">
 				{ p.Title }
 			</h2>
 		</a>

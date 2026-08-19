@@ -33,14 +33,14 @@ func blogSidebar(p post.Post) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"sticky top-20 flex flex-col gap-6\"><div class=\"border border-border bg-surface p-5 flex flex-col rounded-none-none\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border\">READING TOOLS</h3><div class=\"flex flex-col gap-4\"><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Font Size</span><div class=\"flex items-center rounded-none-none border border-border overflow-hidden text-xs font-mono\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors border-r border-border cursor-pointer\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors cursor-pointer\">A+</button></div></div><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Typeface</span> <button onclick=\"toggleSerif()\" aria-label=\"Toggle serif font\" class=\"serif-toggle-btn text-xs font-serif px-3 py-1 border border-border rounded-none-none text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer\">Serif</button></div><div class=\"flex items-center justify-between mt-1\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Warm</span> <input type=\"range\" id=\"warm-slider-desktop\" min=\"0\" max=\"100\" step=\"5\" value=\"0\" oninput=\"setWarmTint(this.value)\" class=\"warm-slider w-24 h-1 accent-amber-500 cursor-pointer\" aria-label=\"Warm tint intensity\"></div><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Save Post</span> <button onclick=\"toggleBookmark(this)\" data-slug=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"sticky top-20 flex flex-col gap-6\"><div class=\"border border-border bg-surface p-5 flex flex-col rounded-none-none\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border\">READING TOOLS</h3><div class=\"flex flex-col gap-4\"><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Font Size</span><div class=\"flex items-center rounded-none-none border border-border overflow-hidden text-xs font-mono\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors border-r border-border cursor-pointer\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors cursor-pointer\">A+</button></div></div><div class=\"flex items-center justify-between mt-1\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Warm</span> <input type=\"range\" id=\"warm-slider-desktop\" min=\"0\" max=\"100\" step=\"5\" value=\"0\" oninput=\"setWarmTint(this.value)\" class=\"warm-slider w-24 h-1 accent-amber-500 cursor-pointer\" aria-label=\"Warm tint intensity\"></div><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Save Post</span> <button onclick=\"toggleBookmark(this)\" data-slug=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 48, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 41, Col: 24}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -53,7 +53,7 @@ func blogSidebar(p post.Post) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 49, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 42, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -66,7 +66,7 @@ func blogSidebar(p post.Post) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Date.Format("2006-01-02"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 50, Col: 45}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 43, Col: 45}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -95,7 +95,7 @@ func blogSidebar(p post.Post) templ.Component {
 		var templ_7745c5c3_Var5 templ.SafeURL
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("https://x.com/intent/tweet?url=" + "https://daemontalk.com/blog/" + p.Slug + "&text=" + p.Title))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 75, Col: 123}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 68, Col: 123}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -116,7 +116,7 @@ func blogSidebar(p post.Post) templ.Component {
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("https://wa.me/?text=" + p.Title + " https://daemontalk.com/blog/" + p.Slug))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 83, Col: 102}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_sidebar.templ`, Line: 76, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

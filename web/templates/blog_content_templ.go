@@ -34,14 +34,14 @@ func blogContent(ui i18n.UI, p post.Post) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Mobile Reading Tools --><div class=\"lg:hidden flex flex-wrap items-center justify-between gap-3 mb-8 p-4 border border-border rounded-none-none bg-surface\"><div class=\"flex items-center rounded-none-none border border-border overflow-hidden text-xs font-mono\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" class=\"px-3 py-1.5 hover:bg-hover text-text transition-colors border-r border-border\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" class=\"px-3 py-1.5 hover:bg-hover text-text transition-colors border-r border-border\">A+</button> <button onclick=\"toggleSerif()\" aria-label=\"Toggle serif font\" class=\"serif-toggle-btn px-3 py-1.5 font-serif hover:bg-hover text-muted transition-colors\">Serif</button></div><div class=\"flex items-center gap-2\"><span class=\"text-[10px] font-mono text-muted uppercase tracking-wider shrink-0\">Warm</span> <input type=\"range\" id=\"warm-slider-mobile\" min=\"0\" max=\"100\" step=\"5\" value=\"0\" oninput=\"setWarmTint(this.value)\" class=\"warm-slider w-20 h-1 accent-amber-500 cursor-pointer\" aria-label=\"Warm tint intensity\"></div><button onclick=\"toggleBookmark(this)\" data-slug=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Mobile Reading Tools --><div class=\"lg:hidden flex flex-wrap items-center justify-between gap-3 mb-8 p-4 border border-border rounded-none-none bg-surface\"><div class=\"flex items-center rounded-none-none border border-border overflow-hidden text-xs font-mono\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" class=\"px-3 py-1.5 hover:bg-hover text-text transition-colors border-r border-border\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" class=\"px-3 py-1.5 hover:bg-hover text-text transition-colors border-r border-border\">A+</button></div><div class=\"flex items-center gap-2\"><span class=\"text-[10px] font-mono text-muted uppercase tracking-wider shrink-0\">Warm</span> <input type=\"range\" id=\"warm-slider-mobile\" min=\"0\" max=\"100\" step=\"5\" value=\"0\" oninput=\"setWarmTint(this.value)\" class=\"warm-slider w-20 h-1 accent-amber-500 cursor-pointer\" aria-label=\"Warm tint intensity\"></div><button onclick=\"toggleBookmark(this)\" data-slug=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 28, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 27, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -54,7 +54,7 @@ func blogContent(ui i18n.UI, p post.Post) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 28, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 27, Col: 82}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -67,7 +67,7 @@ func blogContent(ui i18n.UI, p post.Post) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Date.Format("2006-01-02"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 28, Col: 124}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 27, Col: 124}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -85,7 +85,7 @@ func blogContent(ui i18n.UI, p post.Post) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_TOC)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 34, Col: 18}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_content.templ`, Line: 33, Col: 18}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {

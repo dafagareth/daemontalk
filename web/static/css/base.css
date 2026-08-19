@@ -7,7 +7,7 @@
   body {
     background-color: var(--c-bg);
     color: var(--c-text);
-    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
   }
 
   /* Offset anchor targets so sticky navbar never overlaps headings */
@@ -23,13 +23,14 @@
   }
 
   code, kbd, pre, .font-mono {
-    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   }
 
   /* Display face untuk judul halaman & artikel */
   .display {
-    font-family: 'Bricolage Grotesque', 'DM Sans', ui-sans-serif, sans-serif;
-    letter-spacing: -0.015em;
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
   }
 
   /* Theme toggle icons */
