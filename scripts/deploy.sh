@@ -43,19 +43,13 @@ if [ -f "Caddyfile" ]; then
     sudo systemctl reload caddy || true
 fi
 
-# 5. Build and launch container
-if [ "${FRESH_BUILD}" = "true" ]; then
-    echo "[info] Performing fresh no-cache build..."
-    docker compose build --no-cache
-    docker compose up -d --force-recreate --remove-orphans
-    echo "[info] Pruning Docker builder cache and unused images..."
-    docker builder prune -f
-    docker image prune -f
-else
-    echo "[info] Rebuilding and launching container with cached layers..."
-    docker compose up -d --build --remove-orphans
-    docker image prune -f
-fi
+# 5. Pull new image and restart container
+echo "[info] Pulling latest pre-built image from GHCR..."
+docker compose pull web
+echo "[info] Restarting container..."
+docker compose up -d --force-recreate --remove-orphans
+echo "[info] Pruning old images to free up space..."
+docker image prune -f
 
 # 6. Validate service health
 echo "[info] Validating service health..."
