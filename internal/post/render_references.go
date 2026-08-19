@@ -119,7 +119,7 @@ func renderReferencesHTML(rawContent string) string {
 		}
 
 		if it.Note != "" {
-			buf.WriteString(fmt.Sprintf("<span class=\"text-xs text-muted/80 italic\">(%s) </span>", html.EscapeString(it.Note)))
+			buf.WriteString(fmt.Sprintf("<span class=\"text-xs text-text/80 italic\">(%s) </span>", html.EscapeString(it.Note)))
 		}
 
 		if it.URL != "" {

@@ -16,7 +16,7 @@ func formatSimpleInline(s string) string {
 
 	// Format inline *italic*
 	reItalic := regexp.MustCompile(`\*([^*]+)\*`)
-	s = reItalic.ReplaceAllString(s, `<em class="italic text-muted">$1</em>`)
+	s = reItalic.ReplaceAllString(s, `<em class="italic text-text">$1</em>`)
 
 	return s
 }
