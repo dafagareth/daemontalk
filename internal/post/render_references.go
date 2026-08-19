@@ -67,6 +67,8 @@ func renderReferencesHTML(rawContent string) string {
 		if len(parts) == 2 {
 			k := strings.ToLower(strings.TrimSpace(parts[0]))
 			v := strings.TrimSpace(parts[1])
+			v = strings.Trim(v, `"'`) // Remove surrounding quotes
+
 			switch k {
 			case "title":
 				current.Title = v
