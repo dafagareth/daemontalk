@@ -1,23 +1,22 @@
 @import "tailwindcss";
-@source "../../templates";
-@source "../../templates/**/*.templ";
-@source "../../**/*.templ";
-@source "../../../*.go";
+@source "../../../web/templates/**/*.templ";
+@source "../../../web/static/js/**/*.js";
 @source "../../../internal/**/*.go";
+@source "../../../main.go";
 
 @import "./theme.css";
-@theme {
-  --font-serif: Lora, Merriweather, "PT Serif", serif;
-  --color-text: var(--c-text);
-  --color-muted: var(--c-muted);
-  --color-surface: var(--c-surface);
-  --color-border: var(--c-border);
-  --color-link: var(--c-link);
-  --color-bg: var(--c-bg);
-  --color-hover: var(--c-hover);
-  --color-chip: var(--c-chip);
-  --color-accent: var(--c-accent);
-}
 @import "./base.css";
-@import "./components.css";
+@import "./components/layout.css";
+@import "./components/forms.css";
+@import "./components/typography.css";
+@import "./components/code.css";
+@import "./components/tables.css";
+@import "./components/callouts.css";
+@import "./components/interactive.css";
+@import "./components/admin.css";
+@import "./components/htmx.css";
+@import "./components/reactions.css";
+@import "./components/modals.css";
+@import "./components/animations.css";
+@import "./components/effects.css";
 @import "./utilities.css";

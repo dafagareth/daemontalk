@@ -1,6 +1,17 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Merriweather", "Literata", Georgia, serif;
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-surface: var(--c-surface);
+  --color-border: var(--c-border);
+  --color-link: var(--c-link);
+  --color-bg: var(--c-bg);
+  --color-hover: var(--c-hover);
+  --color-chip: var(--c-chip);
+  --color-accent: var(--c-accent);
+  --color-ok: var(--c-ok);
+  --color-warn: var(--c-warn);
 }
 /* Semantic color tokens — Warm Neutral palette */
 :root {
