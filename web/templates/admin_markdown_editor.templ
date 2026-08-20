@@ -176,6 +176,36 @@ Write content here..."
 			}
 
 			if (tx) {
+				var draftKey = 'daemontalk_draft_' + (document.getElementById('md-slug-val').value || 'new');
+				
+				// Restore from draft if exists and differs from server
+				var savedDraft = localStorage.getItem(draftKey);
+				if (savedDraft && savedDraft !== tx.value) {
+					if (confirm("Found an unsaved draft in your browser. Do you want to restore it?")) {
+						tx.value = savedDraft;
+					} else {
+						localStorage.removeItem(draftKey);
+					}
+				}
+
+				// Auto-save every 3 seconds
+				var saveTimeout;
+				tx.addEventListener('input', function() {
+					clearTimeout(saveTimeout);
+					saveTimeout = setTimeout(function() {
+						localStorage.setItem(draftKey, tx.value);
+					}, 3000);
+					updateCounts();
+				});
+
+				// Clear draft on form submit
+				var form = tx.closest('form');
+				if (form) {
+					form.addEventListener('submit', function() {
+						localStorage.removeItem(draftKey);
+					});
+				}
+
 				tx.addEventListener('keydown', function(e) {
 					if (e.key === 'Tab') {
 						e.preventDefault();
