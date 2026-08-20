@@ -2,11 +2,7 @@
 #prose-body.prose-serif,
 #prose-body.prose-serif p,
 #prose-body.prose-serif li,
-#prose-body.prose-serif blockquote,
-#prose-body.prose-serif h1,
-#prose-body.prose-serif h2,
-#prose-body.prose-serif h3,
-#prose-body.prose-serif h4 {
+#prose-body.prose-serif blockquote {
   font-family: 'Merriweather', Georgia, 'PT Serif', serif;
 }
 
