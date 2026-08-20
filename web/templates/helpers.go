@@ -28,7 +28,7 @@ func renderCommentBody(body string) template.HTML {
 // highlightHTML HTML-escapes text then wraps all occurrences of query
 // (case-insensitive) in <mark> tags for search result display.
 func highlightHTML(text, query string) template.HTML {
-	if query == "" || text == "" {
+	if query == "" || text == "" || len(query) < 2 {
 		return template.HTML(html.EscapeString(text))
 	}
 	lowerQ := strings.ToLower(query)
