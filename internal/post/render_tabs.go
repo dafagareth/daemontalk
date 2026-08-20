@@ -116,7 +116,7 @@ func renderTabsHTML(rawContent string) string {
 		}
 		highlighted := highlightCode(t.Content, t.Lang, t.Name)
 		buf.WriteString(fmt.Sprintf(`    <div class="tab-pane%s%s relative overflow-x-auto" data-tab-pane="%d">
-      <button type="button" class="copy-tab-code copy-btn absolute top-2 right-3 z-10" title="Copy code">copy</button>
+      <button type="button" class="copy-tab-code copy-btn absolute top-[0.55rem] right-[0.75rem] z-10" title="Copy code">copy</button>
       %s
     </div>
 `, hiddenClass, activePaneClass, i, highlighted))

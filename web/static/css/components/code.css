@@ -1,4 +1,4 @@
-@layer components {
+/* Code Blocks & Code Tabs Component Styles */
   .prose code {
     font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
     font-size: 0.875em;
@@ -24,14 +24,14 @@
     color: var(--c-text);
     border: 1px solid var(--c-border);
     border-radius: 0;
-    padding: 1.1rem 1.25rem;
+    padding: 1.5rem;
     overflow-x: auto;
     margin-bottom: 0;
   }
-  /* Single code block with top toolbar header space */
+  /* Single code block with top toolbar header space (Option B: 2.5rem top, 1.5rem sides & bottom) */
   .prose .code-wrap pre,
   .prose .code-wrap pre.chroma {
-    padding: 2.5rem 1.25rem 1.1rem 1.25rem;
+    padding: 2.5rem 1.5rem 2.5rem 1.75rem;
   }
   .prose pre code,
   .prose pre.chroma code {
@@ -39,17 +39,17 @@
     background: none;
     border: none;
     padding: 0;
-    font-size: 0.875em;
+    font-size: 1em;
     line-height: 1.65;
   }
   @media (max-width: 640px) {
     .prose pre,
     .prose pre.chroma {
-      padding: 0.875rem;
+      padding: 1rem;
     }
     .prose .code-wrap pre,
     .prose .code-wrap pre.chroma {
-      padding: 2.25rem 0.875rem 0.875rem 0.875rem;
+      padding: 2.25rem 1rem 1rem 1rem;
     }
     .prose pre code,
     .prose pre.chroma code {
@@ -222,11 +222,39 @@
     border-radius: 0 !important;
     padding: 0 !important;
   }
-  .code-tabs-wrap .chroma pre,
+  /* Code Tabs Padding: less top padding because header bar exists, align left with tab text */
+  .code-tabs-wrap pre.chroma,
   .code-tabs-wrap pre {
-    margin: 0 !important;
-    padding: 2.2rem 1.25rem 1.1rem 1.25rem !important;
-    background: transparent !important;
-    border: none !important;
+    padding: 1.25rem 1.5rem 2.5rem 1.75rem !important;
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace !important;
+    font-size: 0.9em !important;
+    line-height: 1.65 !important;
   }
-}
+  
+  /* Single Code Block Padding: needs 2.5rem top padding for language badge */
+  .code-wrap pre,
+  .code-wrap pre.chroma {
+    padding: 2.5rem 1.5rem 2.5rem 1.75rem !important;
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace !important;
+    font-size: 0.9em !important;
+    line-height: 1.65 !important;
+  }
+  .code-tabs-wrap .chroma code,
+  .code-tabs-wrap code,
+  .code-wrap pre code,
+  .code-wrap pre.chroma code {
+    font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace !important;
+    font-size: 1em !important;
+    line-height: 1.65 !important;
+  }
+  @media (max-width: 640px) {
+    .code-tabs-wrap pre.chroma,
+    .code-tabs-wrap pre {
+      padding: 1.25rem 1rem 2rem 1.25rem !important;
+    }
+    .code-wrap pre,
+    .code-wrap pre.chroma {
+      padding: 2.25rem 1rem 2rem 1.25rem !important;
+    }
+  }
+
