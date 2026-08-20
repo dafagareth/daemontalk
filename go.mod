@@ -12,6 +12,7 @@ require (
 	github.com/charmbracelet/ssh v0.0.0-20250128162118-5c80fc6f20a9
 	github.com/charmbracelet/wish v1.4.5
 	github.com/go-chi/chi/v5 v5.3.0
+	github.com/litao91/goldmark-mathjax v0.0.0-20210217064022-a43cf739a50f
 	github.com/yuin/goldmark v1.8.2
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0

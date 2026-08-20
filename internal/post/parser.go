@@ -21,6 +21,7 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
+	mathjax "github.com/litao91/goldmark-mathjax"
 )
 
 var (
@@ -58,6 +59,7 @@ var md = goldmark.New(
 		extension.GFM,
 		extension.Footnote,
 		meta.Meta,
+		mathjax.MathJax,
 		highlighting.NewHighlighting(
 			highlighting.WithFormatOptions(
 				chromahtml.WithClasses(true),
