@@ -31,13 +31,16 @@ The script automatically executes the following:
 - Installs the Caddy web server from the official Cloudsmith repository.
 - Configures UFW firewall rules: allows ports `22` (SSH), `80` (HTTP), `443` (HTTPS), and `2222` (TUI SSH).
 
-## Application Deployment
+## Initial Manual Deployment
 
-Clone the repository and configure the environment variables:
+For the very first time, you must clone the repository and set up the `.env` file manually. You can choose to place the project in either `/opt/daemontalk` (FHS standard) or `/var/www/daemontalk` (common web root).
 
 ```bash
-$ git clone https://github.com/dafagareth/daemontalk.git /var/www/daemontalk
-$ cd /var/www/daemontalk
+# Choose your preferred path:
+$ INSTALL_DIR="/opt/daemontalk"    # OR "/var/www/daemontalk"
+
+$ git clone https://github.com/dafagareth/daemontalk.git $INSTALL_DIR
+$ cd $INSTALL_DIR
 $ cp .env.example .env
 $ nano .env
 ```
@@ -57,7 +60,7 @@ BASE_URL=https://www.daemontalk.com
 Copy the bundled `Caddyfile` to the system configuration path and reload Caddy:
 
 ```bash
-$ sudo cp /var/www/daemontalk/Caddyfile /etc/caddy/Caddyfile
+$ sudo cp Caddyfile /etc/caddy/Caddyfile
 $ sudo systemctl reload caddy
 ```
 
@@ -77,34 +80,30 @@ Verify that all access endpoints are operational:
   ```bash
   $ ssh daemontalk.com -p 2222
   ```
-- **CLI Feed Stream**:
-  ```bash
-  $ curl -sL https://daemontalk.com/daily
-  ```
 
 ## Operational Scripts and Automation
 
 The repository includes dedicated automation scripts for operational maintenance in the `scripts/` directory:
 
-- **`deploy.sh`**: 1-Click Production Update. Pulls git commits, pulls the latest Docker image, and validates health status.
+- **`deploy.sh`**: 1-Click Production Update. Pulls git commits, pulls the latest Docker image, and validates health status. **This is usually run automatically by GitHub Actions.**
 - **`backup.sh`**: Automated Database & Content Backup. Creates timestamped `.tar.gz` archives of SQLite databases and markdown content with a 7-day retention policy.
 - **`restore.sh <file>`**: Disaster Recovery. Safely restores databases and content from a backup archive with pre-restore safety snapshots.
 - **`healthcheck.sh`**: Watchdog and Auto-Recovery. Monitors the `/healthz` endpoint and automatically restarts the service if it becomes unresponsive.
 
 **Recommended Crontab Setup**
-Open your system crontab (`crontab -e`) and add the following scheduled jobs:
+Open your system crontab (`crontab -e`) and add the following scheduled jobs (adjust the path to match where you installed the project):
 
 ```bash
 # Automated daily backup at 03:00 AM
-0 3 * * * /var/www/daemontalk/scripts/backup.sh > /dev/null 2>&1
+0 3 * * * /opt/daemontalk/scripts/backup.sh > /dev/null 2>&1
 
 # Health monitoring watchdog every 5 minutes (auto-restarts on failure)
-*/5 * * * * /var/www/daemontalk/scripts/healthcheck.sh > /dev/null 2>&1
+*/5 * * * * /opt/daemontalk/scripts/healthcheck.sh > /dev/null 2>&1
 ```
 
 ## Continuous Deployment (CI/CD)
 
-To enable 100% automated deployment whenever you push code or new articles to GitHub:
+Once the initial manual deployment is running, you can enable 100% automated deployment whenever you push code or new articles to GitHub:
 
 1. In your GitHub repository, go to **Settings > Secrets and variables > Actions**.
 2. Add the following repository secrets:
@@ -113,4 +112,4 @@ To enable 100% automated deployment whenever you push code or new articles to Gi
    - `VPS_SSH_KEY`: Your private SSH key content (`~/.ssh/id_ed25519`).
    - `VPS_PORT`: `22` (default).
 
-Whenever you push to the `main` branch, GitHub Actions will build the Docker image, push it to GHCR, and automatically trigger `./scripts/deploy.sh` on your VPS.
+Whenever you push to the `main` branch, GitHub Actions will build the Docker image, push it to GHCR, and automatically trigger `./scripts/deploy.sh` on your VPS to update the live server.
