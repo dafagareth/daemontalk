@@ -3,6 +3,7 @@
 *   **Pencarian Instan**: Pembaruan mesin pencari menggunakan HTMX untuk menampilkan saran *real-time* saat mengetik. Memperbaiki *bug highlight* kuning agresif pada kueri satu huruf.
 *   **Penyimpanan Otomatis**: Editor Admin Markdown kini terintegrasi dengan fungsi *auto-save* ke `localStorage` untuk mencegah draf hilang secara tak sengaja.
 *   **Struktur Tipografi**: Memaksa penggunaan huruf sans-serif khusus untuk judul (*headings*) guna menjaga ketegasan visual saat pengguna mengaktifkan mode Serif.
+*   **Perbaikan CSS**: Mengatasi *bug* pewarisan (*inheritance*) di mana pemilih global `[id]` tanpa sengaja memaksa seluruh isi artikel menjadi huruf sans-serif dan merusak fungsi mode baca.
 *   **Standarisasi WWW**: Domain utama (`daemontalk.com`) kini dialihkan sepenuhnya (*301 redirect*) ke `www.daemontalk.com` melalui konfigurasi Caddy.
 *   **Dokumentasi Diperbarui**: Menyederhanakan instruksi `README.md` dan `VPS_SETUP.md` serta menyertakan bagan arsitektur vektor (SVG) murni yang dapat diskalakan.
 
