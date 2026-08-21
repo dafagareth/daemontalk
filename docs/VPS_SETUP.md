@@ -52,6 +52,8 @@ ADMIN_TOKEN=generate_a_secure_random_token_here
 BASE_URL=https://www.daemontalk.com
 ```
 
+*(Tip: You can generate a secure `ADMIN_TOKEN` by running `openssl rand -hex 32` in your terminal)*
+
 Copy the bundled `Caddyfile` to the system configuration path and reload Caddy:
 
 ```bash
