@@ -1,31 +1,39 @@
 ## Ikhtisar
 
-Situs ini (**daemontalk.com**) adalah buku catatan rekayasa dan portofolio teknik pribadi yang dibangun menggunakan Go. Tanpa framework JavaScript kompleks atau pipeline build yang rumit. Mengandalkan rendering HTML di sisi server (SSR), sedikit HTMX untuk fitur interaktif, dan SQLite untuk komentar serta analitik.
+Situs ini (**daemontalk.com**) adalah publikasi rekayasa perangkat lunak independen dan basis pengetahuan sistem yang dibangun sepenuhnya menggunakan Go. Proyek ini secara sadar menghindari *framework* JavaScript yang kompleks dan proses *build* yang berat, lebih memilih HTML yang dirender di sisi server, interaksi presisi melalui HTMX, dan basis data SQLite yang sangat ringan.
 
 ## Arsitektur
 
-Situs ini berupa satu berkas biner Go yang melayani:
+Keseluruhan sistem dikompilasi menjadi satu berkas biner Go mandiri yang melayani:
 
-- **Halaman Statis**: Beranda, tentang, alat/uses, now, resume, changelog, dan tautan
-- **Blog**: Tulisan Markdown dengan frontmatter, penyorotan sintaks, daftar isi, dan navigasi seri
-- **Proyek**: Daftar etalase proyek dengan halaman detail
-- **Buku Tamu**: Papan pesan komunitas
-- **TIL**: Catatan ringkas pembelajaran teknis
-- **Admin**: Dasbor ringan untuk moderasi dan analitik dasar
+- **Halaman Statis**: Rute inti untuk beranda, tentang, *uses*, *now*, resume, *changelog*, dan tautan.
+- **Mesin Blog**: Pemroses Markdown dengan metadata *frontmatter*, penyorotan sintaks (*syntax highlighting*) Chroma di sisi server, dan daftar isi dinamis.
+- **Etalase Proyek**: Portofolio proyek terperinci berbasis Markdown.
+- **Buku Tamu Komunitas**: Papan pesan persisten menggunakan identitas anonim yang terikat pada *cookie*.
+- **Admin Studio**: Dasbor aman untuk moderasi, penyusunan draf konten, dan analitik telemetri.
 
 ## Tumpukan Teknologi
 
-- **Go** dengan pustaka standar dan router Chi
-- **templ** untuk pembuatan templat HTML di sisi server yang aman secara tipe data
-- **HTMX** untuk interaksi dinamis tanpa berkas JS besar di klien
-- **Tailwind CSS v4** untuk penataan gaya utilitas yang bersih
-- **goldmark** untuk rendering Markdown dengan Chroma syntax highlighter
-- **modernc.org/sqlite** (driver SQLite Go murni) untuk persistensi data
-- Diterapkan pada satu VPS Linux mandiri dengan layanan systemd
+- **Go 1.26+** menggunakan pustaka standar dan `go-chi/chi` untuk perutean.
+- **a-h/templ** untuk pembuatan HTML sisi server yang aman terhadap tipe (*type-safe*).
+- **HTMX** untuk interaksi dinamis dan *real-time* (seperti pencarian instan) tanpa beban JavaScript.
+- **Tailwind CSS v4** untuk penataan gaya utilitas yang ketat.
+- **goldmark** untuk pemrosesan Markdown yang kokoh beserta ekstensinya.
+- **modernc.org/sqlite** (driver SQLite murni Go) untuk penyimpanan data persisten.
+- Disebarkan pada VPS Debian ringan yang dikelola oleh `systemd` dan `Caddy`.
 
-## Tujuan Desain
+## Prinsip Desain
 
-- **Bebas ketergantungan framework JavaScript**: Semua halaman tetap dapat dibaca dan bekerja dengan baik tanpa JavaScript.
-- **Waktu mulai dingin cepat**: Semua artikel diindeks ke dalam memori saat aplikasi dimulai untuk kecepatan akses instan.
-- **Operasional sederhana**: Satu berkas biner, satu berkas SQLite, dan satu layanan systemd.
-- **Multibahasa**: Mendukung penuh Bahasa Indonesia (`/id/`) dan Bahasa Inggris (`/`).
+- **Nirketergantungan JS**: Fungsi inti membaca dan navigasi harus berjalan sempurna meskipun JavaScript dimatikan.
+- **Waktu Mulai Instan**: Seluruh artikel dan metadata diindeks ke dalam memori saat aplikasi menyala demi waktu respons di bawah satu milidetik.
+- **Kesederhanaan Operasional**: Satu berkas biner, satu basis data SQLite, satu layanan systemd. Tidak memerlukan lapisan *cache* atau basis data eksternal.
+- **Lokalisasi Bawaan**: Dukungan perutean dwibahasa penuh untuk Bahasa Inggris (`/`) dan Bahasa Indonesia (`/id/`).
+
+## Kemampuan Utama
+
+- Kontrol tipografi granular (Tema Gelap/Terang/Sepia, peralihan Serif/Sans, penskalaan ukuran huruf dinamis).
+- Pembuatan otomatis kartu pratinjau OpenGraph untuk keperluan berbagi di media sosial.
+- Sindikasi komprehensif melalui RSS 2.0 dan JSON Feed.
+- Integrasi SEO esensial (Sitemap XML, `robots.txt`, skema terstruktur).
+- Pembatasan laju (*rate limiting*) dan mekanisme *honeypot* untuk pencegahan spam.
+- Penjadwalan publikasi menggunakan metadata *frontmatter* `publish_at`.

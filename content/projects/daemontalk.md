@@ -1,45 +1,39 @@
 ## Overview
 
-This site (**daemontalk.com**) is a personal portfolio and tech blog built with Go. No complex JavaScript frameworks or heavy build pipelines. Just server-rendered HTML, a sprinkle of HTMX for interactive features, and a SQLite database for comments and analytics.
+This site (**daemontalk.com**) is an independent engineering publication and systems knowledge graph built entirely in Go. It explicitly avoids complex JavaScript frameworks and heavy build pipelines in favor of server-rendered HTML, precise HTMX interactions, and a lightweight SQLite database.
 
 ## Architecture
 
-The site is a single Go binary that serves:
+The system compiles down to a single standalone Go binary that independently serves:
 
-- **Static pages**: home, about, uses, now, resume, changelog, links
-- **Blog**: markdown posts with frontmatter, syntax highlighting, table of contents, and series navigation
-- **Projects**: project showcase with detail pages
-- **Guestbook**: community message board
-- **TIL**: bite-sized engineering discoveries
-- **Admin**: lightweight dashboard for moderation and basic analytics
+- **Static Pages**: Core routing for home, about, uses, now, resume, changelog, and links.
+- **Blog Engine**: Markdown parser with frontmatter metadata, server-side Chroma syntax highlighting, and dynamic table of contents.
+- **Project Showcase**: Detailed markdown-driven project portfolios.
+- **Community Guestbook**: Lightweight, persistent message board using cookie-bound anonymous identities.
+- **Admin Studio**: Secure dashboard for moderation, content drafting, and telemetry analytics.
 
 ## Tech Stack
 
-- **Go** with the standard library + Chi router
-- **templ** for type-safe server-side HTML templating
-- **HTMX** for dynamic interactions without heavy JS bundles
-- **Tailwind CSS v4** for clean utility styling
-- **goldmark** for Markdown rendering with Chroma syntax highlighting
-- **modernc.org/sqlite** (pure-Go SQLite driver) for persistence
-- Deployed on a single Linux VPS with systemd
+- **Go 1.26+** using the standard library and `go-chi/chi` for routing.
+- **a-h/templ** for type-safe, compiled server-side HTML generation.
+- **HTMX** for dynamic, real-time interactions (like live search) without JavaScript bloat.
+- **Tailwind CSS v4** for strict, utility-first styling.
+- **goldmark** for robust Markdown rendering and extensions.
+- **modernc.org/sqlite** (pure-Go SQLite driver) for persistent data storage.
+- Deployed on a lightweight Debian VPS managed by `systemd` and `Caddy`.
 
-## Design Goals
+## Design Principles
 
-- **Zero JavaScript framework dependencies**: every page works reliably without client JS.
-- **Fast cold start**: all posts are indexed in memory on startup for instant response times.
-- **Simple ops**: one binary, one SQLite database, one systemd service.
-- **Bilingual**: full support for English (`/`) and Indonesian (`/id/`).
+- **Zero JS Dependency**: Core reading and navigation must function perfectly with JavaScript disabled.
+- **Instant Cold Starts**: All posts and metadata are indexed in-memory on startup for sub-millisecond response times.
+- **Operational Simplicity**: One binary, one SQLite database, one systemd service. No external caching layers or databases required.
+- **Native Localization**: Full bilingual routing support for English (`/`) and Indonesian (`/id/`).
 
-## Features Shipped
+## Key Capabilities
 
-- Dark/light/system theme toggle
-- Per-post OG image generation
-- RSS 2.0 + JSON Feed
-- Sitemap + robots.txt
-- PWA manifest
-- Rate limiting + honeypot spam protection
-- Scheduled posts via `publish_at` frontmatter
-- Emoji reactions (👍 ❤️ 🔥)
-- Reading time estimate and view counter
-- Print styles and anchor copy links
-- Keyboard shortcuts (press `?`)
+- Granular typography control (Dark/Light/Sepia themes, Serif/Sans toggle, dynamic font scaling).
+- Automated OpenGraph preview card generation for social sharing.
+- Comprehensive syndication via RSS 2.0 and JSON Feed.
+- Integrated SEO essentials (Sitemap XML, `robots.txt`, structured schema).
+- Rate limiting and honeypot mechanics for spam prevention.
+- Scheduled publishing using `publish_at` frontmatter.
