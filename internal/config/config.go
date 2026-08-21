@@ -58,7 +58,7 @@ func Load() *Config {
 		Port:        getEnv("PORT", "8080"),
 		SSHPort:     getEnv("SSH_PORT", "2222"),
 		Env:         getEnv("ENV", "development"),
-		BaseURL:     getEnv("BASE_URL", "https://daemontalk.com"),
+		BaseURL:     getEnv("BASE_URL", "https://www.daemontalk.com"),
 		AdminToken:  getEnv("ADMIN_TOKEN", ""),
 		ContentDir:  getEnv("CONTENT_DIR", "content"),
 		DataDir:     getEnv("DATA_DIR", "data"),

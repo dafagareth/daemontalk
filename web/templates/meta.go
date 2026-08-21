@@ -1,6 +1,6 @@
 package templates
 
-const siteBaseURL = "https://daemontalk.com"
+const siteBaseURL = "https://www.daemontalk.com"
 
 // AssetVersion is a cache-busting token appended to static CSS/JS URLs. It is
 // set once at startup (see main.go) so a rebuild of main.css is picked up by

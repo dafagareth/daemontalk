@@ -1,7 +1,11 @@
 # Caddyfile configuration for DaemonTalk
 # Automatically manages Let's Encrypt / ZeroSSL certificates
 
-daemontalk.com, www.daemontalk.com {
+daemontalk.com {
+    redir https://www.daemontalk.com{uri} permanent
+}
+
+www.daemontalk.com {
     # Modern compression
     encode zstd gzip
 
