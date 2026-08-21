@@ -452,194 +452,55 @@ svault unlock            # buka kunci seperti biasa dengan master password yang 
 
 ## FAQ
 
-<details>
-<summary>Saya lupa master password. Apakah rahasia saya bisa dipulihkan?</summary>
-<div class="faq-body">
-<p>Tidak. Tidak ada jalur pemulihan, backdoor, atau mekanisme reset. Ini
-disengaja: opsi pemulihan akan melemahkan jaminan keamanan bahwa hanya seseorang
-yang tahu password yang dapat membaca vault. Satu-satunya opsi adalah memulihkan
-dari backup yang dibuat saat kamu masih tahu password, atau menginisialisasi ulang
-vault dan memasukkan kembali rahasiamu. Simpan selalu master password di lokasi
-aman yang terpisah.</p>
-</div>
-</details>
+```faq
+Q: Saya lupa master password. Apakah rahasia saya bisa dipulihkan?
+A: Tidak. Tidak ada jalur pemulihan, backdoor, atau mekanisme reset. Ini disengaja: opsi pemulihan akan melemahkan jaminan keamanan bahwa hanya seseorang yang tahu password yang dapat membaca vault. Satu-satunya opsi adalah memulihkan dari backup yang dibuat saat kamu masih tahu password, atau menginisialisasi ulang vault dan memasukkan kembali rahasiamu. Simpan selalu master password di lokasi aman yang terpisah.
 
-<details>
-<summary>Apakah svault mengirim data ke internet?</summary>
-<div class="faq-body">
-<p>Tidak pernah. Tidak ada kode jaringan di jalur eksekusi utama. Semua data
-tetap ada di <code>~/.svault</code> di mesin lokalmu. Satu-satunya aktivitas
-jaringan yang mungkin terjadi adalah saat skrip instalasi mengunduh binary dari
-GitHub Releases selama setup awal, atau saat kamu membuka URL tersimpan di vault
-dengan <code>svault open</code>.</p>
-</div>
-</details>
+Q: Apakah svault mengirim data ke internet?
+A: Tidak pernah. Tidak ada kode jaringan di jalur eksekusi utama. Semua data tetap ada di `~/.svault` di mesin lokalmu. Satu-satunya aktivitas jaringan yang mungkin terjadi adalah saat skrip instalasi mengunduh binary dari GitHub Releases selama setup awal, atau saat kamu membuka URL tersimpan di vault dengan `svault open`.
 
-<details>
-<summary>Bisakah dua proyek berbeda menggunakan nama rahasia yang sama?</summary>
-<div class="faq-body">
-<p>Ya. Namespace memisahkannya sepenuhnya. <code>myproject/DB_PASSWORD</code>
-dan <code>other-project/DB_PASSWORD</code> adalah nilai yang independen. Saat
-kamu menjalankan svault di dalam repositori git, namespace diset secara otomatis
-dari nama repo, sehingga tidak ada konfigurasi khusus yang diperlukan.</p>
-</div>
-</details>
+Q: Bisakah dua proyek berbeda menggunakan nama rahasia yang sama?
+A: Ya. Namespace memisahkannya sepenuhnya. `myproject/DB_PASSWORD` dan `other-project/DB_PASSWORD` adalah nilai yang independen. Saat kamu menjalankan svault di dalam repositori git, namespace diset secara otomatis dari nama repo, sehingga tidak ada konfigurasi khusus yang diperlukan.
 
-<details>
-<summary>Apakah aman menggunakan svault di server bersama?</summary>
-<div class="faq-body">
-<p>Dengan kehati-hatian. File vault dan file sesi keduanya dibuat dengan izin
-<code>0600</code>, yang mencegah user biasa lain membacanya. Namun, siapa pun
-dengan akses root di mesin dapat membaca kunci sesi dari
-<code>/tmp/.svault_session</code> selama vault terbuka. Di server bersama atau
-multi-user, selalu jalankan <code>svault lock</code> segera setelah selesai
-bekerja, jangan mengandalkan TTL sesi.</p>
-</div>
-</details>
+Q: Apakah aman menggunakan svault di server bersama?
+A: Dengan kehati-hatian. File vault dan file sesi keduanya dibuat dengan izin `0600`, yang mencegah user biasa lain membacanya. Namun, siapa pun dengan akses root di mesin dapat membaca kunci sesi dari `/tmp/.svault_session` selama vault terbuka. Di server bersama atau multi-user, selalu jalankan `svault lock` segera setelah selesai bekerja, jangan mengandalkan TTL sesi.
 
-<details>
-<summary>Apakah svault membutuhkan daemon atau layanan latar belakang?</summary>
-<div class="faq-body">
-<p>Tidak. svault adalah tool command-line biasa. Ia memulai, menjalankan
-operasinya, dan keluar. Satu-satunya state yang menetap adalah file vault
-terenkripsi, audit log, dan file sesi berumur pendek di <code>/tmp</code>. Tidak
-ada yang berjalan di latar belakang di antara perintah-perintah.</p>
-</div>
-</details>
+Q: Apakah svault membutuhkan daemon atau layanan latar belakang?
+A: Tidak. svault adalah tool command-line biasa. Ia memulai, menjalankan operasinya, dan keluar. Satu-satunya state yang menetap adalah file vault terenkripsi, audit log, dan file sesi berumur pendek di `/tmp`. Tidak ada yang berjalan di latar belakang di antara perintah-perintah.
 
-<details>
-<summary>Apa yang terjadi jika file sesi di /tmp terhapus?</summary>
-<div class="faq-body">
-<p>svault memperlakukan file sesi yang hilang sama seperti sesi yang kedaluwarsa.
-Perintah berikutnya yang memerlukan vault terbuka akan menolak berjalan dan
-memintamu menjalankan <code>svault unlock</code> lagi. Vault dan semua rahasia
-yang tersimpan tetap utuh; hanya state sesi yang hilang.</p>
-</div>
-</details>
+Q: Apa yang terjadi jika file sesi di /tmp terhapus?
+A: svault memperlakukan file sesi yang hilang sama seperti sesi yang kedaluwarsa. Perintah berikutnya yang memerlukan vault terbuka akan menolak berjalan dan memintamu menjalankan `svault unlock` lagi. Vault dan semua rahasia yang tersimpan tetap utuh; hanya state sesi yang hilang.
 
-<details>
-<summary>Bisakah svault digunakan di pipeline CI/CD atau container Docker?</summary>
-<div class="faq-body">
-<p>Ya, dengan sedikit perencanaan. Pendekatan yang disarankan adalah membuka
-kunci vault di awal skrip pipeline dan menggunakan <code>svault exec</code>
-untuk menyuntikkan rahasia ke setiap perintah. Set <code>SVAULT_NS</code> ke
-namespace yang benar dan gunakan <code>SVAULT_SESSION_TTL</code> untuk
-memperpanjang sesi jika pipelinemu membutuhkan lebih dari 30 menit. File sesi
-akan tercakup dalam container atau runner, sehingga tidak akan bertahan antar
-run.</p>
-</div>
-</details>
+Q: Bisakah svault digunakan di pipeline CI/CD atau container Docker?
+A: Ya, dengan sedikit perencanaan. Pendekatan yang disarankan adalah membuka kunci vault di awal skrip pipeline dan menggunakan `svault exec` untuk menyuntikkan rahasia ke setiap perintah. Set `SVAULT_NS` ke namespace yang benar dan gunakan `SVAULT_SESSION_TTL` untuk memperpanjang sesi jika pipelinemu membutuhkan lebih dari 30 menit. File sesi akan tercakup dalam container atau runner, sehingga tidak akan bertahan antar run.
 
-<details>
-<summary>Bagaimana cara berbagi rahasia dengan rekan tim?</summary>
-<div class="faq-body">
-<p>svault adalah tool lokal dan tidak memiliki mekanisme berbagi bawaan. Untuk
-berbagi rahasia, ekspor ke file <code>.env</code> dengan <code>svault export</code>
-dan transfer file tersebut melalui saluran aman (pesan terenkripsi, secrets
-manager, atau berbagi file aman). Penerima kemudian dapat mengimpornya dengan
-<code>svault import</code>. Jangan pernah mengirim file <code>.env</code> melalui
-email atau chat yang tidak terenkripsi.</p>
-</div>
-</details>
+Q: Bagaimana cara berbagi rahasia dengan rekan tim?
+A: svault adalah tool lokal dan tidak memiliki mekanisme berbagi bawaan. Untuk berbagi rahasia, ekspor ke file `.env` dengan `svault export` dan transfer file tersebut melalui saluran aman (pesan terenkripsi, secrets manager, atau berbagi file aman). Penerima kemudian dapat mengimpornya dengan `svault import`. Jangan pernah mengirim file `.env` melalui email atau chat yang tidak terenkripsi.
 
-<details>
-<summary>Apa yang terjadi jika svault init dijalankan saat vault sudah ada?</summary>
-<div class="faq-body">
-<p>svault mendeteksi file vault yang ada dan menolak menimpanya tanpa konfirmasi.
-Rahasia yang ada tidak terpengaruh kecuali kamu mengonfirmasi reinisialisasi
-secara eksplisit. Jika ingin mulai dari awal, hapus
-<code>~/.svault/vault.enc</code> secara manual terlebih dahulu, lalu jalankan
-<code>svault init</code>.</p>
-</div>
-</details>
+Q: Apa yang terjadi jika svault init dijalankan saat vault sudah ada?
+A: svault mendeteksi file vault yang ada dan menolak menimpanya tanpa konfirmasi. Rahasia yang ada tidak terpengaruh kecuali kamu mengonfirmasi reinisialisasi secara eksplisit. Jika ingin mulai dari awal, hapus `~/.svault/vault.enc` secara manual terlebih dahulu, lalu jalankan `svault init`.
 
-<details>
-<summary>Bisakah saya memiliki beberapa vault untuk tujuan berbeda?</summary>
-<div class="faq-body">
-<p>Tidak secara langsung. svault menggunakan satu file <code>vault.enc</code>
-dan memisahkan rahasia berdasarkan namespace di dalamnya. Untuk sebagian besar
-kasus, namespace sudah cukup: setiap proyek mendapat namespace terisolasinya
-sendiri, dan kamu bisa membuat sebanyak yang diperlukan. Jika kamu benar-benar
-membutuhkan vault terpisah dengan master password berbeda, kamu perlu mengelola
-file vault secara manual.</p>
-</div>
-</details>
+Q: Bisakah saya memiliki beberapa vault untuk tujuan berbeda?
+A: Tidak secara langsung. svault menggunakan satu file `vault.enc` dan memisahkan rahasia berdasarkan namespace di dalamnya. Untuk sebagian besar kasus, namespace sudah cukup: setiap proyek mendapat namespace terisolasinya sendiri, dan kamu bisa membuat sebanyak yang diperlukan. Jika kamu benar-benar membutuhkan vault terpisah dengan master password berbeda, kamu perlu mengelola file vault secara manual.
 
-<details>
-<summary>Tool clipboard apa yang didukung svault?</summary>
-<div class="faq-body">
-<p>svault mendeteksi tool clipboard yang tersedia berdasarkan lingkunganmu:</p>
-<p><strong>Linux (Wayland):</strong> <code>wl-copy</code> (dari paket <code>wl-clipboard</code>)</p>
-<p><strong>Linux (X11):</strong> <code>xsel</code> atau <code>xclip</code></p>
-<p><strong>macOS:</strong> <code>pbcopy</code> (sudah termasuk dalam sistem)</p>
-<p>Jalankan <code>svault doctor</code> untuk mengonfirmasi tool mana yang
-terdeteksi. Jika tidak ada yang ditemukan, perintah clipboard (<code>copy</code>,
-<code>generate</code>, <code>open</code>) akan gagal dengan pesan error yang
-deskriptif.</p>
-</div>
-</details>
+Q: Tool clipboard apa yang didukung svault?
+A: svault mendeteksi tool clipboard yang tersedia berdasarkan lingkunganmu: **Linux (Wayland):** `wl-copy` (dari paket `wl-clipboard`) **Linux (X11):** `xsel` atau `xclip` **macOS:** `pbcopy` (sudah termasuk dalam sistem) Jalankan `svault doctor` untuk mengonfirmasi tool mana yang terdeteksi. Jika tidak ada yang ditemukan, perintah clipboard (`copy`, `generate`, `open`) akan gagal dengan pesan error yang deskriptif.
 
-<details>
-<summary>Apa yang terjadi jika dua proses svault berjalan bersamaan?</summary>
-<div class="faq-body">
-<p>svault menggunakan file lock eksklusif pada setiap operasi tulis. Jika dua
-proses mencoba menulis secara bersamaan, yang kedua menunggu yang pertama selesai
-baru kemudian melanjutkan. Pembacaan tidak dikunci dan bisa berjalan secara
-bersamaan. Ini mencegah race condition di mana dua penulisan simultan merusak
-satu sama lain dan diam-diam menghilangkan data.</p>
-</div>
-</details>
+Q: Apa yang terjadi jika dua proses svault berjalan bersamaan?
+A: svault menggunakan file lock eksklusif pada setiap operasi tulis. Jika dua proses mencoba menulis secara bersamaan, yang kedua menunggu yang pertama selesai baru kemudian melanjutkan. Pembacaan tidak dikunci dan bisa berjalan secara bersamaan. Ini mencegah race condition di mana dua penulisan simultan merusak satu sama lain dan diam-diam menghilangkan data.
 
-<details>
-<summary>Bagaimana cara membuat backup vault?</summary>
-<div class="faq-body">
-<p>Gunakan perintah backup bawaan:</p>
-<p><code>svault backup ~/safe/vault.bak</code> menyalin vault ke path tertentu.</p>
-<p><code>svault backup</code> (tanpa path) membuat salinan bertimestamp di
-<code>~/.svault/</code> secara otomatis.</p>
-<p>svault juga membuat salinan rollback otomatis pada setiap penulisan, sehingga
-penulisan yang buruk tidak pernah menghancurkan status baik sebelumnya. Untuk
-pemulihan bencana jangka panjang, salin <code>~/.svault/vault.enc</code> ke
-penyimpanan eksternal atau lokasi backup terenkripsi yang terpisah.</p>
-</div>
-</details>
+Q: Bagaimana cara membuat backup vault?
+A: Gunakan perintah backup bawaan: `svault backup ~/safe/vault.bak` menyalin vault ke path tertentu. `svault backup` (tanpa path) membuat salinan bertimestamp di `~/.svault/` secara otomatis. svault juga membuat salinan rollback otomatis pada setiap penulisan, sehingga penulisan yang buruk tidak pernah menghancurkan status baik sebelumnya. Untuk pemulihan bencana jangka panjang, salin `~/.svault/vault.enc` ke penyimpanan eksternal atau lokasi backup terenkripsi yang terpisah.
 
-<details>
-<summary>Bisakah svault digunakan tanpa git terinstal?</summary>
-<div class="faq-body">
-<p>Ya. Git hanya digunakan untuk deteksi namespace otomatis. Jika git tidak
-terinstal atau kamu tidak berada di dalam repositori git, svault kembali ke
-namespace yang di-set dengan <code>svault use</code>, environment variable
-<code>SVAULT_NS</code>, atau namespace <code>default</code>. Semua fitur lain
-berjalan normal. <code>svault doctor</code> akan melaporkan peringatan tentang
-git yang tidak ada, tapi tidak ada perintah yang gagal karena itu.</p>
-</div>
-</details>
+Q: Bisakah svault digunakan tanpa git terinstal?
+A: Ya. Git hanya digunakan untuk deteksi namespace otomatis. Jika git tidak terinstal atau kamu tidak berada di dalam repositori git, svault kembali ke namespace yang di-set dengan `svault use`, environment variable `SVAULT_NS`, atau namespace `default`. Semua fitur lain berjalan normal. `svault doctor` akan melaporkan peringatan tentang git yang tidak ada, tapi tidak ada perintah yang gagal karena itu.
 
-<details>
-<summary>Bisakah svault diotomatisasi di shell script tanpa prompt password interaktif?</summary>
-<div class="faq-body">
-<p>Alur kerja yang dimaksudkan adalah menjalankan <code>svault unlock</code> sekali
-secara interaktif di awal sesi, lalu menggunakan semua perintah lain secara
-non-interaktif dalam jendela 30 menit tersebut. Di dalam pipeline CI di mana
-input interaktif tidak memungkinkan, gunakan <code>SVAULT_SESSION_TTL</code>
-untuk menjaga sesi tetap aktif selama durasi pipeline. Untuk lingkungan yang
-sepenuhnya otomatis, pertimbangkan apakah secrets manager khusus dengan
-autentikasi identitas mesin lebih sesuai.</p>
-</div>
-</details>
+Q: Bisakah svault diotomatisasi di shell script tanpa prompt password interaktif?
+A: Alur kerja yang dimaksudkan adalah menjalankan `svault unlock` sekali secara interaktif di awal sesi, lalu menggunakan semua perintah lain secara non-interaktif dalam jendela 30 menit tersebut. Di dalam pipeline CI di mana input interaktif tidak memungkinkan, gunakan `SVAULT_SESSION_TTL` untuk menjaga sesi tetap aktif selama durasi pipeline. Untuk lingkungan yang sepenuhnya otomatis, pertimbangkan apakah secrets manager khusus dengan autentikasi identitas mesin lebih sesuai.
 
-<details>
-<summary>Apa pengaturan Argon2id yang digunakan svault?</summary>
-<div class="faq-body">
-<p>svault menggunakan Argon2id yang disetel untuk sekitar 200ms waktu penurunan
-pada laptop modern. Ini memberikan resistansi yang berarti terhadap serangan
-brute-force dan dictionary, sambil menjaga perintah unlock cukup cepat untuk
-penggunaan interaktif sehari-hari. Parameter yang tepat (memori, iterasi,
-paralelisme) disimpan bersama salt sehingga versi mendatang dapat mengubah
-default tanpa merusak vault yang ada.</p>
-</div>
-</details>
+Q: Apa pengaturan Argon2id yang digunakan svault?
+A: svault menggunakan Argon2id yang disetel untuk sekitar 200ms waktu penurunan pada laptop modern. Ini memberikan resistansi yang berarti terhadap serangan brute-force dan dictionary, sambil menjaga perintah unlock cukup cepat untuk penggunaan interaktif sehari-hari. Parameter yang tepat (memori, iterasi, paralelisme) disimpan bersama salt sehingga versi mendatang dapat mengubah default tanpa merusak vault yang ada.
+```
 
 ## Tumpukan Teknologi
 

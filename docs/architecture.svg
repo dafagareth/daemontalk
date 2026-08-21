@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="100%" height="100%">
+  <defs>
+    <style>
+      .box { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+      .box-light { fill: #f1f5f9; stroke: #334155; stroke-width: 2; }
+      .box-dashed { fill: transparent; stroke: #334155; stroke-width: 2; stroke-dasharray: 6 6; }
+      .text-title { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 16px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+      .text-sub { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; fill: #334155; text-anchor: middle; }
+      .text-sm { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 12px; fill: #475569; text-anchor: middle; }
+      .line { stroke: #334155; stroke-width: 2; fill: none; }
+      .arrow { fill: #334155; }
+      .bg { fill: #f8fafc; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+    <marker id="arrowhead-rev" markerWidth="10" markerHeight="7" refX="1" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" class="arrow" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" class="bg" />
+
+  <!-- Clients -->
+  <g transform="translate(100, 50)">
+    <rect width="260" height="80" class="box" />
+    <text x="130" y="35" class="text-title">Terminal / SSH Client</text>
+    <text x="130" y="55" class="text-sub">daemontalk-tui</text>
+  </g>
+  <g transform="translate(640, 50)">
+    <rect width="260" height="80" class="box" />
+    <text x="130" y="35" class="text-title">Web Browser / cURL</text>
+    <text x="130" y="55" class="text-sub">HTML, JSON, RSS</text>
+  </g>
+
+  <!-- Servers -->
+  <g transform="translate(100, 200)">
+    <rect width="260" height="90" class="box" />
+    <text x="130" y="40" class="text-title">Wish SSH TUI Server</text>
+    <text x="130" y="60" class="text-sub">(Bubble Tea, Glamour)</text>
+  </g>
+  <g transform="translate(640, 200)">
+    <rect width="260" height="90" class="box" />
+    <text x="130" y="40" class="text-title">Go Chi Web Server</text>
+    <text x="130" y="60" class="text-sub">(Middlewares, SEO, HTMX)</text>
+  </g>
+
+  <!-- Engines -->
+  <g transform="translate(480, 360)">
+    <rect width="240" height="110" class="box-light" />
+    <text x="120" y="35" class="text-title">Content Engine (Disk)</text>
+    <text x="120" y="55" class="text-sm">content/posts/*.md</text>
+    <text x="120" y="75" class="text-sm">Goldmark Parser</text>
+    <text x="120" y="95" class="text-sm">Chroma Highlighting</text>
+  </g>
+  <g transform="translate(740, 360)">
+    <rect width="240" height="110" class="box-light" />
+    <text x="120" y="35" class="text-title">SQLite Engine (WAL)</text>
+    <text x="120" y="55" class="text-sm">Page Views / Hits</text>
+    <text x="120" y="75" class="text-sm">Comments &amp; Reactions</text>
+    <text x="120" y="95" class="text-sm">Web Studio Posts</text>
+  </g>
+
+  <!-- Templ UI -->
+  <g transform="translate(640, 530)">
+    <rect width="260" height="70" class="box-dashed" />
+    <text x="130" y="30" class="text-title">a-h/templ Components</text>
+    <text x="130" y="50" class="text-sub">SSR HTML + Tailwind v4</text>
+  </g>
+
+  <!-- Lines -->
+  <!-- SSH -->
+  <path d="M 230 130 L 230 200" class="line" marker-end="url(#arrowhead)" />
+  <text x="270" y="170" class="text-sm">port 2222</text>
+  
+  <!-- Web -->
+  <path d="M 770 130 L 770 200" class="line" marker-end="url(#arrowhead)" />
+  <text x="830" y="170" class="text-sm">port 80/443 -> 8080</text>
+
+  <!-- TUI to Content -->
+  <path d="M 360 250 L 410 250 L 410 415 L 480 415" class="line" marker-end="url(#arrowhead)" />
+
+  <!-- Web to Engines -->
+  <path d="M 770 290 L 770 320" class="line" />
+  <path d="M 600 320 L 860 320" class="line" />
+  <path d="M 600 320 L 600 360" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 860 320 L 860 360" class="line" marker-end="url(#arrowhead)" />
+
+  <!-- Web to Templ -->
+  <path d="M 770 470 L 770 530" class="line" marker-end="url(#arrowhead)" />
+</svg>

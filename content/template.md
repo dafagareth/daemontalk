@@ -27,7 +27,7 @@ series_part: 1
 
 Write the opening paragraph here. This introduces the topic and serves as the article's executive summary.
 
-## 1. Typography & Text Formatting
+## Typography & Text Formatting
 
 Demonstrate core text formatting and inline elements:
 
@@ -44,7 +44,7 @@ Demonstrate core text formatting and inline elements:
 
 > A key quote, architectural principle, or notable insight.
 
-## 2. Callout & Alert Blocks
+## Callout & Alert Blocks
 
 > [!NOTE]
 > Relevant background context or supplementary details.
@@ -61,7 +61,7 @@ Demonstrate core text formatting and inline elements:
 > [!CAUTION]
 > Warnings about high-risk or destructive actions.
 
-## 3. Key Metrics & Statistics
+## Key Metrics & Statistics
 
 ```stat
 - value: "10x"
@@ -77,7 +77,7 @@ Demonstrate core text formatting and inline elements:
   description: "Reduction in heap allocations"
 ```
 
-## 4. Multi-File Code Tabs
+## Multi-File Code Tabs
 
 ```tabs
 === main.go
@@ -99,7 +99,7 @@ build:
 	go build -o app .
 ```
 
-## 5. Annotated Code Snippets
+## Annotated Code Snippets
 
 ```go
 func handleRequest(w http.ResponseWriter, r *http.Request) {
@@ -111,7 +111,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-## 6. Rich Link Preview
+## Rich Link Preview
 
 ```link
 url: https://example.com
@@ -120,13 +120,13 @@ description: A brief summary of the external resource and why it is relevant.
 site: example.com
 ```
 
-## 7. Interactive Checklist
+## Interactive Checklist
 
 - [ ] Task item one
 - [ ] Task item two
 - [ ] Task item three
 
-## 8. Architecture Diagrams
+## Architecture Diagrams
 
 ```text
 +-------------------+      +-------------------+
@@ -139,7 +139,7 @@ site: example.com
 +-------------------+      +-------------------+
 ```
 
-## 9. Comparison Matrix
+## Comparison Matrix
 
 | Feature | Solution A | Solution B | Solution C |
 | :--- | :--- | :--- | :--- |
@@ -147,7 +147,7 @@ site: example.com
 | Complexity | Low | Medium | High |
 | Scalability | Horizontal | Vertical | Limited |
 
-## 10. Media Components
+## Media Components
 
 ### Carousel
 
@@ -163,7 +163,7 @@ site: example.com
 ![Image 2](/static/images/posts/example/img-2.png "Gallery image two")
 ```
 
-## 11. Frequently Asked Questions
+## Frequently Asked Questions
 
 ```faq
 Q: What is the primary use case for this approach?
@@ -173,7 +173,7 @@ Q: How can this be tested in a local environment?
 A: You can run the provided Makefile targets or execute the test suite directly.
 ```
 
-## 12. Structured References
+## Structured References
 
 ```references
 - title: The Linux Programming Interface
@@ -189,7 +189,7 @@ A: You can run the provided Makefile targets or execute the test suite directly.
   url: https://dataintensive.net/
 ```
 
-## 13. Author Card
+## Author Card
 
 ```author
 name: daemontalk team
@@ -201,7 +201,7 @@ email: team@daemontalk.dev
 website: https://daemontalk.com
 ```
 
-## 14. Mathematics (LaTeX)
+## Mathematics (LaTeX)
 
 Daemontalk supports academic-standard LaTeX formatting via KaTeX. 
 

@@ -451,190 +451,55 @@ svault unlock            # unlock as usual with the same master password
 
 ## FAQ
 
-<details>
-<summary>I forgot my master password. Can I recover my secrets?</summary>
-<div class="faq-body">
-<p>No. There is no recovery path, backdoor, or reset mechanism. This is
-intentional: a recovery option would weaken the security guarantee that only
-someone with the password can read the vault. Your only options are to restore
-from a backup made while you still knew the password, or to re-initialize the
-vault and re-enter your secrets. Keep your master password in a separate
-safe location.</p>
-</div>
-</details>
+```faq
+Q: I forgot my master password. Can I recover my secrets?
+A: No. There is no recovery path, backdoor, or reset mechanism. This is intentional: a recovery option would weaken the security guarantee that only someone with the password can read the vault. Your only options are to restore from a backup made while you still knew the password, or to re-initialize the vault and re-enter your secrets. Keep your master password in a separate safe location.
 
-<details>
-<summary>Does svault send any data to the internet?</summary>
-<div class="faq-body">
-<p>Never. There is no network code in the primary execution path. All data stays
-in <code>~/.svault</code> on your local machine. The only network activity that
-could occur is when the install scripts download the binary from GitHub Releases
-during initial setup, or when you open a URL stored in the vault with
-<code>svault open</code>.</p>
-</div>
-</details>
+Q: Does svault send any data to the internet?
+A: Never. There is no network code in the primary execution path. All data stays in `~/.svault` on your local machine. The only network activity that could occur is when the install scripts download the binary from GitHub Releases during initial setup, or when you open a URL stored in the vault with `svault open`.
 
-<details>
-<summary>Can two different projects use the same secret name?</summary>
-<div class="faq-body">
-<p>Yes. Namespaces keep them completely separate. <code>myproject/DB_PASSWORD</code>
-and <code>other-project/DB_PASSWORD</code> are independent values. When you run
-svault inside a git repository, the namespace is set automatically from the repo
-name, so there is nothing special to configure.</p>
-</div>
-</details>
+Q: Can two different projects use the same secret name?
+A: Yes. Namespaces keep them completely separate. `myproject/DB_PASSWORD` and `other-project/DB_PASSWORD` are independent values. When you run svault inside a git repository, the namespace is set automatically from the repo name, so there is nothing special to configure.
 
-<details>
-<summary>Is it safe to use svault on a shared server?</summary>
-<div class="faq-body">
-<p>With caution. The vault file and session file are both created with permission
-<code>0600</code>, which prevents other regular users from reading them. However,
-anyone with root access on the machine can read the session key from
-<code>/tmp/.svault_session</code> while the vault is unlocked. On a shared or
-multi-user server, always run <code>svault lock</code> immediately after you
-finish working instead of relying on the session TTL.</p>
-</div>
-</details>
+Q: Is it safe to use svault on a shared server?
+A: With caution. The vault file and session file are both created with permission `0600`, which prevents other regular users from reading them. However, anyone with root access on the machine can read the session key from `/tmp/.svault_session` while the vault is unlocked. On a shared or multi-user server, always run `svault lock` immediately after you finish working instead of relying on the session TTL.
 
-<details>
-<summary>Does svault require a daemon or background service?</summary>
-<div class="faq-body">
-<p>No. svault is a plain command-line tool. It starts, performs its operation,
-and exits. The only persistent state is the encrypted vault file, the audit log,
-and the short-lived session file in <code>/tmp</code>. Nothing runs in the
-background between commands.</p>
-</div>
-</details>
+Q: Does svault require a daemon or background service?
+A: No. svault is a plain command-line tool. It starts, performs its operation, and exits. The only persistent state is the encrypted vault file, the audit log, and the short-lived session file in `/tmp`. Nothing runs in the background between commands.
 
-<details>
-<summary>What happens if the session file in /tmp is deleted?</summary>
-<div class="faq-body">
-<p>svault treats a missing session file the same as an expired session. The next
-command that requires an unlocked vault will refuse to run and prompt you to
-run <code>svault unlock</code> again. Your vault and all stored secrets remain
-intact; only the in-memory session state is lost.</p>
-</div>
-</details>
+Q: What happens if the session file in /tmp is deleted?
+A: svault treats a missing session file the same as an expired session. The next command that requires an unlocked vault will refuse to run and prompt you to run `svault unlock` again. Your vault and all stored secrets remain intact; only the in-memory session state is lost.
 
-<details>
-<summary>Can I use svault in a CI/CD pipeline or a Docker container?</summary>
-<div class="faq-body">
-<p>Yes, with some planning. The recommended approach is to unlock the vault at
-the start of the pipeline script and use <code>svault exec</code> to inject
-secrets into individual commands. Set <code>SVAULT_NS</code> to the correct
-namespace and use <code>SVAULT_SESSION_TTL</code> to extend the session length
-if your pipeline takes longer than 30 minutes. The session file will be scoped
-to the container or runner, so it will not persist between runs.</p>
-</div>
-</details>
+Q: Can I use svault in a CI/CD pipeline or a Docker container?
+A: Yes, with some planning. The recommended approach is to unlock the vault at the start of the pipeline script and use `svault exec` to inject secrets into individual commands. Set `SVAULT_NS` to the correct namespace and use `SVAULT_SESSION_TTL` to extend the session length if your pipeline takes longer than 30 minutes. The session file will be scoped to the container or runner, so it will not persist between runs.
 
-<details>
-<summary>How do I share secrets with a teammate?</summary>
-<div class="faq-body">
-<p>svault is a local-only tool and does not have a built-in sharing mechanism.
-To share secrets, export them to a <code>.env</code> file with
-<code>svault export</code> and transfer the file through a secure channel (an
-encrypted message, a secrets manager, or a secure file share). The recipient
-can then import the file with <code>svault import</code>. Never send the
-<code>.env</code> file over email or unencrypted chat.</p>
-</div>
-</details>
+Q: How do I share secrets with a teammate?
+A: svault is a local-only tool and does not have a built-in sharing mechanism. To share secrets, export them to a `.env` file with `svault export` and transfer the file through a secure channel (an encrypted message, a secrets manager, or a secure file share). The recipient can then import the file with `svault import`. Never send the `.env` file over email or unencrypted chat.
 
-<details>
-<summary>What happens if I run svault init when a vault already exists?</summary>
-<div class="faq-body">
-<p>svault detects the existing vault file and refuses to overwrite it without
-confirmation. Your existing secrets are not affected unless you explicitly
-confirm the re-initialization. If you want to start fresh, remove
-<code>~/.svault/vault.enc</code> manually first, then run <code>svault init</code>.</p>
-</div>
-</details>
+Q: What happens if I run svault init when a vault already exists?
+A: svault detects the existing vault file and refuses to overwrite it without confirmation. Your existing secrets are not affected unless you explicitly confirm the re-initialization. If you want to start fresh, remove `~/.svault/vault.enc` manually first, then run `svault init`.
 
-<details>
-<summary>Can I have multiple vaults for different purposes?</summary>
-<div class="faq-body">
-<p>Not directly. svault uses a single <code>vault.enc</code> file and separates
-secrets by namespace within that file. For most use cases, namespaces are
-sufficient: each project gets its own isolated namespace, and you can create as
-many as you need. If you genuinely need a completely separate vault with a
-different master password, you would need to run a second instance with a
-different home directory or manage the vault files manually.</p>
-</div>
-</details>
+Q: Can I have multiple vaults for different purposes?
+A: Not directly. svault uses a single `vault.enc` file and separates secrets by namespace within that file. For most use cases, namespaces are sufficient: each project gets its own isolated namespace, and you can create as many as you need. If you genuinely need a completely separate vault with a different master password, you would need to run a second instance with a different home directory or manage the vault files manually.
 
-<details>
-<summary>What clipboard tools does svault support?</summary>
-<div class="faq-body">
-<p>svault detects the available clipboard tool based on your environment:</p>
-<p><strong>Linux (Wayland):</strong> <code>wl-copy</code> (from <code>wl-clipboard</code>)</p>
-<p><strong>Linux (X11):</strong> <code>xsel</code> or <code>xclip</code></p>
-<p><strong>macOS:</strong> <code>pbcopy</code> (built in)</p>
-<p>Run <code>svault doctor</code> to confirm which tool was detected. If none
-is found, clipboard commands (<code>copy</code>, <code>generate</code>,
-<code>open</code>) will fail with a descriptive error.</p>
-</div>
-</details>
+Q: What clipboard tools does svault support?
+A: svault detects the available clipboard tool based on your environment: **Linux (Wayland):** `wl-copy` (from `wl-clipboard`) **Linux (X11):** `xsel` or `xclip` **macOS:** `pbcopy` (built in) Run `svault doctor` to confirm which tool was detected. If none is found, clipboard commands (`copy`, `generate`, `open`) will fail with a descriptive error.
 
-<details>
-<summary>What happens if two svault processes run at the same time?</summary>
-<div class="faq-body">
-<p>svault uses an exclusive file lock on every write operation. If two processes
-attempt to write simultaneously, the second one waits until the first completes
-and then proceeds. Reads are not locked and can run concurrently. This prevents
-the race condition where two concurrent writes corrupt each other and silently
-lose data.</p>
-</div>
-</details>
+Q: What happens if two svault processes run at the same time?
+A: svault uses an exclusive file lock on every write operation. If two processes attempt to write simultaneously, the second one waits until the first completes and then proceeds. Reads are not locked and can run concurrently. This prevents the race condition where two concurrent writes corrupt each other and silently lose data.
 
-<details>
-<summary>How do I back up my vault?</summary>
-<div class="faq-body">
-<p>Use the built-in backup command:</p>
-<p><code>svault backup ~/safe/vault.bak</code> copies the vault to a specific path.</p>
-<p><code>svault backup</code> (no path) creates a timestamped copy in
-<code>~/.svault/</code> automatically.</p>
-<p>svault also creates an automatic rollback copy on every write, so a bad write
-never destroys the previous good state. For long-term disaster recovery, copy
-<code>~/.svault/vault.enc</code> to external storage or a separate encrypted
-backup location.</p>
-</div>
-</details>
+Q: How do I back up my vault?
+A: Use the built-in backup command: `svault backup ~/safe/vault.bak` copies the vault to a specific path. `svault backup` (no path) creates a timestamped copy in `~/.svault/` automatically. svault also creates an automatic rollback copy on every write, so a bad write never destroys the previous good state. For long-term disaster recovery, copy `~/.svault/vault.enc` to external storage or a separate encrypted backup location.
 
-<details>
-<summary>Can I use svault without git installed?</summary>
-<div class="faq-body">
-<p>Yes. Git is only used for automatic namespace detection. If git is not
-installed or you are not inside a git repository, svault falls back to the
-namespace set by <code>svault use</code>, the <code>SVAULT_NS</code> environment
-variable, or the <code>default</code> namespace. All other features work normally.
-<code>svault doctor</code> will report a warning about missing git, but no
-commands will fail because of it.</p>
-</div>
-</details>
+Q: Can I use svault without git installed?
+A: Yes. Git is only used for automatic namespace detection. If git is not installed or you are not inside a git repository, svault falls back to the namespace set by `svault use`, the `SVAULT_NS` environment variable, or the `default` namespace. All other features work normally. `svault doctor` will report a warning about missing git, but no commands will fail because of it.
 
-<details>
-<summary>Can I automate svault in shell scripts without interactive password prompts?</summary>
-<div class="faq-body">
-<p>The intended workflow is to call <code>svault unlock</code> once interactively
-at the start of your session, then use all other commands non-interactively within
-the 30-minute window. Inside a CI pipeline where interactive input is not possible,
-unlock using a heredoc or piped input, then use <code>SVAULT_SESSION_TTL</code>
-to keep the session alive for the duration of the pipeline. For fully automated
-environments, consider whether a dedicated secrets manager with machine-identity
-authentication is more appropriate.</p>
-</div>
-</details>
+Q: Can I automate svault in shell scripts without interactive password prompts?
+A: The intended workflow is to call `svault unlock` once interactively at the start of your session, then use all other commands non-interactively within the 30-minute window. Inside a CI pipeline where interactive input is not possible, unlock using a heredoc or piped input, then use `SVAULT_SESSION_TTL` to keep the session alive for the duration of the pipeline. For fully automated environments, consider whether a dedicated secrets manager with machine-identity authentication is more appropriate.
 
-<details>
-<summary>What are the Argon2id settings svault uses?</summary>
-<div class="faq-body">
-<p>svault uses Argon2id tuned for roughly 200ms of derivation time on a modern
-laptop. This provides meaningful resistance to brute-force and dictionary attacks
-while keeping the unlock command fast enough for daily interactive use. The exact
-parameters (memory, iterations, parallelism) are stored alongside the salt so
-that future versions can change defaults without breaking existing vaults.</p>
-</div>
-</details>
+Q: What are the Argon2id settings svault uses?
+A: svault uses Argon2id tuned for roughly 200ms of derivation time on a modern laptop. This provides meaningful resistance to brute-force and dictionary attacks while keeping the unlock command fast enough for daily interactive use. The exact parameters (memory, iterations, parallelism) are stored alongside the salt so that future versions can change defaults without breaking existing vaults.
+```
 
 ## Tech Stack
 
