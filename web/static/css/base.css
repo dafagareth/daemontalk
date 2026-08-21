@@ -10,8 +10,12 @@
     font-family: var(--font-sans);
   }
 
+  /* Offset anchor targets so sticky navbar never overlaps headings */
   :target,
-  [id],
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+
   .prose h1,
   .prose h2,
   .prose h3,
