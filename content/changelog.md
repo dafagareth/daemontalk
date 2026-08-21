@@ -1,3 +1,7 @@
+### v1.0.2 (August 22, 2026) · CI/CD Pipeline Patch
+
+*   **Deployment Synchronization**: Fixed a race condition in GitHub Actions where the VPS would deploy a stale image before the new GHCR Docker image finished building. Deployments now strictly wait for the build pipeline to complete.
+
 ### v1.0.1 (August 21, 2026) · UX & Infrastructure Refinements
 
 *   **Live Search**: Upgraded the search engine to use HTMX for real-time, instant search suggestions as you type. Fixed aggressive highlight bug for single-character queries.

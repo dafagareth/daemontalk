@@ -1,3 +1,7 @@
+### v1.0.2 (Agustus 22, 2026) · Pembaruan Jalur CI/CD
+
+*   **Sinkronisasi Deployment**: Memperbaiki *race condition* pada GitHub Actions di mana VPS menarik *Docker image* lawas sebelum *image* terbaru selesai diproses oleh GHCR. *Deployment* kini diatur agar wajib menunggu hingga proses *build* selesai sepenuhnya.
+
 ### v1.0.1 (Agustus 21, 2026) · Peningkatan UX & Infrastruktur
 
 *   **Pencarian Instan**: Pembaruan mesin pencari menggunakan HTMX untuk menampilkan saran *real-time* saat mengetik. Memperbaiki *bug highlight* kuning agresif pada kueri satu huruf.
