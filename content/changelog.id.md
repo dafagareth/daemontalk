@@ -1,3 +1,10 @@
+### v1.0.3 (Agustus 23, 2026) · Perombakan Sidebar Ponsel & Pembersihan UI
+
+- **Desain Ulang Menu Ponsel**: Merombak total antarmuka *drawer* navigasi pada perangkat *mobile*. Memindahkan fitur pencarian ke atas sebagai bilah *input* khusus, mengangkat daftar topik (*Topic Streams*), dan menggunakan *font sans-serif* murni agar lebih ramah sentuh.
+- **Penghapusan Jam Live**: Mencopot elemen jam *real-time* yang berlebihan dari *header* desktop dan ponsel untuk menjaga tampilan navigasi yang lebih bersih dan bebas distraksi.
+- **Ekosistem Sosial**: Menambahkan deretan ikon media sosial khusus (rata kiri) di bagian paling bawah menu ponsel. Menyertakan ikon Facebook baru dan mengganti ikon Threads menjadi format garis luar (*outline*) SVG agar selaras secara estetika. Menyelaraskan seluruh tautan sosial (*handle*) agar langsung mengarah ke `daemontalk`.
+- **Standarisasi Dokumentasi**: Membersihkan markup yang berantakan (*AI slop*) di seluruh file dokumentasi `.md`. Mengubah blok HTML kotor menjadi sintaks *native* ` ```faq ` milik proyek, serta membasmi penomoran *heading* yang kaku pada halaman legal dan pedoman kontribusi.
+
 ### v1.0.2 (Agustus 22, 2026) · Pembaruan Jalur CI/CD
 
 - **Sinkronisasi Deployment**: Memperbaiki *race condition* pada GitHub Actions di mana VPS menarik *Docker image* lawas sebelum *image* terbaru selesai diproses oleh GHCR. *Deployment* kini diatur agar wajib menunggu hingga proses *build* selesai sepenuhnya.

@@ -1,3 +1,10 @@
+### v1.0.3 (August 23, 2026) · Mobile Sidebar Redesign & UI Cleanup
+
+- **Mobile Sidebar Overhaul**: Completely redesigned the mobile navigation drawer. Replaced the generic slide-in links with a dedicated top search bar, prominent topic streams, and native sans-serif fonts for better touch readability.
+- **Clock Feature Deprecation**: Removed the redundant live clock indicator from both desktop and mobile navigation to maintain a cleaner, distraction-free header.
+- **Social Ecosystem**: Added a dedicated, left-aligned social media icon row at the bottom of the mobile drawer. Introduced a Facebook icon and switched the Threads icon from a bulky solid fill to a clean, outlined SVG to match the platform's design language. Updated external handles to point directly to `daemontalk`.
+- **Docs Standardization**: Eradicated redundant markup and "AI slop" across all `.md` documentation files. Converted messy HTML `details` blocks to the project's native ` ```faq ` syntax and scrubbed excessive bullet numbering from legal and contribution guides.
+
 ### v1.0.2 (August 22, 2026) · CI/CD Pipeline Patch
 
 - **Deployment Synchronization**: Fixed a race condition in GitHub Actions where the VPS would deploy a stale image before the new GHCR Docker image finished building. Deployments now strictly wait for the build pipeline to complete.
