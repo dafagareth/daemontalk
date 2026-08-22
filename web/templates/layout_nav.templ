@@ -91,9 +91,7 @@ templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
 				<a href={ templ.SafeURL(prefix(lang) + "/?tag=security") } data-tag="security" class="subnav-tag text-text hover:text-link transition-colors">Security</a>
 				<a href={ templ.SafeURL(prefix(lang) + "/?tag=tools") } data-tag="tools" class="subnav-tag text-text hover:text-link transition-colors">Tools</a>
 			</div>
-			<div class="flex items-center gap-2 text-muted text-[11px] shrink-0 font-mono">
-				<span class="user-live-time tabular-nums font-medium">--:--:--</span>
-			</div>
+
 		</div>
 	</div>
 }
@@ -102,10 +100,10 @@ templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
 templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 	<div
 		id="mobile-menu-overlay"
-		class="fixed inset-0 z-50 bg-bg flex flex-col justify-between p-6 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+		class="fixed inset-0 z-50 bg-surface flex flex-col justify-between p-6 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
 	>
 		<!-- Top Bar: Brand & Close Button -->
-		<div class="flex items-center justify-between border-b border-border pb-4 mb-6">
+		<div class="flex items-center justify-between pb-4 mb-6">
 			<a href={ templ.SafeURL(prefix(lang) + "/") } onclick="toggleMobileMenu()" class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
 				@BrandLogo("h-8 sm:h-9 w-auto")
 			</a>
@@ -121,11 +119,39 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 
 		<!-- Nav Links Section -->
 		<div class="flex-1 flex flex-col gap-6 py-2">
-			<div class="flex flex-col gap-2 font-mono text-base font-semibold">
+			
+			<!-- Search Box (Top) -->
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/search") }
+				onclick="toggleMobileMenu()"
+				class="flex items-center gap-3 px-4 py-3 border border-border bg-bg text-muted hover:text-text rounded-none transition-colors w-full"
+			>
+				@IconSearch("w-4 h-4")
+				<span class="text-sm font-sans">Search articles...</span>
+			</a>
+
+			<!-- Topic Tags -->
+			<div class="pt-2">
+				<p class="text-xs font-sans font-bold text-muted uppercase tracking-wider mb-3">Topic Streams</p>
+				<div class="flex flex-wrap gap-2">
+					for _, tg := range []string{"linux", "ai", "systems", "backend", "devops", "docker", "security", "tools"} {
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/?tag=" + tg) }
+							onclick="toggleMobileMenu()"
+							class="text-xs font-sans px-3 py-1.5 rounded-none bg-chip hover:bg-hover text-text border border-border transition-colors uppercase"
+						>
+							{ tg }
+						</a>
+					}
+				</div>
+			</div>
+
+			<!-- Main Navigation Links -->
+			<div class="flex flex-col gap-2 font-sans text-base font-semibold pt-2">
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/") }
 					onclick="toggleMobileMenu()"
-					class="flex items-center gap-2 py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+					class="py-3 text-text hover:text-link transition-colors"
 				>
 					<span>Live Dispatch</span>
 				</a>
@@ -133,7 +159,7 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 					<a
 						href={ templ.SafeURL(prefix(lang) + "/graph") }
 						onclick="toggleMobileMenu()"
-						class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+						class="py-3 text-text hover:text-link transition-colors"
 					>
 						<span>Systems Radar & Graph</span>
 					</a>
@@ -141,78 +167,68 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/terminal") }
 					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+					class="py-3 text-text hover:text-link transition-colors"
 				>
 					<span>Terminal Shell</span>
 				</a>
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/til") }
 					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+					class="py-3 text-text hover:text-link transition-colors"
 				>
 					{ ui.Nav_TIL }
 				</a>
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/behind") }
 					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
+					class="py-3 text-text hover:text-link transition-colors"
 				>
 					{ ui.Nav_Behind }
 				</a>
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/search") }
-					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors"
-				>
-					<span>Search</span>
-				</a>
-				<button
-					type="button"
-					onclick="toggleMobileMenu(); openShortcuts();"
-					class="py-3 text-text hover:text-link border-b border-border/40 transition-colors text-left cursor-pointer w-full font-mono font-semibold"
-				>
-					<span>Keyboard Shortcuts</span>
-					<kbd class="ml-auto px-1.5 py-0.5 border border-border bg-chip text-[11px] text-muted font-mono">?</kbd>
-				</button>
-			</div>
-
-			<!-- Topic Tags -->
-			<div class="pt-2">
-				<p class="text-xs font-mono font-bold text-muted uppercase tracking-wider mb-3">Topic Streams</p>
-				<div class="flex flex-wrap gap-2">
-					for _, tg := range []string{"linux", "ai", "systems", "backend", "devops", "docker", "security", "tools"} {
-						<a
-							href={ templ.SafeURL(prefix(lang) + "/?tag=" + tg) }
-							onclick="toggleMobileMenu()"
-							class="text-xs font-mono px-3 py-1.5 rounded-none bg-chip hover:bg-hover text-text border border-border transition-colors uppercase"
-						>
-							{ tg }
-						</a>
-					}
-				</div>
 			</div>
 		</div>
 
 		<!-- Bottom Controls: Theme, Language, Edition -->
-		<div class="pt-6 border-t border-border flex items-center justify-between gap-4">
-			<div class="flex items-center gap-3">
-				<button
-					onclick="toggleTheme()"
-					aria-label="Toggle theme"
-					class="text-xs font-mono px-3 py-2 border border-border bg-surface text-text cursor-pointer"
-				>
-					<span>Theme</span>
-				</button>
-				<a
-					href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
-					class="text-xs font-mono px-3 py-2 rounded-none border border-border bg-surface text-link font-semibold"
-				>
-					{ ui.Lang_Switch }
-				</a>
-			</div>
-			<div class="flex items-center gap-2 text-muted text-[11px] font-mono">
-				<span class="user-live-time tabular-nums">--:--</span>
-			</div>
+		<div class="mt-auto pt-8 flex items-center gap-3">
+			<button
+				onclick="toggleTheme()"
+				aria-label="Toggle theme"
+				class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-text cursor-pointer hover:bg-hover transition-colors"
+			>
+				@sunIcon()
+				@moonIcon()
+			</button>
+			<a
+				href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
+				class="text-xs font-sans px-3 py-2 rounded-none border border-border bg-surface text-link font-semibold"
+			>
+				{ ui.Lang_Switch }
+			</a>
+		</div>
+
+		<!-- Social Media Icons -->
+		<div class="pt-6 pb-2 flex items-center justify-start gap-5 text-muted flex-wrap">
+			<a href="https://github.com/dafagareth" target="_blank" aria-label="GitHub" class="hover:text-text transition-colors">
+				@IconGitHub()
+			</a>
+			<a href="https://x.com/dafagareth" target="_blank" aria-label="X (Twitter)" class="hover:text-text transition-colors">
+				@IconX()
+			</a>
+			<a href="https://facebook.com/dafagareth" target="_blank" aria-label="Facebook" class="hover:text-text transition-colors">
+				@IconFacebook()
+			</a>
+			<a href="https://instagram.com/dafagareth" target="_blank" aria-label="Instagram" class="hover:text-text transition-colors">
+				@IconInstagram()
+			</a>
+			<a href="https://threads.net/@dafagareth" target="_blank" aria-label="Threads" class="hover:text-text transition-colors">
+				@IconThreads()
+			</a>
+			<a href="mailto:realdaemontalk@gmail.com" aria-label="Email" class="hover:text-text transition-colors">
+				@IconEmail()
+			</a>
+			<a href={ templ.SafeURL(prefix(lang) + "/rss.xml") } target="_blank" aria-label="RSS Feed" class="hover:text-text transition-colors">
+				@IconRSS()
+			</a>
 		</div>
 	</div>
 }
