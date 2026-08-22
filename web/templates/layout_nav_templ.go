@@ -559,7 +559,7 @@ func mobileMenu(ui i18n.UI, lang string, page string, currentPath string) templ.
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</a> <a href=\"https://x.com/dafagareth\" target=\"_blank\" aria-label=\"X (Twitter)\" class=\"hover:text-text transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</a> <a href=\"https://x.com/daemontalk\" target=\"_blank\" aria-label=\"X (Twitter)\" class=\"hover:text-text transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -567,7 +567,7 @@ func mobileMenu(ui i18n.UI, lang string, page string, currentPath string) templ.
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</a> <a href=\"https://facebook.com/dafagareth\" target=\"_blank\" aria-label=\"Facebook\" class=\"hover:text-text transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</a> <a href=\"https://facebook.com/daemontalk\" target=\"_blank\" aria-label=\"Facebook\" class=\"hover:text-text transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -575,7 +575,7 @@ func mobileMenu(ui i18n.UI, lang string, page string, currentPath string) templ.
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</a> <a href=\"https://instagram.com/dafagareth\" target=\"_blank\" aria-label=\"Instagram\" class=\"hover:text-text transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</a> <a href=\"https://instagram.com/daemontalk\" target=\"_blank\" aria-label=\"Instagram\" class=\"hover:text-text transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -583,7 +583,7 @@ func mobileMenu(ui i18n.UI, lang string, page string, currentPath string) templ.
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</a> <a href=\"https://threads.net/@dafagareth\" target=\"_blank\" aria-label=\"Threads\" class=\"hover:text-text transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</a> <a href=\"https://threads.net/@daemontalk\" target=\"_blank\" aria-label=\"Threads\" class=\"hover:text-text transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

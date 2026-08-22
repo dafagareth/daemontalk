@@ -113,7 +113,7 @@ func footer(ui i18n.UI, lang string) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = footerSocial("https://x.com/dafagareth", "X / Twitter").Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = footerSocial("https://x.com/daemontalk", "X / Twitter").Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -135,7 +135,7 @@ func footer(ui i18n.UI, lang string) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = footerSocial("https://facebook.com/dafagareth", "Facebook").Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = footerSocial("https://facebook.com/daemontalk", "Facebook").Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -157,7 +157,7 @@ func footer(ui i18n.UI, lang string) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = footerSocial("https://instagram.com/dafagareth", "Instagram").Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = footerSocial("https://instagram.com/daemontalk", "Instagram").Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -179,7 +179,7 @@ func footer(ui i18n.UI, lang string) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = footerSocial("https://threads.net/@dafagareth", "Threads").Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = footerSocial("https://threads.net/@daemontalk", "Threads").Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
