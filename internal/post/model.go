@@ -20,7 +20,7 @@ type Post struct {
 	Lang        string
 	Draft       bool
 	PublishAt   time.Time // future date = scheduled post
-	Type        string    // "til" or "" for regular blog posts
+	Type        string    // Post type (e.g., standard)
 	ReadTime     int
 	Cover        string
 	CoverCaption string
