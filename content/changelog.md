@@ -1,3 +1,8 @@
+### v1.0.6 (August 24, 2026) · Complete Feature Eradication
+
+- **TIL Complete Eradication**: Scoured the remaining codebase and completely eradicated leftover "Today I Learned" (TIL) dependencies, including obsolete struct models, localization dictionaries, and mock data in backend tests.
+- **Author Parser Deprecation**: Nuked the redundant custom markdown parser for the ` ```author ` code block. The system no longer renders large author cards to keep the article reading experience as clean and focused as possible.
+
 ### v1.0.5 (August 23, 2026) · TUI LaTeX Graceful Degradation
 
 - **Terminal UI Math Support**: Fixed an issue where LaTeX math blocks (`$$`) and inline math (`$`) would break terminal rendering by bleeding into markdown styling. The TUI now utilizes a preprocessing engine that elegantly degrades LaTeX math into syntax-highlighted code blocks, ensuring formulas remain perfectly readable and structurally intact over SSH connections.

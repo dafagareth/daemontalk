@@ -1,3 +1,8 @@
+### v1.0.6 (Agustus 24, 2026) · Pembersihan Fitur Menyeluruh
+
+- **Pemusnahan Total TIL**: Menyisir sisa-sisa basis kode dan menghapus secara permanen seluruh dependensi "Today I Learned" (TIL) yang masih tertinggal, termasuk model data yang usang, kamus pelokalan bahasa, serta data uji tiruan (*mock*) pada *backend*.
+- **Penghapusan Parser Author**: Memusnahkan *markdown parser* khusus untuk blok kode ` ```author `. Sistem kini tidak lagi mem-parsing dan menampilkan kartu profil penulis yang besar, demi menjaga pengalaman baca artikel yang bersih dan terfokus penuh pada konten teks.
+
 ### v1.0.5 (Agustus 23, 2026) · TUI LaTeX Graceful Degradation
 
 - **Dukungan Matematika pada Terminal UI**: Memperbaiki *bug* di mana blok matematika LaTeX (`$$`) merusak format terminal akibat tabrakan dengan sintaks *markdown*. TUI kini dilengkapi *preprocessor regex* yang secara elegan mereduksi rumus LaTeX menjadi blok kode (*code blocks*), memastikan formula tetap utuh dan sangat nyaman dibaca lewat koneksi SSH.
