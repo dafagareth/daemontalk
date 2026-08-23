@@ -9,7 +9,6 @@ var (
 	reCarouselFenced   = regexp.MustCompile("(?s)```(?:carousel|slider)\\s*\\n(.*?)\\n```")
 	reGalleryFenced    = regexp.MustCompile("(?s)```gallery\\s*\\n(.*?)\\n```")
 	reFAQFenced        = regexp.MustCompile("(?s)```faq\\s*\\n(.*?)\\n```")
-	reAuthorFenced     = regexp.MustCompile("(?s)```author\\s*\\n(.*?)\\n```")
 	reReferencesFenced = regexp.MustCompile("(?s)```(?:references|refs|ref)\\s*\\n(.*?)\\n```")
 	reCalloutFenced    = regexp.MustCompile("(?s)```callout(?:\\s+([a-zA-Z]+))?\\s*\\n(.*?)\\n```")
 	reGitHubAlert      = regexp.MustCompile(`(?m)^>\s*\[\!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][^\n]*\n((?:>[^\n]*(?:\n|$))+)`)
@@ -161,15 +160,6 @@ func preprocessMarkdown(src []byte) []byte {
 			return m
 		}
 		return renderFAQHTML(sub[1])
-	})
-
-	// Replace ```author ... ```
-	srcStr = reAuthorFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
-		sub := reAuthorFenced.FindStringSubmatch(m)
-		if len(sub) < 2 {
-			return m
-		}
-		return renderAuthorHTML(sub[1])
 	})
 
 	return []byte(srcStr)
