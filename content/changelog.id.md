@@ -1,3 +1,8 @@
+### v1.0.4 (Agustus 23, 2026) · Pemangkasan Fitur & Optimasi
+
+- **Penghapusan Fitur TIL**: Memusnahkan fitur *micro-blogging* "Today I Learned" (TIL) beserta seluruh jalur *routing*-nya secara permanen. Keputusan ini diambil untuk memfokuskan publikasi pada artikel teknis yang mendalam dan tajam (*long-form*), serta membersihkan antarmuka dari fitur yang berlebihan.
+- **Perbaikan UI Guestbook**: Memindahkan tombol *Submit* pada halaman *Guestbook* ke sudut kanan bawah formulir masukan agar selaras dengan hierarki visual dan tata letak yang lebih rapi.
+
 ### v1.0.3 (Agustus 23, 2026) · Perombakan Sidebar Ponsel & Pembersihan UI
 
 - **Desain Ulang Menu Ponsel**: Merombak total antarmuka *drawer* navigasi pada perangkat *mobile*. Memindahkan fitur pencarian ke atas sebagai bilah *input* khusus, mengangkat daftar topik (*Topic Streams*), dan menggunakan *font sans-serif* murni agar lebih ramah sentuh.

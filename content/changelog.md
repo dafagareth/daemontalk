@@ -1,3 +1,8 @@
+### v1.0.4 (August 23, 2026) · Feature Pruning & Optimization
+
+- **TIL Feature Deprecation**: Completely removed the "Today I Learned" (TIL) micro-blogging feature and its associated routes. This decision aligns with the publication's focus on high-quality, long-form technical articles, eliminating redundant UI clutter and streamlining the core architecture.
+- **Guestbook UI Refinement**: Relocated the Guestbook submit button to the bottom-right corner of the input form to improve layout consistency and visual hierarchy.
+
 ### v1.0.3 (August 23, 2026) · Mobile Sidebar Redesign & UI Cleanup
 
 - **Mobile Sidebar Overhaul**: Completely redesigned the mobile navigation drawer. Replaced the generic slide-in links with a dedicated top search bar, prominent topic streams, and native sans-serif fonts for better touch readability.
