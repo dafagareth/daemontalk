@@ -112,9 +112,6 @@ type UI struct {
 	Guestbook_Submit    string
 	Guestbook_Empty     string
 
-	TIL_Title   string
-	TIL_NoPosts string
-
 	Stats_Title string
 
 	Changelog_Title string
@@ -238,9 +235,6 @@ var Strings = map[string]UI{
 		Guestbook_Submit:    "Sign",
 		Guestbook_Empty:     "No messages yet. Be the first to sign the guestbook!",
 
-		TIL_Title:   "Today I Learned",
-		TIL_NoPosts: "No TIL entries yet.",
-
 		Stats_Title: "Traffic statistics",
 
 		Changelog_Title: "Changelog",
@@ -343,9 +337,6 @@ var Strings = map[string]UI{
 		Guestbook_BodyLabel: "Tinggalkan pesan...",
 		Guestbook_Submit:    "Tanda tangani buku tamu",
 		Guestbook_Empty:     "Belum ada pesan. Jadilah yang pertama!",
-
-		TIL_Title:   "Hari Ini Saya Belajar",
-		TIL_NoPosts: "Belum ada TIL.",
 
 		Stats_Title: "Statistik",
 
