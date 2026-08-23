@@ -1,3 +1,7 @@
+### v1.0.5 (Agustus 23, 2026) · TUI LaTeX Graceful Degradation
+
+- **Dukungan Matematika pada Terminal UI**: Memperbaiki *bug* di mana blok matematika LaTeX (`$$`) merusak format terminal akibat tabrakan dengan sintaks *markdown*. TUI kini dilengkapi *preprocessor regex* yang secara elegan mereduksi rumus LaTeX menjadi blok kode (*code blocks*), memastikan formula tetap utuh dan sangat nyaman dibaca lewat koneksi SSH.
+
 ### v1.0.4 (Agustus 23, 2026) · Pemangkasan Fitur & Optimasi
 
 - **Penghapusan Fitur TIL**: Memusnahkan fitur *micro-blogging* "Today I Learned" (TIL) beserta seluruh jalur *routing*-nya secara permanen. Keputusan ini diambil untuk memfokuskan publikasi pada artikel teknis yang mendalam dan tajam (*long-form*), serta membersihkan antarmuka dari fitur yang berlebihan.

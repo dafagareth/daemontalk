@@ -1,3 +1,7 @@
+### v1.0.5 (August 23, 2026) · TUI LaTeX Graceful Degradation
+
+- **Terminal UI Math Support**: Fixed an issue where LaTeX math blocks (`$$`) and inline math (`$`) would break terminal rendering by bleeding into markdown styling. The TUI now utilizes a preprocessing engine that elegantly degrades LaTeX math into syntax-highlighted code blocks, ensuring formulas remain perfectly readable and structurally intact over SSH connections.
+
 ### v1.0.4 (August 23, 2026) · Feature Pruning & Optimization
 
 - **TIL Feature Deprecation**: Completely removed the "Today I Learned" (TIL) micro-blogging feature and its associated routes. This decision aligns with the publication's focus on high-quality, long-form technical articles, eliminating redundant UI clutter and streamlining the core architecture.
