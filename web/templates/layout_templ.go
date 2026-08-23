@@ -439,8 +439,6 @@ func pageTitle(page string) string {
 		return "Stats · " + suffix
 	case "daily":
 		return "Daily Tech Briefing · " + suffix
-	case "til":
-		return "TIL · " + suffix
 	case "guestbook":
 		return "Guestbook · " + suffix
 	case "search":

@@ -172,13 +172,6 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 					<span>Terminal Shell</span>
 				</a>
 				<a
-					href={ templ.SafeURL(prefix(lang) + "/til") }
-					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link transition-colors"
-				>
-					{ ui.Nav_TIL }
-				</a>
-				<a
 					href={ templ.SafeURL(prefix(lang) + "/behind") }
 					onclick="toggleMobileMenu()"
 					class="py-3 text-text hover:text-link transition-colors"
