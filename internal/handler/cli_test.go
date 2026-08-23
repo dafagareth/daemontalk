@@ -48,15 +48,6 @@ func TestCLIMainAndDaily(t *testing.T) {
 				Description: "Deep dive into eBPF tracing",
 				Body:        "## eBPF Internals\n\nDetailed content here.",
 			},
-			{
-				Title: "TIL: Linux Inodes",
-				Slug:  "til-linux-inodes",
-				Date:  time.Now(),
-				Lang:  "en",
-				Type:  "til",
-				Tags:  []string{"linux"},
-				Body:  "Check inodes with df -i.",
-			},
 		},
 	}
 	h.RefreshPosts()
