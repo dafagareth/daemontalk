@@ -170,7 +170,7 @@ func TestAdminPageDoesNotIncludePublicNav(t *testing.T) {
 	h.Admin(rec, req)
 
 	body := rec.Body.String()
-	for _, notWant := range []string{`href="/til"`, `href="/behind"`, `href="/search"`, "buymeacoffee.com"} {
+	for _, notWant := range []string{`href="/behind"`, `href="/search"`, "buymeacoffee.com"} {
 		if strings.Contains(body, notWant) {
 			t.Errorf("admin shell should not include public nav/footer, found %q", notWant)
 		}
@@ -201,7 +201,7 @@ func TestPublicPageStillHasPublicNavAndFooter(t *testing.T) {
 	h.BlogIndex(rec, req)
 
 	body := rec.Body.String()
-	for _, want := range []string{`href="/til"`, `href="/behind"`, "github.com", `hreflang="en"`} {
+	for _, want := range []string{`href="/behind"`, "github.com", `hreflang="en"`} {
 		if !strings.Contains(body, want) {
 			t.Errorf("public page should still include %q after headTags() extraction", want)
 		}

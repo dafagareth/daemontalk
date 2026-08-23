@@ -236,7 +236,7 @@ func TestAdminPostEditorDoesNotIncludePublicNav(t *testing.T) {
 	h.AdminPostNew(rec, req)
 
 	body := rec.Body.String()
-	for _, notWant := range []string{`href="/til"`, `href="/behind"`, `href="/search"`, "buymeacoffee.com"} {
+	for _, notWant := range []string{`href="/behind"`, `href="/search"`, "buymeacoffee.com"} {
 		if strings.Contains(body, notWant) {
 			t.Errorf("editor shell should not include public nav/footer, found %q", notWant)
 		}
