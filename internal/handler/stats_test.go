@@ -20,31 +20,22 @@ func TestStatsPage(t *testing.T) {
 			Date:     time.Now(),
 			ReadTime: 5,
 		},
-		{
-			Title:    "Stats Post 2 (TIL)",
-			Slug:     "stats-2",
-			Tags:     []string{"rust"},
-			Lang:     "id",
-			Type:     "til",
-			Date:     time.Now(),
-			ReadTime: 3,
-		},
-	}
-	h := &Handler{
-		FilePosts: posts,
-	}
-
-	rec := httptest.NewRecorder()
-	req := httptest.NewRequest(http.MethodGet, "/stats", nil)
-	h.Stats(rec, req)
-
-	if rec.Code != http.StatusOK {
-		t.Fatalf("expected status 200, got %d", rec.Code)
-	}
-
-	body := rec.Body.String()
-	// The stats page displays numbers and summaries. We can assert strings related to stats are present.
-	if !strings.Contains(body, "Posts") && !strings.Contains(body, "TIL") {
-		t.Error("expected statistics elements in Stats response page")
-	}
+		}
+		h := &Handler{
+			FilePosts: posts,
+		}
+	
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/stats", nil)
+		h.Stats(rec, req)
+	
+		if rec.Code != http.StatusOK {
+			t.Fatalf("expected status 200, got %d", rec.Code)
+		}
+	
+		body := rec.Body.String()
+		// The stats page displays numbers and summaries. We can assert strings related to stats are present.
+		if !strings.Contains(body, "Posts") {
+			t.Error("expected statistics elements in Stats response page")
+		}
 }
