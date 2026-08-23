@@ -26,8 +26,8 @@ To ensure a rapid and accurate assessment, your report must include:
 
 ### Resolution Process
 
-Upon receiving your report, the engineering team adheres to the following protocol:
-1. **Triage:** We will acknowledge receipt of the report within 48 hours.
-2. **Assessment:** We will verify the vulnerability and classify its severity.
-3. **Remediation:** A patch will be developed, tested, and deployed to the production environment.
-4. **Disclosure:** Once patched, the vulnerability will be documented in the repository changelog. You will receive attribution for the responsible disclosure, provided you wish to be credited.
+Since Daemontalk is developed and maintained by a solo developer, please allow a reasonable window for triage and remediation. Upon receiving your report, I will follow this protocol:
+1. **Triage:** I will do my best to acknowledge receipt of your report within 48-72 hours.
+2. **Assessment:** I will personally verify the vulnerability and assess its impact on the system.
+3. **Remediation:** A patch will be written, tested, and deployed to the production server as soon as possible.
+4. **Disclosure:** Once the issue is resolved, it will be documented in the repository changelog. You will receive full attribution for the responsible disclosure if you wish to be credited.
