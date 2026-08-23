@@ -8,7 +8,7 @@ import (
 	"daemontalk/internal/post"
 )
 
-templ DailyPage(ui i18n.UI, lang string, articles []post.Post, tilPosts []post.Post, host string) {
+templ DailyPage(ui i18n.UI, lang string, articles []post.Post, host string) {
 	<div class="container-page py-8 sm:py-12">
 		<div class="max-w-3xl">
 			<!-- ASCII Art Header -->
@@ -100,31 +100,7 @@ templ DailyPage(ui i18n.UI, lang string, articles []post.Post, tilPosts []post.P
 				</div>
 			</section>
 
-			<!-- Section: Today I Learned (TIL) -->
-			if len(tilPosts) > 0 {
-				<section class="mb-12">
-					<div class="flex items-center justify-between pb-2 mb-4 border-b border-border">
-						<h2 class="text-xs font-semibold text-muted uppercase tracking-wider font-mono">Today I Learned</h2>
-						<a href={ templ.SafeURL(prefix(lang) + "/til") } class="text-xs text-link hover:underline font-mono">All Notes</a>
-					</div>
 
-					<div class="divide-y divide-border">
-						for _, til := range tilPosts {
-							<div class="py-3 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-								<div class="min-w-0">
-									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + til.Slug) } class="text-sm font-medium text-text hover:text-link hover:underline">
-										{ til.Title }
-									</a>
-									if til.Description != "" {
-										<p class="text-xs text-muted mt-0.5">{ til.Description }</p>
-									}
-								</div>
-								<code class="text-xs text-muted font-mono shrink-0 select-all">curl -sL { host }/p/{ til.Slug }</code>
-							</div>
-						}
-					</div>
-				</section>
-			}
 
 			<!-- Section: Terminal Endpoints Guide -->
 			<section class="pt-6 border-t border-border">

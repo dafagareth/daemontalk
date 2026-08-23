@@ -385,8 +385,6 @@ func formatCategoryName(tag string) string {
 		return "cURL"
 	case "make":
 		return "Make"
-	case "til":
-		return "TIL"
 	case "awk":
 		return "Awk"
 	case "":

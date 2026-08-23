@@ -7,7 +7,6 @@ import (
 
 type StatsData struct {
 	TotalPosts    int
-	TotalTIL      int
 	TotalWords    int
 	TotalTags     int
 	TotalViews    int
@@ -37,7 +36,6 @@ templ StatsPage(ui i18n.UI, data StatsData) {
 		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-8">{ ui.Stats_Title }</h1>
 		<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
 			@statCard("Posts", fmtNumber(data.TotalPosts), "blog posts published")
-			@statCard("TIL", fmtNumber(data.TotalTIL), "today I learned entries")
 			@statCard("Words", fmtNumber(data.TotalWords), "words written (est.)")
 			@statCard("Tags", fmtNumber(data.TotalTags), "unique tags used")
 			@statCard("Views", fmtNumber(data.TotalViews), "total page views")

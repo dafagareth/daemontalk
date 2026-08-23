@@ -53,12 +53,6 @@ templ ErrorPage(code int, title string, message string, homeLabel string, ui i18
 					{ homeLabel }
 				</a>
 				<a
-					href={ templ.SafeURL(prefix(lang) + "/til") }
-					class="text-xs font-medium px-4 py-2 border border-border text-muted hover:text-text hover:bg-hover transition-colors"
-				>
-					{ ui.Nav_TIL }
-				</a>
-				<a
 					href={ templ.SafeURL(prefix(lang) + "/behind") }
 					class="text-xs font-medium px-4 py-2 border border-border text-muted hover:text-text hover:bg-hover transition-colors"
 				>
