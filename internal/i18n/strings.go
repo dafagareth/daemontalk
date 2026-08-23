@@ -2,7 +2,6 @@ package i18n
 
 type UI struct {
 	Nav_Home     string
-	Nav_TIL      string
 	Nav_Behind   string
 	Nav_Terminal string
 	Footer_Copy  string
@@ -129,7 +128,6 @@ type UI struct {
 var Strings = map[string]UI{
 	"en": {
 		Nav_Home:     "Home",
-		Nav_TIL:      "til",
 		Nav_Behind:   "behind",
 		Nav_Terminal: "terminal",
 		Footer_Copy:  "© 2026 Dafa",
@@ -254,7 +252,6 @@ var Strings = map[string]UI{
 	},
 	"id": {
 		Nav_Home:     "Beranda",
-		Nav_TIL:      "til",
 		Nav_Behind:   "behind",
 		Nav_Terminal: "terminal",
 		Footer_Copy:  "© 2026 Dafa",

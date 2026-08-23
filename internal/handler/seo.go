@@ -74,7 +74,7 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Static pages (en + id).
-	for _, p := range []string{"/", "/behind", "/stats", "/guestbook", "/til", "/resume"} {
+	for _, p := range []string{"/", "/behind", "/stats", "/guestbook", "/resume"} {
 		writeURL(p, "")
 		writeURL("/id"+strings.TrimSuffix(p, "/"), "")
 	}
@@ -143,7 +143,7 @@ func (h *Handler) langSitemap(w http.ResponseWriter, lang string) {
 	}
 
 	// Static pages
-	for _, p := range []string{"/", "/behind", "/stats", "/guestbook", "/til", "/resume", "/changelog", "/links"} {
+	for _, p := range []string{"/", "/behind", "/stats", "/guestbook", "/resume", "/changelog", "/links"} {
 		path := pfx + p
 		if lang != "id" && p == "/" {
 			path = "/"
