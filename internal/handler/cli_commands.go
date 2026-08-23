@@ -20,19 +20,12 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 		posts := h.AllPosts()
 
 		var articles []post.Post
-		var tilPosts []post.Post
 		for _, p := range posts {
 			if p.Draft {
 				continue
 			}
-			if p.Type == "til" {
-				if len(tilPosts) < 4 {
-					tilPosts = append(tilPosts, p)
-				}
-			} else {
-				if len(articles) < 8 {
-					articles = append(articles, p)
-				}
+			if len(articles) < 8 {
+				articles = append(articles, p)
 			}
 		}
 
@@ -40,7 +33,7 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 			Description: "Daily executive technical briefing and terminal CLI endpoints for systems engineers.",
 		}
 		h.Render(w, r, templates.Layout(ui, lang, "daily", r.URL.Path, meta,
-			templates.DailyPage(ui, lang, articles, tilPosts, r.Host)))
+			templates.DailyPage(ui, lang, articles, r.Host)))
 		return
 	}
 
@@ -62,7 +55,7 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(fmt.Sprintf(" %s%s[ TOP DISPATCHES ]%s\n\n", ansiGreen, ansiBold, ansiReset))
 	count := 0
 	for _, p := range posts {
-		if p.Draft || p.Type == "til" {
+		if p.Draft {
 			continue
 		}
 		tags := ""
@@ -77,19 +70,6 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 		count++
 		if count >= 8 {
 			break
-		}
-	}
-
-	b.WriteString(fmt.Sprintf(" %s%s[ TODAY I LEARNED (TIL) ]%s\n\n", ansiGreen, ansiBold, ansiReset))
-	tilCount := 0
-	for _, p := range posts {
-		if p.Type == "til" && !p.Draft {
-			b.WriteString(fmt.Sprintf("  %s•%s %s%s%s\n", ansiYellow, ansiReset, ansiBold, p.Title, ansiReset))
-			b.WriteString(fmt.Sprintf("    curl -sL %s/p/%s\n\n", r.Host, p.Slug))
-			tilCount++
-			if tilCount >= 3 {
-				break
-			}
 		}
 	}
 

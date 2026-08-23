@@ -24,11 +24,7 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 		if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) && !isAdmin {
 			continue
 		}
-		if p.Type == "til" {
-			data.TotalTIL++
-		} else {
 			data.TotalPosts++
-		}
 		data.TotalWords += p.ReadTime * 200
 		for _, t := range p.Tags {
 			tagSet[t] = true

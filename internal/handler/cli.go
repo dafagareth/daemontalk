@@ -73,7 +73,7 @@ func (h *Handler) CLIMain(w http.ResponseWriter, r *http.Request) {
 
 	count := 0
 	for _, p := range posts {
-		if p.Draft || p.Type == "til" {
+		if p.Draft {
 			continue
 		}
 		tags := strings.Join(p.Tags, ", ")
@@ -86,20 +86,6 @@ func (h *Handler) CLIMain(w http.ResponseWriter, r *http.Request) {
 		count++
 		if count >= 6 {
 			break
-		}
-	}
-
-	// Section 2: Latest TIL
-	b.WriteString(fmt.Sprintf(" %s%s[ TODAY I LEARNED (TIL) ]%s\n\n", ansiCyan, ansiBold, ansiReset))
-	tilCount := 0
-	for _, p := range posts {
-		if p.Type == "til" && !p.Draft {
-			b.WriteString(fmt.Sprintf("  %s•%s %s%s%s (%s)\n", ansiYellow, ansiReset, ansiBold, p.Title, ansiReset, p.Date.Format("2006-01-02")))
-			b.WriteString(fmt.Sprintf("    curl -sL %s/p/%s\n\n", r.Host, p.Slug))
-			tilCount++
-			if tilCount >= 3 {
-				break
-			}
 		}
 	}
 
