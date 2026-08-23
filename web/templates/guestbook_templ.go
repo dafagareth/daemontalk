@@ -47,7 +47,7 @@ func GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorNa
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1><p class=\"text-sm text-muted mb-8\">Say hi! Your message is visible to everyone.</p><form class=\"mb-10 flex flex-col gap-3\" hx-post=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1><p class=\"text-sm text-muted mb-8\">Say hi! Your message is visible to everyone.</p><form class=\"mb-10 flex flex-col gap-3 w-full sm:max-w-lg\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -86,7 +86,7 @@ func GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorNa
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"w-full sm:max-w-lg px-3 py-2 text-sm rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-[var(--c-link)] transition-colors resize-y\"></textarea><div><button type=\"submit\" class=\"inline-flex items-center gap-2 text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed\"><span class=\"htmx-indicator spinner\"></span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"w-full px-3 py-2 text-sm rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-[var(--c-link)] transition-colors resize-y\"></textarea><div class=\"flex justify-end w-full\"><button type=\"submit\" class=\"inline-flex items-center gap-2 text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed\"><span class=\"htmx-indicator spinner\"></span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
