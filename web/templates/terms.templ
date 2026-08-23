@@ -13,7 +13,6 @@ templ TermsPage(ui i18n.UI, body template.HTML, lang string) {
 			<span>·</span>
 			<span>TERMS & POLICIES</span>
 		</div>
-		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-8">{ ui.Terms_Title }</h1>
 		<div class="prose max-w-none">
 			@templ.Raw(string(body))
 		</div>
