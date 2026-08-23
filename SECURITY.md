@@ -2,27 +2,32 @@
 
 ## Supported Versions
 
-We currently only provide security updates for the latest `main` branch deployment.
+Security updates and patches are exclusively provided for the latest deployment of the `main` branch. Older versions or branches are strictly unsupported.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| Older   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| Latest  | Yes       |
+| Older   | No        |
 
 ## Reporting a Vulnerability
 
-Security is a high priority for Daemontalk. If you discover a security vulnerability within this repository or the live web application, please **DO NOT** disclose it publicly by opening a GitHub Issue.
+Daemontalk operates under a strict responsible disclosure policy. If you identify a security vulnerability within the codebase, dependencies, or live infrastructure, **do not** create a public GitHub Issue, Pull Request, or publicly broadcast the exploit.
 
-Instead, please report it privately via email:
+Submit all vulnerability reports privately via email:
+**Email:** realdaemontalk@gmail.com
 
-* **Email:** [team@daemontalk.com](mailto:team@daemontalk.com) (or realdaemontalk@gmail.com)
+### Reporting Requirements
 
-### What to include in your report:
-- A detailed description of the vulnerability.
-- Steps to reproduce the issue (including any relevant payloads or HTTP requests).
-- The potential impact of the vulnerability.
+To ensure a rapid and accurate assessment, your report must include:
+1. **Description:** A detailed explanation of the vulnerability and its underlying mechanics.
+2. **Reproduction:** Exact step-by-step instructions to reproduce the issue, including endpoint URLs, HTTP request payloads, and required privileges.
+3. **Impact:** A technical assessment of the potential exploit impact (e.g., Remote Code Execution, SQL Injection, Cross-Site Scripting, Data Exfiltration).
+4. **Environment:** Specify the tools, scripts, or browsers used during discovery.
 
-### Our Commitment:
-- We will acknowledge receipt of your vulnerability report within **48 hours**.
-- We will provide a timeline for the fix and keep you updated on our progress.
-- Once the issue is resolved, we will credit you (if desired) for the responsible disclosure.
+### Resolution Process
+
+Upon receiving your report, the engineering team adheres to the following protocol:
+1. **Triage:** We will acknowledge receipt of the report within 48 hours.
+2. **Assessment:** We will verify the vulnerability and classify its severity.
+3. **Remediation:** A patch will be developed, tested, and deployed to the production environment.
+4. **Disclosure:** Once patched, the vulnerability will be documented in the repository changelog. You will receive attribution for the responsible disclosure, provided you wish to be credited.
