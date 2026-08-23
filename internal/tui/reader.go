@@ -83,6 +83,10 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		return match
 	})
 
+	// Graceful degradation for LaTeX Math blocks in Terminal
+	content = reBlockMath.ReplaceAllString(content, "```math\n$1\n```")
+	content = reInlineMath.ReplaceAllString(content, "`$1`")
+
 	if wrapWidth < 20 {
 		wrapWidth = 20
 	}

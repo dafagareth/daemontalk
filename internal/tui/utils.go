@@ -10,6 +10,8 @@ import (
 
 var (
 	reMarkdownImage = regexp.MustCompile(`!\[([^\]]*)\]\(([^)]+)\)`)
+	reBlockMath     = regexp.MustCompile(`(?s)\$\$(.*?)\$\$`)
+	reInlineMath    = regexp.MustCompile(`\$([^$\n]+)\$`)
 )
 
 // OSC52Copy generates the ANSI sequence to copy text into the SSH client's local clipboard
