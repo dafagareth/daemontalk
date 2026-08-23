@@ -137,7 +137,7 @@ func portalStrictCategoryGrid(ui i18n.UI, categories []CategorySection, lang str
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = IconArrowRight("w-3 h-3").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -146,7 +146,7 @@ func portalStrictCategoryGrid(ui i18n.UI, categories []CategorySection, lang str
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = IconArrowRight("w-3 h-3").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

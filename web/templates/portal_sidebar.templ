@@ -184,10 +184,10 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap">
 								if lang == "id" {
 									<span>Lihat Semua</span>
-									@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+									@IconArrowRight("w-3 h-3")
 								} else {
 									<span>See More</span>
-									@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+									@IconArrowRight("w-3 h-3")
 								}
 							</a>
 						</div>
