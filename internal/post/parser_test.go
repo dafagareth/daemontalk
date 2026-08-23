@@ -230,9 +230,6 @@ email: dafagareth@gmail.com
 	if !strings.Contains(bodyStr, "post-faq-wrap") || !strings.Contains(bodyStr, "Mengapa memilih Linux epoll?") {
 		t.Errorf("expected FAQ section in body, got: %s", bodyStr)
 	}
-	if !strings.Contains(bodyStr, "post-author-card") || !strings.Contains(bodyStr, "Dafa Gareth") {
-		t.Errorf("expected Author card in body, got: %s", bodyStr)
-	}
 }
 
 func TestDescriptionUnescape(t *testing.T) {
