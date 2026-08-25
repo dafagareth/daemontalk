@@ -72,6 +72,7 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Get("/behind", h.Behind)
 	r.Get("/blog/tag/{tag}", h.TagIndex)
 	r.Get("/blog/posts", h.BlogPostsPartial)
+	r.Get("/blog/tag-posts", h.TagPostsPartial)
 	r.With(reactionLimit).Post("/blog/{slug}/reactions/{emoji}", h.PostReaction)
 	r.Get("/terminal", h.Terminal)
 	r.Get("/api/terminal/data", h.TerminalData)
@@ -108,6 +109,7 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Get("/privacy", h.Privacy)
 	r.Get("/terms", h.Terms)
 	r.Get("/license", h.License)
+	r.Get("/accessibility", h.Accessibility)
 	r.Get("/projects/{slug}", h.ProjectDetail)
 
 	// Admin routes (Protected by AdminToken and Rate Limited)
@@ -149,6 +151,7 @@ func New(h *handler.Handler) *chi.Mux {
 		r.Get("/blog", redirect301("/id"))
 		r.Get("/graph", h.Graph)
 		r.Get("/blog/tag/{tag}", h.TagIndex)
+		r.Get("/blog/tag-posts", h.TagPostsPartial)
 		r.Get("/blog/{slug}", h.BlogPost)
 		r.Get("/blog/{slug}/comments/stream", h.StreamComments)
 		r.Get("/blog/{slug}/comments", h.CommentsPartial)
@@ -175,6 +178,7 @@ func New(h *handler.Handler) *chi.Mux {
 		r.Get("/privacy", h.Privacy)
 		r.Get("/terms", h.Terms)
 		r.Get("/license", h.License)
+		r.Get("/accessibility", h.Accessibility)
 		r.Get("/projects/{slug}", h.ProjectDetail)
 	})
 

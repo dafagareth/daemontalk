@@ -1,8 +1,8 @@
 @layer components {
-  /* ToC active link */
+  /* ToC active link (Muted elegant text color, no bright blue) */
   .toc-active {
-    color: var(--c-link) !important;
-    font-weight: 500;
+    color: var(--c-text) !important;
+    font-weight: 700 !important;
   }
 
   /* Interactive Task Lists / Checklists */

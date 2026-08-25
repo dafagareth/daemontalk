@@ -40,9 +40,14 @@ window.openShortcuts = function() {
 		if (e.key === '/') {
 			e.preventDefault();
 			pendingG = false;
-			var si = document.getElementById('blog-search');
-			if (si) { si.focus(); si.select(); }
-			else window.location.href = '/search';
+			var si = document.getElementById('header-search-input') || document.getElementById('blog-search');
+			if (si) {
+				si.focus();
+				si.select();
+				if (window.openSearchPopper) window.openSearchPopper();
+			} else {
+				window.location.href = '/search';
+			}
 			return;
 		}
 

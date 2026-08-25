@@ -18,6 +18,12 @@ window.toggleMobileMenu = function() {
 (function() {
 	var params = new URLSearchParams(window.location.search);
 	var tag = params.get("tag") || "";
+	if (!tag) {
+		var match = window.location.pathname.match(/\/blog\/tag\/([^\/]+)/);
+		if (match) {
+			tag = decodeURIComponent(match[1]).toLowerCase();
+		}
+	}
 	var links = document.querySelectorAll("#subnav-tags .subnav-tag");
 	for (var i = 0; i < links.length; i++) {
 		if (links[i].getAttribute("data-tag") === tag) {
@@ -39,3 +45,155 @@ window.addEventListener("scroll", function() {
 		}
 	}
 }, { passive: true });
+
+// Smart Auto-Hide Header on Scroll Down, Reveal on Scroll Up (Header + Subheader together)
+(function() {
+	var header = document.getElementById("site-header-wrapper");
+	if (!header) return;
+
+	var lastScrollY = window.scrollY;
+	var threshold = 10;
+	var topThreshold = 70;
+
+	window.addEventListener("scroll", function() {
+		var currentScrollY = window.scrollY;
+		
+		if (currentScrollY <= topThreshold) {
+			// At the top of the page: always visible
+			header.classList.remove("-translate-y-full");
+			lastScrollY = currentScrollY;
+			return;
+		}
+
+		var diff = currentScrollY - lastScrollY;
+
+		if (Math.abs(diff) < threshold) {
+			return;
+		}
+
+		if (diff > 0 && currentScrollY > topThreshold) {
+			// Scrolling down -> hide both header & subheader
+			header.classList.add("-translate-y-full");
+		} else if (diff < 0) {
+			// Scrolling up -> reveal both header & subheader
+			header.classList.remove("-translate-y-full");
+		}
+
+		lastScrollY = currentScrollY;
+	}, { passive: true });
+})();
+
+// Instant Search Dropdown Popper Logic
+window.openSearchPopper = function() {
+	var popper = document.getElementById("search-dropdown-popper");
+	var input = document.getElementById("header-search-input");
+	if (popper && input && input.value.trim().length > 0) {
+		popper.classList.remove("hidden");
+	}
+};
+
+window.closeSearchPopper = function() {
+	var popper = document.getElementById("search-dropdown-popper");
+	if (popper) {
+		popper.classList.add("hidden");
+	}
+};
+
+// Monitor HTMX content swap inside #search-dropdown-results
+document.addEventListener("htmx:afterSwap", function(evt) {
+	if (evt.detail && evt.detail.target && evt.detail.target.id === "search-dropdown-results") {
+		var popper = document.getElementById("search-dropdown-popper");
+		var input = document.getElementById("header-search-input");
+		if (popper) {
+			if (input && input.value.trim().length > 0 && evt.detail.target.innerHTML.trim().length > 0) {
+				popper.classList.remove("hidden");
+			} else {
+				popper.classList.add("hidden");
+			}
+		}
+	}
+});
+
+// Hide popper when input is cleared
+document.addEventListener("input", function(e) {
+	if (e.target && e.target.id === "header-search-input") {
+		if (e.target.value.trim().length === 0) {
+			window.closeSearchPopper();
+		}
+	}
+});
+
+// Keyboard navigation in search dropdown
+window.handleSearchKeyNav = function(e) {
+	var popper = document.getElementById("search-dropdown-popper");
+	if (!popper || popper.classList.contains("hidden")) return;
+
+	var items = popper.querySelectorAll(".search-popper-item");
+	if (items.length === 0) return;
+
+	var activeIndex = -1;
+	for (var i = 0; i < items.length; i++) {
+		if (document.activeElement === items[i]) {
+			activeIndex = i;
+			break;
+		}
+	}
+
+	if (e.key === "ArrowDown") {
+		e.preventDefault();
+		var nextIndex = (activeIndex + 1) % items.length;
+		items[nextIndex].focus();
+	} else if (e.key === "ArrowUp") {
+		e.preventDefault();
+		if (activeIndex <= 0) {
+			var input = document.getElementById("header-search-input");
+			if (input) input.focus();
+		} else {
+			items[activeIndex - 1].focus();
+		}
+	} else if (e.key === "Escape") {
+		e.preventDefault();
+		window.closeSearchPopper();
+		var input = document.getElementById("header-search-input");
+		if (input) input.blur();
+	}
+};
+
+// Form submit handler
+window.handleNavSearchSubmit = function(e) {
+	var input = document.getElementById("header-search-input");
+	if (!input || !input.value.trim()) {
+		e.preventDefault();
+	}
+};
+
+// Click outside listener to dismiss search dropdown
+document.addEventListener("click", function(e) {
+	var container = document.getElementById("nav-search-container");
+	if (container && !container.contains(e.target)) {
+		window.closeSearchPopper();
+	}
+});
+
+// Guestbook filter handler
+window.filterGuestbook = function(tag) {
+	var btns = document.querySelectorAll('.gb-filter-btn');
+	btns.forEach(function(b) {
+		if (b.getAttribute('data-tag') === tag) {
+			b.classList.remove('bg-surface', 'text-muted');
+			b.classList.add('bg-text', 'text-bg', 'font-bold');
+		} else {
+			b.classList.remove('bg-text', 'text-bg', 'font-bold');
+			b.classList.add('bg-surface', 'text-muted');
+		}
+	});
+
+	var cards = document.querySelectorAll('.gb-entry-card');
+	cards.forEach(function(c) {
+		if (tag === 'ALL' || c.getAttribute('data-category') === tag) {
+			c.classList.remove('hidden');
+		} else {
+			c.classList.add('hidden');
+		}
+	});
+};

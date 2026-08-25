@@ -7,7 +7,7 @@
   .prose {
     max-width: 42rem;
     font-size: 1.125rem;
-    font-family: 'Merriweather', var(--font-serif);
+    font-family: var(--font-sans);
   }
   .prose h1, .prose h2, .prose h3, .prose h4 {
     font-family: var(--font-sans);
