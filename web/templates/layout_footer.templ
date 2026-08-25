@@ -2,132 +2,168 @@ package templates
 
 import (
 	"strings"
-
 	"daemontalk/internal/i18n"
 )
 
 templ footer(ui i18n.UI, lang string) {
-	<footer class="w-full border-t border-border mt-8 sm:mt-12 bg-[var(--c-footer)] transition-all">
-		<div class="container-page py-12 sm:py-16 min-w-0">
-			<!-- Brand and Social Row -->
-			<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border/60 pb-8 mb-10">
-				<div>
-					<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-						@BrandLogo("h-6 w-auto")
-					</a>
-					<p class="text-[13px] text-muted leading-relaxed max-w-[400px]">
-						{ ui.Footer_Bio }
-					</p>
+	<footer class="w-full bg-[#0d0d10] text-[#e6edf3] py-0 sm:py-12 transition-all mt-0">
+		<div class="container-page !px-0 sm:!px-6 lg:!px-8">
+			
+			// =================================================================
+			// THE FLOATING WIDE-SPLIT ISLAND FOOTER (5 : 7 GRID)
+			// =================================================================
+			<div class="border-0 sm:border-x-2 sm:border-b-2 border-x-0 sm:border-x-2 border-[#27272a] w-full bg-[#121214] shadow-sm mb-6 sm:mb-6 mt-6 sm:mt-0">
+				
+				// WIDE-SPLIT (5 cols Identity / 7 cols 3-Directory Columns)
+				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#27272a]">
+					
+					// LEFT (5 cols / ~42%): Brand Masthead, Terminal Prompt, & Socials
+					<div class="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between">
+						<div>
+							<a href={ templ.SafeURL(prefix(lang) + "/") } class="inline-flex items-center shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+								@BrandLogo("h-7 w-auto")
+							</a>
+							<p class="text-[11px] sm:text-sm text-[#8b949e] leading-relaxed mb-4 max-w-sm">
+								{ ui.Footer_Bio }
+							</p>
+							
+							// Terminal SSH Box
+							<div class="relative bg-zinc-950 text-[#e6edf3] font-mono text-[10px] sm:text-[11px] p-2.5 pr-8 border border-[#27272a] overflow-hidden mb-4 group">
+								<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
+									<span class="text-zinc-500 mr-1.5">$</span>ssh ssh.daemontalk.com -p 2222
+								</div>
+								<button 
+									onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#ffffff'; setTimeout(()=>i.style.color='', 1000);" 
+									title="Copy command" 
+									aria-label="Copy command" 
+									class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-80 group-hover:opacity-100 cursor-pointer"
+								>
+									@IconCopy("w-3.5 h-3.5 transition-colors")
+								</button>
+							</div>
+						</div>
+
+						// Social Media Row
+						<div class="flex items-center gap-1 pt-2 border-t border-[#27272a]/60">
+							@footerSocial("https://github.com/dafagareth", "GitHub") {
+								@IconGitHub()
+							}
+							@footerSocial("https://x.com/daemontalk", "X / Twitter") {
+								@IconX()
+							}
+							@footerSocial("https://instagram.com/daemontalk", "Instagram") {
+								@IconInstagram()
+							}
+							@footerSocial("https://threads.net/@daemontalk", "Threads") {
+								@IconThreads()
+							}
+							@footerSocial("mailto:realdaemontalk@gmail.com", "Email") {
+								@IconEmail()
+							}
+							@footerSocial("/rss.xml", "RSS") {
+								@IconRSS()
+							}
+						</div>
+					</div>
+
+					// RIGHT (7 cols / ~58%): 3 Clean Navigation Columns
+					<div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 bg-[#18181b]/30">
+						
+						// Col 1: The Lab
+						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 border-[#27272a]">
+							<div>
+								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest pb-2 mb-3 border-b border-[#27272a]">
+									{ ui.Footer_Read }
+								</p>
+								<ul class="space-y-2">
+									@footerLink(prefix(lang)+"/", ui.Nav_Home)
+									@footerLink(prefix(lang)+"/about", "About DaemonTalk")
+									@footerLink(prefix(lang)+"/behind", "Behind The Lab")
+									@footerLink(prefix(lang)+"/terminal", "Terminal Shell")
+									@footerLink(prefix(lang)+"/saved", "Reading List")
+								</ul>
+							</div>
+						</div>
+
+						// Col 2: Topics
+						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 border-l sm:border-x divide-[#27272a] border-[#27272a]">
+							<div>
+								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest pb-2 mb-3 border-b border-[#27272a]">
+									{ ui.Footer_Topics }
+								</p>
+								<ul class="space-y-2">
+									@footerLink(prefix(lang)+"/?tag=linux", "Linux & Kernel")
+									@footerLink(prefix(lang)+"/?tag=go", "Go & Backend")
+									@footerLink(prefix(lang)+"/?tag=devops", "DevOps & Cloud")
+									@footerLink(prefix(lang)+"/?tag=security", "Security & Systems")
+									@footerLink(prefix(lang)+"/?tag=performance", "Performance & Memory")
+								</ul>
+							</div>
+						</div>
+
+						// Col 3: Community & Access
+						<div class="col-span-2 sm:col-span-1 p-5 sm:p-6 flex flex-col justify-between sm:border-l border-[#27272a]">
+							<div>
+								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest pb-2 mb-3 border-b border-[#27272a]">
+									{ ui.Footer_Community }
+								</p>
+								<ul class="space-y-2">
+									@footerLink("https://github.com/dafagareth/daemontalk", "GitHub Repository")
+									@footerLink(prefix(lang)+"/guestbook", "Guestbook Log")
+									@footerLink("/rss.xml", "RSS 2.0 (XML)")
+									@footerLink("/feed.json", "JSON Feed (v1.1)")
+									<li>
+										<button
+											type="button"
+											onclick="openShortcuts()"
+											class="text-xs text-[#8b949e] hover:text-[#58a6ff] transition-colors inline-flex items-center gap-1.5 cursor-pointer font-mono pt-1"
+										>
+											@IconShortcuts()
+											<span>Shortcuts</span>
+											<kbd class="px-1 py-0.5 rounded-none border border-[#27272a] bg-[#18181b] text-[10px] font-mono leading-none text-[#8b949e]">?</kbd>
+										</button>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+
 				</div>
-				<!-- Social icons -->
-				<div class="flex items-center gap-1.5">
-					@footerSocial("https://github.com/dafagareth", "GitHub") {
-						@IconGitHub()
-					}
-					@footerSocial("https://x.com/daemontalk", "X / Twitter") {
-						@IconX()
-					}
-					@footerSocial("https://facebook.com/daemontalk", "Facebook") {
-						@IconFacebook()
-					}
-					@footerSocial("https://instagram.com/daemontalk", "Instagram") {
-						@IconInstagram()
-					}
-					@footerSocial("https://threads.net/@daemontalk", "Threads") {
-						@IconThreads()
-					}
-					@footerSocial("mailto:realdaemontalk@gmail.com", "Email") {
-						@IconEmail()
-					}
-					@footerSocial("/rss.xml", "RSS") {
-						@IconRSS()
-					}
-				</div>
+
 			</div>
 
-			<!-- 5-Column Grid -->
-			<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-8 gap-y-10 mb-12">
-				<!-- Col 1: Read / Navigasi -->
-				<div>
-					<p class="text-xs font-semibold text-text uppercase tracking-wider mb-4">{ ui.Footer_Read }</p>
-					<ul class="space-y-2.5">
-						@footerLink(prefix(lang)+"/", ui.Nav_Home)
-						@footerLink(prefix(lang)+"/about", "About Daemontalk")
-						@footerLink(prefix(lang)+"/behind", "Behind The Lab")
-						@footerLink(prefix(lang)+"/terminal", "Terminal Shell")
-						@footerLink(prefix(lang)+"/saved", "Reading List")
-						@footerLink(prefix(lang)+"/search", "Search")
-						@footerLink(prefix(lang)+"/stats", "Stats")
-						<li>
-							<button
-								type="button"
-								onclick="openShortcuts()"
-								class="text-xs text-muted hover:text-link transition-colors inline-flex items-center gap-1.5 cursor-pointer font-mono"
-							>
-								@IconShortcuts()
-								<span>Shortcuts</span>
-								<kbd class="px-1 py-0.5 rounded-none border border-border bg-surface text-[10px] font-mono leading-none">?</kbd>
-							</button>
-						</li>
-					</ul>
+			// THE UNBOXED INLINE FOOTER BAR (Without Box, Free Flowing)
+			<div class="px-5 sm:px-0 flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-4 text-xs font-mono text-[#8b949e] pt-4 sm:pt-1 pb-8 sm:pb-0">
+				
+				// Left: Copyright + Inline Links
+				<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 sm:gap-x-4 sm:gap-y-2 w-full">
+					
+					// Mobile Top Row: Copyright (Left) & Theme Toggle (Right)
+					<div class="flex items-center justify-between w-full sm:w-auto">
+						<span class="text-[#e6edf3] font-bold inline-flex items-center gap-1.5">
+							@IconCopyright("w-3.5 h-3.5 text-[#8b949e]")
+							<span>2026 daemontalk</span>
+						</span>
+						<span class="hidden sm:inline">·</span>
+					</div>
+
+					// Link Wrap
+					<div class="flex flex-wrap items-center gap-x-4 gap-y-2.5">
+						<a href={ templ.SafeURL(prefix(lang) + "/terms") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Terms_Title }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/privacy") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Privacy_Title }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/license") } class="hover:text-[#e6edf3] hover:underline transition-colors">License</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/accessibility") } class="hover:text-[#e6edf3] hover:underline transition-colors">Accessibility</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/stats") } class="hover:text-[#e6edf3] hover:underline transition-colors">Stats</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/changelog") } class="hover:text-[#e6edf3] hover:underline transition-colors">Changelog</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/behind") } class="hover:text-[#e6edf3] hover:underline transition-colors">Colophon</a>
+						<a href="/rss.xml" class="hover:text-[#e6edf3] hover:underline transition-colors">RSS</a>
+						<a href="/manifest.json" class="hover:text-[#e6edf3] hover:underline transition-colors">Manifest</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/resume") } class="hover:text-[#e6edf3] hover:underline transition-colors">Resume / CV</a>
+						<a href="mailto:realdaemontalk@gmail.com" class="hover:text-[#e6edf3] hover:underline transition-colors">Contact</a>
+					</div>
 				</div>
 
-				<!-- Col 2: Topics / Kategori -->
-				<div>
-					<p class="text-xs font-semibold text-text uppercase tracking-wider mb-4">{ ui.Footer_Topics }</p>
-					<ul class="space-y-2.5">
-						@footerLink(prefix(lang)+"/?tag=linux", "Linux")
-						@footerLink(prefix(lang)+"/?tag=go", "Go")
-						@footerLink(prefix(lang)+"/?tag=python", "Python")
-						@footerLink(prefix(lang)+"/?tag=backend", "Backend")
-						@footerLink(prefix(lang)+"/?tag=architecture", "Architecture")
-						@footerLink(prefix(lang)+"/?tag=devops", "DevOps")
-					</ul>
-				</div>
-
-				<!-- Col 3: Open Source -->
-				<div>
-					<p class="text-xs font-semibold text-text uppercase tracking-wider mb-4">{ ui.Footer_Community }</p>
-					<ul class="space-y-2.5">
-						@footerLink("https://github.com/dafagareth/daemontalk", "GitHub Repo")
-						@footerLink("https://github.com/dafagareth/daemontalk/issues", "Report Issue")
-						@footerLink(prefix(lang)+"/contribute", "Writing Guide")
-						@footerLink("/download/template.md", "Template (.md)")
-						@footerLink(prefix(lang)+"/guestbook", "Guestbook")
-					</ul>
-				</div>
-
-				<!-- Col 4: Feeds & Legal -->
-				<div>
-					<p class="text-xs font-semibold text-text uppercase tracking-wider mb-4">{ ui.Footer_Ecosystem }</p>
-					<ul class="space-y-2.5">
-						@footerLink("/rss.xml", "RSS Feed")
-						@footerLink("/feed.json", "JSON Feed")
-						@footerLink(prefix(lang)+"/changelog", "Changelog")
-						@footerLink(prefix(lang)+"/resume", "Resume / CV")
-						@footerLink(prefix(lang)+"/license", "License")
-						@footerLink(prefix(lang)+"/terms", ui.Terms_Title)
-						@footerLink(prefix(lang)+"/privacy", ui.Privacy_Title)
-					</ul>
-				</div>
-
-				<!-- Col 5: Other & Tools -->
-				<div>
-					<p class="text-xs font-semibold text-text uppercase tracking-wider mb-4">{ ui.Footer_Other }</p>
-					<ul class="space-y-2.5">
-						@footerLink("/daily", "Daily Feed (CLI)")
-						@footerLink("/recipes", "CLI Recipes")
-						@footerLink(prefix(lang)+"/links", "Curated Links")
-						@footerLink("/sitemap.xml", "Sitemap XML")
-						@footerLink("/robots.txt", "Robots.txt")
-						@footerLink("/manifest.json", "Manifest JSON")
-					</ul>
-				</div>
-			</div>
-
-			<!-- Bottom bar -->
-			<div class="border-t border-border/40 pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-				<p class="text-xs text-muted">{ ui.Footer_Copy } · Built with Go, templ &amp; HTMX.</p>
 			</div>
 		</div>
 	</footer>
@@ -139,7 +175,7 @@ templ footerSocial(href string, label string) {
 		aria-label={ label }
 		target="_blank"
 		rel="noopener"
-		class="w-9 h-9 flex items-center justify-center rounded-none text-muted hover:text-text hover:bg-hover transition-colors"
+		class="w-8 h-8 flex items-center justify-center rounded-none text-[#8b949e] hover:text-[#e6edf3] hover:bg-[#27272a] transition-colors"
 	>
 		{ children... }
 	</a>
@@ -152,13 +188,17 @@ templ footerLink(href string, label string) {
 				href={ templ.SafeURL(href) }
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-[13px] text-muted hover:text-text transition-colors"
-			>{ label }</a>
+				class="text-xs text-[#8b949e] hover:text-[#e6edf3] hover:text-[#58a6ff] transition-colors inline-flex items-center gap-1 group"
+			>
+				<span>{ label }</span>
+			</a>
 		} else {
 			<a
 				href={ templ.SafeURL(href) }
-				class="text-[13px] text-muted hover:text-text transition-colors"
-			>{ label }</a>
+				class="text-xs text-[#8b949e] hover:text-[#e6edf3] hover:text-[#58a6ff] transition-colors inline-flex items-center gap-1 group"
+			>
+				<span>{ label }</span>
+			</a>
 		}
 	</li>
 }

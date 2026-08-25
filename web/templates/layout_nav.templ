@@ -3,95 +3,107 @@ package templates
 import "daemontalk/internal/i18n"
 
 templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
-	<header class="sticky top-0 md:relative z-30 bg-bg border-b-2 border-border transition-all">
-		<!-- Brand & Utilities Row -->
-		<div class="container-page py-5 sm:py-8 flex items-center justify-between gap-4 min-w-0">
-			<div class="flex items-center gap-4 min-w-0">
-				<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-					@BrandLogo("h-8 sm:h-10 md:h-11 w-auto")
-				</a>
-			</div>
-			<!-- Desktop Utilities -->
-			<div class="hidden md:flex items-center gap-2 shrink-0">
-				if IsRadarEnabled() {
-					<a
-						href={ templ.SafeURL(prefix(lang) + "/graph") }
-						aria-label="Systems Knowledge Radar & Graph"
-						class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono border border-border text-muted hover:text-text hover:bg-hover transition-colors"
-					>
-						@IconRadar("w-3.5 h-3.5")
-						<span>radar</span>
+	<!-- Unified Header & Sub-Nav Sticky Wrapper with Smart Auto-Hide & Reveal on Scroll Up -->
+	<div id="site-header-wrapper" class="sticky top-0 z-40 w-full transition-transform duration-300 ease-in-out bg-[var(--c-nav)]">
+		<header class="bg-[var(--c-nav)] text-text transition-colors">
+			<!-- Brand & Utilities Row -->
+			<div class="container-page py-4 sm:py-6 flex items-center justify-between gap-4 min-w-0">
+				<div class="flex items-center gap-4 min-w-0">
+					<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+						@BrandLogo("h-8 sm:h-10 md:h-11 w-auto")
 					</a>
-				}
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/terminal") }
-					aria-label="Interactive Terminal"
-					class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono border border-border text-muted hover:text-text hover:bg-hover transition-colors"
-				>
-					@IconTerminalPrompt("w-3.5 h-3.5")
-					<span>terminal</span>
-				</a>
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/search") }
-					aria-label="Search"
-					class="w-8 h-8 flex items-center justify-center rounded-none hover:bg-hover transition-colors text-muted"
-				>
-					@IconSearch("w-3.5 h-3.5")
-				</a>
-				<button
-					type="button"
-					onclick="openShortcuts()"
-					aria-label="Keyboard Shortcuts (?)"
-					class="w-8 h-8 flex items-center justify-center rounded-none hover:bg-hover transition-colors text-muted hover:text-text cursor-pointer"
-				>
-					@IconHelp("w-3.5 h-3.5")
-				</button>
-				<button
-					onclick="toggleTheme()"
-					aria-label="Toggle theme"
-					class="w-8 h-8 flex items-center justify-center rounded-none hover:bg-hover transition-colors text-muted"
-				>
-					@sunIcon()
-					@moonIcon()
-				</button>
-				<a
-					href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
-					class="text-xs font-medium text-link border border-border rounded-none px-3 py-1 hover:bg-hover transition-colors"
-				>
-					{ ui.Lang_Switch }
-				</a>
+				</div>
+				<!-- Desktop Utilities: Instant Search Popper -->
+				<div class="hidden md:flex items-center gap-3 shrink-0 flex-1 justify-end">
+					<div id="nav-search-container" class="relative w-full max-w-sm lg:max-w-md">
+						<form action={ templ.SafeURL(prefix(lang) + "/search") } method="get" class="relative group w-full" onsubmit="handleNavSearchSubmit(event)">
+							<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted group-focus-within:text-link transition-colors">
+								@IconSearch("w-4 h-4")
+							</div>
+							<input
+								id="header-search-input"
+								type="search"
+								name="q"
+								placeholder="Search systems, articles..."
+								class="w-full bg-surface border border-border text-text text-sm rounded-none focus:outline-none focus:border-[var(--c-link)] py-2.5 pl-10 pr-12 transition-colors placeholder:text-muted"
+								autocomplete="off"
+								aria-label="Search"
+								hx-get={ string(templ.SafeURL(prefix(lang) + "/search?type=quick")) }
+								hx-trigger="input changed delay:150ms"
+								hx-target="#search-dropdown-results"
+								onkeydown="handleSearchKeyNav(event)"
+							/>
+							<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+								<kbd class="inline-flex items-center justify-center w-6 h-6 text-[11px] font-mono border border-border bg-bg text-muted">/</kbd>
+							</div>
+						</form>
+
+						<!-- Dropdown Popper Card -->
+						<div
+							id="search-dropdown-popper"
+							class="hidden absolute top-full left-0 right-0 mt-1.5 z-50 bg-surface border-2 border-border shadow-2xl overflow-hidden"
+						>
+							<div id="search-dropdown-results">
+								<!-- HTMX injects SearchDropdownResults here -->
+							</div>
+						</div>
+					</div>
+
+					<!-- Desktop Theme Toggle -->
+					<button
+						type="button"
+						onclick="toggleTheme()"
+						aria-label="Toggle theme"
+						class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer shrink-0"
+						title="Toggle light/dark theme"
+					>
+						@sunIcon()
+						@moonIcon()
+					</button>
+				</div>
+
+				<!-- Mobile Top-Right Buttons -->
+				<div class="flex md:hidden items-center gap-2 shrink-0">
+					<!-- Mobile Theme Toggle -->
+					<button
+						type="button"
+						onclick="toggleTheme()"
+						aria-label="Toggle theme"
+						class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer shrink-0"
+						title="Toggle light/dark theme"
+					>
+						@sunIcon()
+						@moonIcon()
+					</button>
+
+					<!-- Mobile Hamburger Button -->
+					<button
+						type="button"
+						onclick="toggleMobileMenu()"
+						aria-label="Open mobile navigation menu"
+						class="w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:bg-hover transition-colors cursor-pointer shrink-0"
+					>
+						@IconMenu("w-5 h-5")
+					</button>
+				</div>
 			</div>
+		</header>
 
-			<!-- Mobile Top-Right Hamburger Button -->
-			<div class="flex md:hidden items-center gap-2 shrink-0">
-				<button
-					type="button"
-					onclick="toggleMobileMenu()"
-					aria-label="Open mobile navigation menu"
-					class="w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:bg-hover transition-colors cursor-pointer"
-				>
-					@IconMenu("w-5 h-5")
-				</button>
+		<!-- Secondary Sub-Navigation Bar (Desktop Only) -->
+		<div class="hidden md:block border-b border-border bg-[var(--c-nav)] transition-colors">
+			<div class="container-page h-11 flex items-center justify-between gap-4 min-w-0 overflow-x-auto scrollbar-none text-xs font-mono uppercase tracking-wider font-semibold">
+				<div id="subnav-tags" class="flex items-center gap-4 sm:gap-6 shrink-0">
+					<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-text hover:text-link transition-colors">ALL</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/linux") } data-tag="linux" class="subnav-tag text-text hover:text-link transition-colors">Linux</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/ai") } data-tag="ai" class="subnav-tag text-text hover:text-link transition-colors">AI</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/systems") } data-tag="systems" class="subnav-tag text-text hover:text-link transition-colors">Systems</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/backend") } data-tag="backend" class="subnav-tag text-text hover:text-link transition-colors">Backend</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/docker") } data-tag="docker" class="subnav-tag text-text hover:text-link transition-colors">Docker</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/devops") } data-tag="devops" class="subnav-tag text-text hover:text-link transition-colors">DevOps</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/security") } data-tag="security" class="subnav-tag text-text hover:text-link transition-colors">Security</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/tools") } data-tag="tools" class="subnav-tag text-text hover:text-link transition-colors">Tools</a>
+				</div>
 			</div>
-		</div>
-
-	</header>
-
-	<!-- Secondary Sub-Navigation Bar (Desktop Only) -->
-	<div class="hidden md:block border-b-2 border-border bg-bg sticky top-0 z-40 shadow-sm">
-		<div class="container-page h-12 flex items-center justify-between gap-4 min-w-0 overflow-x-auto scrollbar-none text-xs font-mono uppercase tracking-wider font-semibold">
-			<div id="subnav-tags" class="flex items-center gap-4 sm:gap-6 shrink-0">
-				<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-text hover:text-link transition-colors">ALL</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=linux") } data-tag="linux" class="subnav-tag text-text hover:text-link transition-colors">Linux</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=ai") } data-tag="ai" class="subnav-tag text-text hover:text-link transition-colors">AI</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=systems") } data-tag="systems" class="subnav-tag text-text hover:text-link transition-colors">Systems</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=backend") } data-tag="backend" class="subnav-tag text-text hover:text-link transition-colors">Backend</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=docker") } data-tag="docker" class="subnav-tag text-text hover:text-link transition-colors">Docker</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=devops") } data-tag="devops" class="subnav-tag text-text hover:text-link transition-colors">DevOps</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=security") } data-tag="security" class="subnav-tag text-text hover:text-link transition-colors">Security</a>
-				<a href={ templ.SafeURL(prefix(lang) + "/?tag=tools") } data-tag="tools" class="subnav-tag text-text hover:text-link transition-colors">Tools</a>
-			</div>
-
 		</div>
 	</div>
 }
@@ -136,7 +148,7 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 				<div class="flex flex-wrap gap-2">
 					for _, tg := range []string{"linux", "ai", "systems", "backend", "devops", "docker", "security", "tools"} {
 						<a
-							href={ templ.SafeURL(prefix(lang) + "/?tag=" + tg) }
+							href={ templ.SafeURL(prefix(lang) + "/blog/tag/" + tg) }
 							onclick="toggleMobileMenu()"
 							class="text-xs font-sans px-3 py-1.5 rounded-none bg-chip hover:bg-hover text-text border border-border transition-colors uppercase"
 						>
