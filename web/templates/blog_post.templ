@@ -8,62 +8,95 @@ import (
 )
 
 templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comment.Comment, views int, isAdmin bool, lang string, reactions map[string]int, seriesParts []post.Post, nav PostNav, userReaction string, visitorName string) {
-	<!-- Reading progress bar (fixed at top with z-50 above all elements) -->
-	<div id="reading-progress" class="fixed top-0 left-0 z-50 h-[3px] bg-[var(--c-link)] shadow-sm pointer-events-none transition-[width] duration-75" style="width:0%"></div>
+	<!-- Main Post Article Container (3-Column Clean Layout) -->
+	<div class="container-page max-w-7xl mx-auto py-8 sm:py-12 transition-all">
+		
+		<!-- 1. The Article Reading 3-Column Block (Left-Aligned with Subnav ALL) -->
+		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14 relative">
+			
+			<!-- LEFT RAIL: Sticky Back Link + Table of Contents (Aligned with ALL) -->
+			<aside class="hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5">
+				<!-- Back Link -->
+				<a href={ templ.SafeURL(homeURL(lang)) } class="inline-flex items-center gap-1.5 text-muted hover:text-text font-bold text-xs font-mono uppercase tracking-wider transition-colors group">
+					@IconArrowLeft("w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5")
+					<span>{ ui.Post_Back }</span>
+				</a>
 
-	<!-- Back to top floating button -->
-	<button
-		id="back-to-top"
-		onclick="window.scrollTo({top:0,behavior:'smooth'})"
-		aria-label="Back to top"
-		class="fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-md transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
-	>
-		@IconArrowUp()
-	</button>
+				if len(p.TOC) > 0 {
+					<div class="space-y-3 pt-1">
+						<div class="text-[11px] font-mono font-bold uppercase tracking-widest text-muted pb-2 border-b border-border/60">
+							{ ui.Post_TOC }
+						</div>
+						<nav class="toc-sidebar max-h-[calc(100vh-16rem)] overflow-y-auto pr-2 scrollbar-none">
+							@tocList(p.TOC)
+						</nav>
+					</div>
+				}
+			</aside>
 
-	<!-- Main Post Article Container (2 Column Layout) -->
-	<div class="container-page py-8 sm:py-12 transition-all">
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-			<!-- Left Column: Article Content -->
-			<div class="lg:col-span-8">
-				<article>
+			<!-- CENTER READING CANVAS: Clean, Pure Typography (Narrowed 42rem) -->
+			<main class="w-full max-w-[42rem] min-w-0 flex-1 relative">
+				<article class="relative z-10">
 					@blogHeader(ui, p, lang, seriesParts)
 					@blogContent(ui, p)
 					if len(seriesParts) > 1 {
 						@seriesBottomNav(seriesParts, p, lang)
 					}
-					</article>
-			</div> <!-- Close left column -->
+				</article>
 
-			<!-- Right Column: Sidebar -->
-			<div class="lg:col-span-4 hidden lg:block">
-				@blogSidebar(p)
-			</div>
-		</div> <!-- Close Grid -->
+				<!-- Unified Card Reaction Bar (Directly below content) -->
+				@ReactionsBar(ui, reactions, p.Slug, lang, userReaction, len(comments), p.Title, p.Date.Format("2006-01-02"))
 
-		<!-- Bottom components (Reactions & Comments) aligned with left column -->
-		<div class="lg:w-8/12 mt-10">
-			<!-- Reactions -->
-			@ReactionsBar(ui, reactions, p.Slug, lang, userReaction)
+				<!-- Inline Comments Section (Original DaemonTalk Thread) -->
+				@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName)
+			</main>
 
-			<!-- Comments -->
-			@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName)
+			<!-- RIGHT RAIL: Sticky Reading Tools (Desktop) -->
+			<aside class="hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none">
+				
+				<!-- Font Size Controls (Clean, no card box) -->
+				<div class="flex items-center gap-1">
+					<button onclick="adjustProseSize(-1)" aria-label="Decrease font size" title="Decrease font size" class="px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none">A-</button>
+					<button onclick="adjustProseSize(1)" aria-label="Increase font size" title="Increase font size" class="px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none">A+</button>
+				</div>
+
+				<!-- Serif / Sans Font Family Toggle -->
+				<div>
+					<button
+						id="serif-toggle-btn"
+						onclick="toggleSerif()"
+						class="inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs"
+						title="Toggle typography font (Sans / Serif)"
+						aria-label="Toggle typography font"
+					>
+						@IconTypography("w-3.5 h-3.5 shrink-0")
+						<span id="serif-toggle-label">Serif</span>
+					</button>
+				</div>
+
+			</aside>
+
 		</div>
 
-		@blogRelated(ui, related, lang)
-	</div> <!-- Close Main Container -->
+		<!-- 2. Post-Article Footer Area (Full-Width Related Dispatches) -->
+		if len(related) > 0 {
+			<div class="w-full mt-16 pt-10 border-t border-border">
+				@blogRelated(ui, related, p.Tags, lang)
+			</div>
+		}
+
+	</div>
+
 	@blogPostScripts()
 }
 
-
-
 templ tocList(entries []post.TOCEntry) {
-	<ul class="space-y-2 text-sm sm:text-[15px] font-mono">
+	<ul class="space-y-2 text-xs font-mono m-0 p-0 list-none">
 		for _, e := range entries {
-			<li class={ templ.KV("pl-4 sm:pl-5 text-sm", e.Level == 3), templ.KV("pl-8 sm:pl-10 text-xs sm:text-sm", e.Level == 4) }>
+			<li class={ templ.KV("pl-3 text-[11px]", e.Level == 3), templ.KV("pl-6 text-[10px]", e.Level == 4) }>
 				<a
 					href={ templ.SafeURL("#" + e.ID) }
-					class="toc-link block py-0.5 text-muted hover:text-link font-mono transition-colors leading-relaxed"
+					class="toc-link block py-0.5 text-muted hover:text-text font-mono transition-colors leading-relaxed truncate"
 				>
 					{ e.Title }
 				</a>
@@ -71,8 +104,6 @@ templ tocList(entries []post.TOCEntry) {
 		}
 	</ul>
 }
-
-
 
 func getSeriesCurrentIndex(parts []post.Post, slug string) int {
 	for i, p := range parts {
@@ -90,24 +121,24 @@ func getSeriesPart(parts []post.Post, idx int) *post.Post {
 	return nil
 }
 
-// seriesNav renders a structured series header card at top.
+// seriesNav renders a clean series index above the article.
 templ seriesNav(parts []post.Post, current post.Post, lang string) {
-	<div class="mb-8 p-4 sm:p-5 border border-border bg-surface not-prose">
-		<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-border/70">
+	<div class="mb-6 p-4 border border-border bg-surface not-prose">
+		<div class="flex items-center justify-between pb-2 mb-2 border-b border-border/60">
 			<div class="flex items-center gap-2">
-				@IconSeries("w-4 h-4 text-link shrink-0")
+				@IconSeries("w-3.5 h-3.5 text-link shrink-0")
 				<span class="font-mono text-xs font-bold uppercase tracking-wider text-text">SERIES: { current.Series }</span>
 			</div>
-			<span class="font-mono text-[11px] px-2 py-0.5 bg-chip border border-border text-muted">
+			<span class="font-mono text-[10px] text-muted">
 				{ fmt.Sprintf("Part %d of %d", getSeriesCurrentIndex(parts, current.Slug)+1, len(parts)) }
 			</span>
 		</div>
-		<ol class="space-y-1.5 m-0 p-0 list-none font-sans text-sm">
+		<ol class="space-y-1 m-0 p-0 list-none font-sans text-xs">
 			for i, part := range parts {
-				<li class="flex items-start gap-2.5 py-1 px-2 rounded-none transition-colors">
-					<span class="shrink-0 font-mono text-xs font-bold text-muted mt-0.5">{ fmt.Sprintf("[%02d]", i+1) }</span>
+				<li class="flex items-start gap-2 py-0.5">
+					<span class="shrink-0 font-mono text-[11px] text-muted">{ fmt.Sprintf("[%02d]", i+1) }</span>
 					if part.Slug == current.Slug {
-						<span class="font-semibold text-text border-l-2 border-link pl-2">{ part.Title } <span class="text-xs text-link font-mono font-normal">(Current)</span></span>
+						<span class="font-bold text-text border-l-2 border-link pl-2">{ part.Title } <span class="text-[10px] text-link font-mono font-normal">(Current)</span></span>
 					} else {
 						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + part.Slug) } class="text-muted hover:text-link transition-colors pl-2">{ part.Title }</a>
 					}
@@ -121,56 +152,27 @@ templ seriesNav(parts []post.Post, current post.Post, lang string) {
 templ seriesBottomNav(parts []post.Post, current post.Post, lang string) {
 	if currIdx := getSeriesCurrentIndex(parts, current.Slug); currIdx >= 0 {
 		if prevPart := getSeriesPart(parts, currIdx-1); prevPart != nil || getSeriesPart(parts, currIdx+1) != nil {
-			<div class="my-8 p-4 border border-border bg-surface not-prose">
-				<div class="text-[11px] font-mono text-muted uppercase tracking-wider mb-3">
-					Series Navigation · { current.Series }
+			<div class="my-8 py-4 border-y border-border/60 not-prose">
+				<div class="text-[10px] font-mono text-muted uppercase tracking-wider mb-2">
+					Series · { current.Series }
 				</div>
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					if prevPart != nil {
-						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + prevPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-bg/50 hover:border-link transition-colors group">
-							<span class="text-[11px] font-mono text-muted flex items-center gap-1">@iconArrowLeft() Previous in Series</span>
-							<span class="text-xs sm:text-sm font-medium text-text group-hover:text-link line-clamp-1">{ prevPart.Title }</span>
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + prevPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors group">
+							<span class="text-[10px] font-mono text-muted flex items-center gap-1">@IconArrowLeft("w-3 h-3") Previous in Series</span>
+							<span class="text-xs font-bold text-text group-hover:text-link line-clamp-1">{ prevPart.Title }</span>
 						</a>
 					} else {
 						<div></div>
 					}
 					if nextPart := getSeriesPart(parts, currIdx+1); nextPart != nil {
-						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + nextPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-bg/50 hover:border-link transition-colors text-right group">
-							<span class="text-[11px] font-mono text-muted flex items-center gap-1 justify-end">Next in Series @iconArrowRight()</span>
-							<span class="text-xs sm:text-sm font-medium text-text group-hover:text-link line-clamp-1">{ nextPart.Title }</span>
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + nextPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors text-right group">
+							<span class="text-[10px] font-mono text-muted flex items-center gap-1 justify-end">Next in Series @IconArrowRight("w-3 h-3")</span>
+							<span class="text-xs font-bold text-text group-hover:text-link line-clamp-1">{ nextPart.Title }</span>
 						</a>
 					}
 				</div>
 			</div>
 		}
-	}
-}
-
-templ blogPostNav(nav PostNav, ui i18n.UI, lang string) {
-	if nav.HasPrev || nav.HasNext {
-		<nav class="mt-8 pt-6 border-t border-border grid grid-cols-2 gap-4">
-			<div>
-				if nav.HasPrev {
-					<a
-						href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + nav.Prev.Slug) }
-						class="group flex flex-col gap-1 text-left"
-					>
-						<span class="text-xs text-muted font-mono inline-flex items-center gap-1">@iconArrowLeft() Older</span>
-						<span class="text-sm text-link group-hover:underline line-clamp-2 leading-snug">{ nav.Prev.Title }</span>
-					</a>
-				}
-			</div>
-			<div class="text-right">
-				if nav.HasNext {
-					<a
-						href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + nav.Next.Slug) }
-						class="group flex flex-col gap-1 items-end"
-					>
-						<span class="text-xs text-muted font-mono inline-flex items-center gap-1">Newer @iconArrowRight()</span>
-						<span class="text-sm text-link group-hover:underline line-clamp-2 leading-snug text-right">{ nav.Next.Title }</span>
-					</a>
-				}
-			</div>
-		</nav>
 	}
 }

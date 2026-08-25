@@ -121,7 +121,7 @@ func TestAdminAutosaveCreatesDraft(t *testing.T) {
 func TestAdminAutosaveSlugConflictGetsSuffix(t *testing.T) {
 	h := newAdminAuthedHandler(t)
 
-	// "Post File" slug bentrok dengan file post → sufiks -2.
+	// "Post File" slug collides with post file → suffix -2.
 	resp := autosaveWithSlug(t, h, 0, "Post File", "Isi apapun.", "post-file")
 	if resp.Slug != "post-file-2" {
 		t.Errorf("slug bentrok: dapat %q, mau post-file-2", resp.Slug)
@@ -190,7 +190,7 @@ func TestAdminPostPublishSlugConflict(t *testing.T) {
 	created := autosave(t, h, 0, "Tulisan Baru", "Isi tulisan.")
 
 	rec := publishForm(h, created.ID, url.Values{
-		"slug":   {"post-file"}, // bentrok dengan file post
+		"slug":   {"post-file"}, // collides with post file
 		"date":   {"2026-07-05"},
 		"lang":   {"id"},
 		"action": {"publish"},
@@ -211,7 +211,7 @@ func TestAdminPostPublishSlugLockedOncePublished(t *testing.T) {
 		t.Fatalf("publish pertama: got %d", rec.Code)
 	}
 
-	// Sudah published → slug dari form diabaikan.
+	// Already published → slug from form ignored.
 	rec = publishForm(h, created.ID, url.Values{
 		"slug": {"slug-kedua"}, "date": {"2026-07-05"}, "lang": {"id"}, "action": {"publish"},
 	})

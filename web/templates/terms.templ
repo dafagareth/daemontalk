@@ -7,19 +7,17 @@ import (
 
 templ TermsPage(ui i18n.UI, body template.HTML, lang string) {
 	<section class="container-page py-8 sm:py-12">
-		<div class="max-w-4xl">
 		<div class="flex items-center gap-2 mb-3 font-mono text-xs text-muted">
 			<span class="px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold">LEGAL</span>
 			<span>·</span>
 			<span>TERMS & POLICIES</span>
 		</div>
-		<div class="prose max-w-none">
+		<div class="prose max-w-none font-sans">
 			@templ.Raw(string(body))
 		</div>
 		<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-mono">
 			@iconArrowLeft()
 			<span>{ ui.Post_Back }</span>
 		</a>
-		</div>
 	</section>
 }

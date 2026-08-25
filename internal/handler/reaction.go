@@ -7,10 +7,12 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
 	"daemontalk/web/templates"
 )
 
 var validEmojis = map[string]bool{
+	"upvote":     true,
 	"like":       true,
 	"heart":      true,
 	"fire":       true,
@@ -33,6 +35,18 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	commentCount := 0
+	if comms, err := h.Comments.ListBySlug(slug); err == nil {
+		commentCount = len(comms)
+	}
+
+	title := ""
+	date := ""
+	if p, ok := post.FindBySlug(h.AllPosts(), slug); ok {
+		title = p.Title
+		date = p.Date.Format("2006-01-02")
+	}
+
 	// Prevent multiple reactions from the same user for this post.
 	cookieName := CookieReactedPrefix + slug
 	if cookie, err := r.Cookie(cookieName); err == nil && cookie.Value != "" {
@@ -53,7 +67,7 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 				HttpOnly: true,
 				SameSite: http.SameSiteLaxMode,
 			})
-			h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, ""))
+			h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, "", commentCount, title, date))
 			return
 		}
 
@@ -74,7 +88,7 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 			HttpOnly: true,
 			SameSite: http.SameSiteLaxMode,
 		})
-		h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji))
+		h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji, commentCount, title, date))
 		return
 	}
 
@@ -93,6 +107,6 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 	})
 
-	h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji))
+	h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji, commentCount, title, date))
 }
 

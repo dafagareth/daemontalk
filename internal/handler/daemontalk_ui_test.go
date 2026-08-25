@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -8,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/post"
 )
 
@@ -149,5 +151,50 @@ func TestDaemontalkUIHTMXPartial(t *testing.T) {
 	}
 	if !strings.Contains(body, `id="load-more-wrap" class="mt-12 mb-8 text-center"`) {
 		t.Error("expected load-more-wrap to retain classes in OOB swap")
+	}
+}
+
+func TestTagPagination(t *testing.T) {
+	posts := make([]post.Post, 25)
+	now := time.Now()
+	for i := 0; i < 25; i++ {
+		posts[i] = post.Post{
+			Title: fmt.Sprintf("Tools Post %d", i+1),
+			Slug:  fmt.Sprintf("tools-%d", i+1),
+			Tags:  []string{"tools"},
+			Date:  now.Add(-time.Duration(i) * time.Minute),
+		}
+	}
+
+	h := &Handler{FilePosts: posts}
+
+	// 1. Test ?tag=tools route on BlogIndex
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/?tag=tools", nil)
+	h.BlogIndex(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rec.Code)
+	}
+	body := rec.Body.String()
+	if !strings.Contains(body, "page=2") {
+		t.Errorf("expected pagination link with page=2 in ?tag=tools response")
+	}
+
+	// 2. Test /blog/tag/tools route on TagIndex
+	rec2 := httptest.NewRecorder()
+	req2 := httptest.NewRequest(http.MethodGet, "/blog/tag/tools", nil)
+	// Add chi route context
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("tag", "tools")
+	req2 = req2.WithContext(context.WithValue(req2.Context(), chi.RouteCtxKey, rctx))
+	h.TagIndex(rec2, req2)
+
+	if rec2.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rec2.Code)
+	}
+	body2 := rec2.Body.String()
+	if !strings.Contains(body2, "page=2") {
+		t.Errorf("expected pagination link with page=2 in /blog/tag/tools response")
 	}
 }

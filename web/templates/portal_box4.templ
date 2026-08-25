@@ -1,0 +1,93 @@
+package templates
+
+import (
+	"fmt"
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []post.Post, lang string) {
+	// BOX 4: ASYMMETRIC SPLIT RIVER (8 : 4) - SEAMLESS WIREFRAME
+	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+		<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
+			
+			// LEFT COLUMN (8 cols / ~66%): 2 Featured Cards
+			<div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[var(--c-border)]">
+				for _, cat := range leftCats {
+					<article class="flex flex-col justify-between group">
+						<div class="flex flex-row-reverse sm:flex-col p-4 sm:p-0 gap-4 sm:gap-0">
+							// Mobile: Right 80px Square Thumbnail | Desktop: Top 16:9 Full Bleed
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-square sm:aspect-[16/9] w-20 sm:w-full shrink-0 bg-surface overflow-hidden sm:border-b border-border">
+								@postThumbnailImg(cat.LeadPost)
+							</a>
+							<div class="flex-1 min-w-0 sm:p-5 lg:p-6">
+								<div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-mono font-bold uppercase tracking-widest text-accent hover:underline">
+										{ categoryTitle(cat, lang) }
+									</a>
+									<span class="hidden sm:inline text-[10px] font-mono text-muted">
+										{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }
+									</span>
+								</div>
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block sm:mb-2">
+									<h3 class="display text-sm sm:text-base lg:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-3 sm:line-clamp-2">
+										{ cat.LeadPost.Title }
+									</h3>
+								</a>
+								if cat.LeadPost.Description != "" {
+									<p class="hidden sm:block text-xs text-muted line-clamp-2 leading-relaxed mb-3">
+										{ cat.LeadPost.Description }
+									</p>
+								}
+								<div class="sm:hidden text-[10px] font-mono text-muted mt-2">
+									{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }
+								</div>
+							</div>
+						</div>
+						<div class="hidden sm:flex px-4 sm:px-5 lg:px-6 pb-4 sm:pb-5 text-[11px] font-mono text-muted items-center justify-between border-t border-border/30 pt-2.5">
+							<span class="font-bold text-text">
+								if cat.LeadPost.Author != "" {
+									{ cat.LeadPost.Author }
+								} else {
+									daemontalk
+								}
+							</span>
+							<time datetime={ cat.LeadPost.Date.Format("2006-01-02") }>{ fmtDate(cat.LeadPost) }</time>
+						</div>
+					</article>
+				}
+			</div>
+
+			// RIGHT COLUMN (4 cols / ~33%): Recent Dispatches
+			<div class="lg:col-span-4 flex flex-col bg-surface/30">
+				<div class="flex items-center justify-between px-4 py-3 border-b border-border bg-surface text-xs font-mono font-bold uppercase tracking-wider">
+					<div class="flex items-center gap-2 text-text">
+						<span>RECENT DISPATCHES</span>
+					</div>
+					<span class="text-[10px] text-muted font-normal uppercase font-mono tracking-wider">INDEX</span>
+				</div>
+
+				<div class="px-3 sm:px-4 py-5 sm:py-6 flex flex-col divide-y divide-border/40 flex-1 justify-around">
+					for _, p := range wirePosts {
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-2.5 first:pt-0 last:pb-0 block">
+							<div class="flex items-center gap-2 mb-1">
+								if len(p.Tags) > 0 {
+									<span class="text-accent text-[9px] font-bold uppercase tracking-wider">{ p.Tags[0] }</span>
+								}
+								<span class="text-muted text-[10px]">·</span>
+								<time class="text-muted text-[10px] font-mono">{ fmtDate(p) }</time>
+							</div>
+							<h4 class="display text-xs sm:text-sm font-semibold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1">
+								{ p.Title }
+							</h4>
+							<div class="text-[9px] font-mono text-muted">
+								{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }
+							</div>
+						</a>
+					}
+				</div>
+			</div>
+
+		</div>
+	</div>
+}

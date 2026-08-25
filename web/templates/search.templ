@@ -78,3 +78,59 @@ templ searchResultItem(ui i18n.UI, p post.Post, query string, lang string, viewC
 		</a>
 	</li>
 }
+
+// SearchDropdownResults renders the instant flyout popper results directly under the header search bar.
+templ SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, lang string, viewCounts map[string]int) {
+	if query != "" {
+		if len(results) == 0 {
+			<div class="p-6 text-center">
+				<p class="text-xs font-mono text-muted mb-1">{ ui.Blog_NoResults }</p>
+				<p class="text-[11px] font-mono text-muted/80">Tidak ada artikel untuk "<span class="text-text font-semibold">{ query }</span>"</p>
+			</div>
+		} else {
+			<div class="divide-y divide-border/50 max-h-[360px] overflow-y-auto scrollbar-thin" id="search-dropdown-list">
+				for i, sr := range results {
+					if i < 6 {
+						<a
+							href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sr.Post.Slug) }
+							class="search-popper-item block p-3.5 hover:bg-hover transition-colors group focus:bg-hover focus:outline-none"
+							tabindex="0"
+							data-index={ fmt.Sprintf("%d", i) }
+						>
+							<div class="flex items-start justify-between gap-3 mb-1">
+								<h4 class="text-xs sm:text-sm font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors">
+									@templ.Raw(string(highlightHTML(sr.Post.Title, query)))
+								</h4>
+								<span class="text-[10px] font-mono text-muted shrink-0 mt-0.5">{ fmtDate(sr.Post) }</span>
+							</div>
+							if sr.Post.Description != "" {
+								<p class="text-[11px] text-muted line-clamp-1 leading-relaxed mb-1.5">
+									@templ.Raw(string(highlightHTML(sr.Post.Description, query)))
+								</p>
+							}
+							<div class="flex items-center gap-2 text-[10px] font-mono text-muted">
+								if len(sr.Post.Tags) > 0 {
+									<span class="uppercase font-bold text-accent">[{ sr.Post.Tags[0] }]</span>
+								}
+								if sr.Post.ReadTime > 0 {
+									<span>·</span>
+									<span>{ fmt.Sprintf("%d min read", sr.Post.ReadTime) }</span>
+								}
+							</div>
+						</a>
+					}
+				}
+			</div>
+			<div class="px-3.5 py-2.5 bg-surface border-t border-border flex items-center justify-between text-[11px] font-mono text-muted">
+				<span>{ fmt.Sprintf("%d artikel ditemukan", len(results)) }</span>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/search?q=" + query) }
+					class="font-bold text-link hover:underline inline-flex items-center gap-1 group"
+				>
+					<span>Lihat semua</span>
+					@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+				</a>
+			</div>
+		}
+	}
+}

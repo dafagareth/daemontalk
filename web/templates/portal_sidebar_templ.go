@@ -35,7 +35,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-2 sm:border-border max-w-6xl 2xl:max-w-7xl mx-auto mb-12 sm:mb-0 sm:my-8 bg-bg\"><div class=\"flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]\"><div class=\"hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]\"><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-2 sm:border-border w-full mb-12 sm:mb-0 sm:my-8 bg-bg\"><div class=\"flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]\"><div class=\"hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]\"><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -85,14 +85,14 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</a> <span class=\"text-xs font-mono text-muted bg-surface border border-border/50 px-1.5 py-0.5 rounded-none-none\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</a> <span class=\"text-xs font-mono text-muted bg-surface border border-border/50 px-1.5 py-0.5 rounded-none\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", tagCounts[tag]))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 32, Col: 152}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 32, Col: 147}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -126,7 +126,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</p><div class=\"relative bg-zinc-900 text-[#10b981] font-mono text-xs p-3.5 pr-10 border border-border overflow-hidden mb-3 group\"><div class=\"overflow-x-auto select-all scrollbar-none whitespace-nowrap\"><span class=\"text-zinc-500 mr-1.5\">$</span>ssh ssh.daemontalk.com -p 2222</div><button onclick=\"navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#10b981'; setTimeout(()=>i.style.color='', 1000);\" title=\"Copy command\" aria-label=\"Copy command\" class=\"absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100 cursor-pointer\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</p><div class=\"relative bg-surface border border-border text-text font-mono text-xs p-3 pr-10 overflow-hidden mb-3 group\"><div class=\"overflow-x-auto select-all scrollbar-none whitespace-nowrap\"><span class=\"text-muted mr-1.5 select-none\">$</span>ssh ssh.daemontalk.com -p 2222</div><button onclick=\"navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='var(--color-accent)'; setTimeout(()=>i.style.color='', 1000);\" title=\"Copy command\" aria-label=\"Copy command\" class=\"absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-text transition-colors opacity-70 group-hover:opacity-100 cursor-pointer\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -134,7 +134,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button></div><div class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><span>Enter</span> <span>Full reader</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><span>t</span> <span>7 Color themes</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted\"><span>w / o</span> <span>Web & Image link</span></div></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button></div><div class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">Enter</kbd> <span>Full reader</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">t</kbd> <span>7 Color themes</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">w / o</kbd> <span>Web &amp; Image link</span></div></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -168,7 +168,23 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</p><div class=\"flex flex-col gap-2\"><a href=\"/rss.xml\" class=\"flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full\"><span>RSS XML</span> <span class=\"text-muted text-[10px]\">&rarr;</span></a> <a href=\"/feed.json\" class=\"flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full\"><span>JSON Feed</span> <span class=\"text-muted text-[10px]\">&rarr;</span></a></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between\"><span class=\"flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</p><div class=\"flex flex-col gap-2\"><a href=\"/rss.xml\" class=\"flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full group\"><span>RSS XML</span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</a> <a href=\"/feed.json\" class=\"flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full group\"><span>JSON Feed</span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</a></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between\"><span class=\"flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -177,17 +193,17 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "PENULIS")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "PENULIS")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "AUTHOR")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "AUTHOR")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</span> <span class=\"text-[10px] font-mono text-muted uppercase\">daemontalk</span></h3><!-- Top row: PFP on left, Name & Role on right --><div class=\"flex items-center gap-3 mb-3\"><div class=\"w-10 h-10 shrink-0 rounded-full border border-border bg-surface flex items-center justify-center p-1.5 shadow-sm overflow-hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</span> <span class=\"text-[10px] font-mono text-muted uppercase\">daemontalk</span></h3><!-- Top row: PFP on left, Name & Role on right --><div class=\"flex items-center gap-3 mb-3\"><div class=\"w-10 h-10 shrink-0 rounded-full border border-border bg-surface flex items-center justify-center p-1.5 shadow-sm overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -195,22 +211,22 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div><div class=\"flex flex-col min-w-0\"><span class=\"text-sm font-bold text-text truncate\">Dafa Gareth</span> <span class=\"text-[11px] font-mono text-muted truncate\">Go &amp; Linux Systems</span></div></div><!-- Bottom row: Description spanning horizontally underneath --><p class=\"text-xs text-muted leading-relaxed mb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div><div class=\"flex flex-col min-w-0\"><span class=\"text-sm font-bold text-text truncate\">Dafa Gareth</span> <span class=\"text-[11px] font-mono text-muted truncate\">Go &amp; Linux Systems</span></div></div><!-- Bottom row: Description spanning horizontally underneath --><p class=\"text-xs text-muted leading-relaxed mb-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Mahasiswa sistem informasi yang mendalami Go backend, sistem operasi Linux, dan arsitektur backend.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "Mahasiswa sistem informasi yang mendalami Go backend, sistem operasi Linux, dan arsitektur backend.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Information systems student focusing on Go backend, Linux systems mechanics, and distributed architecture.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "Information systems student focusing on Go backend, Linux systems mechanics, and distributed architecture.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</p><!-- Bottom actions --><div class=\"flex items-center justify-between pt-2 border-t border-border/50 text-[11px] font-mono\"><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</p><!-- Bottom actions --><div class=\"flex items-center justify-between pt-2 border-t border-border/50 text-[11px] font-mono\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -223,22 +239,26 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\" class=\"text-[10px] font-bold uppercase tracking-widest text-accent hover:text-link flex items-center gap-1 transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\" class=\"text-[10px] font-bold uppercase tracking-widest text-accent hover:text-link flex items-center gap-1 transition-colors group\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "BACA SELENGKAPNYA &rarr;")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<span>BACA SELENGKAPNYA</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "READ MORE &rarr;")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<span>READ MORE</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</a><div class=\"flex items-center gap-2.5 text-muted\"><a href=\"https://github.com/dafagareth\" target=\"_blank\" rel=\"noopener\" class=\"hover:text-text transition-colors\" title=\"GitHub\">")
+		templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</a><div class=\"flex items-center gap-2.5 text-muted\"><a href=\"https://github.com/dafagareth\" target=\"_blank\" rel=\"noopener\" class=\"hover:text-text transition-colors\" title=\"GitHub\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -246,20 +266,20 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</a> <a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</a> <a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/resume"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 156, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 157, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" class=\"hover:text-text transition-colors font-bold text-[11px]\" title=\"Resume\">CV</a></div></div></div></div><div class=\"flex-1 min-w-0\"><div class=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 lg:divide-x divide-border/40 sm:divide-border h-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\" class=\"hover:text-text transition-colors font-bold text-[11px]\" title=\"Resume\">CV</a></div></div></div></div><div class=\"flex-1 min-w-0\"><div class=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 lg:divide-x divide-border/40 sm:divide-border h-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -276,7 +296,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -289,51 +309,51 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\"><div class=\"flex items-center justify-between pb-2 mb-4 border-b-0 sm:border-b-4 border-[var(--c-text)]\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\"><div class=\"flex items-center justify-between pb-2 mb-4 border-b-0 sm:border-b-4 border-[var(--c-text)]\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 templ.SafeURL
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 181, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 182, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"text-sm font-black uppercase tracking-widest text-text hover:text-link pr-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" class=\"text-sm font-black uppercase tracking-widest text-text hover:text-link pr-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(categoryTitle(cat, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 182, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 183, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</a> <a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</a> <a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var11 templ.SafeURL
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 184, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 185, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" class=\"text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\" class=\"text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "id" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<span>Lihat Semua</span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<span>Lihat Semua</span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -342,7 +362,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<span>See More</span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<span>See More</span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -351,20 +371,20 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</a></div><article class=\"group mb-5\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</a></div><article class=\"group mb-5\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 templ.SafeURL
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 197, Col: 79}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 198, Col: 79}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "\" class=\"block relative aspect-[16/9] w-full bg-surface mb-3 overflow-hidden\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "\" class=\"block relative aspect-[16/9] w-full bg-surface mb-3 overflow-hidden\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -372,56 +392,56 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</a> <a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</a> <a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 templ.SafeURL
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 200, Col: 79}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 201, Col: 79}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "\" class=\"block\"><h4 class=\"text-base font-extrabold text-text group-hover:text-link leading-tight line-clamp-3\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" class=\"block\"><h4 class=\"text-base font-extrabold text-text group-hover:text-link leading-tight line-clamp-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(cat.LeadPost.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 202, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 203, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</h4></a></article>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</h4></a></article>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if len(cat.SubPosts) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<div class=\"flex flex-col sm:divide-y sm:divide-[var(--c-border)]/60 sm:border-t sm:border-border/60 mt-2 sm:mt-4\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"flex flex-col sm:divide-y sm:divide-[var(--c-border)]/60 sm:border-t sm:border-border/60 mt-2 sm:mt-4\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				for _, sub := range cat.SubPosts {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, " <article class=\"group py-3 lg:py-4 flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch\"><a href=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, " <article class=\"group py-3 lg:py-4 flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch\"><a href=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var15 templ.SafeURL
 					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 213, Col: 73}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 214, Col: 73}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "\" class=\"block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-2 overflow-hidden\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\" class=\"block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-2 overflow-hidden\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -429,61 +449,61 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</a><div class=\"flex-1 min-w-0 flex flex-col justify-between lg:justify-start h-full lg:h-auto\"><a href=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</a><div class=\"flex-1 min-w-0 flex flex-col justify-between lg:justify-start h-full lg:h-auto\"><a href=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var16 templ.SafeURL
 					templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 218, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 219, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\" data-slug=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "\" data-slug=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var17 string
 					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(sub.Slug)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 218, Col: 97}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 219, Col: 97}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\" class=\"display block text-sm sm:text-base font-bold text-text lg:text-muted group-hover:text-link lg:group-hover:text-text transition-colors line-clamp-3 leading-snug\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\" class=\"display block text-sm sm:text-base font-bold text-text lg:text-muted group-hover:text-link lg:group-hover:text-text transition-colors line-clamp-3 leading-snug\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 219, Col: 23}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_sidebar.templ`, Line: 220, Col: 23}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</a></div></article>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</a></div></article>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

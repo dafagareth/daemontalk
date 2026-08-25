@@ -1,0 +1,57 @@
+package templates
+
+import (
+	"fmt"
+	"daemontalk/internal/i18n"
+)
+
+templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang string) {
+	// BOX 8 (INDEX): DENSE KNOWLEDGE INDEX (3 : 3 : 3 : 3) - PURE TYPOGRAPHY WIREFRAME
+	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+		<div class="grid grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[var(--c-border)]">
+			for i, cat := range categories {
+				<div class={ "px-3 sm:px-5 py-5 sm:py-8 flex flex-col justify-between border-b lg:border-b-0 lg:border-r-0 border-[var(--c-border)]", templ.KV("border-r", i%2==0) }>
+					<div>
+						// Category Header
+						<div class="flex items-center justify-between mb-3">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
+								{ categoryTitle(cat, lang) }
+							</a>
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-mono font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group shrink-0" aria-label="Explore topic">
+								@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+							</a>
+						</div>
+
+						// Posts List (Teks Only)
+						<div class="flex flex-col divide-y divide-border/40">
+							<article class="py-2.5 first:pt-0">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="group block">
+									<h4 class="display text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1">
+										{ cat.LeadPost.Title }
+									</h4>
+									<div class="text-[9px] font-mono text-muted">
+										<span>{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }</span>
+									</div>
+								</a>
+							</article>
+							for j, sub := range cat.SubPosts {
+								if j < 3 {
+									<article class="py-2.5 last:pb-0">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="group block">
+											<h4 class="display text-xs sm:text-sm font-medium text-muted group-hover:text-text transition-colors leading-snug line-clamp-2 mb-1">
+												{ sub.Title }
+											</h4>
+											<div class="text-[9px] font-mono text-muted/80">
+												<span>{ fmt.Sprintf("%d %s", sub.ReadTime, ui.Blog_MinRead) }</span>
+											</div>
+										</a>
+									</article>
+								}
+							}
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+}

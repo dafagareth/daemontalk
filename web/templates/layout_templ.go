@@ -57,12 +57,12 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			return templ_7745c5c3_Err
 		}
 		if !noindex {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!-- Animasi intro hanya pada kunjungan pertama per sesi; navigasi\n\t\t\t     berikutnya langsung tampil (tidak fade ulang tiap pindah halaman). --> <script>\n\t\t\t\t(function() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tif (sessionStorage.getItem(\"visited\")) {\n\t\t\t\t\t\t\tdocument.documentElement.setAttribute(\"data-anims\", \"off\");\n\t\t\t\t\t\t}\n\t\t\t\t\t\tsessionStorage.setItem(\"visited\", \"1\");\n\t\t\t\t\t} catch (e) {}\n\t\t\t\t})();\n\t\t\t</script> <noscript><style>.reveal, .anim-fade-up, .anim-fade-in { opacity: 1 !important; transform: none !important; }</style></noscript>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!-- Intro animation only on first visit per session; subsequent\n\t\t\t     navigation appears immediately (no fade on every page load). --> <script>\n\t\t\t\t(function() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tif (sessionStorage.getItem(\"visited\")) {\n\t\t\t\t\t\t\tdocument.documentElement.setAttribute(\"data-anims\", \"off\");\n\t\t\t\t\t\t}\n\t\t\t\t\t\tsessionStorage.setItem(\"visited\", \"1\");\n\t\t\t\t\t} catch (e) {}\n\t\t\t\t})();\n\t\t\t</script> <noscript><style>.reveal, .anim-fade-up, .anim-fade-in { opacity: 1 !important; transform: none !important; }</style></noscript>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap\"><link rel=\"stylesheet\" href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap\"><link rel=\"stylesheet\" href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -265,7 +265,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<script src=\"https://unpkg.com/htmx.org@2.0.2\" integrity=\"sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ\" crossorigin=\"anonymous\"></script><!-- KaTeX Math / LaTeX Rendering --><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css\" crossorigin=\"anonymous\"><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js\" crossorigin=\"anonymous\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script><script>\n\t\t\tfunction dtRenderMath() {\n\t\t\t\tif (typeof renderMathInElement === \"function\") {\n\t\t\t\t\trenderMathInElement(document.body, {\n\t\t\t\t\t\tdelimiters: [\n\t\t\t\t\t\t\t{left: \"$$\", right: \"$$\", display: true},\n\t\t\t\t\t\t\t{left: \"$\", right: \"$\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\(\", right: \"\\\\)\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\[\", right: \"\\\\]\", display: true}\n\t\t\t\t\t\t],\n\t\t\t\t\t\tignoredTags: [\"script\", \"noscript\", \"style\", \"textarea\", \"pre\", \"code\"],\n\t\t\t\t\t\tthrowOnError: false\n\t\t\t\t\t});\n\t\t\t\t} else {\n\t\t\t\t\tsetTimeout(dtRenderMath, 60);\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (document.readyState === \"loading\") {\n\t\t\t\tdocument.addEventListener(\"DOMContentLoaded\", dtRenderMath);\n\t\t\t} else {\n\t\t\t\tdtRenderMath();\n\t\t\t}\n\t\t</script></head>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<script src=\"https://unpkg.com/htmx.org@2.0.2\" integrity=\"sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ\" crossorigin=\"anonymous\"></script><!-- KaTeX Math / LaTeX Rendering --><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css\" crossorigin=\"anonymous\"><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js\" crossorigin=\"anonymous\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script><script>\n\t\t\tfunction dtAttachMathScrollFade() {\n\t\t\t\trequestAnimationFrame(function() {\n\t\t\t\t\tdocument.querySelectorAll(\".katex-display, .math-display\").forEach(function(el) {\n\t\t\t\t\t\tif (el.parentElement && el.parentElement.classList.contains(\"katex-scroll-wrapper\")) {\n\t\t\t\t\t\t\tvar existingFade = el.parentElement.querySelector(\".katex-fade-right\");\n\t\t\t\t\t\t\tif (existingFade) {\n\t\t\t\t\t\t\t\tvar isOver = el.scrollWidth > (el.clientWidth + 4);\n\t\t\t\t\t\t\t\texistingFade.style.display = isOver ? \"block\" : \"none\";\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar wrapper = document.createElement(\"div\");\n\t\t\t\t\t\twrapper.className = \"katex-scroll-wrapper relative my-4\";\n\t\t\t\t\t\tel.parentNode.insertBefore(wrapper, el);\n\t\t\t\t\t\twrapper.appendChild(el);\n\n\t\t\t\t\t\tvar fade = document.createElement(\"div\");\n\t\t\t\t\t\tfade.className = \"katex-fade-right pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[var(--c-bg)] to-transparent transition-opacity duration-200\";\n\t\t\t\t\t\twrapper.appendChild(fade);\n\n\t\t\t\t\t\tfunction checkOverflow() {\n\t\t\t\t\t\t\tvar isOverflow = el.scrollWidth > (el.clientWidth + 4);\n\t\t\t\t\t\t\tif (!isOverflow) {\n\t\t\t\t\t\t\t\tfade.style.display = \"none\";\n\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\tfade.style.display = \"block\";\n\t\t\t\t\t\t\t\tvar atEnd = (el.scrollWidth - el.scrollLeft - el.clientWidth) < 6;\n\t\t\t\t\t\t\t\tfade.style.opacity = atEnd ? \"0\" : \"1\";\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\tel.addEventListener(\"scroll\", checkOverflow, { passive: true });\n\t\t\t\t\t\tcheckOverflow();\n\t\t\t\t\t\twindow.addEventListener(\"resize\", checkOverflow, { passive: true });\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t}\n\n\t\t\tfunction dtRenderMath() {\n\t\t\t\tif (typeof renderMathInElement === \"function\") {\n\t\t\t\t\trenderMathInElement(document.body, {\n\t\t\t\t\t\tdelimiters: [\n\t\t\t\t\t\t\t{left: \"$$\", right: \"$$\", display: true},\n\t\t\t\t\t\t\t{left: \"$\", right: \"$\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\(\", right: \"\\\\)\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\[\", right: \"\\\\]\", display: true}\n\t\t\t\t\t\t],\n\t\t\t\t\t\tignoredTags: [\"script\", \"noscript\", \"style\", \"textarea\", \"pre\", \"code\"],\n\t\t\t\t\t\tthrowOnError: false\n\t\t\t\t\t});\n\t\t\t\t\tdtAttachMathScrollFade();\n\t\t\t\t} else {\n\t\t\t\t\tsetTimeout(dtRenderMath, 60);\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (document.readyState === \"loading\") {\n\t\t\t\tdocument.addEventListener(\"DOMContentLoaded\", dtRenderMath);\n\t\t\t} else {\n\t\t\t\tdtRenderMath();\n\t\t\t}\n\t\t</script></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -301,7 +301,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(lang)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 112, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 151, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 		if templ_7745c5c3_Err != nil {
@@ -339,15 +339,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</main><!-- Global Back to top floating button --><button id=\"back-to-top\" onclick=\"window.scrollTo({top:0,behavior:'smooth'})\" aria-label=\"Back to top\" class=\"fixed bottom-6 right-6 z-40 w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-all opacity-0 pointer-events-none shadow-md\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = IconArrowUp().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</button><!-- Footer -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</main><!-- Footer -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -355,7 +347,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<!-- Keyboard Shortcuts Modal -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<!-- Keyboard Shortcuts Modal -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -363,7 +355,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<!-- Confirm Modal -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<!-- Confirm Modal -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -371,7 +363,15 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<!-- Visited Posts Marker -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<!-- Global Back to Top Floating Button --><button id=\"back-to-top\" onclick=\"window.scrollTo({top:0,behavior:'smooth'})\" aria-label=\"Back to top\" title=\"Back to top\" class=\"fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowUp().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</button><!-- Visited Posts Marker -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

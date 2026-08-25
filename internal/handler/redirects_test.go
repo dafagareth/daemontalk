@@ -11,8 +11,8 @@ import (
 	"daemontalk/internal/post"
 )
 
-// BlogIndex dipakai sebagai handler "/" setelah pivot; harus merender daftar
-// tulisan dengan judul halaman "daemontalk" (bukan "Blog · daemontalk").
+// BlogIndex is used as "/" handler after pivot; must render the list of
+// posts with page title "daemontalk" (not "Blog · daemontalk").
 func TestBlogIndexAsHome(t *testing.T) {
 	h := &Handler{
 		FilePosts: []post.Post{{Title: "Tulisan Pertama", Slug: "tulisan-pertama"}},

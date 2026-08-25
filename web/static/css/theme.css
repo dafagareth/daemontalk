@@ -1,6 +1,6 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Merriweather", "Literata", Georgia, serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
   --color-text: var(--c-text);
   --color-muted: var(--c-muted);
   --color-surface: var(--c-surface);
@@ -13,50 +13,50 @@
   --color-ok: var(--c-ok);
   --color-warn: var(--c-warn);
 }
-/* Semantic color tokens — Warm Neutral palette */
+/* Semantic color tokens — The Crisp Broadsheet palette */
 :root {
-  --c-bg:        #fafafa;
+  --c-bg:        #f6f6f8;
   --c-surface:   #ffffff;
-  --c-nav:       #ffffff;
-  --c-footer:    #f4f4f5;
-  --c-text:      #18181b;
-  --c-muted:     #71717a;
-  --c-border:    #e4e4e7;
-  --c-hover:     #f4f4f5;
-  --c-chip:      #f4f4f5;
+  --c-nav:       #f6f6f8;
+  --c-footer:    #0d0d10;
+  --c-text:      #121214;
+  --c-muted:     #646470;
+  --c-border:    #dcdce4;
+  --c-hover:     #eeeff3;
+  --c-chip:      #eeeff3;
   --c-link:      #1d6fa4;
-  --c-link-bg:   #ddeef8;
+  --c-link-bg:   #e5edf5;
   --c-link-text: #1d6fa4;
   --c-ok:        #276a45;
   --c-ok-bg:     #e0f0e8;
   --c-warn:      #b03a2e;
   --c-warn-bg:   #faeae8;
-  --c-accent:    #e11d48;
+  --c-accent:    #ea580c;
 
   /* GitHub Light Terminal Theme */
   --term-bg:       #ffffff;
-  --term-title-bg: #f6f8fa;
-  --term-border:   #d0d7de;
-  --term-text:     #24292f;
-  --term-muted:    #57606a;
+  --term-title-bg: #f4f4f7;
+  --term-border:   #dcdce4;
+  --term-text:     #121214;
+  --term-muted:    #646470;
   --term-prompt:   #1a7f37;
   --term-link:     #0969da;
-  --term-chip-bg:  #eaeef2;
+  --term-chip-bg:  #eeeff3;
   --term-cursor:   #1a7f37;
 }
 
 /* System dark preference (fallback when no manual toggle) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="sepia"]) {
-    --c-bg:        #0d1117;
-    --c-surface:   #161b22;
-    --c-nav:       #161b22;
-    --c-footer:    #0d1117;
+    --c-bg:        #121214;
+    --c-surface:   #18181b;
+    --c-nav:       #0d0d10;
+    --c-footer:    #0d0d10;
     --c-text:      #e6edf3;
     --c-muted:     #8b949e;
-    --c-border:    #30363d;
-    --c-hover:     #21262d;
-    --c-chip:      #21262d;
+    --c-border:    #27272a;
+    --c-hover:     #27272a;
+    --c-chip:      #27272a;
     --c-link:      #58a6ff;
     --c-link-bg:   #1f3a5c;
     --c-link-text: #58a6ff;
@@ -64,7 +64,7 @@
     --c-ok-bg:     #1b3a2a;
     --c-warn:      #f85149;
     --c-warn-bg:   #3d1515;
-    --c-accent:    #f78166;
+    --c-accent:    #f97316;
 
     /* GitHub Dark Terminal Theme */
     --term-bg:       #0d1117;
@@ -81,15 +81,15 @@
 
 /* Manual dark toggle */
 [data-theme="dark"] {
-  --c-bg:        #0d1117;
-  --c-surface:   #161b22;
-  --c-nav:       #161b22;
-  --c-footer:    #0d1117;
+  --c-bg:        #121214;
+  --c-surface:   #18181b;
+  --c-nav:       #0d0d10;
+  --c-footer:    #0d0d10;
   --c-text:      #e6edf3;
   --c-muted:     #8b949e;
-  --c-border:    #30363d;
-  --c-hover:     #21262d;
-  --c-chip:      #21262d;
+  --c-border:    #27272a;
+  --c-hover:     #27272a;
+  --c-chip:      #27272a;
   --c-link:      #58a6ff;
   --c-link-bg:   #1f3a5c;
   --c-link-text: #58a6ff;
@@ -97,7 +97,7 @@
   --c-ok-bg:     #1b3a2a;
   --c-warn:      #f85149;
   --c-warn-bg:   #3d1515;
-  --c-accent:    #f78166;
+  --c-accent:    #f97316;
 
   /* GitHub Dark Terminal Theme */
   --term-bg:       #0d1117;
@@ -122,6 +122,7 @@
   --c-border:    #d9c8a9;
   --c-hover:     #ebdcb9;
   --c-chip:      #ebdcb9;
+  --c-accent:    #c2410c;
 }
 
 /* Colorize SVG icons to dark brown (#433422) in sepia mode (logo stays black) */

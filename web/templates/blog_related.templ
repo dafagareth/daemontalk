@@ -6,34 +6,140 @@ import (
 	"daemontalk/internal/post"
 )
 
-templ blogRelated(ui i18n.UI, related []post.Post, lang string) {
+templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang string) {
 	if len(related) > 0 {
-		<div class="mt-16 pt-8 border-t-4 border-[var(--c-text)]">
-			<h3 class="text-xl font-bold font-sans text-text mb-6 uppercase tracking-widest">{ ui.Post_Related }</h3>
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-				for _, rp := range related {
-					<article class="group flex flex-col gap-0 min-w-0">
-						<div class="relative aspect-[16/9] w-full overflow-hidden shrink-0 mb-3 bg-surface">
-							@postThumbnail(rp, blogPrefix(lang) + "/blog/" + rp.Slug)
-						</div>
-						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + rp.Slug) } data-slug={ rp.Slug } class="block group mb-1">
-							<h3 class="text-sm sm:text-base font-black text-text group-hover:text-link transition-colors line-clamp-3 leading-snug break-words">
-								{ rp.Title }
-							</h3>
-						</a>
-						<div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1 text-[9px] sm:text-[11px] font-mono text-muted uppercase tracking-wider">
-							<time datetime={ rp.Date.Format("2006-01-02") }>{ fmtDate(rp) }</time>
-							<span>·</span>
-							<span>{ fmt.Sprintf("%d %s", rp.ReadTime, ui.Blog_MinRead) }</span>
-						</div>
-						if rp.Description != "" {
-							<p class="text-xs sm:text-sm text-muted line-clamp-2 leading-relaxed mt-1 break-words">
-								{ rp.Description }
-							</p>
-						}
-					</article>
-				}
+		<section class="w-full">
+			<!-- Unified 3-Box Monolith Wireframe Grid (Full-Cover Hero Overlay + Dual Stacked Cards) -->
+			<div class="border-2 border-border divide-y lg:divide-y-0 lg:divide-x divide-border bg-surface/20 w-full overflow-hidden">
+				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border items-stretch">
+					
+					<!-- BOX 1: Hero Full-Bleed Image with Bottom Gradient Overlay (6 Cols / 50%) -->
+					if len(related) > 0 {
+						<article class="lg:col-span-6 relative overflow-hidden group min-h-[280px] sm:min-h-[320px] flex flex-col justify-end hover:bg-hover/20 transition-colors">
+							<!-- Full Background Image -->
+							<div class="absolute inset-0 w-full h-full overflow-hidden bg-bg">
+								@postThumbnailImg(related[0])
+							</div>
+
+							<!-- Dark Bottom Gradient Fade -->
+							<div class="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)] via-[var(--c-bg)]/80 to-transparent/10 pointer-events-none transition-opacity duration-300"></div>
+
+							<!-- Overlayed Content at the Bottom -->
+							<div class="relative z-10 p-5 sm:p-6 flex flex-col justify-end h-full">
+								<div>
+									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
+										if len(related[0].Tags) > 0 {
+											<span class="text-xs font-mono font-bold uppercase text-[var(--c-link)]">#{ related[0].Tags[0] }</span>
+											<span>·</span>
+										}
+										<time datetime={ related[0].Date.Format("2006-01-02") }>{ fmtDate(related[0]) }</time>
+										<span>·</span>
+										<span>{ fmt.Sprintf("%d %s", related[0].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
+
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } data-slug={ related[0].Slug } class="block mb-2">
+										<h4 class="text-base sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
+											{ related[0].Title }
+										</h4>
+									</a>
+
+									if related[0].Description != "" {
+										<p class="text-xs text-muted line-clamp-2 leading-relaxed font-sans mb-3">
+											{ related[0].Description }
+										</p>
+									}
+								</div>
+
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } class="mt-2 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">
+									<span class="text-[11px] font-bold uppercase tracking-wider">Read Full Dispatch</span>
+									@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+								</a>
+							</div>
+						</article>
+					}
+
+					<!-- BOX 2: Secondary Dispatch 1 (3 Cols / 25% - Flush Top Thumbnail) -->
+					if len(related) > 1 {
+						<article class="lg:col-span-3 flex flex-col overflow-hidden group hover:bg-hover/20 transition-colors">
+							<!-- Flush Top Thumbnail (Zero outer padding) -->
+							<div class="relative w-full aspect-[16/10] overflow-hidden bg-bg border-b border-border">
+								@postThumbnail(related[1], blogPrefix(lang) + "/blog/" + related[1].Slug)
+							</div>
+
+							<!-- Padded Text Content -->
+							<div class="p-5 flex-1 flex flex-col justify-between">
+								<div>
+									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
+										if len(related[1].Tags) > 0 {
+											<span class="text-xs font-mono font-bold uppercase text-[var(--c-link)]">#{ related[1].Tags[0] }</span>
+											<span>·</span>
+										}
+										<span>{ fmt.Sprintf("%d %s", related[1].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
+
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[1].Slug) } data-slug={ related[1].Slug } class="block mb-1.5">
+										<h4 class="text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
+											{ related[1].Title }
+										</h4>
+									</a>
+
+									if related[1].Description != "" {
+										<p class="text-[11px] text-muted line-clamp-2 leading-relaxed font-sans">
+											{ related[1].Description }
+										</p>
+									}
+								</div>
+
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[1].Slug) } class="mt-4 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">
+									<span class="text-[11px] font-bold uppercase tracking-wider">Read Dispatch</span>
+									@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+								</a>
+							</div>
+						</article>
+					}
+
+					<!-- BOX 3: Secondary Dispatch 2 (3 Cols / 25% - Flush Top Thumbnail) -->
+					if len(related) > 2 {
+						<article class="lg:col-span-3 flex flex-col overflow-hidden group hover:bg-hover/20 transition-colors">
+							<!-- Flush Top Thumbnail (Zero outer padding) -->
+							<div class="relative w-full aspect-[16/10] overflow-hidden bg-bg border-b border-border">
+								@postThumbnail(related[2], blogPrefix(lang) + "/blog/" + related[2].Slug)
+							</div>
+
+							<!-- Padded Text Content -->
+							<div class="p-5 flex-1 flex flex-col justify-between">
+								<div>
+									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
+										if len(related[2].Tags) > 0 {
+											<span class="text-xs font-mono font-bold uppercase text-[var(--c-link)]">#{ related[2].Tags[0] }</span>
+											<span>·</span>
+										}
+										<span>{ fmt.Sprintf("%d %s", related[2].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
+
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[2].Slug) } data-slug={ related[2].Slug } class="block mb-1.5">
+										<h4 class="text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
+											{ related[2].Title }
+										</h4>
+									</a>
+
+									if related[2].Description != "" {
+										<p class="text-[11px] text-muted line-clamp-2 leading-relaxed font-sans">
+											{ related[2].Description }
+										</p>
+									}
+								</div>
+
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[2].Slug) } class="mt-4 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">
+									<span class="text-[11px] font-bold uppercase tracking-wider">Read Dispatch</span>
+									@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+								</a>
+							</div>
+						</article>
+					}
+
+				</div>
 			</div>
-		</div>
+		</section>
 	}
 }

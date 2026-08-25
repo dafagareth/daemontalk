@@ -95,7 +95,7 @@ func TestAdminDeleteForbiddenWithoutAuth(t *testing.T) {
 func TestConfirmModalMarkupPresent(t *testing.T) {
 	h := &Handler{AdminToken: "secret"}
 
-	// Halaman 403 pun dibungkus Layout() yang sama — cukup buat pastikan
+	// 403 Page is also wrapped in the same Layout() — just to make sure
 	// modal konfirmasi global (dipakai admin & blog) benar-benar terpasang.
 	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
 	rec := httptest.NewRecorder()

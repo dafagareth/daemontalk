@@ -23,18 +23,18 @@ var slugCleanRe = regexp.MustCompile(`[^a-z0-9-]+`)
 
 // uniqueShortID generates a collision-free short ID.
 
-// slugify menghasilkan slug kebab-case dari judul (fallback server-side untuk
+// slugify generates kebab-case slug from title (server-side fallback for
 // generator JS di form editor).
 
-// editorMD merender markdown menjadi HTML polos untuk dimuat ke Quill —
-// sengaja tanpa chroma/heading-id/lazy-img supaya round-trip HTML↔markdown
+// editorMD renders markdown into plain HTML to load into Quill —
+// intentionally without chroma/heading-id/lazy-img to allow round-trip HTML↔markdown
 // di editor tetap bersih.
 var editorMD = goldmark.New(goldmark.WithExtensions(extension.Strikethrough))
 
-// slugTaken melapor apakah slug sudah dipakai post file atau post DB lain.
+// slugTaken reports whether slug is already used by a post file or another DB post.
 
-// uniqueSlug mencari slug bebas dengan sufiks -2, -3, … — dipakai autosave
-// supaya pembuatan draft tidak pernah gagal karena slug bentrok.
+// uniqueSlug finds a free slug with suffix -2, -3, … — used by autosave
+// so draft creation never fails due to slug collision.
 
 func (h *Handler) renderEditor(w http.ResponseWriter, r *http.Request, p postdb.WebPost, errMsg string, status int) {
 	w.WriteHeader(status)

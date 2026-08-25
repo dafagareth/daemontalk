@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
@@ -52,10 +54,19 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	name := GetVisitorIdentity(w, r)
+	customName := strings.TrimSpace(r.PostFormValue("name"))
+	if customName != "" && len(customName) <= 30 {
+		name = customName
+	}
 	if h.isAdmin(r) {
 		name = "daemontalk"
 	}
-	body := r.PostFormValue("body")
+
+	category := strings.TrimSpace(r.PostFormValue("category"))
+	body := strings.TrimSpace(r.PostFormValue("body"))
+	if category != "" && !strings.HasPrefix(body, "[") {
+		body = fmt.Sprintf("[%s] %s", strings.ToUpper(category), body)
+	}
 
 	// Spam check: silently drop high-risk submissions.
 	if spamScore(name, body) > spamThreshold {

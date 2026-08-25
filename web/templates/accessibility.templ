@@ -1,0 +1,23 @@
+package templates
+
+import (
+	"html/template"
+	"daemontalk/internal/i18n"
+)
+
+templ AccessibilityPage(ui i18n.UI, body template.HTML, lang string) {
+	<section class="container-page py-8 sm:py-12">
+		<div class="flex items-center gap-2 mb-3 font-mono text-xs text-muted">
+			<span class="px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold">STANDARDS</span>
+			<span>·</span>
+			<span>WCAG 2.1 AA</span>
+		</div>
+		<div class="prose max-w-none font-sans">
+			@templ.Raw(string(body))
+		</div>
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-mono">
+			@iconArrowLeft()
+			<span>{ ui.Post_Back }</span>
+		</a>
+	</section>
+}

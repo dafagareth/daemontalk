@@ -14,7 +14,7 @@ func fmtCommentTime(t time.Time) string {
 
 // commentsSection is the whole block: the live tree list plus the single bottom submit form.
 templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.Comment, isAdmin bool, visitorName string) {
-	<section class="mt-12 pt-8">
+	<section id="comments-section" class="mt-12 pt-8 border-t border-border/60">
 		@commentList(ui, comments, isAdmin, slug, lang, visitorName)
 		<div id="comment-form-container" class="mt-8 pt-6 border-t border-border/40 scroll-mt-24">
 			<div class="flex items-center justify-between mb-3">

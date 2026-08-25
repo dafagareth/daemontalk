@@ -49,7 +49,7 @@ templ Behind(ui i18n.UI, lang string, projects []project.Project, ghStats github
 			</div>
 		</section>
 
-		<!-- GitHub stats (pindahan dari home) -->
+		<!-- stats (moved from home) -->
 		if ghStats.Login != "" {
 			@githubStats(ghStats)
 		}

@@ -31,8 +31,8 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 			})();
 		</script>
 		if !noindex {
-			<!-- Animasi intro hanya pada kunjungan pertama per sesi; navigasi
-			     berikutnya langsung tampil (tidak fade ulang tiap pindah halaman). -->
+			<!-- Intro animation only on first visit per session; subsequent
+			     navigation appears immediately (no fade on every page load). -->
 			<script>
 				(function() {
 					try {
@@ -47,7 +47,7 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 		}
 		<link rel="preconnect" href="https://fonts.googleapis.com"/>
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap"/>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap"/>
 		<link rel="stylesheet" href={ assetURL("/static/css/chroma.css") }/>
 		<link rel="stylesheet" href={ assetURL("/static/css/main.css") }/>
 		if noindex {
@@ -82,6 +82,44 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 		<script>
+			function dtAttachMathScrollFade() {
+				requestAnimationFrame(function() {
+					document.querySelectorAll(".katex-display, .math-display").forEach(function(el) {
+						if (el.parentElement && el.parentElement.classList.contains("katex-scroll-wrapper")) {
+							var existingFade = el.parentElement.querySelector(".katex-fade-right");
+							if (existingFade) {
+								var isOver = el.scrollWidth > (el.clientWidth + 4);
+								existingFade.style.display = isOver ? "block" : "none";
+							}
+							return;
+						}
+						var wrapper = document.createElement("div");
+						wrapper.className = "katex-scroll-wrapper relative my-4";
+						el.parentNode.insertBefore(wrapper, el);
+						wrapper.appendChild(el);
+
+						var fade = document.createElement("div");
+						fade.className = "katex-fade-right pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[var(--c-bg)] to-transparent transition-opacity duration-200";
+						wrapper.appendChild(fade);
+
+						function checkOverflow() {
+							var isOverflow = el.scrollWidth > (el.clientWidth + 4);
+							if (!isOverflow) {
+								fade.style.display = "none";
+							} else {
+								fade.style.display = "block";
+								var atEnd = (el.scrollWidth - el.scrollLeft - el.clientWidth) < 6;
+								fade.style.opacity = atEnd ? "0" : "1";
+							}
+						}
+
+						el.addEventListener("scroll", checkOverflow, { passive: true });
+						checkOverflow();
+						window.addEventListener("resize", checkOverflow, { passive: true });
+					});
+				});
+			}
+
 			function dtRenderMath() {
 				if (typeof renderMathInElement === "function") {
 					renderMathInElement(document.body, {
@@ -94,6 +132,7 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 						ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
 						throwOnError: false
 					});
+					dtAttachMathScrollFade();
 				} else {
 					setTimeout(dtRenderMath, 60);
 				}
@@ -120,21 +159,22 @@ templ Layout(ui i18n.UI, lang string, page string, currentPath string, meta Page
 			<main class="w-full flex-1">
 				@content
 			</main>
-			<!-- Global Back to top floating button -->
-			<button
-				id="back-to-top"
-				onclick="window.scrollTo({top:0,behavior:'smooth'})"
-				aria-label="Back to top"
-				class="fixed bottom-6 right-6 z-40 w-9 h-9 flex items-center justify-center rounded-none border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-all opacity-0 pointer-events-none shadow-md"
-			>
-				@IconArrowUp()
-			</button>
 			<!-- Footer -->
 			@footer(ui, lang)
 			<!-- Keyboard Shortcuts Modal -->
 			@shortcutsModal()
 			<!-- Confirm Modal -->
 			@confirmModal()
+			<!-- Global Back to Top Floating Button -->
+			<button
+				id="back-to-top"
+				onclick="window.scrollTo({top:0,behavior:'smooth'})"
+				aria-label="Back to top"
+				title="Back to top"
+				class="fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
+			>
+				@IconArrowUp()
+			</button>
 			<!-- Visited Posts Marker -->
 			@visitedPostsScript()
 			<!-- Layout Interactive Scripts -->

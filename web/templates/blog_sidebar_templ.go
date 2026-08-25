@@ -33,7 +33,7 @@ func blogSidebar(p post.Post) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"sticky top-20 flex flex-col gap-6\"><div class=\"border border-border bg-surface p-5 flex flex-col rounded-none-none\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border\">READING TOOLS</h3><div class=\"flex flex-col gap-4\"><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Font Size</span><div class=\"flex items-center rounded-none-none border border-border overflow-hidden text-xs font-mono\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors border-r border-border cursor-pointer\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors cursor-pointer\">A+</button></div></div><div class=\"flex items-center justify-between mt-1\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Warm</span> <input type=\"range\" id=\"warm-slider-desktop\" min=\"0\" max=\"100\" step=\"5\" value=\"0\" oninput=\"setWarmTint(this.value)\" class=\"warm-slider w-24 h-1 accent-amber-500 cursor-pointer\" aria-label=\"Warm tint intensity\"></div><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Save Post</span> <button onclick=\"toggleBookmark(this)\" data-slug=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"sticky top-20 flex flex-col gap-6\"><div class=\"border border-border bg-surface p-5 flex flex-col rounded-none\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border\">READING TOOLS</h3><div class=\"flex flex-col gap-4\"><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Font Size</span><div class=\"flex items-center rounded-none border border-border overflow-hidden text-xs font-mono\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors border-r border-border cursor-pointer\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" class=\"px-3 py-1 hover:bg-hover text-muted hover:text-text transition-colors cursor-pointer\">A+</button></div></div><div class=\"flex items-center justify-between mt-1\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Warm</span> <input type=\"range\" id=\"warm-slider-desktop\" min=\"0\" max=\"100\" step=\"5\" value=\"0\" oninput=\"setWarmTint(this.value)\" class=\"warm-slider w-24 h-1 accent-amber-500 cursor-pointer\" aria-label=\"Warm tint intensity\"></div><div class=\"flex items-center justify-between\"><span class=\"text-xs font-mono text-muted uppercase tracking-wider\">Save Post</span> <button onclick=\"toggleBookmark(this)\" data-slug=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -72,7 +72,7 @@ func blogSidebar(p post.Post) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" aria-label=\"Bookmark post\" class=\"bookmark-btn text-xs font-mono px-3 py-1 border border-border rounded-none-none text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer\">☆</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" aria-label=\"Bookmark post\" class=\"bookmark-btn text-xs font-mono px-3 py-1 border border-border rounded-none text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer\">☆</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -80,7 +80,7 @@ func blogSidebar(p post.Post) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div><div class=\"border border-border bg-surface p-5 flex flex-col rounded-none-none\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border\">SHARE</h3><div class=\"flex flex-col gap-2\"><button onclick=\"copyPostLink(this)\" class=\"flex items-center gap-2 text-xs px-3 py-2 border border-border rounded-none-none text-muted hover:bg-hover hover:text-text transition-colors font-mono uppercase tracking-wider w-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div><div class=\"border border-border bg-surface p-5 flex flex-col rounded-none\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border\">SHARE</h3><div class=\"flex flex-col gap-2\"><button onclick=\"copyPostLink(this)\" class=\"flex items-center gap-2 text-xs px-3 py-2 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono uppercase tracking-wider w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -101,7 +101,7 @@ func blogSidebar(p post.Post) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" target=\"_blank\" rel=\"noopener\" class=\"flex items-center gap-2 text-xs px-3 py-2 border border-border rounded-none-none text-muted hover:bg-hover hover:text-text transition-colors font-mono uppercase tracking-wider w-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" target=\"_blank\" rel=\"noopener\" class=\"flex items-center gap-2 text-xs px-3 py-2 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono uppercase tracking-wider w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -122,7 +122,7 @@ func blogSidebar(p post.Post) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" target=\"_blank\" rel=\"noopener\" class=\"flex items-center gap-2 text-xs px-3 py-2 border border-border rounded-none-none text-muted hover:bg-hover hover:text-text transition-colors font-mono uppercase tracking-wider w-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" target=\"_blank\" rel=\"noopener\" class=\"flex items-center gap-2 text-xs px-3 py-2 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono uppercase tracking-wider w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -22,23 +22,146 @@ templ reactionIcon(emoji string, active bool) {
 	}
 }
 
-// ReactionsBar renders the emoji reaction row for a post. Exported for the reaction handler.
-templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string, userReaction string) {
-	<div id="reactions-bar" class="flex flex-wrap items-center gap-2">
-		<p class="text-xs text-muted w-full mb-1 font-medium uppercase tracking-wide">Reactions</p>
-		for _, emoji := range []string{"like", "heart", "fire", "mindblown", "insightful"} {
+// ReactionsBar renders the 5 authentic emoji reactions along with Bookmark and Share dock.
+templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string, userReaction string, commentCount int, title string, date string) {
+	<div id="reactions-bar" class="w-full mt-6 p-1.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-none flex items-center justify-between gap-3 select-none font-mono text-xs not-prose">
+		
+		<!-- Left Group: 5 Authentic Emoji Reactions (Like, Heart, Fire, Mindblown, Insightful) -->
+		<div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+			for _, emoji := range []string{"like", "heart", "fire", "mindblown", "insightful"} {
+				{{
+					active := emoji == userReaction
+					count := reactions[emoji]
+				}}
+				<button
+					hx-post={ blogPrefix(lang) + "/blog/" + slug + "/reactions/" + emoji }
+					hx-target="#reactions-bar"
+					hx-swap="outerHTML"
+					class={
+						"inline-flex items-center gap-1.5 px-1.5 py-1 text-xs transition-transform hover:scale-110 cursor-pointer",
+						templ.KV("text-text font-bold", active),
+						templ.KV("text-muted hover:text-text opacity-75 hover:opacity-100", !active),
+					}
+					title={ reactionName(emoji) }
+					aria-label={ reactionName(emoji) }
+				>
+					@reactionIcon(emoji, active)
+					if count > 0 {
+						<span class={ "text-xs font-mono font-medium", templ.KV("text-text font-bold", active), templ.KV("text-muted", !active) }>{ fmt.Sprintf("%d", count) }</span>
+					}
+				</button>
+			}
+		</div>
+
+		<!-- Right Group: Pure Save Icon & Share Dock -->
+		<div class="flex items-center gap-1 sm:gap-1.5 relative shrink-0">
+			
+			<!-- Pure Save Icon (Bookmark) -->
 			<button
-				class={ "reaction-btn flex items-center justify-center gap-2", templ.KV("reaction-active", emoji == userReaction) }
-				hx-post={ blogPrefix(lang) + "/blog/" + slug + "/reactions/" + emoji }
-				hx-target="#reactions-bar"
-				hx-swap="outerHTML"
-				title={ reactionName(emoji) }
+				type="button"
+				onclick="toggleBookmark(this)"
+				data-slug={ slug }
+				data-title={ title }
+				data-date={ date }
+				class="bookmark-btn p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center"
+				title="Save / Bookmark post"
+				aria-label="Save post"
 			>
-				@reactionIcon(emoji, emoji == userReaction)
-				if reactions[emoji] > 0 {
-					<span class="reaction-count text-xs font-mono">{ fmt.Sprintf("%d", reactions[emoji]) }</span>
-				}
+				@IconBookmark("bookmark-icon w-4 h-4 shrink-0")
 			</button>
-		}
+
+			<!-- Share Button & Horizontal Dock Popover -->
+			<div class="relative">
+				<button
+					type="button"
+					onclick="toggleSharePopover(event)"
+					class="p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group"
+					title="Share article"
+					aria-label="Share article"
+				>
+					@IconShare("w-4 h-4 shrink-0")
+				</button>
+
+				<!-- The Micro Horizontal Dock Popover -->
+				<div id="share-popover-menu" class="hidden absolute right-0 bottom-full mb-3 bg-surface border border-border shadow-2xl z-40 p-1 font-mono text-xs rounded-none select-none whitespace-nowrap">
+					<div class="flex items-center gap-1">
+						
+						<!-- 1. Copy Link Button -->
+						<button
+							type="button"
+							onclick="copyPostUrl(this, event)"
+							class="px-2.5 py-1.5 text-muted hover:text-text hover:bg-hover flex items-center gap-1.5 cursor-pointer rounded-none transition-colors group font-bold text-xs"
+							title="Copy link to clipboard"
+						>
+							@IconLink("w-3.5 h-3.5 text-muted group-hover:text-text shrink-0")
+							<span class="share-label-text">
+								if lang == "id" {
+									Salin
+								} else {
+									Copy
+								}
+							</span>
+							<span class="share-copied-status hidden text-accent font-bold">
+								if lang == "id" {
+									Tersalin
+								} else {
+									Copied
+								}
+							</span>
+						</button>
+
+						<div class="h-4 w-px bg-border/60 mx-0.5"></div>
+
+						<!-- 2. X / Twitter -->
+						<button
+							type="button"
+							onclick="shareToTwitter(event)"
+							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
+							title="Share on X"
+							aria-label="Share on X"
+						>
+							@IconX("w-3.5 h-3.5 shrink-0")
+						</button>
+
+						<!-- 3. Bluesky -->
+						<button
+							type="button"
+							onclick="shareToBluesky(event)"
+							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
+							title="Share on Bluesky"
+							aria-label="Share on Bluesky"
+						>
+							@IconBluesky("w-3.5 h-3.5 shrink-0")
+						</button>
+
+						<!-- 4. LinkedIn -->
+						<button
+							type="button"
+							onclick="shareToLinkedIn(event)"
+							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
+							title="Share on LinkedIn"
+							aria-label="Share on LinkedIn"
+						>
+							@IconLinkedIn("w-3.5 h-3.5 shrink-0")
+						</button>
+
+						<!-- 5. Threads -->
+						<button
+							type="button"
+							onclick="shareToThreads(event)"
+							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
+							title="Share on Threads"
+							aria-label="Share on Threads"
+						>
+							@IconThreads("w-3.5 h-3.5 shrink-0")
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
 	</div>
 }

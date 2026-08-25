@@ -60,8 +60,9 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 	if page < 1 {
 		page = 1
 	}
+	pageSize := 12
 	total := len(filtered)
-	totalPages := (total + DefaultPostsPerPage - 1) / DefaultPostsPerPage
+	totalPages := (total + pageSize - 1) / pageSize
 	if totalPages < 1 {
 		totalPages = 1
 	}
@@ -73,8 +74,8 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 	if total == 0 {
 		pagePosts = nil
 	} else {
-		start := (page - 1) * DefaultPostsPerPage
-		end := start + DefaultPostsPerPage
+		start := (page - 1) * pageSize
+		end := start + pageSize
 		if end > total {
 			end = total
 		}
@@ -90,15 +91,15 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Setelah pivot blog-first, BlogIndex juga melayani "/" dan "/id" sebagai
-	// halaman utama: judul tab "daemontalk" + JSON-LD situs.
+	// After blog-first pivot, BlogIndex also serves "/" and "/id" as
+	// main page: tab title "daemontalk" + site JSON-LD.
 	pageName := "blog"
 	meta := templates.PageMeta{}
 	if r.URL.Path == "/" || r.URL.Path == "/id" || r.URL.Path == "/id/" {
 		pageName = "home"
 		meta.JSONLD = siteJSONLD()
 	}
-	h.Render(w, r, templates.Layout(ui, lang, pageName, r.URL.Path, meta, templates.BlogIndex(ui, pagePosts, lang, page, totalPages, viewCounts, tagCounts, tagFilter)))
+	h.Render(w, r, templates.Layout(ui, lang, pageName, r.URL.Path, meta, templates.BlogIndex(ui, filtered, pagePosts, lang, page, totalPages, viewCounts, tagCounts, tagFilter)))
 }
 
 // BlogPostsPartial returns a partial HTML response (list items + updated Load More button)

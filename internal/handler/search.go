@@ -43,6 +43,10 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 	isHTMX := r.Header.Get("HX-Request") == "true"
 	if isHTMX {
+		if r.URL.Query().Get("type") == "quick" || r.Header.Get("HX-Target") == "search-dropdown-results" {
+			h.Render(w, r, templates.SearchDropdownResults(ui, query, results, lang, viewCounts))
+			return
+		}
 		h.Render(w, r, templates.SearchResultsList(ui, query, results, lang, viewCounts))
 		return
 	}

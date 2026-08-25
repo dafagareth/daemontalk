@@ -22,8 +22,8 @@ import (
 type Handler struct {
 	ContentDir  string // path to content directory (defaults to "content")
 	AllProjects []project.Project
-	FilePosts   []post.Post   // post markdown dari content/posts, dimuat sekali saat startup
-	PostDB      *postdb.Store // post buatan editor web (opsional)
+	FilePosts   []post.Post   // markdown posts from content/posts, loaded once at startup
+	PostDB      *postdb.Store // posts created by web editor (optional)
 	Comments    *comment.Store
 	AdminToken  string // when set, enables comment moderation
 
@@ -38,7 +38,7 @@ type Handler struct {
 	SMTPPass string
 	SMTPTo   string
 
-	// GitHub token for higher API rate limits (optional)
+	// token for higher API rate limits (optional)
 	GitHubToken string
 }
 
@@ -62,9 +62,9 @@ func (h *Handler) ReloadFilePosts() {
 	}
 }
 
-// RefreshPosts merender ulang post dari DB, menggabungkannya dengan post file,
-// dan mengganti snapshot. Dipanggil saat startup dan setiap kali editor
-// menyimpan/menghapus post — post baru langsung tampil tanpa restart.
+// RefreshPosts re-renders posts from DB, merges them with file posts,
+// and replaces snapshot. Called at startup and every time the editor
+// saving/deleting post — new post directly appears without restart.
 func (h *Handler) RefreshPosts() {
 	merged := make([]post.Post, 0, len(h.FilePosts)+8)
 	merged = append(merged, h.FilePosts...)

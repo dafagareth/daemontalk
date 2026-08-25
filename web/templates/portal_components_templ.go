@@ -392,7 +392,7 @@ func portalStrictFeatureStory(ui i18n.UI, p post.Post, lang string) templ.Compon
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent\"></div><div class=\"absolute bottom-0 left-0 w-full p-3 sm:p-4\"><h4 class=\"display text-white text-sm sm:text-base font-extrabold leading-snug line-clamp-2 shadow-sm\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent\"></div><div class=\"absolute bottom-0 left-0 w-full px-3 sm:px-4 py-5 sm:py-6\"><h4 class=\"display text-white text-sm sm:text-base font-extrabold leading-snug line-clamp-2 shadow-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

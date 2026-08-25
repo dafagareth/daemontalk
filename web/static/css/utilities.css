@@ -1,9 +1,97 @@
-/* Serif font toggle */
+/* ==========================================================================
+   Editorial Serif / Sans Typography Calibration
+   ========================================================================== */
+#prose-body.prose-serif {
+  font-family: var(--font-serif) !important;
+  font-optical-sizing: auto;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 #prose-body.prose-serif,
 #prose-body.prose-serif p,
 #prose-body.prose-serif li,
-#prose-body.prose-serif blockquote {
-  font-family: 'Merriweather', Georgia, 'PT Serif', serif;
+#prose-body.prose-serif blockquote,
+#prose-body.prose-serif h1,
+#prose-body.prose-serif h2,
+#prose-body.prose-serif h3,
+#prose-body.prose-serif h4 {
+  font-family: var(--font-serif) !important;
+}
+
+#prose-body.prose-serif p {
+  line-height: 1.82 !important;
+}
+
+/* Default font weights for Serif */
+#prose-body.prose-serif strong,
+#prose-body.prose-serif b {
+  font-weight: 600 !important;
+}
+
+/* Dark Mode Serif Calibration: Soft off-white parchment ink, reduces glare and halation */
+[data-theme="dark"] #prose-body.prose-serif,
+[data-theme="dark"] #prose-body.prose-serif p,
+[data-theme="dark"] #prose-body.prose-serif li {
+  color: #dcdfe6 !important;
+  letter-spacing: 0.006em;
+}
+
+[data-theme="dark"] #prose-body.prose-serif h1,
+[data-theme="dark"] #prose-body.prose-serif h2,
+[data-theme="dark"] #prose-body.prose-serif h3,
+[data-theme="dark"] #prose-body.prose-serif h4 {
+  color: #f1f3f7 !important;
+  letter-spacing: -0.015em;
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] #prose-body.prose-serif strong,
+[data-theme="dark"] #prose-body.prose-serif b {
+  color: #f1f3f7 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] #prose-body.prose-serif blockquote {
+  color: #9da3af !important;
+  border-left-color: #3f3f46 !important;
+  font-style: italic;
+}
+
+/* Light Mode Serif Calibration: Deep rich ink on paper */
+[data-theme="light"] #prose-body.prose-serif,
+[data-theme="light"] #prose-body.prose-serif p,
+[data-theme="light"] #prose-body.prose-serif li {
+  color: #18181c !important;
+  letter-spacing: 0.002em;
+}
+
+[data-theme="light"] #prose-body.prose-serif h1,
+[data-theme="light"] #prose-body.prose-serif h2,
+[data-theme="light"] #prose-body.prose-serif h3,
+[data-theme="light"] #prose-body.prose-serif h4 {
+  color: #0d0d10 !important;
+  letter-spacing: -0.018em;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] #prose-body.prose-serif strong,
+[data-theme="light"] #prose-body.prose-serif b {
+  color: #0d0d10 !important;
+  font-weight: 600 !important;
+}
+
+#prose-body.prose-sans,
+#prose-body.prose-sans p,
+#prose-body.prose-sans li,
+#prose-body.prose-sans blockquote,
+#prose-body.prose-sans h1,
+#prose-body.prose-sans h2,
+#prose-body.prose-sans h3,
+#prose-body.prose-sans h4 {
+  font-family: var(--font-sans) !important;
 }
 
 /* GitHub contribution heatmap cells */
