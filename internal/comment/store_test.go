@@ -218,4 +218,3 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 		t.Errorf("expected 0 replies under Dave, got %d", len(tree[1].Replies))
 	}
 }
-

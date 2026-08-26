@@ -59,7 +59,6 @@ type CategorySection struct {
 	SubPosts []post.Post
 }
 
-
 // mapTagToCategory maps a post tag to the high-level main categories.
 func mapTagToCategory(t string) string {
 	t = strings.ToLower(strings.TrimSpace(t))
@@ -78,14 +77,26 @@ func mapTagToCategory(t string) string {
 }
 
 // getCategoryCluster finds posts matching a set of tags and builds a CategorySection.
-func getCategoryCluster(posts []post.Post, categoryKey string, matchTags []string, subLimit int) CategorySection {
+// excludeSlugs allows skipping posts already displayed elsewhere on the homepage.
+// By passing a pointer, the function automatically appends selected posts to prevent duplicates in subsequent calls.
+func getCategoryCluster(posts []post.Post, categoryKey string, matchTags []string, subLimit int, excludeSlugs *[]string) CategorySection {
 	tagSet := make(map[string]bool)
 	for _, t := range matchTags {
 		tagSet[strings.ToLower(strings.TrimSpace(t))] = true
 	}
 
+	excludeMap := make(map[string]bool)
+	if excludeSlugs != nil {
+		for _, s := range *excludeSlugs {
+			excludeMap[s] = true
+		}
+	}
+
 	var matched []post.Post
 	for _, p := range posts {
+		if excludeMap[p.Slug] {
+			continue
+		}
 		for _, t := range p.Tags {
 			cleanTag := strings.ToLower(strings.TrimSpace(t))
 			if tagSet[cleanTag] {
@@ -97,8 +108,11 @@ func getCategoryCluster(posts []post.Post, categoryKey string, matchTags []strin
 
 	if len(matched) == 0 {
 		// Fallback to any post if no exact match found
-		if len(posts) > 0 {
-			matched = append(matched, posts[0])
+		for _, p := range posts {
+			if !excludeMap[p.Slug] {
+				matched = append(matched, p)
+				break
+			}
 		}
 	}
 
@@ -107,6 +121,9 @@ func getCategoryCluster(posts []post.Post, categoryKey string, matchTags []strin
 	}
 	if len(matched) > 0 {
 		sec.LeadPost = matched[0]
+		if excludeSlugs != nil {
+			*excludeSlugs = append(*excludeSlugs, sec.LeadPost.Slug)
+		}
 	}
 	if len(matched) > 1 {
 		limit := subLimit
@@ -114,20 +131,53 @@ func getCategoryCluster(posts []post.Post, categoryKey string, matchTags []strin
 			limit = len(matched) - 1
 		}
 		sec.SubPosts = matched[1 : limit+1]
+		if excludeSlugs != nil {
+			for _, p := range sec.SubPosts {
+				*excludeSlugs = append(*excludeSlugs, p.Slug)
+			}
+		}
 	}
 	return sec
 }
 
+// collectSlugs gathers all slugs from CategorySections (lead + sub posts).
+func collectSlugs(sections ...CategorySection) []string {
+	var slugs []string
+	for _, s := range sections {
+		if s.LeadPost.Slug != "" {
+			slugs = append(slugs, s.LeadPost.Slug)
+		}
+		for _, p := range s.SubPosts {
+			slugs = append(slugs, p.Slug)
+		}
+	}
+	return slugs
+}
+
+// collectPostSlugs gathers slugs from a slice of posts.
+func collectPostSlugs(posts []post.Post) []string {
+	var slugs []string
+	for _, p := range posts {
+		slugs = append(slugs, p.Slug)
+	}
+	return slugs
+}
+
 // getWirePosts returns quick headline dispatches avoiding already highlighted slugs.
-func getWirePosts(posts []post.Post, excludeSlugs []string, limit int) []post.Post {
+func getWirePosts(posts []post.Post, excludeSlugs *[]string, limit int) []post.Post {
 	excludeMap := make(map[string]bool)
-	for _, s := range excludeSlugs {
-		excludeMap[s] = true
+	if excludeSlugs != nil {
+		for _, s := range *excludeSlugs {
+			excludeMap[s] = true
+		}
 	}
 	var out []post.Post
 	for _, p := range posts {
 		if !excludeMap[p.Slug] {
 			out = append(out, p)
+			if excludeSlugs != nil {
+				*excludeSlugs = append(*excludeSlugs, p.Slug)
+			}
 			if len(out) >= limit {
 				break
 			}
@@ -261,7 +311,6 @@ func getPopularPostsExcluding(posts []post.Post, viewCounts map[string]int, excl
 	}
 	return out
 }
-
 
 type TagCount struct {
 	Tag   string
