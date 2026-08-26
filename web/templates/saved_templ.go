@@ -31,41 +31,28 @@ func SavedPage(ui i18n.UI, lang string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12\"><h1 class=\"display text-2xl sm:text-3xl font-semibold text-text mb-2\">Reading List</h1><p class=\"text-sm text-muted mb-8\">Posts you've bookmarked. Saved locally in your browser.</p><div id=\"saved-list\"><p class=\"text-sm text-muted\">Loading...</p></div><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-6 sm:py-10\"><div class=\"border-y sm:border-2 border-border bg-bg shadow-sm w-full max-w-7xl mx-auto flex flex-col\"><!-- HEADER: Logbook Cover --><div class=\"p-6 sm:p-10 border-b-2 border-border flex flex-col gap-4\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 templ.SafeURL
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog"))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/saved.templ`, Line: 12, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/saved.templ`, Line: 11, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-8 font-mono\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"font-mono text-xs uppercase font-bold text-muted hover:text-text transition-colors w-fit flex items-center gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = iconArrowLeft().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconArrowLeft("w-3 h-3").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_Back)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/saved.templ`, Line: 14, Col: 23}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span></a></section><script src=\"/static/js/saved.js\" defer></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span>BACK TO BLOG</span></a><div class=\"flex flex-col mt-2\"><h1 class=\"display text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight uppercase mb-2\">Saved Dispatches</h1><div class=\"font-mono text-xs uppercase font-bold text-muted\"><span id=\"saved-count-display\">0 Entries</span></div></div></div><!-- LIST: The Ledger Entries --><div id=\"saved-list\" class=\"flex flex-col divide-y divide-border\"><div class=\"p-8 sm:p-12 text-center\"><p class=\"text-xs font-mono text-muted flex items-center justify-center gap-2\"><span class=\"w-1.5 h-1.5 rounded-full bg-accent animate-pulse\"></span> Reading system ledger...</p></div></div></div></section><script src=\"/static/js/saved.js\" defer></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

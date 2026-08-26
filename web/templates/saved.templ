@@ -3,16 +3,34 @@ package templates
 import "daemontalk/internal/i18n"
 
 templ SavedPage(ui i18n.UI, lang string) {
-	<section class="container-page py-8 sm:py-12">
-		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">Reading List</h1>
-		<p class="text-sm text-muted mb-8">Posts you've bookmarked. Saved locally in your browser.</p>
-		<div id="saved-list">
-			<p class="text-sm text-muted">Loading...</p>
+	<section class="container-page py-6 sm:py-10">
+		<div class="border-y sm:border-2 border-border bg-bg shadow-sm w-full max-w-7xl mx-auto flex flex-col">
+			
+			<!-- HEADER: Logbook Cover -->
+			<div class="p-6 sm:p-10 border-b-2 border-border flex flex-col gap-4">
+				<a href={ templ.SafeURL(prefix(lang) + "/") } class="font-mono text-xs uppercase font-bold text-muted hover:text-text transition-colors w-fit flex items-center gap-2">
+					@IconArrowLeft("w-3 h-3")
+					<span>BACK TO BLOG</span>
+				</a>
+				<div class="flex flex-col mt-2">
+					<h1 class="display text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight uppercase mb-2">Saved Dispatches</h1>
+					<div class="font-mono text-xs uppercase font-bold text-muted">
+						<span id="saved-count-display">0 Entries</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- LIST: The Ledger Entries -->
+			<div id="saved-list" class="flex flex-col divide-y divide-border">
+				<div class="p-8 sm:p-12 text-center">
+					<p class="text-xs font-mono text-muted flex items-center justify-center gap-2">
+						<span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+						Reading system ledger...
+					</p>
+				</div>
+			</div>
+
 		</div>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog") } class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-8 font-mono">
-			@iconArrowLeft()
-			<span>{ ui.Post_Back }</span>
-		</a>
 	</section>
 	<script src="/static/js/saved.js" defer></script>
 }
