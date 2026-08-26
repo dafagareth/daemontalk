@@ -18,7 +18,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/charmbracelet/ssh"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/config"
 	"daemontalk/internal/handler"
@@ -29,8 +28,8 @@ import (
 	"daemontalk/internal/router"
 	"daemontalk/internal/tuisrv"
 	"daemontalk/web/templates"
+	"github.com/charmbracelet/ssh"
 )
-
 
 func main() {
 	cfg := config.Load()

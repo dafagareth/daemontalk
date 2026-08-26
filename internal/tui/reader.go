@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"daemontalk/internal/post"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
-	"daemontalk/internal/post"
 )
 
 // FindPostFile locates the exact markdown file corresponding to a given post
