@@ -1325,7 +1325,7 @@ func IconReactionThumbsUp(active bool) templ.Component {
 			templ_7745c5c3_Var76 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var77 = []any{"w-4 h-4", templ.KV("text-blue-500 fill-blue-500", active)}
+		var templ_7745c5c3_Var77 = []any{"w-5 h-5 sm:w-6 sm:h-6", templ.KV("text-blue-500 fill-blue-500", active)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var77...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -1372,7 +1372,7 @@ func IconReactionHeart(active bool) templ.Component {
 			templ_7745c5c3_Var79 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var80 = []any{"w-4 h-4", templ.KV("text-red-500 fill-red-500", active)}
+		var templ_7745c5c3_Var80 = []any{"w-5 h-5 sm:w-6 sm:h-6", templ.KV("text-red-500 fill-red-500", active)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var80...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -1419,7 +1419,7 @@ func IconReactionFire(active bool) templ.Component {
 			templ_7745c5c3_Var82 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var83 = []any{"w-4 h-4", templ.KV("text-orange-500 fill-orange-500", active)}
+		var templ_7745c5c3_Var83 = []any{"w-5 h-5 sm:w-6 sm:h-6", templ.KV("text-orange-500 fill-orange-500", active)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var83...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -1466,7 +1466,7 @@ func IconReactionMindBlown(active bool) templ.Component {
 			templ_7745c5c3_Var85 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var86 = []any{"w-4 h-4", templ.KV("text-purple-500 fill-purple-500", active)}
+		var templ_7745c5c3_Var86 = []any{"w-5 h-5 sm:w-6 sm:h-6", templ.KV("text-purple-500 fill-purple-500", active)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var86...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -1513,7 +1513,7 @@ func IconReactionInsightful(active bool) templ.Component {
 			templ_7745c5c3_Var88 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var89 = []any{"w-4 h-4", templ.KV("text-yellow-500 fill-yellow-500", active)}
+		var templ_7745c5c3_Var89 = []any{"w-5 h-5 sm:w-6 sm:h-6", templ.KV("text-yellow-500 fill-yellow-500", active)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var89...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

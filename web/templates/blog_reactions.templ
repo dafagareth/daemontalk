@@ -27,7 +27,7 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 	<div id="reactions-bar" class="w-full mt-6 p-1.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-none flex items-center justify-between gap-3 select-none font-mono text-xs not-prose">
 		
 		<!-- Left Group: 5 Authentic Emoji Reactions (Like, Heart, Fire, Mindblown, Insightful) -->
-		<div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+		<div class="flex items-center gap-2 sm:gap-3 flex-wrap">
 			for _, emoji := range []string{"like", "heart", "fire", "mindblown", "insightful"} {
 				{{
 					active := emoji == userReaction
@@ -38,8 +38,8 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 					hx-target="#reactions-bar"
 					hx-swap="outerHTML"
 					class={
-						"inline-flex items-center gap-1.5 px-1.5 py-1 text-xs transition-transform hover:scale-110 cursor-pointer",
-						templ.KV("text-text font-bold", active),
+						"inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded bg-surface border border-transparent hover:border-border/50",
+						templ.KV("text-text font-bold bg-border/20 border-border/50", active),
 						templ.KV("text-muted hover:text-text opacity-75 hover:opacity-100", !active),
 					}
 					title={ reactionName(emoji) }
@@ -47,7 +47,7 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 				>
 					@reactionIcon(emoji, active)
 					if count > 0 {
-						<span class={ "text-xs font-mono font-medium", templ.KV("text-text font-bold", active), templ.KV("text-muted", !active) }>{ fmt.Sprintf("%d", count) }</span>
+						<span class={ "text-xs sm:text-sm font-mono font-medium", templ.KV("text-text font-bold", active), templ.KV("text-muted", !active) }>{ fmt.Sprintf("%d", count) }</span>
 					}
 				</button>
 			}

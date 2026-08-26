@@ -97,15 +97,15 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"reactions-bar\" class=\"w-full mt-6 p-1.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-none flex items-center justify-between gap-3 select-none font-mono text-xs not-prose\"><!-- Left Group: 5 Authentic Emoji Reactions (Like, Heart, Fire, Mindblown, Insightful) --><div class=\"flex items-center gap-1 sm:gap-2 flex-wrap\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"reactions-bar\" class=\"w-full mt-6 p-1.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-none flex items-center justify-between gap-3 select-none font-mono text-xs not-prose\"><!-- Left Group: 5 Authentic Emoji Reactions (Like, Heart, Fire, Mindblown, Insightful) --><div class=\"flex items-center gap-2 sm:gap-3 flex-wrap\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, emoji := range []string{"like", "heart", "fire", "mindblown", "insightful"} {
 			active := emoji == userReaction
 			count := reactions[emoji]
-			var templ_7745c5c3_Var4 = []any{"inline-flex items-center gap-1.5 px-1.5 py-1 text-xs transition-transform hover:scale-110 cursor-pointer",
-				templ.KV("text-text font-bold", active),
+			var templ_7745c5c3_Var4 = []any{"inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded bg-surface border border-transparent hover:border-border/50",
+				templ.KV("text-text font-bold bg-border/20 border-border/50", active),
 				templ.KV("text-muted hover:text-text opacity-75 hover:opacity-100", !active),
 			}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
@@ -173,7 +173,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 				return templ_7745c5c3_Err
 			}
 			if count > 0 {
-				var templ_7745c5c3_Var9 = []any{"text-xs font-mono font-medium", templ.KV("text-text font-bold", active), templ.KV("text-muted", !active)}
+				var templ_7745c5c3_Var9 = []any{"text-xs sm:text-sm font-mono font-medium", templ.KV("text-text font-bold", active), templ.KV("text-muted", !active)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var9...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -198,7 +198,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 50, Col: 154}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 50, Col: 165}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
