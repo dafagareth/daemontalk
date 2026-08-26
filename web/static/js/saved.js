@@ -16,23 +16,18 @@
 
 			var html = '';
 			bookmarks.forEach(function(b, i) {
-				var num = (i + 1).toString().padStart(2, '0');
+				var bgClass = i % 2 !== 0 ? 'bg-surface/30' : 'bg-bg';
 				
-				html += '<div class="group flex flex-col sm:flex-row items-stretch hover:bg-surface transition-colors">';
+				html += '<div class="group flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 sm:px-8 gap-4 hover:bg-hover/20 transition-colors ' + bgClass + '">';
 				
-				// Col 1: Huge Ledger Number
-				html += '	<div class="hidden sm:flex w-20 shrink-0 items-center justify-center border-r border-border font-mono text-2xl font-black text-muted opacity-30 group-hover:opacity-100 transition-opacity bg-surface/50">';
-				html += '		' + num;
-				html += '	</div>';
-				
-				// Col 2: Title & Context
-				html += '	<a href="/blog/' + b.slug + '" class="flex-1 min-w-0 p-5 sm:p-6 sm:px-8 flex flex-col justify-center border-b sm:border-b-0 border-border">';
+				// Left: Title & Context
+				html += '	<a href="/blog/' + b.slug + '" class="flex-1 min-w-0 flex flex-col justify-center">';
 				html += '		<h3 class="display text-base sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5">' + escHtml(b.title) + '</h3>';
-				html += '		<p class="text-xs font-mono text-muted uppercase tracking-wider">ENTRY / ' + escHtml(b.slug).split('-')[0] + '</p>';
+				html += '		<p class="text-[11px] font-mono text-muted uppercase tracking-wider">ENTRY / ' + escHtml(b.slug).split('-')[0] + '</p>';
 				html += '	</a>';
 				
-				// Col 3: Meta & Actions
-				html += '	<div class="sm:w-48 shrink-0 p-4 sm:p-6 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-l-0 sm:border-l border-border gap-2 bg-surface/30 group-hover:bg-transparent transition-colors">';
+				// Right: Meta & Actions
+				html += '	<div class="flex items-center sm:flex-col sm:items-end justify-between sm:justify-center shrink-0 gap-3 sm:gap-2">';
 				html += '		<div class="font-mono text-[10px] text-muted tracking-wider uppercase">' + escHtml(b.date || "UNKNOWN DATE") + '</div>';
 				html += '		<button onclick="removeBookmark(\'' + b.slug + '\')" class="font-mono text-[10px] font-bold text-[var(--c-warn)] hover:underline uppercase tracking-wider" title="Remove from ledger">[ DEL ]</button>';
 				html += '	</div>';
