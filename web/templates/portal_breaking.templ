@@ -6,55 +6,99 @@ import (
 )
 
 templ portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) {
-	// BOX 3: DEEP DIVE SPOTLIGHT (6:6) - SEAMLESS WIREFRAME
+	// BOX 3: DEEP DIVE SPOTLIGHT (Desktop 2-Col 6:6 | Mobile 10-Card Swipe Carousel)
 	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
-		// Mobile: Horizontal Swipe Carousel | Desktop: 2-Column Grid
+		
+		<!-- Section Header Strip for Mobile & Desktop -->
+		<div class="flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-border bg-surface/50 text-xs font-mono font-bold uppercase tracking-wider">
+			<span class="text-text">
+				DEEP DIVE SPOTLIGHT
+			</span>
+			<span class="text-muted text-[10px] hidden sm:inline uppercase">curated technical deep-dives</span>
+		</div>
+
+		<!-- Mobile: 10-Card Horizontal Swipe Carousel | Desktop: 2-Column Spotlight Grid -->
 		<div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:divide-x divide-[var(--c-border)]">
-			for _, cat := range categories {
-				<article class="shrink-0 w-[85vw] sm:w-auto snap-center flex flex-col justify-between group border-r border-border sm:border-r-0 last:border-r-0">
+			for idx, cat := range categories {
+				<div class={
+					"shrink-0 w-[82vw] max-w-[320px] sm:max-w-none sm:w-auto snap-center flex flex-col justify-between px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 group border-r border-border sm:border-r-0 last:border-r-0",
+					templ.KV("sm:hidden", idx >= 2),
+				}>
 					<div>
-						// Image 16:9 flush edge-to-edge
-						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
-							@postThumbnailImg(cat.LeadPost)
-						</a>
-
-						// Story Details
-						<div class="px-5 sm:px-6 py-8 sm:py-10 lg:px-7 lg:py-12">
-							<div class="flex items-center justify-between gap-2 mb-3">
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-mono font-bold uppercase tracking-widest text-accent hover:underline">
-									DEEP DIVE · { categoryTitle(cat, lang) }
-								</a>
-								<span class="text-[10px] font-mono text-muted">
-									{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }
-								</span>
-							</div>
-
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block mb-3">
-								<h3 class="display text-xl sm:text-2xl font-extrabold text-text group-hover:text-link transition-colors leading-tight">
-									{ cat.LeadPost.Title }
-								</h3>
+						<!-- Category Header -->
+						<div class="flex items-center justify-between mb-3.5 pb-2 border-b border-border/40">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[11px] font-mono font-black uppercase tracking-widest text-accent hover:underline flex items-center gap-1.5">
+								<span>{ categoryTitle(cat, lang) }</span>
 							</a>
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-mono font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group/btn shrink-0">
+								if lang == "id" {
+									<span>Lihat Semua</span>
+								} else {
+									<span>See More</span>
+								}
+								@IconArrowRight("w-3 h-3 transition-transform group-hover/btn:translate-x-0.5")
+							</a>
+						</div>
 
-							if cat.LeadPost.Description != "" {
-								<p class="text-sm text-muted line-clamp-3 leading-relaxed mb-4">
-									{ cat.LeadPost.Description }
-								</p>
+						<!-- Lead Post: Split Row (Thumbnail on Side / Top) -->
+						<article class="group/lead mb-5 sm:mb-6">
+							<div class="flex flex-col sm:flex-row gap-3.5 sm:gap-4 items-start">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="w-full sm:w-36 lg:w-44 aspect-[16/9] shrink-0 bg-surface overflow-hidden border border-border block">
+									@postThumbnailImg(cat.LeadPost)
+								</a>
+								<div class="flex-1 min-w-0">
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block mb-1.5">
+										<h3 class="display text-[17px] lg:text-[19px] font-bold text-text group-hover/lead:text-link transition-colors leading-snug line-clamp-3">
+											{ cat.LeadPost.Title }
+										</h3>
+									</a>
+									if cat.LeadPost.Description != "" {
+										<p class="text-[13px] text-muted line-clamp-2 leading-relaxed mb-2">
+											{ cat.LeadPost.Description }
+										</p>
+									}
+									<div class="flex items-center gap-2 text-[11px] font-mono text-muted">
+										<time datetime={ cat.LeadPost.Date.Format("2006-01-02") }>{ fmtDate(cat.LeadPost) }</time>
+										<span>·</span>
+										<span>{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }</span>
+									</div>
+								</div>
+							</div>
+						</article>
+					</div>
+
+					<!-- Sub Posts List (Fills the column solidly without empty voids) -->
+					if len(cat.SubPosts) > 0 {
+						<div class="flex flex-col divide-y divide-border/40 border-t border-border/40 mt-auto pt-1">
+							for j, sub := range cat.SubPosts {
+								if j < 2 {
+									<article class="group/sub">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class={
+											"flex items-start justify-between gap-3 sm:gap-4 pt-3.5 sm:pt-4",
+											templ.KV("pb-3.5 sm:pb-4", j != 1 && j != len(cat.SubPosts)-1),
+										}>
+											<div class="flex-1 min-w-0">
+												<h4 class="display text-[15px] font-bold text-text group-hover/sub:text-link transition-colors leading-snug line-clamp-2">
+													{ sub.Title }
+												</h4>
+												<div class="flex items-center gap-2 text-[11px] font-mono text-muted mt-1.5">
+													<time datetime={ sub.Date.Format("2006-01-02") }>{ fmtDate(sub) }</time>
+													<span>·</span>
+													<span>{ fmt.Sprintf("%d %s", sub.ReadTime, ui.Blog_MinRead) }</span>
+												</div>
+											</div>
+											if sub.Cover != "" {
+												<div class="w-14 sm:w-16 aspect-[16/9] shrink-0 bg-surface overflow-hidden border border-border">
+													@postThumbnailImg(sub)
+												</div>
+											}
+										</a>
+									</article>
+								}
 							}
 						</div>
-					</div>
-
-					// Meta footer
-					<div class="px-5 sm:px-6 lg:px-7 pb-5 sm:pb-6 flex items-center justify-between text-xs font-mono text-muted border-t border-border/30 pt-3">
-						<span class="font-bold text-text">
-							if cat.LeadPost.Author != "" {
-								{ cat.LeadPost.Author }
-							} else {
-								daemontalk
-							}
-						</span>
-						<time datetime={ cat.LeadPost.Date.Format("2006-01-02") }>{ fmtDate(cat.LeadPost) }</time>
-					</div>
-				</article>
+					}
+				</div>
 			}
 		</div>
 	</div>
