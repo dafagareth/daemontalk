@@ -437,7 +437,7 @@ func SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, lan
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"><div class=\"flex items-start justify-between gap-3 mb-1\"><h4 class=\"text-xs sm:text-sm font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors\">")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"><div class=\"flex items-start justify-between gap-3 mb-1\"><h4 class=\"text-sm font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
