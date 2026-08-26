@@ -9,8 +9,11 @@ templ portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) 
 	// BOX 2: TRI-COLUMN CORE TOPICS (4:4:4) - SEAMLESS WIREFRAME
 	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]">
-			for _, cat := range categories {
-				<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between">
+			for idx, cat := range categories {
+				<div class={
+					"flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 border-b border-border sm:border-b-0 sm:border-r last:border-0",
+					templ.KV("sm:hidden", idx >= 3),
+				}>
 					<div>
 						// Category Header
 						<div class="flex items-center justify-between mb-3">
@@ -28,23 +31,23 @@ templ portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) 
 						</div>
 
 						// Lead Post (Split-Row on Mobile, Stacked on Desktop)
-						<article class="group mb-4">
+						<article class="group mb-5 sm:mb-6">
 							<div class="flex flex-row-reverse sm:flex-col gap-3 sm:gap-0">
 								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-square sm:aspect-[16/9] w-20 sm:w-full shrink-0 bg-surface mb-0 sm:mb-3 overflow-hidden border border-border">
 									@postThumbnailImg(cat.LeadPost)
 								</a>
 								<div class="flex-1 min-w-0">
 									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block mb-1.5">
-										<h3 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-3 sm:line-clamp-2">
+										<h3 class="display text-[17px] font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-3 sm:line-clamp-2">
 											{ cat.LeadPost.Title }
 										</h3>
 									</a>
 									if cat.LeadPost.Description != "" {
-										<p class="hidden sm:block text-xs text-muted line-clamp-2 leading-relaxed mb-2">
+										<p class="hidden sm:block text-[13px] text-muted line-clamp-2 leading-relaxed mb-2">
 											{ cat.LeadPost.Description }
 										</p>
 									}
-									<div class="text-[10px] font-mono text-muted mt-1 sm:mt-0">
+									<div class="text-[11px] font-mono text-muted mt-1 sm:mt-0">
 										<span>{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }</span>
 									</div>
 								</div>
@@ -54,15 +57,18 @@ templ portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) 
 
 					// Sub Posts List (Teks Only)
 					if len(cat.SubPosts) > 0 {
-						<div class="flex flex-col divide-y divide-border/40 border-t border-border/40 pt-2 mt-auto">
+						<div class="flex flex-col divide-y divide-border/40 border-t border-border/40 mt-auto pt-1">
 							for j, sub := range cat.SubPosts {
 								if j < 3 {
-									<article class="group py-2 first:pt-1 last:pb-0">
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block">
-											<h4 class="display text-xs sm:text-sm font-semibold text-text/90 group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1">
+									<article class="group">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class={
+											"block pt-3.5 sm:pt-4",
+											templ.KV("pb-3.5 sm:pb-4", j != 2 && j != len(cat.SubPosts)-1),
+										}>
+											<h4 class="display text-[15px] font-semibold text-text/90 group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5">
 												{ sub.Title }
 											</h4>
-											<div class="text-[9px] font-mono text-muted">
+											<div class="text-[11px] font-mono text-muted">
 												<span>{ fmt.Sprintf("%d %s", sub.ReadTime, ui.Blog_MinRead) }</span>
 											</div>
 										</a>
