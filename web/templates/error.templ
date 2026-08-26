@@ -30,14 +30,8 @@ templ CustomError(code int, title string, message string, ui i18n.UI, lang strin
 templ ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) {
 	<div class="max-w-3xl mx-auto px-6 py-20 sm:py-32">
 		<div class="space-y-6 max-w-lg">
-			<div class="flex items-center gap-6 mb-2">
-				<div class="glitch-wrapper">
-					<div class="glitch-text" data-text={ fmt.Sprintf("%d", code) }>
-						{ fmt.Sprintf("%d", code) }
-					</div>
-				</div>
-				<!-- Animated terminal monitor SVG -->
-				@IconMonitor("w-16 h-16 text-link animate-pulse")
+			<div class="text-6xl sm:text-7xl font-mono font-black text-text tracking-tight mb-4">
+				{ fmt.Sprintf("%d", code) }
 			</div>
 			<h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-text">
 				{ title }
