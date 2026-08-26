@@ -32,24 +32,38 @@ func fmtNumber(n int) string {
 }
 
 templ StatsPage(ui i18n.UI, data StatsData) {
-	<section class="container-page py-8 sm:py-12">
-		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-8">{ ui.Stats_Title }</h1>
-		<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-			@statCard("Posts", fmtNumber(data.TotalPosts), "blog posts published")
-			@statCard("Words", fmtNumber(data.TotalWords), "words written (est.)")
-			@statCard("Tags", fmtNumber(data.TotalTags), "unique tags used")
-			@statCard("Views", fmtNumber(data.TotalViews), "total page views")
-			@statCard("Comments", fmtNumber(data.TotalComments), "comments received")
-			@statCard("EN", fmtNumber(data.LangEN), "posts in English")
-			@statCard("ID", fmtNumber(data.LangID), "posts in Indonesian")
+	<section class="container-page py-12 sm:py-20 flex flex-col items-center justify-center min-h-[60vh]">
+		<div class="w-full max-w-3xl flex flex-col font-mono">
+			<!-- CLI Output Area -->
+			<div class="text-text text-sm leading-loose w-full">
+				<div class="flex flex-col gap-4 w-full uppercase">
+					@statCliLine("Total Articles Published", fmtNumber(data.TotalPosts))
+					@statCliLine("Total Words Written (Est.)", fmtNumber(data.TotalWords))
+					@statCliLine("Unique System Tags Used", fmtNumber(data.TotalTags))
+					
+					<div class="my-4 border-b border-border/50 border-dashed"></div>
+					
+					@statCliLine("Total Raw Page Views", fmtNumber(data.TotalViews))
+					@statCliLine("User Comments Received", fmtNumber(data.TotalComments))
+					
+					<div class="my-4 border-b border-border/50 border-dashed"></div>
+					
+					@statCliLine("EN Locale Documents", fmtNumber(data.LangEN))
+					@statCliLine("ID Locale Documents", fmtNumber(data.LangID))
+				</div>
+				
+				<div class="mt-16 text-center text-[10px] text-muted font-bold tracking-widest animate-pulse">
+					[ EOF ]
+				</div>
+			</div>
 		</div>
 	</section>
 }
 
-templ statCard(label string, value string, description string) {
-	<div class="border border-border rounded-none p-4 bg-surface">
-		<p class="text-2xl font-mono font-semibold text-text tabular-nums">{ value }</p>
-		<p class="text-xs font-semibold text-muted mt-0.5 uppercase tracking-wide">{ label }</p>
-		<p class="text-xs text-muted mt-1 leading-snug">{ description }</p>
+templ statCliLine(label string, value string) {
+	<div class="flex items-end w-full">
+		<span class="shrink-0 font-bold text-muted">{ label }</span>
+		<div class="flex-1 mx-3 mb-1 border-b-[3px] border-dotted border-border/70"></div>
+		<span class="shrink-0 font-bold tracking-widest text-text">[ <span class="text-link">{ value }</span> ]</span>
 	</div>
 }
