@@ -35,7 +35,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-2 sm:border-border w-full mb-12 sm:mb-0 sm:my-8 bg-bg\"><div class=\"flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]\"><div class=\"hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]\"><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border sm:border-border w-full mb-12 sm:mb-0 sm:my-8 bg-bg\"><div class=\"flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]\"><div class=\"hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]\"><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -103,7 +103,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -111,7 +111,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "TERMINAL TUI INTERFACE</h3><p class=\"text-xs text-muted mb-3 leading-relaxed\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "TERMINAL TUI INTERFACE</h3><p class=\"text-xs text-muted line-clamp-2 mb-3 leading-relaxed\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -134,7 +134,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button></div><div class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">Enter</kbd> <span>Full reader</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">t</kbd> <span>7 Color themes</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">w / o</kbd> <span>Web &amp; Image link</span></div></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button></div><div class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">Enter</kbd> <span>Full reader</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">t</kbd> <span>7 Color themes</span></div><div class=\"flex items-center justify-between text-[11px] font-mono text-muted\"><kbd class=\"px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text\">w / o</kbd> <span>Web &amp; Image link</span></div></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -153,7 +153,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</h3><p class=\"text-xs text-muted mb-4 leading-relaxed\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</h3><p class=\"text-xs text-muted line-clamp-2 mb-4 leading-relaxed\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -184,7 +184,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</a></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between\"><span class=\"flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</a></div></div><div class=\"p-5 flex flex-col\"><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between\"><span class=\"flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -211,7 +211,7 @@ func portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div><div class=\"flex flex-col min-w-0\"><span class=\"text-sm font-bold text-text truncate\">Dafa Gareth</span> <span class=\"text-[11px] font-mono text-muted truncate\">Go &amp; Linux Systems</span></div></div><!-- Bottom row: Description spanning horizontally underneath --><p class=\"text-xs text-muted leading-relaxed mb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div><div class=\"flex flex-col min-w-0\"><span class=\"text-sm font-bold text-text truncate\">Dafa Gareth</span> <span class=\"text-[11px] font-mono text-muted truncate\">Go &amp; Linux Systems</span></div></div><!-- Bottom row: Description spanning horizontally underneath --><p class=\"text-xs text-muted line-clamp-2 leading-relaxed mb-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

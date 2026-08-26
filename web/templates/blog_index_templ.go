@@ -208,7 +208,7 @@ func blogCardItemDynamic(ui i18n.UI, p post.Post, lang string, viewCounts map[st
 	})
 }
 
-// BORDERLESS FLAT EDITORIAL CARD (Consistent 16:9 Thumbnail, Clean Meta, Headline, Snippet)
+// BORDERLESS FLAT EDITORIAL CARD (Consistent 16:9 Thumbnail, Meta, Headline, Snippet)
 func blogCardItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]int, hideTag bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -334,7 +334,7 @@ func blogCardItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]in
 			return templ_7745c5c3_Err
 		}
 		if p.Description != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<p class=\"hidden sm:block text-sm text-muted line-clamp-2 leading-relaxed mb-3.5 break-words\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<p class=\"hidden sm:line-clamp-2 text-sm text-muted leading-relaxed mb-3.5 break-words\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

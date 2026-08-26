@@ -123,7 +123,7 @@ func portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) t
 			return templ_7745c5c3_Err
 		}
 		if p.Description != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p class=\"text-sm sm:text-base text-muted line-clamp-3 leading-relaxed mb-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p class=\"text-sm sm:text-base text-muted line-clamp-2 leading-relaxed mb-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -650,7 +650,7 @@ func portalResponsiveTagSubStory(ui i18n.UI, p post.Post, lang string) templ.Com
 			return templ_7745c5c3_Err
 		}
 		if p.Description != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<p class=\"hidden lg:block text-sm text-muted line-clamp-2 leading-relaxed mb-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<p class=\"hidden lg:line-clamp-2 text-sm text-muted leading-relaxed mb-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

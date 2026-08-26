@@ -34,7 +34,7 @@ func portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) t
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg\"><div class=\"grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg\"><div class=\"grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -117,7 +117,7 @@ func portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) t
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</a></div><article class=\"group mb-5 sm:mb-6\"><div class=\"flex flex-row-reverse sm:flex-col gap-3 sm:gap-0\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</a></div><article class=\"group mb-5 sm:mb-6\"><div class=\"flex flex-col gap-3 sm:gap-0\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -130,7 +130,7 @@ func portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) t
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"block relative aspect-square sm:aspect-[16/9] w-20 sm:w-full shrink-0 bg-surface mb-0 sm:mb-3 overflow-hidden border border-border\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"block relative aspect-[16/9] w-auto sm:w-full -mx-5 sm:mx-0 shrink-0 bg-surface mb-3 sm:mb-3 overflow-hidden border-y sm:border border-border\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -169,7 +169,7 @@ func portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) t
 				return templ_7745c5c3_Err
 			}
 			if cat.LeadPost.Description != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<p class=\"hidden sm:block text-[13px] text-muted line-clamp-2 leading-relaxed mb-2\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<p class=\"line-clamp-2 text-[13px] text-muted leading-relaxed mb-2\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

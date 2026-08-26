@@ -156,7 +156,7 @@ func blogHeader(ui i18n.UI, p post.Post, lang string, seriesParts []post.Post) t
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><!-- Clean Author & Tags Row --><div class=\"flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border/60 text-xs font-mono\"><div class=\"flex items-center gap-2\"><span class=\"text-muted\">By</span> <strong class=\"text-text font-bold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><!-- Author & Tags Row --><div class=\"flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border/60 text-xs font-mono\"><div class=\"flex items-center gap-2\"><span class=\"text-muted\">By</span> <strong class=\"text-text font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

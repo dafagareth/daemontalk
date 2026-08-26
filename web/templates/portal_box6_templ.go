@@ -35,7 +35,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x-2 sm:border-b-2 sm:border-[var(--c-border)] w-full mt-0 sm:mt-0 mb-0 bg-[var(--c-text)] text-[var(--c-bg)] sm:bg-[var(--c-bg)] sm:text-[var(--c-text)]\"><div class=\"grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-bg)]/30 sm:divide-[var(--c-border)]\"><div class=\"lg:col-span-7 px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between\"><div><div class=\"flex items-center justify-between pb-2 mb-4 border-b-2 border-[var(--c-bg)]/40 sm:border-[var(--c-border)]\"><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x sm:border-b sm:border-[var(--c-border)] w-full mt-0 sm:mt-0 mb-0 bg-[var(--c-text)] text-[var(--c-bg)] sm:bg-[var(--c-bg)] sm:text-[var(--c-text)]\"><div class=\"grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-bg)]/30 sm:divide-[var(--c-border)]\"><div class=\"lg:col-span-7 px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between\"><div><div class=\"flex items-center justify-between pb-2 mb-4 border-b border-[var(--c-bg)]/40 sm:border-[var(--c-border)]\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -131,7 +131,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"text-[10px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)] mt-auto\"><span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"text-[10px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)] mt-2\"><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -168,7 +168,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"group block\"><h4 class=\"display text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2 mb-1\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"group block\"><h4 class=\"display text-base sm:text-[17px] font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2 mb-1\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -181,7 +181,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</h4><div class=\"text-[9px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)]\"><span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</h4><div class=\"text-[11px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)]\"><span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -205,7 +205,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><div class=\"lg:col-span-5 px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between bg-[var(--c-bg)]/5 sm:bg-[var(--c-surface)]/20\"><div><div class=\"flex items-center justify-between pb-2 mb-4 border-b-2 border-[var(--c-bg)]/40 sm:border-[var(--c-border)]\"><span class=\"text-xs font-mono font-black uppercase tracking-widest text-[var(--c-bg)] sm:text-[var(--c-text)]\">ARCHITECTURE SPOTLIGHT</span> <span class=\"text-[10px] font-mono text-[var(--c-bg)]/70 sm:text-[var(--c-accent)]\">DISPATCHES</span></div><div class=\"flex flex-col divide-y divide-[var(--c-bg)]/20 sm:divide-[var(--c-border)]/40\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><div class=\"lg:col-span-5 px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between bg-[var(--c-bg)]/5 sm:bg-[var(--c-surface)]/20\"><div><div class=\"flex items-center justify-between pb-2 mb-4 border-b border-[var(--c-bg)]/40 sm:border-[var(--c-border)]\"><span class=\"text-sm font-mono font-black uppercase tracking-widest text-[var(--c-bg)] sm:text-[var(--c-text)]\">ARCHITECTURE SPOTLIGHT</span> <span class=\"text-xs font-mono text-[var(--c-bg)]/70 sm:text-[var(--c-accent)]\">DISPATCHES</span></div><div class=\"flex flex-col divide-y divide-[var(--c-bg)]/20 sm:divide-[var(--c-border)]/40\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -223,19 +223,19 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" class=\"group py-2.5 first:pt-0 last:pb-0 flex items-start justify-between gap-3\"><div class=\"flex-1 min-w-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" class=\"group py-3 first:pt-0 last:pb-0 flex items-start justify-between gap-3 sm:gap-4\"><div class=\"flex-1 min-w-0\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if len(p.Tags) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-[var(--c-bg)]/80 sm:text-[var(--c-accent)] text-[9px] font-bold uppercase tracking-wider block mb-0.5\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-[var(--c-bg)]/80 sm:text-[var(--c-accent)] text-xs font-bold uppercase tracking-wider block mb-1\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(p.Tags[0])
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box6.templ`, Line: 82, Col: 142}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box6.templ`, Line: 82, Col: 137}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -246,7 +246,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<h4 class=\"display text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<h4 class=\"display text-[15px] sm:text-[17px] font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -259,7 +259,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</h4><div class=\"text-[9px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)] mt-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</h4><div class=\"text-[11px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)] mt-1.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

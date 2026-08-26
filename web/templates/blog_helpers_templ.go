@@ -202,7 +202,7 @@ func homeURL(lang string) string {
 	return "/"
 }
 
-// postThumbnail renders the post cover image if available, or a clean minimalist "No Photo" fallback box.
+// postThumbnail renders the post cover image if available, or a minimalist "No Photo" fallback box.
 func postThumbnail(p post.Post, linkURL string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

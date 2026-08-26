@@ -54,14 +54,14 @@ func blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang str
 					return templ_7745c5c3_Err
 				}
 				if len(related[0].Tags) > 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span class=\"text-xs font-mono font-bold uppercase text-[var(--c-link)]\">#")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span class=\"text-xs font-mono font-bold uppercase text-accent\">#")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var2 string
 					templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(related[0].Tags[0])
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_related.templ`, Line: 32, Col: 105}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_related.templ`, Line: 32, Col: 96}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 					if templ_7745c5c3_Err != nil {
@@ -217,14 +217,14 @@ func blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang str
 					return templ_7745c5c3_Err
 				}
 				if len(related[1].Tags) > 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-xs font-mono font-bold uppercase text-[var(--c-link)]\">#")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-xs font-mono font-bold uppercase text-accent\">#")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var11 string
 					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(related[1].Tags[0])
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_related.templ`, Line: 74, Col: 105}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_related.templ`, Line: 74, Col: 96}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
@@ -354,14 +354,14 @@ func blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang str
 					return templ_7745c5c3_Err
 				}
 				if len(related[2].Tags) > 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<span class=\"text-xs font-mono font-bold uppercase text-[var(--c-link)]\">#")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<span class=\"text-xs font-mono font-bold uppercase text-accent\">#")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(related[2].Tags[0])
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_related.templ`, Line: 114, Col: 105}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_related.templ`, Line: 114, Col: 96}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {

@@ -34,7 +34,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg\"><!-- Section Header Strip for Mobile & Desktop --><div class=\"flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-border bg-surface/50 text-xs font-mono font-bold uppercase tracking-wider\"><span class=\"text-text\">DEEP DIVE SPOTLIGHT</span> <span class=\"text-muted text-[10px] hidden sm:inline uppercase\">curated technical deep-dives</span></div><!-- Mobile: 10-Card Horizontal Swipe Carousel | Desktop: 2-Column Spotlight Grid --><div class=\"flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:divide-x divide-[var(--c-border)]\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg\"><!-- Section Header Strip for Mobile & Desktop --><div class=\"flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-border bg-surface/50 text-xs font-mono font-bold uppercase tracking-wider\"><span class=\"text-text\">DEEP DIVE SPOTLIGHT</span> <span class=\"text-muted text-[10px] hidden sm:inline uppercase\">curated technical deep-dives</span></div><!-- Mobile: 10-Card Horizontal Swipe Carousel | Desktop: 2-Column Spotlight Grid --><div class=\"flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:divide-x divide-[var(--c-border)]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

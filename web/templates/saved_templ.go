@@ -31,7 +31,7 @@ func SavedPage(ui i18n.UI, lang string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-6 sm:py-10\"><div class=\"border-y sm:border-2 border-border bg-bg shadow-sm w-full max-w-7xl mx-auto flex flex-col\"><!-- HEADER: Logbook Cover --><div class=\"p-6 sm:p-10 border-b-2 border-border flex flex-col gap-4\"><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page !px-0 sm:!px-6 lg:!px-8 py-0 sm:py-10\"><div class=\"border-y sm:border border-border bg-bg shadow-sm w-full max-w-7xl mx-auto flex flex-col\"><!-- HEADER: Logbook Cover --><div class=\"p-6 sm:p-8 border-b border-border flex flex-col gap-4\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -52,7 +52,7 @@ func SavedPage(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span>BACK TO BLOG</span></a><div class=\"flex flex-col mt-2\"><h1 class=\"display text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight uppercase mb-2\">Saved Dispatches</h1><div class=\"font-mono text-xs uppercase font-bold text-muted\"><span id=\"saved-count-display\">0 Entries</span></div></div></div><!-- LIST: The Ledger Entries --><div id=\"saved-list\" class=\"flex flex-col divide-y divide-border\"><div class=\"p-8 sm:p-12 text-center\"><p class=\"text-xs font-mono text-muted flex items-center justify-center gap-2\"><span class=\"w-1.5 h-1.5 rounded-full bg-accent animate-pulse\"></span> Reading system ledger...</p></div></div></div></section><script src=\"/static/js/saved.js\" defer></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span>BACK TO BLOG</span></a><div class=\"flex flex-col mt-2\"><h1 class=\"display text-3xl sm:text-4xl lg:text-5xl font-black text-text tracking-tight uppercase mb-2\">Saved Dispatches</h1></div></div><!-- LIST: The Ledger Entries --><div id=\"saved-list\" class=\"flex flex-col divide-y divide-border\"><div class=\"p-8 sm:p-12 text-center\"><p class=\"text-xs font-mono text-muted flex items-center justify-center gap-2\"><span class=\"w-1.5 h-1.5 rounded-full bg-accent animate-pulse\"></span> Reading system ledger...</p></div></div></div></section><script src=\"/static/js/saved.js\" defer></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -8,7 +8,7 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-// AdminLayout is a clean, minimal shell for the admin dashboard.
+// AdminLayout is a minimal shell for the admin dashboard.
 // Top navigation with text-only tabs, no sidebar, no decorative branding.
 func AdminLayout(page string, currentPath string, content templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

@@ -14,7 +14,7 @@ import (
 	"daemontalk/internal/i18n"
 )
 
-// NotFound renders a clean, minimal 404 Not Found page.
+// NotFound renders a minimal 404 Not Found page.
 func NotFound(ui i18n.UI, lang string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -44,7 +44,7 @@ func NotFound(ui i18n.UI, lang string) templ.Component {
 	})
 }
 
-// Forbidden renders a clean, minimal 403 Forbidden page.
+// Forbidden renders a minimal 403 Forbidden page.
 func Forbidden(ui i18n.UI, lang string, reason string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -74,7 +74,7 @@ func Forbidden(ui i18n.UI, lang string, reason string) templ.Component {
 	})
 }
 
-// ServerError renders a clean, minimal 500 Internal Server Error page.
+// ServerError renders a minimal 500 Internal Server Error page.
 func ServerError(ui i18n.UI, lang string, detail string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -134,7 +134,7 @@ func CustomError(code int, title string, message string, ui i18n.UI, lang string
 	})
 }
 
-// ErrorPage renders a simple, clean, minimalist error page.
+// ErrorPage renders a simple, minimalist error page.
 func ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

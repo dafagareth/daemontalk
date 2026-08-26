@@ -13,7 +13,7 @@ import (
 	"fmt"
 )
 
-// AdminPostEditor is a clean, distraction-free post editor.
+// AdminPostEditor is a distraction-free post editor.
 // Includes large borderless title, Quill bubble WYSIWYG editor with markdown conversion,
 // real-time autosave status indicator, and post details / publish modal.
 func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.Component {

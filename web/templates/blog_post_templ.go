@@ -36,7 +36,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Main Post Article Container (3-Column Clean Layout) --><div class=\"container-page max-w-7xl mx-auto py-8 sm:py-12 transition-all\"><!-- 1. The Article Reading 3-Column Block (Left-Aligned with Subnav ALL) --><div class=\"flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14 relative\"><!-- LEFT RAIL: Sticky Back Link + Table of Contents (Aligned with ALL) --><aside class=\"hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5\"><!-- Back Link --><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Main Post Article Container (3-Column Layout) --><div class=\"container-page max-w-7xl mx-auto py-8 sm:py-12 transition-all\"><!-- 1. The Article Reading 3-Column Block (Left-Aligned with Subnav ALL) --><div class=\"flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14 relative\"><!-- LEFT RAIL: Sticky Back Link + Table of Contents (Aligned with ALL) --><aside class=\"hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5\"><!-- Back Link --><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -49,7 +49,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"inline-flex items-center gap-1.5 text-muted hover:text-text font-bold text-xs font-mono uppercase tracking-wider transition-colors group\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" onclick=\"if(document.referrer.includes(window.location.host)) { history.back(); return false; }\" class=\"inline-flex items-center gap-1.5 text-muted hover:text-text font-bold text-xs font-mono uppercase tracking-wider transition-colors group\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -101,7 +101,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</aside><!-- CENTER READING CANVAS: Clean, Pure Typography (Narrowed 42rem) --><main class=\"w-full max-w-[42rem] min-w-0 flex-1 relative\"><article class=\"relative z-10\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</aside><!-- CENTER READING CANVAS: Pure Typography (Narrowed 42rem) --><main class=\"w-full max-w-[42rem] min-w-0 flex-1 relative\"><article class=\"relative z-10\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -127,7 +127,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</main><!-- RIGHT RAIL: Sticky Reading Tools (Desktop) --><aside class=\"hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none\"><!-- Font Size Controls (Clean, no card box) --><div class=\"flex items-center gap-1\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" title=\"Decrease font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" title=\"Increase font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A+</button></div><!-- Serif / Sans Font Family Toggle --><div><button id=\"serif-toggle-btn\" onclick=\"toggleSerif()\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle typography font (Sans / Serif)\" aria-label=\"Toggle typography font\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</main><!-- RIGHT RAIL: Sticky Reading Tools (Desktop) --><aside class=\"hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none\"><!-- Font Size Controls (no card box) --><div class=\"flex items-center gap-1\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" title=\"Decrease font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" title=\"Increase font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A+</button></div><!-- Serif / Sans Font Family Toggle --><div><button id=\"serif-toggle-btn\" onclick=\"toggleSerif()\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle typography font (Sans / Serif)\" aria-label=\"Toggle typography font\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -272,7 +272,7 @@ func getSeriesPart(parts []post.Post, idx int) *post.Post {
 	return nil
 }
 
-// seriesNav renders a clean series index above the article.
+// seriesNav renders a series index above the article.
 func seriesNav(parts []post.Post, current post.Post, lang string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
