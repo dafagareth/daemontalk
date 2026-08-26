@@ -257,7 +257,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconBookmark("bookmark-icon w-5 h-5 sm:w-6 sm:h-6 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconBookmark("bookmark-icon w-4 h-4 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -265,7 +265,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconShare("w-5 h-5 sm:w-6 sm:h-6 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconShare("w-4 h-4 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
