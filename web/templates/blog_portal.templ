@@ -19,10 +19,18 @@ templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, 
 			getCategoryCluster(posts, "devops", []string{"devops", "cloud", "ci-cd", "automation"}, 3),
 		}
 
-		// Box 3 (6:6): Security, Systems
+		// Box 3 (Deep Dive 10-Card Mobile Carousel / 2-Col Desktop): 10 Curated Technical Clusters
 		box3Cats := []CategorySection{
 			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "privacy", "ztna", "firewall", "openssl", "landlock"}, 2),
 			getCategoryCluster(posts, "systems", []string{"systems", "rust", "compiler", "io-uring", "zig", "assembly"}, 2),
+			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2),
+			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 2),
+			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 2),
+			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2),
+			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 2),
+			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 2),
+			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2),
+			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "terminal"}, 2),
 		}
 
 		// Box 4 (8:4): Left (Performance, Docker) + Right (Live Wire Feed)
@@ -34,7 +42,7 @@ templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, 
 		for i := 0; i <= 8 && i < len(posts); i++ {
 			excludeSlugs = append(excludeSlugs, posts[i].Slug)
 		}
-		box4WirePosts := getWirePosts(posts, excludeSlugs, 5)
+		box4WirePosts := getWirePosts(posts, excludeSlugs, 4)
 
 		// Box 5 (3:3:3:3): Tools, Terminal, Database, Networking
 		box5Cats := []CategorySection{
@@ -60,23 +68,6 @@ templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, 
 	// -----------------------------------------------------------------
 	// THE 8-BOX CONTINUOUS MONOLITH (FUSED WIREFRAME GRID)
 	// -----------------------------------------------------------------
-
-	// Mobile Topic Scroll Strip (Mobile Only) - Pattern 7 (Horizontal Tag Ticker)
-	<nav class="sm:hidden w-full overflow-x-auto snap-x snap-mandatory scrollbar-none py-2.5 px-0 bg-surface/50 border-x-0 sm:border-x-2 border-b-2 border-border flex items-center whitespace-nowrap text-xs font-mono text-muted relative">
-		<div class="px-3 flex items-center gap-1.5">
-		<span class="text-[10px] uppercase font-bold text-accent tracking-wider mr-1">TOPICS:</span>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="px-2.5 py-1 bg-chip border border-border text-text font-bold uppercase tracking-wider">All</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/linux") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#linux</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/go") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#go</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/security") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#security</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/performance") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#performance</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/docker") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#docker</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/tools") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#tools</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/terminal") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#terminal</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/ebpf") } class="px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#ebpf</a>
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/ai") } class="snap-start px-2.5 py-1 border border-border hover:bg-hover hover:text-text transition-colors uppercase tracking-wider">#ai</a>
-		</div>
-	</nav>
 
 	// 1. Tech Hero (3 : 6 : 3)
 	@portalHeroTop(ui, posts, lang, viewCounts, true)
@@ -112,7 +103,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 		popularPosts := getPopularPostsExcluding(posts, viewCounts, excludeSlugs, 3)
 	}}
 	// TECH EDITORIAL HERO (3:6:3 ASYMMETRIC GRID)
-	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+	<div class="border-0 sm:border-2 border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="w-full">
 			<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
 			
@@ -122,7 +113,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 				<div class="order-2 lg:order-1 lg:col-span-3 flex flex-col divide-y divide-[var(--c-border)] bg-bg">
 					// Dispatch 1 (Lead Headline on Left)
 					if len(posts) > 1 {
-						<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between">
+						<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12 flex flex-col justify-between">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[1].Slug) } class="group block">
 								if len(posts[1].Tags) > 0 {
 									<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">
@@ -148,7 +139,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 
 					// Dispatch 2 (Secondary Headline)
 					if len(posts) > 2 {
-						<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between">
+						<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12 flex flex-col justify-between">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[2].Slug) } class="group block">
 								if len(posts[2].Tags) > 0 {
 									<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1.5 inline-block">
@@ -172,7 +163,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 
 					// Dispatch 3 (Compact Headline)
 					if len(posts) > 3 {
-						<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between">
+						<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12 flex flex-col justify-between">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[3].Slug) } class="group block">
 								if len(posts[3].Tags) > 0 {
 									<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">
@@ -201,7 +192,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 						</div>
 
 						// Story Details below image
-						<div class="px-5 sm:px-6 py-8 sm:py-10 lg:px-7 lg:py-12 flex flex-col flex-1">
+						<div class="px-5 sm:px-6 py-10 sm:py-12 lg:px-8 lg:py-14 flex flex-col flex-1">
 							if len(posts[0].Tags) > 0 {
 								<div class="flex items-center gap-2 mb-2.5">
 									<span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-accent/15 text-accent uppercase tracking-wider">
@@ -250,16 +241,16 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 								<div class="relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
 									@postThumbnailImg(posts[4])
 								</div>
-								<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12">
+								<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12">
 									if len(posts[4].Tags) > 0 {
 										<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1.5 block">
 											{ posts[4].Tags[0] }
 										</span>
 									}
-									<h3 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-2">
+									<h3 class="display text-[17px] font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-2">
 										{ posts[4].Title }
 									</h3>
-									<div class="text-[10px] font-mono text-muted">
+									<div class="text-[11px] font-mono text-muted">
 										{ fmt.Sprintf("%d %s", posts[4].ReadTime, ui.Blog_MinRead) }
 									</div>
 								</div>
@@ -288,17 +279,17 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 								<div class="text-xs text-muted py-3 text-center">No additional popular posts</div>
 							}
 							for _, p := range popularPosts {
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-4 sm:py-5 first:pt-0 last:pb-0 flex items-start justify-between gap-3">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-5 sm:py-6 flex items-start justify-between gap-3 sm:gap-4 text-text visited:text-visited">
 									<div class="flex-1 min-w-0">
 										if len(p.Tags) > 0 {
-											<span class="text-accent text-[9px] font-bold uppercase tracking-wider block mb-0.5">
+											<span class="text-accent text-[10px] font-bold uppercase tracking-wider block mb-1">
 												{ p.Tags[0] }
 											</span>
 										}
-										<h4 class="display text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
+										<h4 class="display text-[15px] font-bold group-hover:text-link transition-colors leading-snug line-clamp-3">
 											{ p.Title }
 										</h4>
-										<div class="text-[9px] font-mono text-muted mt-1">
+										<div class="text-[11px] font-mono text-muted mt-1.5">
 											{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }
 										</div>
 									</div>
