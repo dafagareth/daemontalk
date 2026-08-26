@@ -46,9 +46,6 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 
 				<!-- Unified Card Reaction Bar (Directly below content) -->
 				@ReactionsBar(ui, reactions, p.Slug, lang, userReaction, len(comments), p.Title, p.Date.Format("2006-01-02"))
-
-				<!-- Inline Comments Section (Original DaemonTalk Thread) -->
-				@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName)
 			</main>
 
 			<!-- RIGHT RAIL: Sticky Reading Tools (Desktop) -->
@@ -76,6 +73,15 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 
 			</aside>
 
+		</div>
+
+		<!-- Inline Comments Section (Below 3-Column, Centered under article) -->
+		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14">
+			<div class="hidden xl:block w-52 shrink-0"></div>
+			<div class="w-full max-w-[42rem] min-w-0 flex-1">
+				@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName)
+			</div>
+			<div class="hidden lg:block w-32 xl:w-36 shrink-0"></div>
 		</div>
 
 		<!-- 2. Post-Article Footer Area (Full-Width Related Dispatches) -->

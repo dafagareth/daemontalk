@@ -127,15 +127,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<!-- Inline Comments Section (Original DaemonTalk Thread) -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</main><!-- RIGHT RAIL: Sticky Reading Tools (Desktop) --><aside class=\"hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none\"><!-- Font Size Controls (Clean, no card box) --><div class=\"flex items-center gap-1\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" title=\"Decrease font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" title=\"Increase font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A+</button></div><!-- Serif / Sans Font Family Toggle --><div><button id=\"serif-toggle-btn\" onclick=\"toggleSerif()\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle typography font (Sans / Serif)\" aria-label=\"Toggle typography font\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</main><!-- RIGHT RAIL: Sticky Reading Tools (Desktop) --><aside class=\"hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none\"><!-- Font Size Controls (Clean, no card box) --><div class=\"flex items-center gap-1\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" title=\"Decrease font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" title=\"Increase font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A+</button></div><!-- Serif / Sans Font Family Toggle --><div><button id=\"serif-toggle-btn\" onclick=\"toggleSerif()\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle typography font (Sans / Serif)\" aria-label=\"Toggle typography font\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -143,7 +135,15 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span id=\"serif-toggle-label\">Serif</span></button></div></aside></div><!-- 2. Post-Article Footer Area (Full-Width Related Dispatches) -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span id=\"serif-toggle-label\">Serif</span></button></div></aside></div><!-- Inline Comments Section (Below 3-Column, Centered under article) --><div class=\"flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14\"><div class=\"hidden xl:block w-52 shrink-0\"></div><div class=\"w-full max-w-[42rem] min-w-0 flex-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"hidden lg:block w-32 xl:w-36 shrink-0\"></div></div><!-- 2. Post-Article Footer Area (Full-Width Related Dispatches) -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -224,7 +224,7 @@ func tocList(entries []post.TOCEntry) templ.Component {
 			var templ_7745c5c3_Var8 templ.SafeURL
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("#" + e.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 98, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 104, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -237,7 +237,7 @@ func tocList(entries []post.TOCEntry) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(e.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 101, Col: 14}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 107, Col: 14}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -309,7 +309,7 @@ func seriesNav(parts []post.Post, current post.Post, lang string) templ.Componen
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(current.Series)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 130, Col: 105}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 136, Col: 105}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -322,7 +322,7 @@ func seriesNav(parts []post.Post, current post.Post, lang string) templ.Componen
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Part %d of %d", getSeriesCurrentIndex(parts, current.Slug)+1, len(parts)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 133, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 139, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -340,7 +340,7 @@ func seriesNav(parts []post.Post, current post.Post, lang string) templ.Componen
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("[%02d]", i+1))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 139, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 145, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -358,7 +358,7 @@ func seriesNav(parts []post.Post, current post.Post, lang string) templ.Componen
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(part.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 141, Col: 80}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 147, Col: 80}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -376,7 +376,7 @@ func seriesNav(parts []post.Post, current post.Post, lang string) templ.Componen
 				var templ_7745c5c3_Var15 templ.SafeURL
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + part.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 143, Col: 70}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 149, Col: 70}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -389,7 +389,7 @@ func seriesNav(parts []post.Post, current post.Post, lang string) templ.Componen
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(part.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 143, Col: 143}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 149, Col: 143}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -444,7 +444,7 @@ func seriesBottomNav(parts []post.Post, current post.Post, lang string) templ.Co
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(current.Series)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 157, Col: 31}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 163, Col: 31}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -462,7 +462,7 @@ func seriesBottomNav(parts []post.Post, current post.Post, lang string) templ.Co
 					var templ_7745c5c3_Var19 templ.SafeURL
 					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + prevPart.Slug))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 161, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 167, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 					if templ_7745c5c3_Err != nil {
@@ -483,7 +483,7 @@ func seriesBottomNav(parts []post.Post, current post.Post, lang string) templ.Co
 					var templ_7745c5c3_Var20 string
 					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(prevPart.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 163, Col: 100}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 169, Col: 100}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 					if templ_7745c5c3_Err != nil {
@@ -507,7 +507,7 @@ func seriesBottomNav(parts []post.Post, current post.Post, lang string) templ.Co
 					var templ_7745c5c3_Var21 templ.SafeURL
 					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + nextPart.Slug))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 169, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 175, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 					if templ_7745c5c3_Err != nil {
@@ -520,7 +520,7 @@ func seriesBottomNav(parts []post.Post, current post.Post, lang string) templ.Co
 					var templ_7745c5c3_Var22 string
 					templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(nextPart.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 171, Col: 100}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 177, Col: 100}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 					if templ_7745c5c3_Err != nil {
