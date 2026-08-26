@@ -1,3 +1,11 @@
+### v1.1.0 (August 27, 2026) · Mobile UI & Codebase Optimization
+
+- **Mobile View Optimizations**: Enforced strict edge-to-edge (padding-free) constraints and consistent 16:9 aspect ratios for thumbnail images on mobile viewports across the portal.
+- **Reading List Redesign**: Optimized the 'Saved Dispatches' view by converting it into a clean, minimalist single-column ledger list on mobile devices.
+- **Navigation Cleanup**: Streamlined the mobile navigation sidebar, added missing essential links, updated labels, and removed unnecessary social icons to prioritize readability.
+- **Codebase Refactoring**: Executed a comprehensive template cleanup, stripping away excessive styling annotations, legacy comments, and "AI slop" from the HTML structure, resulting in a significantly cleaner developer experience.
+- **Search Bug Fix**: Resolved a fallback rendering bug where submitting a search query on the HTMX form resulted in a partial, unstyled HTML fragment being served instead of the complete page layout.
+
 ### v1.0.6 (August 24, 2026) · Complete Feature Eradication
 
 - **TIL Complete Eradication**: Scoured the remaining codebase and completely eradicated leftover "Today I Learned" (TIL) dependencies, including obsolete struct models, localization dictionaries, and mock data in backend tests.

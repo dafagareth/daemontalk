@@ -1,3 +1,11 @@
+### v1.1.0 (27 Agustus 2026) · Optimisasi UI Mobile & Pembersihan Kode
+
+- **Optimisasi Tampilan Mobile**: Menerapkan batasan layar penuh tanpa jarak (*edge-to-edge padding-free*) secara ketat dan rasio gambar 16:9 yang konsisten pada seluruh *thumbnail* di beranda untuk perangkat ponsel.
+- **Desain Ulang Daftar Bacaan**: Memaksimalkan halaman 'Saved Dispatches' dengan mengubahnya menjadi tampilan buku besar (*ledger*) satu kolom bergaris zebra yang minimalis di layar ponsel.
+- **Pembersihan Navigasi**: Merapikan laci navigasi *sidebar mobile*, menambahkan tautan esensial yang hilang, menyesuaikan label teks, serta menghapus ikon media sosial yang tidak relevan.
+- **Pembersihan Source Code**: Melakukan pembersihan total pada fail *template*, memangkas baris komentar *styling* berlebihan, komentar lawas, serta teks sisa dari AI, menghasilkan kode yang lebih murni dan profesional.
+- **Perbaikan Bug Pencarian**: Memperbaiki *bug* pada fitur pencarian berbasis HTMX, di mana menekan tombol Enter sebelumnya mengakibatkan respons HTML mentah tanpa desain (*deadcode*). Kini, halaman penuh dirender dengan sempurna.
+
 ### v1.0.6 (Agustus 24, 2026) · Pembersihan Fitur Menyeluruh
 
 - **Pemusnahan Total TIL**: Menyisir sisa-sisa basis kode dan menghapus secara permanen seluruh dependensi "Today I Learned" (TIL) yang masih tertinggal, termasuk model data yang usang, kamus pelokalan bahasa, serta data uji tiruan (*mock*) pada *backend*.
