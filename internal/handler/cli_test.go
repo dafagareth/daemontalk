@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/post"
+	"github.com/go-chi/chi/v5"
 )
 
 func TestIsCLIRequest(t *testing.T) {
@@ -40,10 +40,10 @@ func TestCLIMainAndDaily(t *testing.T) {
 	h := &Handler{
 		FilePosts: []post.Post{
 			{
-				Title:   "eBPF Linux Observability",
-				Slug:    "ebpf-linux-observability",
-				Date:    time.Now(),
-				Lang:    "en",
+				Title:       "eBPF Linux Observability",
+				Slug:        "ebpf-linux-observability",
+				Date:        time.Now(),
+				Lang:        "en",
 				Tags:        []string{"linux", "ebpf"},
 				Description: "Deep dive into eBPF tracing",
 				Body:        "## eBPF Internals\n\nDetailed content here.",

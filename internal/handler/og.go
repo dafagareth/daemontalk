@@ -7,9 +7,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/og"
 	"daemontalk/internal/post"
+	"github.com/go-chi/chi/v5"
 )
 
 // ogCache memoizes rendered OG PNGs by slug. Cards only change when post

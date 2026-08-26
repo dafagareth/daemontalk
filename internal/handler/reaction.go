@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
 	"daemontalk/web/templates"
+	"github.com/go-chi/chi/v5"
 )
 
 var validEmojis = map[string]bool{
@@ -109,4 +109,3 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 
 	h.Render(w, r, templates.ReactionsBar(ui, reactions, slug, lang, emoji, commentCount, title, date))
 }
-

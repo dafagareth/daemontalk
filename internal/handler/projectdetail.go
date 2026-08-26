@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
 	"daemontalk/internal/project"
 	"daemontalk/web/templates"
+	"github.com/go-chi/chi/v5"
 )
 
 func (h *Handler) ProjectDetail(w http.ResponseWriter, r *http.Request) {
@@ -53,4 +53,3 @@ func (h *Handler) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 		Description: desc,
 	}, templates.ProjectDetailPage(ui, *found, lang, toc)))
 }
-

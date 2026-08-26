@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/post"
+	"github.com/go-chi/chi/v5"
 )
 
 // BlogIndex is used as "/" handler after pivot; must render the list of

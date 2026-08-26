@@ -20,4 +20,3 @@ func (h *Handler) About(w http.ResponseWriter, r *http.Request) {
 		Description: "About Daemontalk philosophy and editorial standards.",
 	}, templates.AboutPage(ui, lang)))
 }
-

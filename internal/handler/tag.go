@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
 	"daemontalk/web/templates"
+	"github.com/go-chi/chi/v5"
 )
 
 func (h *Handler) TagIndex(w http.ResponseWriter, r *http.Request) {
@@ -85,4 +85,3 @@ func (h *Handler) TagPostsPartial(w http.ResponseWriter, r *http.Request) {
 	remaining := total - end
 	h.Render(w, r, templates.TagRiverItems(ui, pagePosts, lang, offset-6, nextOffset, remaining, tag))
 }
-

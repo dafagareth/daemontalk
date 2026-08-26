@@ -10,13 +10,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/a-h/templ"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
 	"daemontalk/internal/postdb"
 	"daemontalk/internal/project"
 	"daemontalk/web/templates"
+	"github.com/a-h/templ"
 )
 
 type Handler struct {

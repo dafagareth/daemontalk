@@ -27,4 +27,3 @@ func (h *Handler) Behind(w http.ResponseWriter, r *http.Request) {
 	}
 	h.Render(w, r, templates.Layout(ui, lang, "behind", r.URL.Path, meta, templates.Behind(ui, lang, featured, ghStats)))
 }
-

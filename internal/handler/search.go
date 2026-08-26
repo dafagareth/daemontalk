@@ -47,8 +47,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			h.Render(w, r, templates.SearchDropdownResults(ui, query, results, lang, viewCounts))
 			return
 		}
-		h.Render(w, r, templates.SearchResultsList(ui, query, results, lang, viewCounts))
-		return
+
+		if r.Header.Get("HX-Target") == "search-results" {
+			h.Render(w, r, templates.SearchResultsList(ui, query, results, lang, viewCounts))
+			return
+		}
+
+		// If it's a boosted form submission or link, it will have a different target (or no explicit target).
+		// We let it fall through to render the full page Layout, which hx-boost handles seamlessly.
 	}
 
 	desc := "Search posts on daemontalk.com"
@@ -60,4 +66,3 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, r, templates.Layout(ui, lang, "search", r.URL.Path, meta,
 		templates.SearchPage(ui, query, results, lang, viewCounts)))
 }
-

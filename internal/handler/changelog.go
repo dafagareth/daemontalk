@@ -22,4 +22,3 @@ func (h *Handler) Changelog(w http.ResponseWriter, r *http.Request) {
 		Description: "A running log of features and changes shipped to daemontalk.com.",
 	}, templates.ChangelogPage(body, lang)))
 }
-

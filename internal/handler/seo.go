@@ -29,7 +29,7 @@ const seoBaseURL = "https://daemontalk.com"
 // Robots serves robots.txt pointing crawlers at the sitemap and blocking AI scrapers.
 func (h *Handler) Robots(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	
+
 	robotsTxt := `User-agent: *
 Disallow: /admin
 Disallow: /admin/

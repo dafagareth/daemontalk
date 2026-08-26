@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/post"
 	"daemontalk/internal/postdb"
 	"daemontalk/web/templates"
+	"github.com/go-chi/chi/v5"
 )
 
 func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
@@ -127,4 +127,3 @@ func (h *Handler) AdminDeleteComment(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
-

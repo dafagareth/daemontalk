@@ -96,4 +96,3 @@ func (h *Handler) renderGuestbookList(w http.ResponseWriter, r *http.Request, ui
 	}
 	h.Render(w, r, templates.GuestbookList(ui, entries))
 }
-

@@ -18,4 +18,3 @@ func (h *Handler) Links(w http.ResponseWriter, r *http.Request) {
 		Description: "A curated list of tools, articles, and resources I find useful.",
 	}, templates.LinksPage(ui, grouped, links.CategoryOrder)))
 }
-

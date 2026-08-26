@@ -24,7 +24,7 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 		if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) && !isAdmin {
 			continue
 		}
-			data.TotalPosts++
+		data.TotalPosts++
 		data.TotalWords += p.ReadTime * 200
 		for _, t := range p.Tags {
 			tagSet[t] = true
@@ -61,4 +61,3 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 	meta := templates.PageMeta{Description: "Site statistics for daemontalk.com — posts, views, and more."}
 	h.Render(w, r, templates.Layout(ui, lang, "stats", r.URL.Path, meta, templates.StatsPage(ui, data)))
 }
-

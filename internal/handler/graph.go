@@ -27,4 +27,3 @@ func (h *Handler) Graph(w http.ResponseWriter, r *http.Request) {
 		Description: "Interactive knowledge graph connecting Linux kernel architectures, language runtimes, memory models, and distributed storage engines.",
 	}, templates.GraphPage(ui, lang, posts)))
 }
-

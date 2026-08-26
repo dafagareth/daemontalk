@@ -14,4 +14,3 @@ func (h *Handler) Saved(w http.ResponseWriter, r *http.Request) {
 		Description: "Your saved posts reading list.",
 	}, templates.SavedPage(ui, lang)))
 }
-

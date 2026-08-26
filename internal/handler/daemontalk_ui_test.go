@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/post"
+	"github.com/go-chi/chi/v5"
 )
 
 func TestDaemontalkUILayoutRendering(t *testing.T) {

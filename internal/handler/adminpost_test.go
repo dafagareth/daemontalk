@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-chi/chi/v5"
 	"daemontalk/internal/post"
 	"daemontalk/internal/postdb"
+	"github.com/go-chi/chi/v5"
 )
 
 func TestAdminPostNewForbiddenWithoutAuth(t *testing.T) {

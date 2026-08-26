@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"net/http"
 	"daemontalk/web/templates"
+	"net/http"
 )
 
 func (h *Handler) License(w http.ResponseWriter, r *http.Request) {
