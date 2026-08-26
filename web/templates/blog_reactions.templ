@@ -24,11 +24,11 @@ templ reactionIcon(emoji string, active bool) {
 
 // ReactionsBar renders the 5 authentic emoji reactions along with Bookmark and Share dock.
 templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string, userReaction string, commentCount int, title string, date string) {
-	<div id="reactions-bar" class="w-full mt-6 p-1.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-none flex items-center justify-between gap-3 select-none font-mono text-xs not-prose">
+	<div id="reactions-bar" class="w-full mt-6 flex items-center justify-between gap-2 sm:gap-3 select-none font-mono text-xs not-prose">
 		
-		<!-- Left Group: 5 Authentic Emoji Reactions (Like, Heart, Fire, Mindblown, Insightful) -->
-		<div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-			for _, emoji := range []string{"like", "heart", "fire", "mindblown", "insightful"} {
+		<!-- Left Group: 3 Authentic Emoji Reactions -->
+		<div class="flex items-center gap-1.5 sm:gap-3 flex-nowrap">
+			for _, emoji := range []string{"like", "heart", "fire"} {
 				{{
 					active := emoji == userReaction
 					count := reactions[emoji]
@@ -38,8 +38,8 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 					hx-target="#reactions-bar"
 					hx-swap="outerHTML"
 					class={
-						"inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded bg-surface border border-transparent hover:border-border/50",
-						templ.KV("text-text font-bold bg-border/20 border-border/50", active),
+						"inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded hover:bg-surface shrink-0",
+						templ.KV("text-text font-bold bg-surface", active),
 						templ.KV("text-muted hover:text-text opacity-75 hover:opacity-100", !active),
 					}
 					title={ reactionName(emoji) }
@@ -54,7 +54,7 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 		</div>
 
 		<!-- Right Group: Pure Save Icon & Share Dock -->
-		<div class="flex items-center gap-1 sm:gap-1.5 relative shrink-0">
+		<div class="flex items-center gap-1 sm:gap-2 relative shrink-0">
 			
 			<!-- Pure Save Icon (Bookmark) -->
 			<button
@@ -63,11 +63,11 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 				data-slug={ slug }
 				data-title={ title }
 				data-date={ date }
-				class="bookmark-btn p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center"
+				class="bookmark-btn p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center"
 				title="Save / Bookmark post"
 				aria-label="Save post"
 			>
-				@IconBookmark("bookmark-icon w-4 h-4 shrink-0")
+				@IconBookmark("bookmark-icon w-5 h-5 sm:w-6 sm:h-6 shrink-0")
 			</button>
 
 			<!-- Share Button & Horizontal Dock Popover -->
@@ -75,11 +75,11 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 				<button
 					type="button"
 					onclick="toggleSharePopover(event)"
-					class="p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group"
+					class="p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group"
 					title="Share article"
 					aria-label="Share article"
 				>
-					@IconShare("w-4 h-4 shrink-0")
+					@IconShare("w-5 h-5 sm:w-6 sm:h-6 shrink-0")
 				</button>
 
 				<!-- The Micro Horizontal Dock Popover -->

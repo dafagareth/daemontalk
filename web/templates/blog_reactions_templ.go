@@ -97,15 +97,15 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"reactions-bar\" class=\"w-full mt-6 p-1.5 sm:px-3 sm:py-2 bg-surface border border-border rounded-none flex items-center justify-between gap-3 select-none font-mono text-xs not-prose\"><!-- Left Group: 5 Authentic Emoji Reactions (Like, Heart, Fire, Mindblown, Insightful) --><div class=\"flex items-center gap-2 sm:gap-3 flex-wrap\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"reactions-bar\" class=\"w-full mt-6 flex items-center justify-between gap-2 sm:gap-3 select-none font-mono text-xs not-prose\"><!-- Left Group: 3 Authentic Emoji Reactions --><div class=\"flex items-center gap-1.5 sm:gap-3 flex-nowrap\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, emoji := range []string{"like", "heart", "fire", "mindblown", "insightful"} {
+		for _, emoji := range []string{"like", "heart", "fire"} {
 			active := emoji == userReaction
 			count := reactions[emoji]
-			var templ_7745c5c3_Var4 = []any{"inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded bg-surface border border-transparent hover:border-border/50",
-				templ.KV("text-text font-bold bg-border/20 border-border/50", active),
+			var templ_7745c5c3_Var4 = []any{"inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded hover:bg-surface shrink-0",
+				templ.KV("text-text font-bold bg-surface", active),
 				templ.KV("text-muted hover:text-text opacity-75 hover:opacity-100", !active),
 			}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
@@ -214,7 +214,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><!-- Right Group: Pure Save Icon & Share Dock --><div class=\"flex items-center gap-1 sm:gap-1.5 relative shrink-0\"><!-- Pure Save Icon (Bookmark) --><button type=\"button\" onclick=\"toggleBookmark(this)\" data-slug=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><!-- Right Group: Pure Save Icon & Share Dock --><div class=\"flex items-center gap-1 sm:gap-2 relative shrink-0\"><!-- Pure Save Icon (Bookmark) --><button type=\"button\" onclick=\"toggleBookmark(this)\" data-slug=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -253,19 +253,19 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"bookmark-btn p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center\" title=\"Save / Bookmark post\" aria-label=\"Save post\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"bookmark-btn p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center\" title=\"Save / Bookmark post\" aria-label=\"Save post\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconBookmark("bookmark-icon w-4 h-4 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconBookmark("bookmark-icon w-5 h-5 sm:w-6 sm:h-6 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</button><!-- Share Button & Horizontal Dock Popover --><div class=\"relative\"><button type=\"button\" onclick=\"toggleSharePopover(event)\" class=\"p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group\" title=\"Share article\" aria-label=\"Share article\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</button><!-- Share Button & Horizontal Dock Popover --><div class=\"relative\"><button type=\"button\" onclick=\"toggleSharePopover(event)\" class=\"p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group\" title=\"Share article\" aria-label=\"Share article\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconShare("w-4 h-4 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconShare("w-5 h-5 sm:w-6 sm:h-6 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
