@@ -2,15 +2,14 @@ package templates
 
 import (
 	"fmt"
-	"strconv"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
 )
 
-templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.Post, lang string, viewCounts map[string]int, page int, totalPages int) {
+templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewCounts map[string]int) {
 	<div class="w-full">
 		<!-- MINIMALIST MONOLITH TAG HEADER & BREADCRUMB -->
-		<div class="mb-8 pt-2">
+		<div class="mb-6 sm:mb-8 pt-3 sm:pt-2 px-4 sm:px-0">
 			<!-- Breadcrumb & Back Navigation -->
 			<div class="flex items-center justify-between gap-4 mb-4 text-xs font-mono text-muted">
 				<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="hover:text-link transition-colors inline-flex items-center gap-1.5 group font-bold uppercase tracking-wider">
@@ -32,11 +31,6 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.P
 					<h1 class="text-3xl sm:text-4xl font-sans font-black uppercase tracking-tight text-text">
 						{ tag }
 					</h1>
-					if page > 1 {
-						<span class="text-xs font-mono text-muted">
-							{ fmt.Sprintf("(Page %d of %d)", page, totalPages) }
-						</span>
-					}
 				</div>
 				<p class="text-xs font-mono text-muted">
 					if lang == "id" {
@@ -52,75 +46,79 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.P
 			<div class="p-12 text-center text-sm font-mono text-muted border-2 border-border bg-surface">
 				No dispatches found for #{ tag }
 			</div>
-		} else if page == 1 {
+		} else {
 			// =========================================================
-			// PAGE 1: FULL EDITORIAL MASTHEAD + SPOTLIGHT + RIVER
+			// FULL EDITORIAL SPOTLIGHT + STREAM RIVER (CONTINUOUS SCROLL)
 			// =========================================================
 
-			// TINGKAT 1: TOPIC HERO SPOTLIGHT (8 : 4 Asymmetric)
+			// TINGKAT 1: TOPIC HERO SPOTLIGHT (8 : 4 Asymmetric Desktop / Lead + Duet 2-Col Mobile)
 			<div class="border-0 sm:border-x-2 sm:border-y-2 sm:border-border w-full mb-0 bg-bg">
 				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
 					
 					// LEFT (8 cols): Main Featured Lead Story for Tag
 					<div class="lg:col-span-8 flex flex-col justify-between group">
 						<div>
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + pagePosts[0].Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
-								@postThumbnailImg(pagePosts[0])
-							</a>
+							if allPosts[0].Cover != "" {
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + allPosts[0].Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
+									@postThumbnailImg(allPosts[0])
+								</a>
+							}
 							<div class="p-5 sm:p-6 lg:px-7 lg:py-12">
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + pagePosts[0].Slug) } class="block mb-3">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + allPosts[0].Slug) } class="block mb-3">
 									<h2 class="display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text group-hover:text-link transition-colors leading-[1.18] tracking-tight">
-										{ pagePosts[0].Title }
+										{ allPosts[0].Title }
 									</h2>
 								</a>
-								if pagePosts[0].Description != "" {
+								if allPosts[0].Description != "" {
 									<p class="text-sm sm:text-base text-muted line-clamp-3 leading-relaxed mb-4">
-										{ pagePosts[0].Description }
+										{ allPosts[0].Description }
 									</p>
 								}
 							</div>
 						</div>
 						<div class="px-5 sm:px-6 lg:px-7 pb-5 flex items-center justify-between text-xs font-mono text-muted border-t border-border/30 pt-3">
 							<span class="font-bold text-text">
-								if pagePosts[0].Author != "" {
-									{ pagePosts[0].Author }
+								if allPosts[0].Author != "" {
+									{ allPosts[0].Author }
 								} else {
 									daemontalk
 								}
 							</span>
 							<div class="flex items-center gap-2">
-								<time datetime={ pagePosts[0].Date.Format("2006-01-02") }>{ fmtDate(pagePosts[0]) }</time>
+								<time datetime={ allPosts[0].Date.Format("2006-01-02") }>{ fmtDate(allPosts[0]) }</time>
 								<span>·</span>
-								<span>{ fmt.Sprintf("%d %s", pagePosts[0].ReadTime, ui.Blog_MinRead) }</span>
+								<span>{ fmt.Sprintf("%d %s", allPosts[0].ReadTime, ui.Blog_MinRead) }</span>
 							</div>
 						</div>
 					</div>
 
-					// RIGHT (4 cols): Secondary Stories (pagePosts[1..2])
-					<div class="lg:col-span-4 flex flex-col divide-y divide-[var(--c-border)]">
-						if len(pagePosts) > 1 {
-							for i := 1; i <= 2 && i < len(pagePosts); i++ {
+					// RIGHT (4 cols on Desktop / Duet 2-Col on Mobile): Secondary Stories (allPosts[1..2])
+					<div class="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 divide-x lg:divide-x-0 lg:divide-y divide-[var(--c-border)]">
+						if len(allPosts) > 1 {
+							for i := 1; i <= 2 && i < len(allPosts); i++ {
 								<article class="flex flex-col justify-between flex-1 group">
 									<div>
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + pagePosts[i].Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
-											@postThumbnailImg(pagePosts[i])
-										</a>
-										<div class="p-4 sm:p-5">
-											<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + pagePosts[i].Slug) } class="block mb-1.5">
-												<h3 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
-													{ pagePosts[i].Title }
+										if allPosts[i].Cover != "" {
+											<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + allPosts[i].Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
+												@postThumbnailImg(allPosts[i])
+											</a>
+										}
+										<div class="p-3.5 sm:p-5">
+											<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + allPosts[i].Slug) } class="block mb-1.5">
+												<h3 class="display text-xs sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
+													{ allPosts[i].Title }
 												</h3>
 											</a>
-											if pagePosts[i].Description != "" {
-												<p class="text-xs text-muted line-clamp-2 leading-relaxed mb-2">
-													{ pagePosts[i].Description }
+											if allPosts[i].Description != "" {
+												<p class="hidden sm:block text-xs text-muted line-clamp-2 leading-relaxed mb-2">
+													{ allPosts[i].Description }
 												</p>
 											}
 										</div>
 									</div>
-									<div class="px-4 sm:px-5 pb-4 text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 pt-2 mt-auto">
-										<time>{ fmtDate(pagePosts[i]) }</time>
-										<span>{ fmt.Sprintf("%d %s", pagePosts[i].ReadTime, ui.Blog_MinRead) }</span>
+									<div class="px-3.5 sm:px-5 pb-3 sm:pb-4 text-[9px] sm:text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 pt-2 mt-auto">
+										<time>{ fmtDate(allPosts[i]) }</time>
+										<span>{ fmt.Sprintf("%d %s", allPosts[i].ReadTime, ui.Blog_MinRead) }</span>
 									</div>
 								</article>
 							}
@@ -131,31 +129,33 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.P
 			</div>
 
 			// TINGKAT 2: FEATURED TOPIC TRIO (4 : 4 : 4)
-			if len(pagePosts) > 3 {
+			if len(allPosts) > 3 {
 				<div class="border-0 sm:border-x-2 sm:border-b-2 sm:border-border w-full mt-0 mb-0 bg-bg">
 					<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]">
-						for i := 3; i <= 5 && i < len(pagePosts); i++ {
+						for i := 3; i <= 5 && i < len(allPosts); i++ {
 							<article class="flex flex-col justify-between group">
 								<div>
-									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + pagePosts[i].Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
-										@postThumbnailImg(pagePosts[i])
-									</a>
+									if allPosts[i].Cover != "" {
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + allPosts[i].Slug) } class="block relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
+											@postThumbnailImg(allPosts[i])
+										</a>
+									}
 									<div class="p-4 sm:p-5">
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + pagePosts[i].Slug) } class="block mb-1.5">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + allPosts[i].Slug) } class="block mb-1.5">
 											<h3 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
-												{ pagePosts[i].Title }
+												{ allPosts[i].Title }
 											</h3>
 										</a>
-										if pagePosts[i].Description != "" {
+										if allPosts[i].Description != "" {
 											<p class="text-xs text-muted line-clamp-2 leading-relaxed mb-2">
-												{ pagePosts[i].Description }
+												{ allPosts[i].Description }
 											</p>
 										}
 									</div>
 								</div>
 								<div class="px-4 sm:px-5 pb-4 text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 mt-auto pt-2">
-									<time>{ fmtDate(pagePosts[i]) }</time>
-									<span>{ fmt.Sprintf("%d %s", pagePosts[i].ReadTime, ui.Blog_MinRead) }</span>
+									<time>{ fmtDate(allPosts[i]) }</time>
+									<span>{ fmt.Sprintf("%d %s", allPosts[i].ReadTime, ui.Blog_MinRead) }</span>
 								</div>
 							</article>
 						}
@@ -163,140 +163,72 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.P
 				</div>
 			}
 
-			// TINGKAT 3: THE DISPATCH RIVER (2-Kolom Horizontal Stream)
-			if len(pagePosts) > 6 {
+			// TINGKAT 3: THE DISPATCH RIVER (2-Kolom Continuous Stream)
+			if len(allPosts) > 6 {
 				<div class="border-0 sm:border-x-2 sm:border-b-2 sm:border-border w-full mt-0 mb-0 sm:mb-0 bg-bg">
 					<div class="flex items-center justify-between px-5 py-3 border-b-2 border-border bg-surface text-xs font-mono font-bold uppercase tracking-wider">
 						<span class="text-accent">CHRONOLOGICAL ARCHIVE RIVER</span>
-						<span class="text-muted text-[10px] lowercase">{ fmt.Sprintf("%d dispatches in stream", len(pagePosts)-6) }</span>
+						<span class="text-muted text-[10px] lowercase">{ fmt.Sprintf("%d dispatches in stream", len(allPosts)-6) }</span>
 					</div>
 
-					<div class="grid grid-cols-1 md:grid-cols-2">
-						for idx, p := range pagePosts[6:] {
+					<div id="tag-river-grid" class="grid grid-cols-1 md:grid-cols-2">
+						for idx, p := range initialRiverPosts(allPosts, 6, 6) {
 							@tagRiverItem(ui, p, lang, idx)
 						}
 					</div>
 				</div>
-			}
 
-			// Standard Pagination Bar
-			if totalPages > 1 {
-				@tagPagination(tag, page, totalPages, lang)
-			}
-
-		} else {
-			// =========================================================
-			// PAGE > 1: CLEAN CONTINUOUS 2-COLUMN RIVER + PAGINATION
-			// =========================================================
-			<div class="border-0 sm:border-x-2 sm:border-y-2 sm:border-border w-full mb-0 bg-bg">
-				<div class="flex items-center justify-between px-5 py-3 border-b-2 border-border bg-surface text-xs font-mono font-bold uppercase tracking-wider">
-					<span class="text-accent">CHRONOLOGICAL ARCHIVE RIVER · PAGE { strconv.Itoa(page) }</span>
-					<span class="text-muted text-[10px] lowercase">{ fmt.Sprintf("%d dispatches on this page", len(pagePosts)) }</span>
-				</div>
-
-				<div class="grid grid-cols-1 md:grid-cols-2">
-					for idx, p := range pagePosts {
-						@tagRiverItem(ui, p, lang, idx)
-					}
-				</div>
-			</div>
-
-			// Standard Pagination Bar
-			if totalPages > 1 {
-				@tagPagination(tag, page, totalPages, lang)
+				if len(allPosts) > 12 {
+					<div id="tag-river-load-more" class="py-8 flex justify-center">
+						<button
+							hx-get={ fmt.Sprintf("%s/blog/tag-posts?tag=%s&offset=12", blogPrefix(lang), tag) }
+							hx-trigger="click"
+							hx-target="#tag-river-load-more"
+							hx-swap="outerHTML"
+							class="p-2.5 sm:p-3 text-muted hover:text-text hover:bg-hover border border-border transition-colors group cursor-pointer"
+							aria-label="Load more dispatches"
+							title="Load more dispatches"
+						>
+							@IconArrowDown("w-5 h-5 transition-transform group-hover:translate-y-0.5")
+						</button>
+					</div>
+				}
 			}
 		}
 	</div>
 }
 
-// Clean Standard Editorial Pagination
-templ tagPagination(tag string, currentPage int, totalPages int, lang string) {
-	<div class="border-0 sm:border-x-2 sm:border-b-2 sm:border-border w-full bg-surface/40 not-prose">
-		<div class="flex items-center justify-between p-4 sm:p-5 text-xs font-mono">
-			<!-- Previous Link -->
-			<div>
-				if currentPage > 1 {
-					<a
-						href={ templ.SafeURL(fmt.Sprintf("%s/blog/tag/%s?page=%d", blogPrefix(lang), tag, currentPage-1)) }
-						class="inline-flex items-center gap-1.5 text-muted hover:text-link font-bold uppercase tracking-wider transition-colors group"
-					>
-						@IconArrowLeft("w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5")
-						<span>
-							if lang == "id" {
-								Sebelumnya
-							} else {
-								Previous
-							}
-						</span>
-					</a>
-				} else {
-					<span class="text-muted/30 uppercase tracking-wider select-none inline-flex items-center gap-1.5 cursor-not-allowed">
-						@IconArrowLeft("w-3.5 h-3.5 opacity-30")
-						<span>
-							if lang == "id" {
-								Sebelumnya
-							} else {
-								Previous
-							}
-						</span>
-					</span>
-				}
-			</div>
-
-			<!-- Page Number Buttons -->
-			<div class="flex items-center gap-1.5">
-				for p := 1; p <= totalPages; p++ {
-					if p == currentPage {
-						<span class="w-8 h-8 flex items-center justify-center bg-chip border border-border font-bold text-text">
-							{ strconv.Itoa(p) }
-						</span>
-					} else {
-						<a
-							href={ templ.SafeURL(fmt.Sprintf("%s/blog/tag/%s?page=%d", blogPrefix(lang), tag, p)) }
-							class="w-8 h-8 flex items-center justify-center border border-transparent hover:border-border hover:bg-hover text-muted hover:text-text transition-colors"
-						>
-							{ strconv.Itoa(p) }
-						</a>
-					}
-				}
-			</div>
-
-			<!-- Next Link -->
-			<div>
-				if currentPage < totalPages {
-					<a
-						href={ templ.SafeURL(fmt.Sprintf("%s/blog/tag/%s?page=%d", blogPrefix(lang), tag, currentPage+1)) }
-						class="inline-flex items-center gap-1.5 text-muted hover:text-link font-bold uppercase tracking-wider transition-colors group"
-					>
-						<span>
-							if lang == "id" {
-								Berikutnya
-							} else {
-								Next
-							}
-						</span>
-						@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
-					</a>
-				} else {
-					<span class="text-muted/30 uppercase tracking-wider select-none inline-flex items-center gap-1.5 cursor-not-allowed">
-						<span>
-							if lang == "id" {
-								Berikutnya
-							} else {
-								Next
-							}
-						</span>
-						@IconArrowRight("w-3.5 h-3.5 opacity-30")
-					</span>
-				}
-			</div>
-		</div>
-	</div>
+func initialRiverPosts(posts []post.Post, offset int, count int) []post.Post {
+	if offset >= len(posts) {
+		return nil
+	}
+	end := offset + count
+	if end > len(posts) {
+		end = len(posts)
+	}
+	return posts[offset:end]
 }
 
 templ TagRiverItems(ui i18n.UI, posts []post.Post, lang string, startIdx int, nextOffset int, remaining int, tag string) {
-	for idx, p := range posts {
-		@tagRiverItem(ui, p, lang, startIdx+idx)
+	<div id="tag-river-grid" hx-swap-oob="beforeend">
+		for idx, p := range posts {
+			@tagRiverItem(ui, p, lang, startIdx+idx)
+		}
+	</div>
+	if remaining > 0 {
+		<div id="tag-river-load-more" class="py-8 flex justify-center">
+			<button
+				hx-get={ fmt.Sprintf("%s/blog/tag-posts?tag=%s&offset=%d", blogPrefix(lang), tag, nextOffset) }
+				hx-trigger="click"
+				hx-target="#tag-river-load-more"
+				hx-swap="outerHTML"
+				class="p-2.5 sm:p-3 text-muted hover:text-text hover:bg-hover border border-border transition-colors group cursor-pointer"
+				aria-label="Load more dispatches"
+				title="Load more dispatches"
+			>
+				@IconArrowDown("w-5 h-5 transition-transform group-hover:translate-y-0.5")
+			</button>
+		</div>
 	}
 }
 
@@ -308,8 +240,8 @@ templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int) {
 	}>
 		<div>
 			if p.Cover != "" {
-				<div class="flex flex-col sm:flex-row gap-3.5 sm:gap-4 items-start mb-2">
-					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="w-full sm:w-36 sm:shrink-0 aspect-[16/9] bg-surface overflow-hidden border border-border block">
+				<div class="flex flex-row gap-3.5 sm:gap-4 items-start mb-2">
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="w-20 h-20 sm:w-36 sm:h-auto sm:aspect-[16/9] shrink-0 bg-surface overflow-hidden border border-border block">
 						@postThumbnailImg(p)
 					</a>
 					<div class="flex-1 min-w-0">
@@ -319,7 +251,7 @@ templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int) {
 							</h4>
 						</a>
 						if p.Description != "" {
-							<p class="text-xs text-muted line-clamp-2 leading-relaxed">
+							<p class="hidden sm:block text-xs text-muted line-clamp-2 leading-relaxed">
 								{ p.Description }
 							</p>
 						}
