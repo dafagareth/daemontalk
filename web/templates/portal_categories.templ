@@ -7,7 +7,7 @@ import (
 
 templ portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) {
 	// BOX 2: TRI-COLUMN CORE TOPICS (4:4:4) - SEAMLESS WIREFRAME
-	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]">
 			for idx, cat := range categories {
 				<div class={
@@ -32,8 +32,8 @@ templ portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) 
 
 						// Lead Post (Split-Row on Mobile, Stacked on Desktop)
 						<article class="group mb-5 sm:mb-6">
-							<div class="flex flex-row-reverse sm:flex-col gap-3 sm:gap-0">
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-square sm:aspect-[16/9] w-20 sm:w-full shrink-0 bg-surface mb-0 sm:mb-3 overflow-hidden border border-border">
+							<div class="flex flex-col gap-3 sm:gap-0">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-auto sm:w-full -mx-5 sm:mx-0 shrink-0 bg-surface mb-3 sm:mb-3 overflow-hidden border-y sm:border border-border">
 									@postThumbnailImg(cat.LeadPost)
 								</a>
 								<div class="flex-1 min-w-0">
@@ -43,7 +43,7 @@ templ portalCategoryTrio(ui i18n.UI, categories []CategorySection, lang string) 
 										</h3>
 									</a>
 									if cat.LeadPost.Description != "" {
-										<p class="hidden sm:block text-[13px] text-muted line-clamp-2 leading-relaxed mb-2">
+										<p class="line-clamp-2 text-[13px] text-muted leading-relaxed mb-2">
 											{ cat.LeadPost.Description }
 										</p>
 									}

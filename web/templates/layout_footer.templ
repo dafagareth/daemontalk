@@ -9,15 +9,13 @@ templ footer(ui i18n.UI, lang string) {
 	<footer class="w-full bg-[#0d0d10] text-[#e6edf3] py-0 sm:py-12 transition-all mt-0">
 		<div class="container-page !px-0 sm:!px-6 lg:!px-8">
 			
-			// =================================================================
-			// THE FLOATING WIDE-SPLIT ISLAND FOOTER (5 : 7 GRID)
-			// =================================================================
-			<div class="border-0 sm:border-x-2 sm:border-b-2 border-x-0 sm:border-x-2 border-[#27272a] w-full bg-[#121214] shadow-sm mb-6 sm:mb-6 mt-6 sm:mt-0">
+			// Footer
+			<div class="border-t sm:border border-[#27272a] w-full bg-[#121214] shadow-sm mb-6 sm:mb-6 mt-6 sm:mt-0">
 				
-				// WIDE-SPLIT (5 cols Identity / 7 cols 3-Directory Columns)
+				// Wide split
 				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#27272a]">
 					
-					// LEFT (5 cols / ~42%): Brand Masthead, Terminal Prompt, & Socials
+					// Left
 					<div class="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between">
 						<div>
 							<a href={ templ.SafeURL(prefix(lang) + "/") } class="inline-flex items-center shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
@@ -27,7 +25,7 @@ templ footer(ui i18n.UI, lang string) {
 								{ ui.Footer_Bio }
 							</p>
 							
-							// Terminal SSH Box
+							// Terminal
 							<div class="relative bg-zinc-950 text-[#e6edf3] font-mono text-[11px] p-2.5 pr-8 border border-[#27272a] overflow-hidden mb-4 group">
 								<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
 									<span class="text-zinc-500 mr-1.5">$</span>ssh ssh.daemontalk.com -p 2222
@@ -43,7 +41,7 @@ templ footer(ui i18n.UI, lang string) {
 							</div>
 						</div>
 
-						// Social Media Row
+						// Socials
 						<div class="flex items-center gap-1 pt-2 border-t border-[#27272a]/60">
 							@footerSocial("https://github.com/dafagareth", "GitHub") {
 								@IconGitHub()
@@ -66,13 +64,13 @@ templ footer(ui i18n.UI, lang string) {
 						</div>
 					</div>
 
-					// RIGHT (7 cols / ~58%): 3 Clean Navigation Columns
-					<div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 bg-[#18181b]/30">
+					// Right
+					<div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 bg-[#18181b]/30">
 						
-						// Col 1: The Lab
+						// Col 1
 						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 border-[#27272a]">
 							<div>
-								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest pb-2 mb-3 border-b border-[#27272a]">
+								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest mb-3">
 									{ ui.Footer_Read }
 								</p>
 								<ul class="space-y-2">
@@ -85,10 +83,10 @@ templ footer(ui i18n.UI, lang string) {
 							</div>
 						</div>
 
-						// Col 2: Topics
-						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 border-l sm:border-x divide-[#27272a] border-[#27272a]">
+						// Col 2
+						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 sm:border-x border-[#27272a]">
 							<div>
-								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest pb-2 mb-3 border-b border-[#27272a]">
+								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest mb-3">
 									{ ui.Footer_Topics }
 								</p>
 								<ul class="space-y-2">
@@ -101,10 +99,10 @@ templ footer(ui i18n.UI, lang string) {
 							</div>
 						</div>
 
-						// Col 3: Community & Access
-						<div class="col-span-2 sm:col-span-1 p-5 sm:p-6 flex flex-col justify-between sm:border-l border-[#27272a]">
+						// Col 3
+						<div class="p-5 sm:p-6 flex flex-col justify-between sm:border-l border-[#27272a]">
 							<div>
-								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest pb-2 mb-3 border-b border-[#27272a]">
+								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest mb-3">
 									{ ui.Footer_Community }
 								</p>
 								<ul class="space-y-2">
@@ -133,13 +131,13 @@ templ footer(ui i18n.UI, lang string) {
 
 			</div>
 
-			// THE UNBOXED INLINE FOOTER BAR (Without Box, Free Flowing)
+			// Bottom Bar
 			<div class="px-5 sm:px-0 flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-4 text-xs font-mono text-[#8b949e] pt-4 sm:pt-1 pb-8 sm:pb-0">
 				
-				// Left: Copyright + Inline Links
+				// Bottom left
 				<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 sm:gap-x-4 sm:gap-y-2 w-full">
 					
-					// Mobile Top Row: Copyright (Left) & Theme Toggle (Right)
+					// Mobile top row
 					<div class="flex items-center justify-between w-full sm:w-auto">
 						<span class="text-[#e6edf3] font-bold inline-flex items-center gap-1.5">
 							@IconCopyright("w-3.5 h-3.5 text-[#8b949e]")
@@ -148,7 +146,7 @@ templ footer(ui i18n.UI, lang string) {
 						<span class="hidden sm:inline">·</span>
 					</div>
 
-					// Link Wrap
+					// Links
 					<div class="flex flex-wrap items-center gap-x-4 gap-y-2.5">
 						<a href={ templ.SafeURL(prefix(lang) + "/terms") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Terms_Title }</a>
 						<a href={ templ.SafeURL(prefix(lang) + "/privacy") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Privacy_Title }</a>

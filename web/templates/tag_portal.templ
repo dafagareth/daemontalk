@@ -47,9 +47,7 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewC
 				No dispatches found for #{ tag }
 			</div>
 		} else {
-			// =========================================================
 			// FULL EDITORIAL SPOTLIGHT + STREAM RIVER (CONTINUOUS SCROLL)
-			// =========================================================
 
 			// TINGKAT 1: TOPIC HERO SPOTLIGHT (8 : 4 Asymmetric Desktop / Lead + Duet 2-Col Mobile)
 			<div class="border-0 sm:border-x-2 sm:border-y-2 sm:border-border w-full mb-0 bg-bg">
@@ -74,20 +72,20 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewC
 										{ allPosts[0].Description }
 									</p>
 								}
-							</div>
-						</div>
-						<div class="px-5 sm:px-6 lg:px-7 pb-5 flex items-center justify-between text-xs font-mono text-muted border-t border-border/30 pt-3">
-							<span class="font-bold text-text">
-								if allPosts[0].Author != "" {
-									{ allPosts[0].Author }
-								} else {
-									daemontalk
-								}
-							</span>
-							<div class="flex items-center gap-2">
-								<time datetime={ allPosts[0].Date.Format("2006-01-02") }>{ fmtDate(allPosts[0]) }</time>
-								<span>·</span>
-								<span>{ fmt.Sprintf("%d %s", allPosts[0].ReadTime, ui.Blog_MinRead) }</span>
+								<div class="flex items-center justify-between text-xs font-mono text-muted border-t border-border/30 mt-2 pt-3">
+									<span class="font-bold text-text">
+										if allPosts[0].Author != "" {
+											{ allPosts[0].Author }
+										} else {
+											daemontalk
+										}
+									</span>
+									<div class="flex items-center gap-2">
+										<time datetime={ allPosts[0].Date.Format("2006-01-02") }>{ fmtDate(allPosts[0]) }</time>
+										<span>·</span>
+										<span>{ fmt.Sprintf("%d %s", allPosts[0].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -110,13 +108,13 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewC
 												</h3>
 											</a>
 											if allPosts[i].Description != "" {
-												<p class="hidden sm:block text-xs text-muted line-clamp-2 leading-relaxed mb-2">
+												<p class="hidden sm:line-clamp-2 text-xs text-muted  leading-relaxed mb-2">
 													{ allPosts[i].Description }
 												</p>
 											}
 										</div>
 									</div>
-									<div class="px-3.5 sm:px-5 pb-3 sm:pb-4 text-[9px] sm:text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 pt-2 mt-auto">
+									<div class="px-3.5 sm:px-5 pb-3 sm:pb-4 text-[9px] sm:text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 mt-2 pt-3">
 										<time>{ fmtDate(allPosts[i]) }</time>
 										<span>{ fmt.Sprintf("%d %s", allPosts[i].ReadTime, ui.Blog_MinRead) }</span>
 									</div>
@@ -153,7 +151,7 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewC
 										}
 									</div>
 								</div>
-								<div class="px-4 sm:px-5 pb-4 text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 mt-auto pt-2">
+								<div class="px-4 sm:px-5 pb-4 text-[10px] font-mono text-muted flex items-center justify-between border-t border-border/30 mt-2 pt-2">
 									<time>{ fmtDate(allPosts[i]) }</time>
 									<span>{ fmt.Sprintf("%d %s", allPosts[i].ReadTime, ui.Blog_MinRead) }</span>
 								</div>
@@ -173,7 +171,7 @@ templ TagPortal(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewC
 
 					<div id="tag-river-grid" class="grid grid-cols-1 md:grid-cols-2">
 						for idx, p := range initialRiverPosts(allPosts, 6, 6) {
-							@tagRiverItem(ui, p, lang, idx)
+							@tagRiverItem(ui, p, lang, idx, idx%3 == 0)
 						}
 					</div>
 				</div>
@@ -212,7 +210,7 @@ func initialRiverPosts(posts []post.Post, offset int, count int) []post.Post {
 templ TagRiverItems(ui i18n.UI, posts []post.Post, lang string, startIdx int, nextOffset int, remaining int, tag string) {
 	<div id="tag-river-grid" hx-swap-oob="beforeend">
 		for idx, p := range posts {
-			@tagRiverItem(ui, p, lang, startIdx+idx)
+			@tagRiverItem(ui, p, lang, startIdx+idx, (startIdx+idx)%3 == 0)
 		}
 	</div>
 	if remaining > 0 {
@@ -232,32 +230,36 @@ templ TagRiverItems(ui i18n.UI, posts []post.Post, lang string, startIdx int, ne
 	}
 }
 
-templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int) {
+templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int, showImage bool) {
 	<article class={
-		"p-4 sm:p-5 flex flex-col justify-between group border-border/60",
+		"flex flex-col justify-between group border-border/60",
 		templ.KV("md:border-r", idx%2 == 0),
 		templ.KV("border-t", idx >= 2 || idx == 1),
 	}>
-		<div>
-			if p.Cover != "" {
-				<div class="flex flex-row gap-3.5 sm:gap-4 items-start mb-2">
-					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="w-20 h-20 sm:w-36 sm:h-auto sm:aspect-[16/9] shrink-0 bg-surface overflow-hidden border border-border block">
-						@postThumbnailImg(p)
+		if p.Cover != "" && showImage {
+			<div class="flex flex-row items-stretch h-full">
+				<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="w-24 sm:w-40 shrink-0 bg-surface overflow-hidden border-r border-border/60 block">
+					@postThumbnailImg(p)
+				</a>
+				<div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col">
+					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block mb-1">
+						<h4 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
+							{ p.Title }
+						</h4>
 					</a>
-					<div class="flex-1 min-w-0">
-						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block mb-1">
-							<h4 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
-								{ p.Title }
-							</h4>
-						</a>
-						if p.Description != "" {
-							<p class="hidden sm:block text-xs text-muted line-clamp-2 leading-relaxed">
-								{ p.Description }
-							</p>
-						}
+					if p.Description != "" {
+						<p class="hidden sm:line-clamp-2 text-xs text-muted leading-relaxed">
+							{ p.Description }
+						</p>
+					}
+					<div class="flex items-center justify-between text-[10px] font-mono text-muted pt-2 border-t border-border/30 mt-auto">
+						<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
+						<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
 					</div>
 				</div>
-			} else {
+			</div>
+		} else {
+			<div class="p-4 sm:p-5 flex flex-col h-full justify-between">
 				<div class="flex flex-col mb-2">
 					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block mb-1">
 						<h4 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
@@ -270,11 +272,11 @@ templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int) {
 						</p>
 					}
 				</div>
-			}
-		</div>
-		<div class="flex items-center justify-between text-[10px] font-mono text-muted pt-2 border-t border-border/30 mt-auto">
-			<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
-			<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
-		</div>
+				<div class="flex items-center justify-between text-[10px] font-mono text-muted pt-2 border-t border-border/30 mt-auto">
+					<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
+					<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+				</div>
+			</div>
+		}
 	</article>
 }

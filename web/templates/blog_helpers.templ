@@ -133,7 +133,7 @@ func homeURL(lang string) string {
 	return "/"
 }
 
-// postThumbnail renders the post cover image if available, or a clean minimalist "No Photo" fallback box.
+// postThumbnail renders the post cover image if available, or a minimalist "No Photo" fallback box.
 templ postThumbnail(p post.Post, linkURL string) {
 	if linkURL != "" {
 		<a href={ templ.SafeURL(linkURL) } class="block w-full h-full">

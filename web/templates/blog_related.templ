@@ -29,7 +29,7 @@ templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang st
 								<div>
 									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
 										if len(related[0].Tags) > 0 {
-											<span class="text-xs font-mono font-bold uppercase text-[var(--c-link)]">#{ related[0].Tags[0] }</span>
+											<span class="text-xs font-mono font-bold uppercase text-accent">#{ related[0].Tags[0] }</span>
 											<span>·</span>
 										}
 										<time datetime={ related[0].Date.Format("2006-01-02") }>{ fmtDate(related[0]) }</time>
@@ -71,7 +71,7 @@ templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang st
 								<div>
 									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
 										if len(related[1].Tags) > 0 {
-											<span class="text-xs font-mono font-bold uppercase text-[var(--c-link)]">#{ related[1].Tags[0] }</span>
+											<span class="text-xs font-mono font-bold uppercase text-accent">#{ related[1].Tags[0] }</span>
 											<span>·</span>
 										}
 										<span>{ fmt.Sprintf("%d %s", related[1].ReadTime, ui.Blog_MinRead) }</span>
@@ -111,7 +111,7 @@ templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang st
 								<div>
 									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
 										if len(related[2].Tags) > 0 {
-											<span class="text-xs font-mono font-bold uppercase text-[var(--c-link)]">#{ related[2].Tags[0] }</span>
+											<span class="text-xs font-mono font-bold uppercase text-accent">#{ related[2].Tags[0] }</span>
 											<span>·</span>
 										}
 										<span>{ fmt.Sprintf("%d %s", related[2].ReadTime, ui.Blog_MinRead) }</span>

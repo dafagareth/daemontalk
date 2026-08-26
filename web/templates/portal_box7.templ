@@ -6,8 +6,8 @@ import (
 )
 
 templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang string) {
-	// BOX 8 (INDEX): DENSE KNOWLEDGE INDEX (3 : 3 : 3 : 3) - PURE TYPOGRAPHY WIREFRAME
-	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+	// Box 8
+	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 			for i, cat := range categories {
 				<div class={
@@ -19,7 +19,7 @@ templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang st
 					templ.KV("lg:border-r", i < 3),
 				}>
 					<div>
-						// Category Header
+						// Header
 						<div class="flex items-center justify-between mb-4 sm:mb-5">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
 								{ categoryTitle(cat, lang) }

@@ -6,13 +6,13 @@ import (
 )
 
 templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string) {
-	// BOX 5: QUAD TOOLING MATRIX (3 : 3 : 3 : 3) - HORIZONTAL SWIPE CAROUSEL ON MOBILE (PATTERN 4)
-	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+	// Box 5
+	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:divide-x sm:divide-y-0 divide-[var(--c-border)]">
 			for _, cat := range categories {
 				<div class="shrink-0 w-[85vw] sm:w-auto snap-center px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 flex flex-col justify-between border-r sm:border-r-0 border-[var(--c-border)] last:border-r-0">
 					<div>
-						// Category Header
+						// Header
 						<div class="flex items-center justify-between mb-4 sm:mb-5">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
 								{ categoryTitle(cat, lang) }
@@ -22,7 +22,7 @@ templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string
 							</a>
 						</div>
 
-						// Lead Story with 16:9 Mini Thumbnail
+						// Post
 						<article class="group mb-4">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 sm:mb-4 overflow-hidden border border-border">
 								@postThumbnailImg(cat.LeadPost)
@@ -38,7 +38,7 @@ templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string
 						</article>
 					</div>
 
-					// Sub Posts List
+					// Subposts
 					if len(cat.SubPosts) > 0 {
 						<div class="flex flex-col mt-auto pt-2 border-t border-border/40">
 							for j, sub := range cat.SubPosts {

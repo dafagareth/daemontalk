@@ -6,13 +6,13 @@ import (
 
 templ portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) {
 	// BOX 4: QUICK TOPICS (3:3:3:3) - SEAMLESS WIREFRAME
-	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--c-border)]">
 			for _, cat := range categories {
 				<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between">
 					<div>
 						// Category Header
-						<div class="flex items-center justify-between pb-2 mb-3 border-b-2 border-border">
+						<div class="flex items-center justify-between pb-2 mb-3 border-b border-border">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
 								{ categoryTitle(cat, lang) }
 							</a>

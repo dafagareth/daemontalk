@@ -8,130 +8,134 @@ import (
 
 templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, lang string, viewCounts map[string]int) {
 	{{
-		// -------------------------------------------------------------
 		// DYNAMIC CATEGORY AGGREGATION FOR 8 MONOLITHIC BOXES
-		// -------------------------------------------------------------
+		// With global deduplication: once a post appears, it won't repeat.
+
+		// Hero posts (Box 1) use posts[0..5], collect their slugs first
+		var usedSlugs []string
+		for i := 0; i <= 5 && i < len(posts); i++ {
+			usedSlugs = append(usedSlugs, posts[i].Slug)
+		}
 
 		// Box 2 (4:4:4): Linux, Go/Backend, DevOps
 		box2Cats := []CategorySection{
-			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 3),
-			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 3),
-			getCategoryCluster(posts, "devops", []string{"devops", "cloud", "ci-cd", "automation"}, 3),
+			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "devops", []string{"devops", "cloud", "ci-cd", "automation"}, 3, &usedSlugs),
 		}
 
 		// Box 3 (Deep Dive 10-Card Mobile Carousel / 2-Col Desktop): 10 Curated Technical Clusters
 		box3Cats := []CategorySection{
-			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "privacy", "ztna", "firewall", "openssl", "landlock"}, 2),
-			getCategoryCluster(posts, "systems", []string{"systems", "rust", "compiler", "io-uring", "zig", "assembly"}, 2),
-			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2),
-			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 2),
-			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 2),
-			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2),
-			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 2),
-			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 2),
-			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2),
-			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "terminal"}, 2),
+			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "privacy", "ztna", "firewall", "openssl", "landlock"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "systems", []string{"systems", "rust", "compiler", "io-uring", "zig", "assembly"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "terminal"}, 2, &usedSlugs),
 		}
 
 		// Box 4 (8:4): Left (Performance, Docker) + Right (Live Wire Feed)
 		box4LeftCats := []CategorySection{
-			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2),
-			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2),
+			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2, &usedSlugs),
 		}
-		var excludeSlugs []string
-		for i := 0; i <= 8 && i < len(posts); i++ {
-			excludeSlugs = append(excludeSlugs, posts[i].Slug)
-		}
-		box4WirePosts := getWirePosts(posts, excludeSlugs, 4)
+		box4WirePosts := getWirePosts(posts, &usedSlugs, 4)
 
 		// Box 5 (3:3:3:3): Tools, Terminal, Database, Networking
 		box5Cats := []CategorySection{
-			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "ffmpeg"}, 2),
-			getCategoryCluster(posts, "terminal", []string{"terminal", "tmux", "ghostty", "neovim", "helix", "zsh", "fish"}, 2),
-			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2),
-			getCategoryCluster(posts, "networking", []string{"networking", "wireguard", "tailscale", "ssh", "dns", "protocols"}, 2),
+			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "ffmpeg"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "terminal", []string{"terminal", "tmux", "ghostty", "neovim", "helix", "zsh", "fish"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "networking", []string{"networking", "wireguard", "tailscale", "ssh", "dns", "protocols"}, 2, &usedSlugs),
 		}
 
 		// Box 6 (7:5): Left (Architecture Essay) + Right (Spotlight Side Thumbs)
-		box6Essay := getCategoryCluster(posts, "architecture", []string{"architecture", "philosophy", "reading", "design"}, 2)
-		box6SidePosts := getWirePosts(posts, append(excludeSlugs, box6Essay.LeadPost.Slug), 3)
+		box6Essay := getCategoryCluster(posts, "architecture", []string{"architecture", "philosophy", "reading", "design"}, 2, &usedSlugs)
+		box6SidePosts := getWirePosts(posts, &usedSlugs, 3)
 
 		// Box 7 (3:3:3:3 Dense Text): AI, eBPF, Debugging, Shell
 		box7Cats := []CategorySection{
-			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 3),
-			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 3),
-			getCategoryCluster(posts, "debugging", []string{"debugging", "dmesg", "strace", "lsof", "pprof"}, 3),
-			getCategoryCluster(posts, "shell", []string{"shell", "bash", "scripting", "tips", "makefile", "cron", "systemd"}, 3),
+			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "debugging", []string{"debugging", "dmesg", "strace", "lsof", "pprof"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "shell", []string{"shell", "bash", "scripting", "tips", "makefile", "cron", "systemd"}, 3, &usedSlugs),
 		}
 	}}
 
-	// -----------------------------------------------------------------
 	// THE 8-BOX CONTINUOUS MONOLITH (FUSED WIREFRAME GRID)
-	// -----------------------------------------------------------------
 
-	// 1. Tech Hero (3 : 6 : 3)
+	// Box 1
 	@portalHeroTop(ui, posts, lang, viewCounts, true)
 
-	// 2. Engineering Lab & Cockpit (3 : 3 : 3 : 3) - Interactive (Terminal, Top 5 Tags, RSS, Guestbook)
+	// Box 2
 	@portalBox8Cockpit(ui, tagCounts, lang, len(posts))
 
-	// 3. Tri-Column Core Topics (4 : 4 : 4)
+	// Box 3
 	@portalCategoryTrio(ui, box2Cats, lang)
 
-	// 4. Dual Deep Dive Spotlight (6 : 6)
+	// Box 4
 	@portalDeepDive(ui, box3Cats, lang)
 
-	// 5. Asymmetric Split River (8 : 4)
+	// Box 5
 	@portalBox4SplitRiver(ui, box4LeftCats, box4WirePosts, lang)
 
-	// 6. Quad Tooling Matrix (3 : 3 : 3 : 3)
+	// Box 6
 	@portalBox5QuadMatrix(ui, box5Cats, lang)
 
-	// 7. Asymmetric Essay Banner (7 : 5)
+	// Box 7
 	@portalBox6EssayBanner(ui, box6Essay, box6SidePosts, lang)
 
-	// 8. Dense Knowledge Index (3 : 3 : 3 : 3) - Pure Typography
+	// Box 8
 	@portalBox7KnowledgeIndex(ui, box7Cats, lang)
 }
 
 templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int, showSidebarTabs bool) {
 	{{
 		var excludeSlugs []string
-		for i := 0; i <= 4 && i < len(posts); i++ {
+		for i := 0; i <= 5 && i < len(posts); i++ {
 			excludeSlugs = append(excludeSlugs, posts[i].Slug)
 		}
 		popularPosts := getPopularPostsExcluding(posts, viewCounts, excludeSlugs, 3)
 	}}
 	// TECH EDITORIAL HERO (3:6:3 ASYMMETRIC GRID)
-	<div class="border-0 sm:border-2 border-border w-full mb-0 sm:mb-0 bg-bg">
+	<div class="border-0 sm:border border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="w-full">
 			<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
 			
-				// -------------------------------------------------------------
-				// 1. LEFT COLUMN (3 cols / ~25%): TEXT-HEAVY LEAD DISPATCHES
-				// -------------------------------------------------------------
-				<div class="order-2 lg:order-1 lg:col-span-3 flex flex-col divide-y divide-[var(--c-border)] bg-bg">
+				// Col 1
+				<div class="order-2 lg:order-1 lg:col-span-4 flex flex-col divide-y divide-[var(--c-border)] bg-bg">
 					// Dispatch 1 (Lead Headline on Left)
 					if len(posts) > 1 {
-						<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12 flex flex-col justify-between">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[1].Slug) } class="group block">
-								if len(posts[1].Tags) > 0 {
-									<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">
-										{ posts[1].Tags[0] }
-									</span>
+						<div class="flex flex-col flex-1">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[1].Slug) } class="group flex flex-col">
+								if posts[1].Cover != "" {
+									<div class="block lg:hidden w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
+										@postThumbnailImg(posts[1])
+									</div>
 								}
-								<h2 class="display text-lg sm:text-xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
-									{ posts[1].Title }
-								</h2>
-								if posts[1].Description != "" {
-									<p class="text-xs text-muted line-clamp-3 leading-relaxed mb-3">
-										{ posts[1].Description }
-									</p>
-								}
-								<div class="flex items-center gap-2 text-[10px] font-mono text-muted mt-auto pt-2 border-t border-border/30">
-									<time datetime={ posts[1].Date.Format("2006-01-02") }>{ fmtDate(posts[1]) }</time>
-									<span>·</span>
-									<span>{ fmt.Sprintf("%d %s", posts[1].ReadTime, ui.Blog_MinRead) }</span>
+								<div class="px-5 sm:px-6 py-6 sm:py-8 lg:py-12 flex-1 flex flex-col">
+									if len(posts[1].Tags) > 0 {
+										<span class="text-accent text-xs font-bold uppercase tracking-wider mb-1.5 lg:mb-2 inline-block">
+											{ posts[1].Tags[0] }
+										</span>
+									}
+									<h2 class="display text-lg sm:text-xl lg:text-2xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
+										{ posts[1].Title }
+									</h2>
+									if posts[1].Description != "" {
+										<p class="text-sm text-muted line-clamp-2 leading-relaxed mb-3">
+											{ posts[1].Description }
+										</p>
+									}
+									<div class="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-2 pt-2 sm:pt-3 border-t border-border/30">
+										<time datetime={ posts[1].Date.Format("2006-01-02") } class="hidden sm:inline">{ fmtDate(posts[1]) }</time>
+										<span class="hidden sm:inline">·</span>
+										<span>{ fmt.Sprintf("%d %s", posts[1].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
 								</div>
 							</a>
 						</div>
@@ -139,23 +143,30 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 
 					// Dispatch 2 (Secondary Headline)
 					if len(posts) > 2 {
-						<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12 flex flex-col justify-between">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[2].Slug) } class="group block">
-								if len(posts[2].Tags) > 0 {
-									<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1.5 inline-block">
-										{ posts[2].Tags[0] }
-									</span>
+						<div class="flex flex-col flex-1">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[2].Slug) } class="group flex flex-col">
+								if posts[2].Cover != "" {
+									<div class="block lg:hidden w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
+										@postThumbnailImg(posts[2])
+									</div>
 								}
-								<h3 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
-									{ posts[2].Title }
-								</h3>
-								if posts[2].Description != "" {
-									<p class="text-xs text-muted line-clamp-2 leading-relaxed mb-2">
-										{ posts[2].Description }
-									</p>
-								}
-								<div class="text-[10px] font-mono text-muted">
-									<span>{ fmt.Sprintf("%d %s", posts[2].ReadTime, ui.Blog_MinRead) }</span>
+								<div class="px-5 sm:px-6 py-6 sm:py-8 lg:py-12 flex-1 flex flex-col">
+									if len(posts[2].Tags) > 0 {
+										<span class="text-accent text-[11px] font-bold uppercase tracking-wider mb-1 lg:mb-1.5 inline-block">
+											{ posts[2].Tags[0] }
+										</span>
+									}
+									<h3 class="display text-[15px] sm:text-lg lg:text-xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
+										{ posts[2].Title }
+									</h3>
+									if posts[2].Description != "" {
+										<p class="text-[13px] text-muted line-clamp-2 leading-relaxed mb-2">
+											{ posts[2].Description }
+										</p>
+									}
+									<div class="text-[10px] sm:text-[11px] font-mono text-muted mt-2 pt-2 border-t border-border/30">
+										<span>{ fmt.Sprintf("%d %s", posts[2].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
 								</div>
 							</a>
 						</div>
@@ -163,28 +174,38 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 
 					// Dispatch 3 (Compact Headline)
 					if len(posts) > 3 {
-						<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12 flex flex-col justify-between">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[3].Slug) } class="group block">
-								if len(posts[3].Tags) > 0 {
-									<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">
-										{ posts[3].Tags[0] }
-									</span>
+						<div class="flex flex-col flex-1">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[3].Slug) } class="group flex flex-col">
+								if posts[3].Cover != "" {
+									<div class="block lg:hidden w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
+										@postThumbnailImg(posts[3])
+									</div>
 								}
-								<h3 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug">
-									{ posts[3].Title }
-								</h3>
-								<div class="text-[10px] font-mono text-muted mt-2">
-									<span>{ fmt.Sprintf("%d %s", posts[3].ReadTime, ui.Blog_MinRead) }</span>
+								<div class="px-5 sm:px-6 py-6 sm:py-8 lg:py-10 flex-1 flex flex-col">
+									if len(posts[3].Tags) > 0 {
+										<span class="text-accent text-[11px] lg:text-xs font-bold uppercase tracking-wider mb-1 lg:mb-1.5 inline-block">
+											{ posts[3].Tags[0] }
+										</span>
+									}
+									<h3 class="display text-[14px] sm:text-base lg:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
+										{ posts[3].Title }
+									</h3>
+									if posts[3].Description != "" {
+										<p class="text-[12px] text-muted line-clamp-2 leading-relaxed mb-2">
+											{ posts[3].Description }
+										</p>
+									}
+									<div class="text-[10px] sm:text-[11px] font-mono text-muted mt-2 pt-2 border-t border-border/30">
+										<span>{ fmt.Sprintf("%d %s", posts[3].ReadTime, ui.Blog_MinRead) }</span>
+									</div>
 								</div>
 							</a>
 						</div>
 					}
 				</div>
 
-				// -------------------------------------------------------------
-				// 2. CENTER COLUMN (6 cols / ~50%): THE MAIN CENTERPIECE HERO STORY
-				// -------------------------------------------------------------
-				<div class="order-1 lg:order-2 lg:col-span-6 flex flex-col bg-bg">
+				// Col 2
+				<div class="order-1 lg:order-2 lg:col-span-5 flex flex-col bg-bg">
 					if len(posts) > 0 {
 						// Visual Hero Image (Strict 16:9)
 						<div class="relative w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
@@ -192,7 +213,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 						</div>
 
 						// Story Details below image
-						<div class="px-5 sm:px-6 py-10 sm:py-12 lg:px-8 lg:py-14 flex flex-col flex-1">
+						<div class="px-5 sm:px-6 py-10 sm:py-12 lg:px-8 lg:py-14 flex flex-col">
 							if len(posts[0].Tags) > 0 {
 								<div class="flex items-center gap-2 mb-2.5">
 									<span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-accent/15 text-accent uppercase tracking-wider">
@@ -206,11 +227,11 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 								</h1>
 							</a>
 							if posts[0].Description != "" {
-								<p class="text-sm sm:text-base text-muted line-clamp-3 leading-relaxed mb-5">
+								<p class="text-sm sm:text-base text-muted line-clamp-2  leading-relaxed mb-4">
 									{ posts[0].Description }
 								</p>
 							}
-							<div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-muted mt-auto pt-4 border-t border-border/40">
+							<div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-muted mt-2 pt-3 border-t border-border/40">
 								<div class="flex items-center gap-2">
 									<span class="font-bold text-text">
 										if posts[0].Author != "" {
@@ -228,11 +249,33 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 							</div>
 						</div>
 					}
+
+					// Secondary Dispatch below Hero (fills the void)
+					if len(posts) > 5 {
+						<div class="hidden lg:block border-t border-border px-5 sm:px-6 py-8 sm:py-10 lg:px-8">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[5].Slug) } class="group block">
+								if len(posts[5].Tags) > 0 {
+									<span class="text-accent text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+										{ posts[5].Tags[0] }
+									</span>
+								}
+								<h3 class="display text-lg sm:text-xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
+									{ posts[5].Title }
+								</h3>
+								if posts[5].Description != "" {
+									<p class="text-sm text-muted line-clamp-2 leading-relaxed mb-3">
+										{ posts[5].Description }
+									</p>
+								}
+								<div class="text-xs font-mono text-muted mt-2 pt-2 border-t border-border/30">
+									<span>{ fmt.Sprintf("%d %s", posts[5].ReadTime, ui.Blog_MinRead) }</span>
+								</div>
+							</a>
+						</div>
+					}
 				</div>
 
-				// -------------------------------------------------------------
-				// 3. RIGHT COLUMN (3 cols / ~25%): FEATURE CARD + DEDUPLICATED POPULAR
-				// -------------------------------------------------------------
+				// Col 3
 				<div class="order-3 lg:order-3 lg:col-span-3 flex flex-col divide-y divide-[var(--c-border)] bg-bg">
 					// Featured Card (Post 4) with flush image (Strict 16:9)
 					if len(posts) > 4 {
@@ -247,7 +290,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 											{ posts[4].Tags[0] }
 										</span>
 									}
-									<h3 class="display text-[17px] font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-2">
+									<h3 class="display text-[17px] font-bold text-text group-hover:text-link transition-colors leading-snug  mb-2">
 										{ posts[4].Title }
 									</h3>
 									<div class="text-[11px] font-mono text-muted">
@@ -279,22 +322,19 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 								<div class="text-xs text-muted py-3 text-center">No additional popular posts</div>
 							}
 							for _, p := range popularPosts {
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-5 sm:py-6 flex items-start justify-between gap-3 sm:gap-4 text-text visited:text-visited">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-4 sm:py-5 flex items-start gap-3 text-text visited:text-visited">
 									<div class="flex-1 min-w-0">
 										if len(p.Tags) > 0 {
-											<span class="text-accent text-[10px] font-bold uppercase tracking-wider block mb-1">
+											<span class="text-accent text-xs font-bold uppercase tracking-wider block mb-1">
 												{ p.Tags[0] }
 											</span>
 										}
-										<h4 class="display text-[15px] font-bold group-hover:text-link transition-colors leading-snug line-clamp-3">
+										<h4 class="display text-[14px] sm:text-[15px] font-bold group-hover:text-link transition-colors leading-snug">
 											{ p.Title }
 										</h4>
 										<div class="text-[11px] font-mono text-muted mt-1.5">
 											{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }
 										</div>
-									</div>
-									<div class="w-20 sm:w-24 aspect-[16/9] shrink-0 overflow-hidden border border-border bg-surface">
-										@postThumbnailImg(p)
 									</div>
 								</a>
 							}
@@ -308,7 +348,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 }
 
 templ portalTagHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int) {
-	<div class="border-0 sm:border-2 sm:border-border w-full mb-4 sm:mb-8 sm:mt-4 bg-bg flex flex-col">
+	<div class="border-0 sm:border sm:border-border w-full mb-4 sm:mb-8 sm:mt-4 bg-bg flex flex-col">
 		
 		// ROW 1: 1 Big Left, 2 Stacked Right
 		if len(posts) > 0 {

@@ -42,7 +42,7 @@ templ blogCardItemDynamic(ui i18n.UI, p post.Post, lang string, viewCounts map[s
 	@blogCardItem(ui, p, lang, viewCounts, false)
 }
 
-// BORDERLESS FLAT EDITORIAL CARD (Consistent 16:9 Thumbnail, Clean Meta, Headline, Snippet)
+// BORDERLESS FLAT EDITORIAL CARD (Consistent 16:9 Thumbnail, Meta, Headline, Snippet)
 templ blogCardItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]int, hideTag bool) {
 	<article class="blog-item group flex flex-row sm:flex-col gap-4 sm:gap-0 min-w-0 items-start sm:items-stretch h-full" data-search={ searchIndex(p) }>
 		<!-- Media Container -->
@@ -65,7 +65,7 @@ templ blogCardItem(ui i18n.UI, p post.Post, lang string, viewCounts map[string]i
 			</div>
 
 			if p.Description != "" {
-				<p class="hidden sm:block text-sm text-muted line-clamp-2 leading-relaxed mb-3.5 break-words">
+				<p class="hidden sm:line-clamp-2 text-sm text-muted  leading-relaxed mb-3.5 break-words">
 					{ p.Description }
 				</p>
 			}

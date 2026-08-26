@@ -20,7 +20,7 @@ templ portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) 
 			</h2>
 		</a>
 		if p.Description != "" {
-			<p class="text-sm sm:text-base text-muted line-clamp-3 leading-relaxed mb-4">
+			<p class="text-sm sm:text-base text-muted line-clamp-2 leading-relaxed mb-4">
 				{ p.Description }
 			</p>
 		}
@@ -124,7 +124,7 @@ templ portalResponsiveTagSubStory(ui i18n.UI, p post.Post, lang string) {
 			</div>
 
 			if p.Description != "" {
-				<p class="hidden lg:block text-sm text-muted line-clamp-2 leading-relaxed mb-4">
+				<p class="hidden lg:line-clamp-2 text-sm text-muted leading-relaxed mb-4">
 					{ p.Description }
 				</p>
 			}

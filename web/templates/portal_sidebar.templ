@@ -7,7 +7,7 @@ import (
 )
 
 templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCounts map[string]int, lang string) {
-	<div class="border-0 sm:border-2 sm:border-border w-full mb-12 sm:mb-0 sm:my-8 bg-bg">
+	<div class="border-0 sm:border sm:border-border w-full mb-12 sm:mb-0 sm:my-8 bg-bg">
 		<div class="flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
 
 		// LEFT BOX: Sidebar cards stacked vertically
@@ -15,7 +15,7 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 			
 			// Card 1: Popular Tags
 			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
 					@IconHashtag("w-3.5 h-3.5 text-accent")
 					if lang == "id" {
 						5 TAG POPULER
@@ -37,11 +37,11 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 
 			// Card 2: Terminal TUI Interface
 			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
 					@IconCommandLine("w-3.5 h-3.5 text-accent")
 					TERMINAL TUI INTERFACE
 				</h3>
-				<p class="text-xs text-muted mb-3 leading-relaxed">
+				<p class="text-xs text-muted line-clamp-2 mb-3 leading-relaxed">
 					if lang == "id" {
 						Baca artikel interaktif langsung dari terminal dengan antarmuka TUI.
 					} else {
@@ -79,7 +79,7 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 
 			// Card 3: RSS Feed
 			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
+				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
 					@IconRSSAlt("w-3.5 h-3.5 text-accent")
 					if lang == "id" {
 						BERLANGGANAN FEED
@@ -87,7 +87,7 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 						SUBSCRIBE FEED
 					}
 				</h3>
-				<p class="text-xs text-muted mb-4 leading-relaxed">
+				<p class="text-xs text-muted line-clamp-2 mb-4 leading-relaxed">
 					if lang == "id" {
 						Tetap terupdate menggunakan RSS Reader favorit Anda.
 					} else {
@@ -108,7 +108,7 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 
 			// Card 4: About / Author
 			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between">
+				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between">
 					<span class="flex items-center gap-1.5">
 						@IconInfo("w-3.5 h-3.5 text-accent")
 						if lang == "id" {
@@ -132,7 +132,7 @@ templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagC
 				</div>
 
 				<!-- Bottom row: Description spanning horizontally underneath -->
-				<p class="text-xs text-muted leading-relaxed mb-4">
+				<p class="text-xs text-muted line-clamp-2 leading-relaxed mb-4">
 					if lang == "id" {
 						Mahasiswa sistem informasi yang mendalami Go backend, sistem operasi Linux, dan arsitektur backend.
 					} else {

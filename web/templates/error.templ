@@ -6,17 +6,17 @@ import (
 	"daemontalk/internal/i18n"
 )
 
-// NotFound renders a clean, minimal 404 Not Found page.
+// NotFound renders a minimal 404 Not Found page.
 templ NotFound(ui i18n.UI, lang string) {
 	@ErrorPage(404, ui.NotFound_Title, ui.NotFound_Body, ui.NotFound_Home, ui, lang)
 }
 
-// Forbidden renders a clean, minimal 403 Forbidden page.
+// Forbidden renders a minimal 403 Forbidden page.
 templ Forbidden(ui i18n.UI, lang string, reason string) {
 	@ErrorPage(403, ui.Forbidden_Title, ui.Forbidden_Body, ui.Forbidden_Home, ui, lang)
 }
 
-// ServerError renders a clean, minimal 500 Internal Server Error page.
+// ServerError renders a minimal 500 Internal Server Error page.
 templ ServerError(ui i18n.UI, lang string, detail string) {
 	@ErrorPage(500, ui.ServerError_Title, ui.ServerError_Body, ui.ServerError_Home, ui, lang)
 }
@@ -26,7 +26,7 @@ templ CustomError(code int, title string, message string, ui i18n.UI, lang strin
 	@ErrorPage(code, title, message, ui.NotFound_Home, ui, lang)
 }
 
-// ErrorPage renders a simple, clean, minimalist error page.
+// ErrorPage renders a simple, minimalist error page.
 templ ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) {
 	<div class="max-w-3xl mx-auto px-6 py-20 sm:py-32">
 		<div class="space-y-6 max-w-lg">
