@@ -363,6 +363,3 @@ Mari kita uji inline math: $n_{\text{layers}}$ dan $\text{seq\_len}$.
 		t.Errorf("Escaped seq\\_len was mangled: %s", body)
 	}
 }
-
-
-

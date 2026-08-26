@@ -67,7 +67,7 @@ func renderLinkHTML(rawContent string) string {
   <a href="%s" target="_blank" rel="noopener noreferrer" class="group block no-underline text-inherit hover:no-underline">
     <div class="link-title font-semibold text-text group-hover:text-link text-[0.95em] leading-snug no-underline flex items-center gap-2">
       %s
-      ` + GetIcon(IconExternalLink, "w-4 h-4 text-muted group-hover:text-link transition-colors") + `
+      `+GetIcon(IconExternalLink, "w-4 h-4 text-muted group-hover:text-link transition-colors")+`
     </div>
     %s
     %s

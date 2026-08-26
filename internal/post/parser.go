@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	meta "github.com/yuin/goldmark-meta"
@@ -21,7 +22,6 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
-	mathjax "github.com/litao91/goldmark-mathjax"
 )
 
 var (
@@ -258,4 +258,3 @@ func readTime(html string) int {
 	}
 	return minutes
 }
-

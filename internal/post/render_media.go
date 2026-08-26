@@ -82,7 +82,7 @@ func renderCarouselHTML(items []mediaItem) string {
         aria-label="Previous slide"
         class="w-8 h-8 flex items-center justify-center border border-border bg-surface text-text hover:bg-hover hover:border-[var(--c-link)] transition-colors cursor-pointer"
       >
-        ` + GetIcon(IconChevronLeft, "w-4 h-4") + `
+        `+GetIcon(IconChevronLeft, "w-4 h-4")+`
       </button>
       <button
         type="button"
@@ -90,7 +90,7 @@ func renderCarouselHTML(items []mediaItem) string {
         aria-label="Next slide"
         class="w-8 h-8 flex items-center justify-center border border-border bg-surface text-text hover:bg-hover hover:border-[var(--c-link)] transition-colors cursor-pointer"
       >
-        ` + GetIcon(IconChevronRight, "w-4 h-4") + `
+        `+GetIcon(IconChevronRight, "w-4 h-4")+`
       </button>
     </div>
   </div>
