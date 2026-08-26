@@ -37,7 +37,7 @@ func DailyPage(ui i18n.UI, lang string, articles []post.Post, host string) templ
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"container-page py-8 sm:py-12\"><div class=\"max-w-3xl\"><!-- ASCII Art Header --><div class=\"mb-6\"><pre class=\"font-mono text-xs sm:text-sm text-link select-none overflow-x-auto leading-tight\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"container-page py-8 sm:py-12\"><div class=\"max-w-3xl\"><!-- ASCII Art Header --><div class=\"mb-6\"><pre class=\"font-mono text-sm text-link select-none overflow-x-auto leading-tight\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
