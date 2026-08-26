@@ -206,7 +206,7 @@ func extractTOC(htmlStr string) []TOCEntry {
 	for _, m := range reHeading.FindAllStringSubmatch(htmlStr, -1) {
 		level, _ := strconv.Atoi(m[1])
 		id := m[2]
-		title := strings.TrimSpace(reTag.ReplaceAllString(m[3], ""))
+		title := stdhtml.UnescapeString(strings.TrimSpace(reTag.ReplaceAllString(m[3], "")))
 		if title != "" {
 			toc = append(toc, TOCEntry{ID: id, Title: title, Level: level})
 		}
