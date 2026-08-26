@@ -95,7 +95,7 @@ func BlogIndex(ui i18n.UI, allPosts []post.Post, posts []post.Post, lang string,
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = TagPortal(ui, currentTag, allPosts, posts, lang, viewCounts, page, totalPages).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = TagPortal(ui, currentTag, allPosts, lang, viewCounts).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -113,7 +113,7 @@ func BlogIndex(ui i18n.UI, allPosts []post.Post, posts []post.Post, lang string,
 	})
 }
 
-func TagPage(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.Post, lang string, viewCounts map[string]int, page int, totalPages int) templ.Component {
+func TagPage(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewCounts map[string]int) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -138,7 +138,7 @@ func TagPage(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.Post
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = TagPortal(ui, tag, allPosts, pagePosts, lang, viewCounts, page, totalPages).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = TagPortal(ui, tag, allPosts, lang, viewCounts).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

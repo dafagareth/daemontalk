@@ -20,7 +20,7 @@ templ BlogIndex(ui i18n.UI, allPosts []post.Post, posts []post.Post, lang string
 			if currentTag == "" {
 				@portalNewsLayout(ui, allPosts, tagCounts, lang, viewCounts)
 			} else {
-				@TagPortal(ui, currentTag, allPosts, posts, lang, viewCounts, page, totalPages)
+				@TagPortal(ui, currentTag, allPosts, lang, viewCounts)
 			}
 
 			<script src="/static/js/blog_index.js"></script>
@@ -28,9 +28,9 @@ templ BlogIndex(ui i18n.UI, allPosts []post.Post, posts []post.Post, lang string
 	</section>
 }
 
-templ TagPage(ui i18n.UI, tag string, allPosts []post.Post, pagePosts []post.Post, lang string, viewCounts map[string]int, page int, totalPages int) {
+templ TagPage(ui i18n.UI, tag string, allPosts []post.Post, lang string, viewCounts map[string]int) {
 	<section class="container-page !px-0 sm:!px-6 lg:!px-8 pb-0 mb-0 transition-all">
-		@TagPortal(ui, tag, allPosts, pagePosts, lang, viewCounts, page, totalPages)
+		@TagPortal(ui, tag, allPosts, lang, viewCounts)
 	</section>
 }
 
