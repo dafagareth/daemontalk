@@ -51,7 +51,7 @@ templ portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []po
 						for j, sub := range essaySec.SubPosts {
 							if j < 2 {
 								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="group block">
-									<h4 class="display text-xs sm:text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2 mb-1">
+									<h4 class="display text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2 mb-1">
 										{ sub.Title }
 									</h4>
 									<div class="text-[9px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)]">
@@ -81,7 +81,7 @@ templ portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []po
 									if len(p.Tags) > 0 {
 										<span class="text-[var(--c-bg)]/80 sm:text-[var(--c-accent)] text-[9px] font-bold uppercase tracking-wider block mb-0.5">{ p.Tags[0] }</span>
 									}
-									<h4 class="display text-xs sm:text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2">
+									<h4 class="display text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2">
 										{ p.Title }
 									</h4>
 									<div class="text-[9px] font-mono text-[var(--c-bg)]/60 sm:text-[var(--c-muted)] mt-1">

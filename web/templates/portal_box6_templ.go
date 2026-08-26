@@ -168,7 +168,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"group block\"><h4 class=\"display text-xs sm:text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2 mb-1\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"group block\"><h4 class=\"display text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2 mb-1\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -246,7 +246,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<h4 class=\"display text-xs sm:text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<h4 class=\"display text-sm font-semibold text-[var(--c-bg)] sm:text-[var(--c-text)] group-hover:opacity-80 sm:group-hover:opacity-100 sm:group-hover:text-[var(--c-link)] transition-colors leading-snug line-clamp-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
