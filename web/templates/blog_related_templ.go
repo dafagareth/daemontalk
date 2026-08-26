@@ -274,7 +274,7 @@ func blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang str
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" class=\"block mb-1.5\"><h4 class=\"text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" class=\"block mb-1.5\"><h4 class=\"text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -411,7 +411,7 @@ func blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang str
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "\" class=\"block mb-1.5\"><h4 class=\"text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "\" class=\"block mb-1.5\"><h4 class=\"text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

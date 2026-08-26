@@ -78,7 +78,7 @@ templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang st
 									</div>
 
 									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[1].Slug) } data-slug={ related[1].Slug } class="block mb-1.5">
-										<h4 class="text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
+										<h4 class="text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
 											{ related[1].Title }
 										</h4>
 									</a>
@@ -118,7 +118,7 @@ templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang st
 									</div>
 
 									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[2].Slug) } data-slug={ related[2].Slug } class="block mb-1.5">
-										<h4 class="text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
+										<h4 class="text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
 											{ related[2].Title }
 										</h4>
 									</a>
