@@ -147,8 +147,8 @@
     border-bottom: none !important;
   }
 
-  /* Visited post title indicator */
+  /* Visited post title indicator (JS-based, applied via localStorage) */
   .post-visited {
-    color: color-mix(in srgb, var(--c-link) 60%, transparent) !important;
+    color: var(--c-visited) !important;
   }
 }
