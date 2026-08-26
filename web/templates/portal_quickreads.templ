@@ -25,7 +25,7 @@ templ portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) {
 						<div class="flex flex-col divide-y divide-border/40">
 							<article class="py-2.5 first:pt-0">
 								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="group block">
-									<h4 class="display text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
+									<h4 class="display text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
 										{ cat.LeadPost.Title }
 									</h4>
 								</a>
@@ -34,7 +34,7 @@ templ portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) {
 								if j < 3 {
 									<article class="py-2.5 last:pb-0">
 										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="group block">
-											<h4 class="display text-xs sm:text-sm font-medium text-muted group-hover:text-text transition-colors leading-snug line-clamp-2">
+											<h4 class="display text-sm font-medium text-muted group-hover:text-text transition-colors leading-snug line-clamp-2">
 												{ sub.Title }
 											</h4>
 										</a>

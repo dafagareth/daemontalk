@@ -98,7 +98,7 @@ func portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) tem
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"group block\"><h4 class=\"display text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"group block\"><h4 class=\"display text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -130,7 +130,7 @@ func portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) tem
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"group block\"><h4 class=\"display text-xs sm:text-sm font-medium text-muted group-hover:text-text transition-colors leading-snug line-clamp-2\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"group block\"><h4 class=\"display text-sm font-medium text-muted group-hover:text-text transition-colors leading-snug line-clamp-2\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
