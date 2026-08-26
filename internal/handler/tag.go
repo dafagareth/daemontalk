@@ -34,29 +34,6 @@ func (h *Handler) TagIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pageStr := r.URL.Query().Get("page")
-	page, _ := strconv.Atoi(pageStr)
-	if page < 1 {
-		page = 1
-	}
-
-	pageSize := 12
-	total := len(filtered)
-	totalPages := (total + pageSize - 1) / pageSize
-	if totalPages < 1 {
-		totalPages = 1
-	}
-	if page > totalPages {
-		page = totalPages
-	}
-
-	start := (page - 1) * pageSize
-	end := start + pageSize
-	if end > total {
-		end = total
-	}
-	pagePosts := filtered[start:end]
-
 	var viewCounts map[string]int
 	if h.Comments != nil {
 		if vc, err := h.Comments.AllViewCounts(); err != nil {
@@ -68,7 +45,7 @@ func (h *Handler) TagIndex(w http.ResponseWriter, r *http.Request) {
 
 	h.Render(w, r, templates.Layout(ui, lang, "#"+tag, r.URL.Path, templates.PageMeta{
 		Description: fmt.Sprintf("Posts tagged #%s on daemontalk.com", tag),
-	}, templates.TagPage(ui, tag, filtered, pagePosts, lang, viewCounts, page, totalPages)))
+	}, templates.TagPage(ui, tag, filtered, lang, viewCounts)))
 }
 
 func (h *Handler) TagPostsPartial(w http.ResponseWriter, r *http.Request) {
@@ -106,7 +83,6 @@ func (h *Handler) TagPostsPartial(w http.ResponseWriter, r *http.Request) {
 	pagePosts := filtered[offset:end]
 	nextOffset := end
 	remaining := total - end
-
-	h.Render(w, r, templates.TagRiverItems(ui, pagePosts, lang, offset, nextOffset, remaining, tag))
+	h.Render(w, r, templates.TagRiverItems(ui, pagePosts, lang, offset-6, nextOffset, remaining, tag))
 }
 
