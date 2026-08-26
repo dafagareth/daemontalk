@@ -154,7 +154,7 @@ func TestDaemontalkUIHTMXPartial(t *testing.T) {
 	}
 }
 
-func TestTagPagination(t *testing.T) {
+func TestTagStream(t *testing.T) {
 	posts := make([]post.Post, 25)
 	now := time.Now()
 	for i := 0; i < 25; i++ {
@@ -177,14 +177,16 @@ func TestTagPagination(t *testing.T) {
 		t.Fatalf("expected 200, got %d", rec.Code)
 	}
 	body := rec.Body.String()
-	if !strings.Contains(body, "page=2") {
-		t.Errorf("expected pagination link with page=2 in ?tag=tools response")
+	if !strings.Contains(body, "Tools Post 1") {
+		t.Errorf("expected initial tools posts in continuous stream")
+	}
+	if !strings.Contains(body, "tag-river-load-more") {
+		t.Errorf("expected infinite scroll load-more trigger for remaining posts")
 	}
 
 	// 2. Test /blog/tag/tools route on TagIndex
 	rec2 := httptest.NewRecorder()
 	req2 := httptest.NewRequest(http.MethodGet, "/blog/tag/tools", nil)
-	// Add chi route context
 	rctx := chi.NewRouteContext()
 	rctx.URLParams.Add("tag", "tools")
 	req2 = req2.WithContext(context.WithValue(req2.Context(), chi.RouteCtxKey, rctx))
@@ -194,7 +196,20 @@ func TestTagPagination(t *testing.T) {
 		t.Fatalf("expected 200, got %d", rec2.Code)
 	}
 	body2 := rec2.Body.String()
-	if !strings.Contains(body2, "page=2") {
-		t.Errorf("expected pagination link with page=2 in /blog/tag/tools response")
+	if !strings.Contains(body2, "Tools Post 1") {
+		t.Errorf("expected initial tools posts in /blog/tag/tools continuous stream")
+	}
+
+	// 3. Test /blog/tag-posts partial response for lazy-loading on scroll
+	rec3 := httptest.NewRecorder()
+	req3 := httptest.NewRequest(http.MethodGet, "/blog/tag-posts?tag=tools&offset=18", nil)
+	h.TagPostsPartial(rec3, req3)
+
+	if rec3.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rec3.Code)
+	}
+	body3 := rec3.Body.String()
+	if !strings.Contains(body3, "Tools Post 25") {
+		t.Errorf("expected remaining posts in tag-posts partial response")
 	}
 }
