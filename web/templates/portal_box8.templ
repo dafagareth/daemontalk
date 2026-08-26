@@ -8,10 +8,10 @@ import (
 templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalPosts int) {
 	// BOX 2 (COCKPIT): ENGINEERING LAB & COCKPIT (3 : 3 : 3 : 3) - TYPE 3 COMBINATION
 	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-surface/20">
-		<div class="grid grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[var(--c-border)]">
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[var(--c-border)] divide-y sm:divide-y-0 divide-[var(--c-border)]">
 			
 			// Col 1: Terminal TUI Interface
-			<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between border-b border-r lg:border-none border-[var(--c-border)]">
+			<div class="hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-b sm:border-r lg:border-none border-[var(--c-border)]">
 				<div>
 					<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconCommandLine("w-3.5 h-3.5 text-accent")
@@ -45,7 +45,7 @@ templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, total
 			</div>
 
 			// Col 2: Top 5 Tags Radar (Pengganti Author)
-			<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between border-b lg:border-none border-[var(--c-border)]">
+			<div class="flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-b lg:border-none border-[var(--c-border)]">
 				<div>
 					<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconHashtag("w-3.5 h-3.5 text-accent")
@@ -69,7 +69,7 @@ templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, total
 			</div>
 
 			// Col 3: Syndication & RSS
-			<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between border-r lg:border-none border-[var(--c-border)]">
+			<div class="hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-r lg:border-none border-[var(--c-border)]">
 				<div>
 					<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconRSSAlt("w-3.5 h-3.5 text-accent")
@@ -99,7 +99,7 @@ templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, total
 			</div>
 
 			// Col 4: Guestbook & Community Log
-			<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between">
+			<div class="flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between">
 				<div>
 					<h3 class="font-sans text-xs font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconTerminalPrompt("w-3.5 h-3.5 text-accent")
