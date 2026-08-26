@@ -68,7 +68,7 @@ func footer(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><div class=\"relative bg-zinc-950 text-[#e6edf3] font-mono text-[10px] sm:text-[11px] p-2.5 pr-8 border border-[#27272a] overflow-hidden mb-4 group\"><div class=\"overflow-x-auto select-all scrollbar-none whitespace-nowrap\"><span class=\"text-zinc-500 mr-1.5\">$</span>ssh ssh.daemontalk.com -p 2222</div><button onclick=\"navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#ffffff'; setTimeout(()=>i.style.color='', 1000);\" title=\"Copy command\" aria-label=\"Copy command\" class=\"absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-80 group-hover:opacity-100 cursor-pointer\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><div class=\"relative bg-zinc-950 text-[#e6edf3] font-mono text-[11px] p-2.5 pr-8 border border-[#27272a] overflow-hidden mb-4 group\"><div class=\"overflow-x-auto select-all scrollbar-none whitespace-nowrap\"><span class=\"text-zinc-500 mr-1.5\">$</span>ssh ssh.daemontalk.com -p 2222</div><button onclick=\"navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#ffffff'; setTimeout(()=>i.style.color='', 1000);\" title=\"Copy command\" aria-label=\"Copy command\" class=\"absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-80 group-hover:opacity-100 cursor-pointer\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
