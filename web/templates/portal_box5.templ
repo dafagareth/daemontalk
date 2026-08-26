@@ -10,10 +10,10 @@ templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string
 	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:divide-x sm:divide-y-0 divide-[var(--c-border)]">
 			for _, cat := range categories {
-				<div class="shrink-0 w-[85vw] sm:w-auto snap-center px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between border-r sm:border-r-0 border-[var(--c-border)] last:border-r-0">
+				<div class="shrink-0 w-[85vw] sm:w-auto snap-center px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 flex flex-col justify-between border-r sm:border-r-0 border-[var(--c-border)] last:border-r-0">
 					<div>
 						// Category Header
-						<div class="flex items-center justify-between mb-3">
+						<div class="flex items-center justify-between mb-4 sm:mb-5">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
 								{ categoryTitle(cat, lang) }
 							</a>
@@ -23,16 +23,16 @@ templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string
 						</div>
 
 						// Lead Story with 16:9 Mini Thumbnail
-						<article class="group mb-3">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-2.5 overflow-hidden border border-border">
+						<article class="group mb-4">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 sm:mb-4 overflow-hidden border border-border">
 								@postThumbnailImg(cat.LeadPost)
 							</a>
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block mb-1">
-								<h4 class="display text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block mb-1 text-text visited:text-visited">
+								<h4 class="display text-[17px] font-bold group-hover:text-link transition-colors leading-snug line-clamp-2">
 									{ cat.LeadPost.Title }
 								</h4>
 							</a>
-							<div class="text-[10px] font-mono text-muted">
+							<div class="text-[11px] font-mono text-muted">
 								<span>{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }</span>
 							</div>
 						</article>
@@ -40,15 +40,15 @@ templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string
 
 					// Sub Posts List
 					if len(cat.SubPosts) > 0 {
-						<div class="flex flex-col divide-y divide-border/40 border-t border-border/40 pt-2 mt-auto">
+						<div class="flex flex-col mt-auto pt-2 border-t border-border/40">
 							for j, sub := range cat.SubPosts {
 								if j < 2 {
-									<article class="py-2 first:pt-1 last:pb-0">
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="group block">
-											<h5 class="display text-xs font-semibold text-text/90 group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1">
+									<article class="border-b border-border/40 last:border-b-0">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="group block py-4 text-text/90 visited:text-visited">
+											<h5 class="display text-[15px] font-semibold group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5">
 												{ sub.Title }
 											</h5>
-											<div class="text-[9px] font-mono text-muted">
+											<div class="text-[11px] font-mono text-muted">
 												<span>{ fmt.Sprintf("%d %s", sub.ReadTime, ui.Blog_MinRead) }</span>
 											</div>
 										</a>

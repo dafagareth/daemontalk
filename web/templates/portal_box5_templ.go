@@ -39,7 +39,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 			return templ_7745c5c3_Err
 		}
 		for _, cat := range categories {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"shrink-0 w-[85vw] sm:w-auto snap-center px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between border-r sm:border-r-0 border-[var(--c-border)] last:border-r-0\"><div><div class=\"flex items-center justify-between mb-3\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"shrink-0 w-[85vw] sm:w-auto snap-center px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 flex flex-col justify-between border-r sm:border-r-0 border-[var(--c-border)] last:border-r-0\"><div><div class=\"flex items-center justify-between mb-4 sm:mb-5\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -86,7 +86,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</a></div><article class=\"group mb-3\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</a></div><article class=\"group mb-4\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -99,7 +99,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"block relative aspect-[16/9] w-full bg-surface mb-2.5 overflow-hidden border border-border\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"block relative aspect-[16/9] w-full bg-surface mb-3 sm:mb-4 overflow-hidden border border-border\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -120,7 +120,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"block mb-1\"><h4 class=\"display text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"block mb-1 text-text visited:text-visited\"><h4 class=\"display text-[17px] font-bold group-hover:text-link transition-colors leading-snug line-clamp-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -133,7 +133,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</h4></a><div class=\"text-[10px] font-mono text-muted\"><span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</h4></a><div class=\"text-[11px] font-mono text-muted\"><span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -151,13 +151,13 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 				return templ_7745c5c3_Err
 			}
 			if len(cat.SubPosts) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"flex flex-col divide-y divide-border/40 border-t border-border/40 pt-2 mt-auto\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"flex flex-col mt-auto pt-2 border-t border-border/40\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				for j, sub := range cat.SubPosts {
 					if j < 2 {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<article class=\"py-2 first:pt-1 last:pb-0\"><a href=\"")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<article class=\"border-b border-border/40 last:border-b-0\"><a href=\"")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -170,7 +170,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"group block\"><h5 class=\"display text-xs font-semibold text-text/90 group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1\">")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"group block py-4 text-text/90 visited:text-visited\"><h5 class=\"display text-[15px] font-semibold group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -183,7 +183,7 @@ func portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</h5><div class=\"text-[9px] font-mono text-muted\"><span>")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</h5><div class=\"text-[11px] font-mono text-muted\"><span>")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
