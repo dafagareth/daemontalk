@@ -8,12 +8,19 @@ import (
 templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang string) {
 	// BOX 8 (INDEX): DENSE KNOWLEDGE INDEX (3 : 3 : 3 : 3) - PURE TYPOGRAPHY WIREFRAME
 	<div class="border-0 sm:border-x-2 sm:border-b-2 border-border w-full mb-0 sm:mb-0 bg-bg">
-		<div class="grid grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[var(--c-border)]">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 			for i, cat := range categories {
-				<div class={ "px-3 sm:px-5 py-5 sm:py-8 flex flex-col justify-between border-b lg:border-b-0 lg:border-r-0 border-[var(--c-border)]", templ.KV("border-r", i%2==0) }>
+				<div class={
+					"flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 border-[var(--c-border)]",
+					templ.KV("border-b", i < len(categories)-1),
+					templ.KV("md:border-b-0", i >= 2),
+					templ.KV("lg:border-b-0", true),
+					templ.KV("md:border-r", i%2 == 0),
+					templ.KV("lg:border-r", i < 3),
+				}>
 					<div>
 						// Category Header
-						<div class="flex items-center justify-between mb-3">
+						<div class="flex items-center justify-between mb-4 sm:mb-5">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
 								{ categoryTitle(cat, lang) }
 							</a>
@@ -24,24 +31,24 @@ templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang st
 
 						// Posts List (Teks Only)
 						<div class="flex flex-col divide-y divide-border/40">
-							<article class="py-2.5 first:pt-0">
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="group block">
-									<h4 class="display text-xs sm:text-sm font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1">
+							<article class="group">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block pb-4 sm:pb-5 text-text visited:text-visited">
+									<h4 class="display text-[17px] font-bold group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5">
 										{ cat.LeadPost.Title }
 									</h4>
-									<div class="text-[9px] font-mono text-muted">
+									<div class="text-[11px] font-mono text-muted">
 										<span>{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }</span>
 									</div>
 								</a>
 							</article>
 							for j, sub := range cat.SubPosts {
 								if j < 3 {
-									<article class="py-2.5 last:pb-0">
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="group block">
-											<h4 class="display text-xs sm:text-sm font-medium text-muted group-hover:text-text transition-colors leading-snug line-clamp-2 mb-1">
+									<article class="group">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block py-4 sm:py-5 text-muted visited:text-visited">
+											<h4 class="display text-[15px] font-medium group-hover:text-text transition-colors leading-snug line-clamp-2 mb-1.5">
 												{ sub.Title }
 											</h4>
-											<div class="text-[9px] font-mono text-muted/80">
+											<div class="text-[11px] font-mono text-muted/80">
 												<span>{ fmt.Sprintf("%d %s", sub.ReadTime, ui.Blog_MinRead) }</span>
 											</div>
 										</a>
