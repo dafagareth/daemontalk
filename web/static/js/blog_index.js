@@ -185,3 +185,25 @@ window.toggleBookmark = function(btn) {
 	}
 	localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 };
+
+// Mark visited post titles with faded color
+(function() {
+	var read = [];
+	try { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}
+	if (!read.length) return;
+	var readSet = {};
+	read.forEach(function(s) { readSet[s] = true; });
+
+	// Find all post links and mark their titles
+	document.querySelectorAll('a[href*="/blog/"]').forEach(function(a) {
+		var href = a.getAttribute('href') || '';
+		var match = href.match(/\/blog\/([^\/\?#]+)$/);
+		if (match && readSet[match[1]]) {
+			// Find heading inside this link
+			var heading = a.querySelector('h1, h2, h3, h4');
+			if (heading) {
+				heading.classList.add('post-visited');
+			}
+		}
+	});
+})();
