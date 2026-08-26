@@ -272,7 +272,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div></div><div class=\"w-20 aspect-[16/9] sm:w-24 shrink-0 overflow-hidden border border-[var(--c-bg)]/30 sm:border-[var(--c-border)] bg-[var(--c-bg)]/10 sm:bg-[var(--c-surface)]\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div></div><div class=\"w-32 aspect-[16/9] sm:w-40 lg:w-48 shrink-0 overflow-hidden border border-[var(--c-bg)]/30 sm:border-[var(--c-border)] bg-[var(--c-bg)]/10 sm:bg-[var(--c-surface)]\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

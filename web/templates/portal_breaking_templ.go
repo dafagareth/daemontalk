@@ -331,7 +331,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 							return templ_7745c5c3_Err
 						}
 						if sub.Cover != "" {
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"w-14 sm:w-16 aspect-[16/9] shrink-0 bg-surface overflow-hidden border border-border\">")
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"w-28 aspect-[16/9] sm:w-36 lg:w-44 shrink-0 bg-surface overflow-hidden border border-border\">")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
