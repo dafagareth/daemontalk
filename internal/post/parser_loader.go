@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"sort"
@@ -37,6 +38,7 @@ func LoadArchived(dir string) ([]Post, error) {
 		}
 		p, err := parseFile(filepath.Join(dir, e.Name()))
 		if err != nil {
+			slog.Warn("parse archived post failed", "file", e.Name(), "error", err)
 			continue
 		}
 		if p.Slug == "" {
