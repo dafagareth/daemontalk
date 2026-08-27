@@ -205,7 +205,7 @@ func portalBox6EssayBanner(ui i18n.UI, essaySec CategorySection, sidePosts []pos
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><div class=\"lg:col-span-5 px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between bg-[var(--c-bg)]/5 sm:bg-[var(--c-surface)]/20\"><div><div class=\"flex items-center justify-between pb-2 mb-4 border-b border-[var(--c-bg)]/40 sm:border-[var(--c-border)]\"><span class=\"text-sm font-mono font-black uppercase tracking-widest text-[var(--c-bg)] sm:text-[var(--c-text)]\">ARCHITECTURE SPOTLIGHT</span> <span class=\"text-xs font-mono text-[var(--c-bg)]/70 sm:text-[var(--c-accent)]\">DISPATCHES</span></div><div class=\"flex flex-col divide-y divide-[var(--c-bg)]/20 sm:divide-[var(--c-border)]/40\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><div class=\"lg:col-span-5 px-4 sm:px-5 py-6 sm:py-8 lg:py-12 lg:px-6 flex flex-col justify-between bg-[var(--c-bg)]/5 sm:bg-[var(--c-surface)]/20\"><div><div class=\"flex items-center justify-between pb-2 mb-4 border-b border-[var(--c-bg)]/40 sm:border-[var(--c-border)]\"><span class=\"text-sm font-mono font-black uppercase tracking-widest text-[var(--c-bg)] sm:text-[var(--c-text)]\">POLICY & SYSTEMS SPOTLIGHT</span> <span class=\"text-xs font-mono text-[var(--c-bg)]/70 sm:text-[var(--c-accent)]\">DISPATCHES</span></div><div class=\"flex flex-col divide-y divide-[var(--c-bg)]/20 sm:divide-[var(--c-border)]/40\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

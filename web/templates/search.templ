@@ -127,7 +127,7 @@ templ SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, la
 					href={ templ.SafeURL(prefix(lang) + "/search?q=" + query) }
 					class="font-bold text-link hover:underline inline-flex items-center gap-1 group"
 				>
-					<span>Lihat semua</span>
+					<span>{ ui.Search_SeeAll }</span>
 					@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
 				</a>
 			</div>

@@ -40,9 +40,35 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 					@blogHeader(ui, p, lang, seriesParts)
 					@blogContent(ui, p)
 					if len(seriesParts) > 1 {
-						@seriesBottomNav(seriesParts, p, lang)
+						@seriesBottomNav(ui, seriesParts, p, lang)
 					}
 				</article>
+
+				<!-- Contributing Callout (End of Article) -->
+				<div class="mt-8 mb-8 border border-border bg-surface p-6 font-sans">
+					<h3 class="text-base font-bold text-text mb-2">
+						if lang == "id" {
+							Punya catatan teknis untuk dibagikan?
+						} else {
+							Have technical notes to share?
+						}
+					</h3>
+					<p class="text-sm text-muted mb-4 leading-relaxed">
+						if lang == "id" {
+							DaemonTalk menerima kontribusi berupa panduan sistem, riset arsitektur, atau eksperimen teknologi. Kirimkan draft Anda via GitHub Pull Request.
+						} else {
+							DaemonTalk accepts contributions for systems guides, architecture research, or tech experiments. Submit your drafts via GitHub Pull Request.
+						}
+					</p>
+					<a href={ templ.SafeURL(prefix(lang) + "/contribute") } class="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-link hover:text-accent transition-colors group">
+						if lang == "id" {
+							Baca Pedoman Kontribusi
+						} else {
+							Read the Contributing Guide
+						}
+						@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+					</a>
+				</div>
 
 				<!-- Unified Card Reaction Bar (Directly below content) -->
 				@ReactionsBar(ui, reactions, p.Slug, lang, userReaction, len(comments), p.Title, p.Date.Format("2006-01-02"))
@@ -67,7 +93,7 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 						aria-label="Toggle typography font"
 					>
 						@IconTypography("w-3.5 h-3.5 shrink-0")
-						<span id="serif-toggle-label">Serif</span>
+						<span id="serif-toggle-label">{ ui.Post_Serif }</span>
 					</button>
 				</div>
 
@@ -128,7 +154,7 @@ func getSeriesPart(parts []post.Post, idx int) *post.Post {
 }
 
 // seriesNav renders a series index above the article.
-templ seriesNav(parts []post.Post, current post.Post, lang string) {
+templ seriesNav(ui i18n.UI, parts []post.Post, current post.Post, lang string) {
 	<div class="mb-6 p-4 border border-border bg-surface not-prose">
 		<div class="flex items-center justify-between pb-2 mb-2 border-b border-border/60">
 			<div class="flex items-center gap-2">
@@ -144,7 +170,7 @@ templ seriesNav(parts []post.Post, current post.Post, lang string) {
 				<li class="flex items-start gap-2 py-0.5">
 					<span class="shrink-0 font-mono text-[11px] text-muted">{ fmt.Sprintf("[%02d]", i+1) }</span>
 					if part.Slug == current.Slug {
-						<span class="font-bold text-text border-l-2 border-link pl-2">{ part.Title } <span class="text-[10px] text-link font-mono font-normal">(Current)</span></span>
+						<span class="font-bold text-text border-l-2 border-link pl-2">{ part.Title } <span class="text-[10px] text-link font-mono font-normal">{ ui.Post_Current }</span></span>
 					} else {
 						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + part.Slug) } class="text-muted hover:text-link transition-colors pl-2">{ part.Title }</a>
 					}
@@ -155,7 +181,7 @@ templ seriesNav(parts []post.Post, current post.Post, lang string) {
 }
 
 // seriesBottomNav renders dedicated Prev / Next episode buttons in series at the bottom.
-templ seriesBottomNav(parts []post.Post, current post.Post, lang string) {
+templ seriesBottomNav(ui i18n.UI, parts []post.Post, current post.Post, lang string) {
 	if currIdx := getSeriesCurrentIndex(parts, current.Slug); currIdx >= 0 {
 		if prevPart := getSeriesPart(parts, currIdx-1); prevPart != nil || getSeriesPart(parts, currIdx+1) != nil {
 			<div class="my-8 py-4 border-y border-border/60 not-prose">

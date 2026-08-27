@@ -17,52 +17,44 @@ templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, 
 			usedSlugs = append(usedSlugs, posts[i].Slug)
 		}
 
-		// Box 2 (4:4:4): Linux, Go/Backend, DevOps
+		// Box 2 (4:4:4): The Trio
 		box2Cats := []CategorySection{
-			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "devops", []string{"devops", "cloud", "ci-cd", "automation"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "software", []string{"software", "development", "programming", "coding"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "linux", []string{"linux", "os", "archlinux", "ubuntu"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "firewall", "authentication"}, 3, &usedSlugs),
 		}
 
-		// Box 3 (Deep Dive 10-Card Mobile Carousel / 2-Col Desktop): 10 Curated Technical Clusters
+		// Box 3 (Deep Dive Spotlight): AI & Backend Architecture (Limited to 2 for desktop/mobile consistency)
 		box3Cats := []CategorySection{
-			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "privacy", "ztna", "firewall", "openssl", "landlock"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "systems", []string{"systems", "rust", "compiler", "io-uring", "zig", "assembly"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "linux", []string{"linux", "kernel", "archlinux"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "go", []string{"go", "backend", "concurrency", "networking", "caddy"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "terminal"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "ai", []string{"ai", "machine-learning", "llm", "models", "agents"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "backend-architecture", []string{"backend", "go", "architecture", "distributed", "api"}, 2, &usedSlugs),
 		}
 
-		// Box 4 (8:4): Left (Performance, Docker) + Right (Live Wire Feed)
+		// Box 4 (8:4): Split River
 		box4LeftCats := []CategorySection{
-			getCategoryCluster(posts, "performance", []string{"performance", "cache", "memory", "cgroups", "pacing", "zstd"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "docker", []string{"docker", "podman", "containers", "containerd", "runc", "microvm", "firecracker"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "networking", []string{"networking", "protocols", "wireguard", "ssh", "dns", "tcp"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "gaming", []string{"gaming", "graphics", "gpu", "simulation"}, 2, &usedSlugs),
 		}
 		box4WirePosts := getWirePosts(posts, &usedSlugs, 4)
 
-		// Box 5 (3:3:3:3): Tools, Terminal, Database, Networking
+		// Box 5 (3:3:3:3): Quad Matrix
 		box5Cats := []CategorySection{
-			getCategoryCluster(posts, "tools", []string{"tools", "cli", "ripgrep", "fzf", "jq", "curl", "awk", "ffmpeg"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "terminal", []string{"terminal", "tmux", "ghostty", "neovim", "helix", "zsh", "fish"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "database", []string{"database", "sqlite", "duckdb", "clickhouse", "litestream", "valkey", "storage"}, 2, &usedSlugs),
-			getCategoryCluster(posts, "networking", []string{"networking", "wireguard", "tailscale", "ssh", "dns", "protocols"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "tools", []string{"tools", "workflow", "git", "automation"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "science", []string{"science", "research", "physics", "computing"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "systems", []string{"systems", "low-level", "compiler", "assembly", "memory"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "container-internals", []string{"containers", "docker", "podman", "namespaces", "cgroups"}, 2, &usedSlugs),
 		}
 
-		// Box 6 (7:5): Left (Architecture Essay) + Right (Spotlight Side Thumbs)
-		box6Essay := getCategoryCluster(posts, "architecture", []string{"architecture", "philosophy", "reading", "design"}, 2, &usedSlugs)
+		// Box 6 (7:5): Essay Banner (Tech Policy)
+		box6Essay := getCategoryCluster(posts, "policy", []string{"policy", "law", "censorship", "government"}, 2, &usedSlugs)
 		box6SidePosts := getWirePosts(posts, &usedSlugs, 3)
 
-		// Box 7 (3:3:3:3 Dense Text): AI, eBPF, Debugging, Shell
+		// Box 7 (3:3:3:3 Dense Text): Knowledge Index
 		box7Cats := []CategorySection{
-			getCategoryCluster(posts, "ai", []string{"ai", "llm", "quantization", "dpo", "agents"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "ebpf", []string{"ebpf", "tracing", "observability", "lsm"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "debugging", []string{"debugging", "dmesg", "strace", "lsof", "pprof"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "shell", []string{"shell", "bash", "scripting", "tips", "makefile", "cron", "systemd"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "terminal", []string{"terminal", "shell", "bash", "cli", "tmux", "zsh"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "database", []string{"database", "storage", "sqlite", "duckdb", "sql"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "ebpf", []string{"ebpf", "observability", "tracing", "debugging", "dmesg", "strace"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "crypto", []string{"privacy", "cryptography", "encryption"}, 3, &usedSlugs),
 		}
 	}}
 
@@ -313,13 +305,13 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 									POPULAR DISPATCHES
 								}
 							</div>
-							<span class="text-[10px] text-muted font-normal lowercase font-mono">top views</span>
+							<span class="text-[10px] text-muted font-normal lowercase font-mono">{ ui.Portal_TopViews }</span>
 						</div>
 
 						// Deduplicated Content List with 16:9 Mini Thumbnails
 						<div class="px-3 sm:px-4 py-5 sm:py-6 flex flex-col divide-y divide-border/40">
 							if len(popularPosts) == 0 {
-								<div class="text-xs text-muted py-3 text-center">No additional popular posts</div>
+								<div class="text-xs text-muted py-3 text-center">{ ui.Portal_NoPopPosts }</div>
 							}
 							for _, p := range popularPosts {
 								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-4 sm:py-5 flex items-start gap-3 text-text">

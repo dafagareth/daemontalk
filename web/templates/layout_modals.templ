@@ -1,6 +1,8 @@
 package templates
 
-templ shortcutsModal() {
+import "daemontalk/internal/i18n"
+
+templ shortcutsModal(ui i18n.UI) {
 	<!-- Keyboard shortcuts overlay & modal -->
 	<div
 		class="shortcuts-overlay"
@@ -9,7 +11,7 @@ templ shortcutsModal() {
 	>
 		<div class="shortcuts-modal">
 			<div class="flex items-center justify-between mb-5">
-				<p class="text-sm font-medium text-text">Keyboard Shortcuts</p>
+				<p class="text-sm font-medium text-text">{ ui.Modal_ShortcutsTitle }</p>
 				<button
 					onclick="document.getElementById('shortcuts-overlay').classList.remove('open')"
 					class="text-lg leading-none text-muted hover:text-text bg-none border-none cursor-pointer"
@@ -42,7 +44,7 @@ templ shortcutRow(key string, description string) {
 // confirmModal is the custom confirm dialog that replaces the browser's
 // window.confirm() (reused by both public pages (blog comment delete) and
 // the admin shell (post delete, comment delete) via hx-confirm/data-confirm).
-templ confirmModal() {
+templ confirmModal(ui i18n.UI) {
 	<div
 		class="shortcuts-overlay"
 		id="confirm-overlay"
@@ -51,8 +53,8 @@ templ confirmModal() {
 		<div class="shortcuts-modal">
 			<p id="confirm-message" class="text-sm text-text mb-5"></p>
 			<div class="flex items-center justify-end gap-3">
-				<button type="button" data-confirm-cancel class="text-sm px-4 py-2 rounded-none border border-border text-muted hover:bg-hover transition-colors">Batal</button>
-				<button type="button" data-confirm-ok class="text-sm px-4 py-2 rounded-none bg-[var(--c-warn)] text-white font-medium hover:brightness-110 transition-all">Hapus</button>
+				<button type="button" data-confirm-cancel class="text-sm px-4 py-2 rounded-none border border-border text-muted hover:bg-hover transition-colors">{ ui.Modal_Cancel }</button>
+				<button type="button" data-confirm-ok class="text-sm px-4 py-2 rounded-none bg-[var(--c-warn)] text-white font-medium hover:brightness-110 transition-all">{ ui.Modal_Delete }</button>
 			</div>
 		</div>
 	</div>

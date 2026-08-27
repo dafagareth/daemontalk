@@ -81,15 +81,15 @@ templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
 		<div class="hidden md:block border-b border-border bg-[var(--c-nav)] transition-colors">
 			<div class="container-page h-11 flex items-center justify-between gap-4 min-w-0 overflow-x-auto scrollbar-none text-xs font-mono uppercase tracking-wider font-semibold">
 				<div id="subnav-tags" class="flex items-center gap-4 sm:gap-6 shrink-0">
-					<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-text hover:text-link transition-colors">ALL</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-text hover:text-link transition-colors">{ ui.Nav_All }</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/software") } data-tag="software" class="subnav-tag text-text hover:text-link transition-colors">Software</a>
 					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/linux") } data-tag="linux" class="subnav-tag text-text hover:text-link transition-colors">Linux</a>
 					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/ai") } data-tag="ai" class="subnav-tag text-text hover:text-link transition-colors">AI</a>
-					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/systems") } data-tag="systems" class="subnav-tag text-text hover:text-link transition-colors">Systems</a>
-					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/backend") } data-tag="backend" class="subnav-tag text-text hover:text-link transition-colors">Backend</a>
-					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/docker") } data-tag="docker" class="subnav-tag text-text hover:text-link transition-colors">Docker</a>
-					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/devops") } data-tag="devops" class="subnav-tag text-text hover:text-link transition-colors">DevOps</a>
 					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/security") } data-tag="security" class="subnav-tag text-text hover:text-link transition-colors">Security</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/networking") } data-tag="networking" class="subnav-tag text-text hover:text-link transition-colors">Network</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/gaming") } data-tag="gaming" class="subnav-tag text-text hover:text-link transition-colors">Gaming</a>
 					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/tools") } data-tag="tools" class="subnav-tag text-text hover:text-link transition-colors">Tools</a>
+					<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/science") } data-tag="science" class="subnav-tag text-text hover:text-link transition-colors">Science</a>
 				</div>
 			</div>
 		</div>
@@ -133,7 +133,7 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 			<!-- Tags -->
 			<div class="pt-2">
 				<div class="flex flex-wrap gap-2">
-					for _, tg := range []string{"linux", "ai", "systems", "backend", "devops", "docker", "security", "tools"} {
+					for _, tg := range []string{"software", "linux", "ai", "security", "networking", "gaming", "tools", "science"} {
 						<a
 							href={ templ.SafeURL(prefix(lang) + "/blog/tag/" + tg) }
 							onclick="toggleMobileMenu()"
@@ -152,7 +152,7 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 					onclick="toggleMobileMenu()"
 					class="py-3 text-text hover:text-link transition-colors"
 				>
-					<span>Live Dispatch</span>
+					<span>{ ui.Nav_LiveDispatch }</span>
 				</a>
 				if IsRadarEnabled() {
 					<a
@@ -183,6 +183,17 @@ templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
 					class="py-3 text-text hover:text-link transition-colors"
 				>
 					<span>Guestbook Log</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/contribute") }
+					onclick="toggleMobileMenu()"
+					class="py-3 text-text hover:text-link transition-colors"
+				>
+					if lang == "id" {
+						<span>Panduan Kontribusi</span>
+					} else {
+						<span>Contributing Guide</span>
+					}
 				</a>
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/behind") }

@@ -115,7 +115,7 @@ func blogHeader(ui i18n.UI, p post.Post, lang string, seriesParts []post.Post) t
 			return templ_7745c5c3_Err
 		}
 		if len(seriesParts) > 1 {
-			templ_7745c5c3_Err = seriesNav(seriesParts, p, lang).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = seriesNav(ui, seriesParts, p, lang).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

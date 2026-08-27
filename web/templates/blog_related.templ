@@ -37,17 +37,11 @@ templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang st
 										<span>{ fmt.Sprintf("%d %s", related[0].ReadTime, ui.Blog_MinRead) }</span>
 									</div>
 
-									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } data-slug={ related[0].Slug } class="block mb-2">
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } data-slug={ related[0].Slug } class="block mb-1 sm:mb-2">
 										<h4 class="text-base sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
 											{ related[0].Title }
 										</h4>
 									</a>
-
-									if related[0].Description != "" {
-										<p class="text-xs text-muted line-clamp-2 leading-relaxed font-sans mb-3">
-											{ related[0].Description }
-										</p>
-									}
 								</div>
 
 								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } class="mt-2 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">

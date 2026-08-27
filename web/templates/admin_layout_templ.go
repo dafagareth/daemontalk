@@ -8,6 +8,8 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "daemontalk/internal/i18n"
+
 // AdminLayout is a minimal shell for the admin dashboard.
 // Top navigation with text-only tabs, no sidebar, no decorative branding.
 func AdminLayout(page string, currentPath string, content templ.Component) templ.Component {
@@ -79,7 +81,7 @@ func AdminLayout(page string, currentPath string, content templ.Component) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = confirmModal().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = confirmModal(i18n.Get("en")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

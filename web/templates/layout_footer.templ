@@ -75,10 +75,10 @@ templ footer(ui i18n.UI, lang string) {
 								</p>
 								<ul class="space-y-2">
 									@footerLink(prefix(lang)+"/", ui.Nav_Home)
-									@footerLink(prefix(lang)+"/about", "About DaemonTalk")
-									@footerLink(prefix(lang)+"/behind", "Behind The Lab")
-									@footerLink(prefix(lang)+"/terminal", "Terminal Shell")
-									@footerLink(prefix(lang)+"/saved", "Reading List")
+									@footerLink(prefix(lang)+"/about", ui.Link_About)
+									@footerLink(prefix(lang)+"/behind", ui.Link_Behind)
+									@footerLink(prefix(lang)+"/terminal", ui.Link_Terminal)
+									@footerLink(prefix(lang)+"/saved", ui.Link_ReadingList)
 								</ul>
 							</div>
 						</div>
@@ -107,7 +107,8 @@ templ footer(ui i18n.UI, lang string) {
 								</p>
 								<ul class="space-y-2">
 									@footerLink("https://github.com/dafagareth/daemontalk", "GitHub Repository")
-									@footerLink(prefix(lang)+"/guestbook", "Guestbook Log")
+									@footerLink(prefix(lang)+"/contribute", ui.Link_ContribGuide)
+									@footerLink(prefix(lang)+"/guestbook", ui.Link_Guestbook)
 									@footerLink("/rss.xml", "RSS 2.0 (XML)")
 									@footerLink("/feed.json", "JSON Feed (v1.1)")
 									<li>
@@ -116,8 +117,7 @@ templ footer(ui i18n.UI, lang string) {
 											onclick="openShortcuts()"
 											class="text-xs text-[#8b949e] hover:text-[#58a6ff] transition-colors inline-flex items-center gap-1.5 cursor-pointer font-mono pt-1"
 										>
-											@IconShortcuts()
-											<span>Shortcuts</span>
+											<span>{ ui.Link_Shortcuts }</span>
 											<kbd class="px-1 py-0.5 rounded-none border border-[#27272a] bg-[#18181b] text-[10px] font-mono leading-none text-[#8b949e]">?</kbd>
 										</button>
 									</li>
@@ -150,15 +150,16 @@ templ footer(ui i18n.UI, lang string) {
 					<div class="flex flex-wrap items-center gap-x-4 gap-y-2.5">
 						<a href={ templ.SafeURL(prefix(lang) + "/terms") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Terms_Title }</a>
 						<a href={ templ.SafeURL(prefix(lang) + "/privacy") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Privacy_Title }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/license") } class="hover:text-[#e6edf3] hover:underline transition-colors">License</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/accessibility") } class="hover:text-[#e6edf3] hover:underline transition-colors">Accessibility</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/stats") } class="hover:text-[#e6edf3] hover:underline transition-colors">Stats</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/changelog") } class="hover:text-[#e6edf3] hover:underline transition-colors">Changelog</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/behind") } class="hover:text-[#e6edf3] hover:underline transition-colors">Colophon</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/contribute") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Contribute }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/license") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_License }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/accessibility") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Accessibility }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/stats") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Stats_Title }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/changelog") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Changelog_Title }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/behind") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Behind_Colophon }</a>
 						<a href="/rss.xml" class="hover:text-[#e6edf3] hover:underline transition-colors">RSS</a>
 						<a href="/manifest.json" class="hover:text-[#e6edf3] hover:underline transition-colors">Manifest</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/resume") } class="hover:text-[#e6edf3] hover:underline transition-colors">Resume / CV</a>
-						<a href="mailto:realdaemontalk@gmail.com" class="hover:text-[#e6edf3] hover:underline transition-colors">Contact</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/resume") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Resume }</a>
+						<a href="mailto:realdaemontalk@gmail.com" class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Contact }</a>
 					</div>
 				</div>
 

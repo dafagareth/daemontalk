@@ -241,17 +241,12 @@ templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int, showImage bool
 				<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="w-24 sm:w-40 shrink-0 bg-surface overflow-hidden border-r border-border/60 block">
 					@postThumbnailImg(p)
 				</a>
-				<div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col">
+				<div class="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between">
 					<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block mb-1">
 						<h4 class="display text-sm sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
 							{ p.Title }
 						</h4>
 					</a>
-					if p.Description != "" {
-						<p class="hidden sm:line-clamp-2 text-xs text-muted leading-relaxed">
-							{ p.Description }
-						</p>
-					}
 					<div class="flex items-center justify-between text-[10px] font-mono text-muted pt-2 border-t border-border/30 mt-auto">
 						<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
 						<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
@@ -266,11 +261,6 @@ templ tagRiverItem(ui i18n.UI, p post.Post, lang string, idx int, showImage bool
 							{ p.Title }
 						</h4>
 					</a>
-					if p.Description != "" {
-						<p class="text-xs text-muted line-clamp-2 leading-relaxed">
-							{ p.Description }
-						</p>
-					}
 				</div>
 				<div class="flex items-center justify-between text-[10px] font-mono text-muted pt-2 border-t border-border/30 mt-auto">
 					<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>

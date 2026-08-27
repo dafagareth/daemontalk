@@ -88,20 +88,85 @@ func GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorNa
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"w-full bg-surface border border-border text-text text-sm font-sans rounded-none py-2.5 px-3 focus:outline-none focus:border-link transition-colors\"></div><div><label for=\"gb-category\" class=\"block text-xs font-sans font-bold text-text uppercase mb-1.5\">Topic Stream</label> <select id=\"gb-category\" name=\"category\" class=\"w-full bg-surface border border-border text-text text-sm font-sans rounded-none py-2.5 px-3 focus:outline-none focus:border-link transition-colors cursor-pointer\"><option value=\"GENERAL\">General</option> <option value=\"FEEDBACK\">Feedback</option> <option value=\"SYSTEMS\">Systems &amp; Linux</option> <option value=\"ARCHITECTURE\">Architecture</option></select></div></div><!-- Message Payload --><div><label for=\"gb-message-body\" class=\"block text-xs font-sans font-bold text-text uppercase mb-1.5\">Message Payload</label> <textarea id=\"gb-message-body\" name=\"body\" required maxlength=\"500\" rows=\"4\" placeholder=\"Write your transmission message here...\" class=\"w-full px-3 py-3 text-sm font-sans rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-link transition-colors resize-y leading-relaxed\"></textarea></div><!-- Submit Action --><div class=\"flex justify-end mt-2\"><button type=\"submit\" class=\"inline-flex items-center justify-center gap-2 text-xs font-mono font-bold uppercase tracking-wider px-6 py-3 rounded-none bg-text text-bg hover:bg-link hover:text-white transition-all cursor-pointer shadow-sm group w-full sm:w-auto\"><span class=\"htmx-indicator spinner\"></span> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"w-full bg-surface border border-border text-text text-sm font-sans rounded-none py-2.5 px-3 focus:outline-none focus:border-link transition-colors\"></div><div><label for=\"gb-category\" class=\"block text-xs font-sans font-bold text-text uppercase mb-1.5\">Topic Stream</label> <select id=\"gb-category\" name=\"category\" class=\"w-full bg-surface border border-border text-text text-sm font-sans rounded-none py-2.5 px-3 focus:outline-none focus:border-link transition-colors cursor-pointer\"><option value=\"GENERAL\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Guestbook_Submit)
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(ui.GB_OptGeneral)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 92, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 61, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</option> <option value=\"FEEDBACK\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(ui.GB_OptFeedback)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 62, Col: 53}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</option> <option value=\"SYSTEMS\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(ui.GB_OptSystems)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 63, Col: 51}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</option> <option value=\"ARCHITECTURE\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(ui.GB_OptArch)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 64, Col: 53}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</option></select></div></div><!-- Message Payload --><div><label for=\"gb-message-body\" class=\"block text-xs font-sans font-bold text-text uppercase mb-1.5\">Message Payload</label> <textarea id=\"gb-message-body\" name=\"body\" required maxlength=\"500\" rows=\"4\" placeholder=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var10 string
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(ui.GB_Placeholder)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 80, Col: 39}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"w-full px-3 py-3 text-sm font-sans rounded-none border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-link transition-colors resize-y leading-relaxed\"></textarea></div><!-- Submit Action --><div class=\"flex justify-end mt-2\"><button type=\"submit\" class=\"inline-flex items-center justify-center gap-2 text-xs font-mono font-bold uppercase tracking-wider px-6 py-3 rounded-none bg-text text-bg hover:bg-link hover:text-white transition-all cursor-pointer shadow-sm group w-full sm:w-auto\"><span class=\"htmx-indicator spinner\"></span> <span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var11 string
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Guestbook_Submit)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 92, Col: 35}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -109,20 +174,20 @@ func GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorNa
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</button></div></form></div></div><!-- MODULE 3: FILTER BAR --><div class=\"p-3.5 sm:px-6 bg-surface flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border\"><div class=\"flex items-center gap-3\"><span class=\"text-xs font-mono font-black uppercase tracking-wider text-text\">TRANSMISSION ARCHIVE</span> <span class=\"text-[10px] font-mono px-2 py-0.5 bg-bg border border-border text-muted\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</button></div></form></div></div><!-- MODULE 3: FILTER BAR --><div class=\"p-3.5 sm:px-6 bg-surface flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border\"><div class=\"flex items-center gap-3\"><span class=\"text-xs font-mono font-black uppercase tracking-wider text-text\">TRANSMISSION ARCHIVE</span> <span class=\"text-[10px] font-mono px-2 py-0.5 bg-bg border border-border text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d ENTRIES", len(entries)))
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d ENTRIES", len(entries)))
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 107, Col: 47}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span></div><!-- Filter Pills --><div class=\"flex items-center gap-1.5 overflow-x-auto scrollbar-none text-[11px] font-mono\"><button onclick=\"filterGuestbook('ALL')\" class=\"gb-filter-btn px-2.5 py-1 bg-text text-bg font-bold border border-border cursor-pointer transition-colors\" data-tag=\"ALL\">ALL</button> <button onclick=\"filterGuestbook('GENERAL')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"GENERAL\">GENERAL</button> <button onclick=\"filterGuestbook('FEEDBACK')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"FEEDBACK\">FEEDBACK</button> <button onclick=\"filterGuestbook('SYSTEMS')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"SYSTEMS\">SYSTEMS</button> <button onclick=\"filterGuestbook('ARCHITECTURE')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"ARCHITECTURE\">ARCHITECTURE</button></div></div><!-- MODULE 4: ENTRIES GRID -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</span></div><!-- Filter Pills --><div class=\"flex items-center gap-1.5 overflow-x-auto scrollbar-none text-[11px] font-mono\"><button onclick=\"filterGuestbook('ALL')\" class=\"gb-filter-btn px-2.5 py-1 bg-text text-bg font-bold border border-border cursor-pointer transition-colors\" data-tag=\"ALL\">ALL</button> <button onclick=\"filterGuestbook('GENERAL')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"GENERAL\">GENERAL</button> <button onclick=\"filterGuestbook('FEEDBACK')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"FEEDBACK\">FEEDBACK</button> <button onclick=\"filterGuestbook('SYSTEMS')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"SYSTEMS\">SYSTEMS</button> <button onclick=\"filterGuestbook('ARCHITECTURE')\" class=\"gb-filter-btn px-2.5 py-1 bg-bg text-muted hover:text-text border border-border cursor-pointer transition-colors\" data-tag=\"ARCHITECTURE\">ARCHITECTURE</button></div></div><!-- MODULE 4: ENTRIES GRID -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -130,7 +195,7 @@ func GuestbookPage(ui i18n.UI, entries []comment.Comment, lang string, visitorNa
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -155,22 +220,22 @@ func GuestbookList(ui i18n.UI, entries []comment.Comment) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var13 == nil {
+			templ_7745c5c3_Var13 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div id=\"guestbook-list-container\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div id=\"guestbook-list-container\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(entries) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"p-12 text-center bg-surface text-muted font-sans text-sm border-t border-border\"><p class=\"mb-1 font-mono uppercase font-bold text-xs\">[NO TRANSMISSIONS RECORDED]</p><p class=\"text-text\">Be the first engineer to transmit a message to the lab.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"p-12 text-center bg-surface text-muted font-sans text-sm border-t border-border\"><p class=\"mb-1 font-mono uppercase font-bold text-xs\">[NO TRANSMISSIONS RECORDED]</p><p class=\"text-text\">Be the first engineer to transmit a message to the lab.</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"grid grid-cols-1 border-t border-border bg-bg\" id=\"guestbook-cards-grid\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"grid grid-cols-1 border-t border-border bg-bg\" id=\"guestbook-cards-grid\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -180,12 +245,12 @@ func GuestbookList(ui i18n.UI, entries []comment.Comment) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -209,135 +274,135 @@ func guestbookCard(e comment.Comment, logNum int, idx int, total int) templ.Comp
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var9 == nil {
-			templ_7745c5c3_Var9 = templ.NopComponent
+		templ_7745c5c3_Var14 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var14 == nil {
+			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var10 = []any{"gb-entry-card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-start gap-4 transition-colors border-border hover:bg-hover/20",
+		var templ_7745c5c3_Var15 = []any{"gb-entry-card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-start gap-4 transition-colors border-border hover:bg-hover/20",
 			templ.KV("border-b", idx < total-1),
 			templ.KV("bg-surface/30", idx%2 != 0),
 			templ.KV("bg-surface/60", e.Name == "daemontalk" || e.Name == "Dafa Gareth"),
 		}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var10...)
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<article class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var10).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" data-category=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(getGuestbookTagOnly(e.Body))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 155, Col: 45}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"><div class=\"w-full\"><!-- Top Meta --><div class=\"flex items-center justify-between gap-2 pb-2 mb-3 border-b border-border text-[10px] font-mono text-muted\"><div class=\"flex items-center gap-2\"><span class=\"font-bold text-text\">#")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%04d", logNum))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 161, Col: 69}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</span> <span class=\"px-1.5 py-0.5 bg-chip text-text font-bold uppercase border border-border\">[")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var14 string
-		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(getGuestbookTagOnly(e.Body))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 163, Col: 36}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "]</span></div><time datetime=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(e.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00"))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 166, Col: 74}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" class=\"comment-time\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<article class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var16 string
-		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmtCommentTime(e.CreatedAt))
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var15).String())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 167, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</time></div><!-- Author Row --><div class=\"flex items-center gap-2 mb-3\"><span class=\"font-sans text-sm font-bold text-text\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" data-category=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var17 string
-		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(e.Name)
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(getGuestbookTagOnly(e.Body))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 174, Col: 13}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 155, Col: 45}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span> ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if e.Name == "daemontalk" || e.Name == "Dafa Gareth" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<span class=\"text-[9px] font-mono font-bold px-1.5 py-0.5 bg-text text-bg uppercase\">Author</span>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div><!-- Message Content --><div class=\"text-sm text-text whitespace-pre-wrap break-words leading-relaxed font-sans\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\"><div class=\"w-full\"><!-- Top Meta --><div class=\"flex items-center justify-between gap-2 pb-2 mb-3 border-b border-border text-[10px] font-mono text-muted\"><div class=\"flex items-center gap-2\"><span class=\"font-bold text-text\">#")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var18 string
-		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(getGuestbookBody(e.Body))
+		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%04d", logNum))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 185, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 161, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div></div></article>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</span> <span class=\"px-1.5 py-0.5 bg-chip text-text font-bold uppercase border border-border\">[")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var19 string
+		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(getGuestbookTagOnly(e.Body))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 163, Col: 36}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "]</span></div><time datetime=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var20 string
+		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(e.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 166, Col: 74}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" class=\"comment-time\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var21 string
+		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmtCommentTime(e.CreatedAt))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 167, Col: 34}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</time></div><!-- Author Row --><div class=\"flex items-center gap-2 mb-3\"><span class=\"font-sans text-sm font-bold text-text\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var22 string
+		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(e.Name)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 174, Col: 13}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</span> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if e.Name == "daemontalk" || e.Name == "Dafa Gareth" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span class=\"text-[9px] font-mono font-bold px-1.5 py-0.5 bg-text text-bg uppercase\">Author</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div><!-- Message Content --><div class=\"text-sm text-text whitespace-pre-wrap break-words leading-relaxed font-sans\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var23 string
+		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(getGuestbookBody(e.Body))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/guestbook.templ`, Line: 185, Col: 30}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div></div></article>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

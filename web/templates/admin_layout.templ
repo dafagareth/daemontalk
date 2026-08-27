@@ -1,5 +1,7 @@
 package templates
 
+import "daemontalk/internal/i18n"
+
 // AdminLayout is a minimal shell for the admin dashboard.
 // Top navigation with text-only tabs, no sidebar, no decorative branding.
 templ AdminLayout(page string, currentPath string, content templ.Component) {
@@ -134,7 +136,7 @@ templ AdminLayout(page string, currentPath string, content templ.Component) {
 					initAdminTabFromURL();
 				});
 			</script>
-			@confirmModal()
+			@confirmModal(i18n.Get("en"))
 		</body>
 	</html>
 }

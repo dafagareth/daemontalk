@@ -55,15 +55,15 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 		} else {
 			<link rel="alternate" type="application/rss+xml" title="daemontalk" href="/rss.xml"/>
 			<link rel="alternate" type="application/feed+json" title="daemontalk" href="/feed.json"/>
-			<link rel="alternate" hreflang="en" href={ siteBaseURL + hreflangEN(currentPath) }/>
-			<link rel="alternate" hreflang="id" href={ siteBaseURL + "/id" + hreflangEN(currentPath) }/>
-			<link rel="alternate" hreflang="x-default" href={ siteBaseURL + hreflangEN(currentPath) }/>
+			<link rel="alternate" hreflang="en" href={ SiteBaseURL + hreflangEN(currentPath) }/>
+			<link rel="alternate" hreflang="id" href={ SiteBaseURL + "/id" + hreflangEN(currentPath) }/>
+			<link rel="alternate" hreflang="x-default" href={ SiteBaseURL + hreflangEN(currentPath) }/>
 			<link rel="manifest" href="/manifest.json"/>
 			<meta name="description" content={ meta.ogDesc() }/>
 			<meta property="og:title" content={ pageTitle(page) }/>
 			<meta property="og:description" content={ meta.ogDesc() }/>
 			<meta property="og:type" content={ meta.ogType() }/>
-			<meta property="og:url" content={ siteBaseURL + currentPath }/>
+			<meta property="og:url" content={ SiteBaseURL + currentPath }/>
 			<meta property="og:image" content={ meta.ogImage() }/>
 			<meta property="og:image:width" content="1200"/>
 			<meta property="og:image:height" content="630"/>
@@ -162,9 +162,9 @@ templ Layout(ui i18n.UI, lang string, page string, currentPath string, meta Page
 			<!-- Footer -->
 			@footer(ui, lang)
 			<!-- Keyboard Shortcuts Modal -->
-			@shortcutsModal()
+			@shortcutsModal(ui)
 			<!-- Confirm Modal -->
-			@confirmModal()
+			@confirmModal(ui)
 			<!-- Global Back to Top Floating Button -->
 			<button
 				id="back-to-top"

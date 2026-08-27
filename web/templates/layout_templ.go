@@ -103,7 +103,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 templ.SafeURL
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(siteBaseURL + hreflangEN(currentPath))
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(SiteBaseURL + hreflangEN(currentPath))
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 58, Col: 83}
 			}
@@ -116,7 +116,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 templ.SafeURL
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(siteBaseURL + "/id" + hreflangEN(currentPath))
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(SiteBaseURL + "/id" + hreflangEN(currentPath))
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 59, Col: 91}
 			}
@@ -129,7 +129,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 templ.SafeURL
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(siteBaseURL + hreflangEN(currentPath))
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(SiteBaseURL + hreflangEN(currentPath))
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 60, Col: 90}
 			}
@@ -194,7 +194,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(siteBaseURL + currentPath)
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(SiteBaseURL + currentPath)
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 66, Col: 62}
 			}
@@ -351,7 +351,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = shortcutsModal().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = shortcutsModal(ui).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -359,7 +359,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = confirmModal().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = confirmModal(ui).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
