@@ -15,6 +15,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -57,6 +58,9 @@ func main() {
 	// browser cache automatically.
 	if fi, err := os.Stat("web/static/css/main.css"); err == nil {
 		templates.AssetVersion = fmt.Sprintf("%d", fi.ModTime().Unix())
+	}
+	if cfg.BaseURL != "" {
+		templates.SiteBaseURL = strings.TrimSuffix(cfg.BaseURL, "/")
 	}
 	for _, sz := range []int{192, 512} {
 		name := fmt.Sprintf("web/static/images/icon-%d.png", sz)
