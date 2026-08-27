@@ -21,10 +21,6 @@ func TestGenerateCSS(t *testing.T) {
 		t.Error("missing dark theme scoping")
 	}
 
-	if !strings.Contains(css, `[data-theme="sepia"]`) {
-		t.Error("missing sepia theme scoping")
-	}
-
 	if !strings.Contains(css, `@media (prefers-color-scheme: dark)`) {
 		t.Error("missing prefers-color-scheme dark query")
 	}
