@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 func (h *Handler) JSONFeed(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +28,9 @@ func (h *Handler) JSONFeed(w http.ResponseWriter, r *http.Request) {
 	items := make([]jsonFeedItem, 0, len(h.AllPosts()))
 	for _, p := range h.AllPosts() {
 		if p.Draft {
+			continue
+		}
+		if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) {
 			continue
 		}
 		items = append(items, jsonFeedItem{
