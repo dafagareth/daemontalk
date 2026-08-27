@@ -74,6 +74,7 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 64*1024)
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
@@ -139,7 +140,8 @@ func (h *Handler) sendCommentNotification(slug, name, body string) {
 		port = "587"
 	}
 	subject := stripCRLF(fmt.Sprintf("New comment on: %s", slug))
-	msgBody := fmt.Sprintf("Post: %s\nFrom: %s\n\n%s", stripCRLF(slug), stripCRLF(name), body)
+	cleanedBody := cleanEmailBody(body)
+	msgBody := fmt.Sprintf("Post: %s\r\nFrom: %s\r\n\r\n%s", stripCRLF(slug), stripCRLF(name), cleanedBody)
 	msg := []byte("To: " + h.SMTPTo + "\r\n" +
 		"From: " + h.SMTPUser + "\r\n" +
 		"Subject: " + subject + "\r\n" +
@@ -150,6 +152,17 @@ func (h *Handler) sendCommentNotification(slug, name, body string) {
 	if err := smtp.SendMail(h.SMTPHost+":"+port, auth, h.SMTPUser, []string{h.SMTPTo}, msg); err != nil {
 		slog.Error("send comment notification failed", "slug", slug, "error", err)
 	}
+}
+
+// cleanEmailBody strips unprintable control characters to prevent header/boundary manipulation.
+func cleanEmailBody(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		if r == '\n' || r == '\r' || r == '\t' || (r >= 32 && r != 127) {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
 
 func (h *Handler) StreamComments(w http.ResponseWriter, r *http.Request) {
