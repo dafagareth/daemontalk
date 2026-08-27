@@ -24,6 +24,9 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 			if p.Draft {
 				continue
 			}
+			if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) {
+				continue
+			}
 			if len(articles) < 8 {
 				articles = append(articles, p)
 			}
@@ -56,6 +59,9 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 	count := 0
 	for _, p := range posts {
 		if p.Draft {
+			continue
+		}
+		if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) {
 			continue
 		}
 		tags := ""
@@ -94,6 +100,7 @@ func (h *Handler) CLITag(w http.ResponseWriter, r *http.Request) {
 	if tag == "" {
 		tag = strings.ToLower(r.URL.Query().Get("tag"))
 	}
+	tag = sanitizeCLIText(tag)
 	posts := h.AllPosts()
 
 	var b strings.Builder
@@ -102,6 +109,9 @@ func (h *Handler) CLITag(w http.ResponseWriter, r *http.Request) {
 	matched := 0
 	for _, p := range posts {
 		if p.Draft {
+			continue
+		}
+		if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) {
 			continue
 		}
 		hasTag := false
@@ -141,6 +151,20 @@ func (h *Handler) CLIPost(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusNotFound)
 		_, _ = w.Write([]byte(fmt.Sprintf("Post not found: %s\n", slug)))
+		return
+	}
+
+	// Enforce the same visibility rules as BlogPost (HDL-001 fix).
+	if p.Draft {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte("Post not found.\n"))
+		return
+	}
+	if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte("Post not found.\n"))
 		return
 	}
 
@@ -206,4 +230,16 @@ func (h *Handler) CLIRecipes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(applyColors(b.String(), color)))
+}
+
+// sanitizeCLIText filters a string to strictly safe alphanumeric/punctuation characters,
+// preventing terminal ANSI escape injection attacks.
+func sanitizeCLIText(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '-' || r == '_' || r == '.' || r == '+' {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
