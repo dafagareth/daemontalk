@@ -1,52 +1,60 @@
 # Privacy Policy
 
-**Last updated: August 2026**
+**Last updated: August 27, 2026**
 
-Daemontalk operates under a strict zero-tracker philosophy. Your reading habits, personal data, and privacy are fully protected.
+Daemontalk operates under a strict zero-tracker philosophy. We believe technical publications should prioritize reader autonomy, transparency, and computational minimalism. We do not track, profile, monetize, or harvest personal data.
 
-## 1. Zero Tracking & No Third-Party Ad Networks
+## 1. Zero Tracking & Self-Hosted Infrastructure
 
-- **No Behavioral Trackers**: This site does not use Google Analytics, Facebook Pixel, advertising trackers, or fingerprinting scripts.
-- **No Third-Party Ad Networks**: We do not serve commercial banner advertisements or sell user attention to third-party data brokers.
-- **Self-Hosted Infrastructure**: Scripts, stylesheets, and core resources are served directly from our dedicated binary server, minimizing external surveillance vectors.
+- **No Behavioral Trackers**: This site operates without Google Analytics, Meta/Facebook Pixels, tracking beacons, advertising cookies, or browser fingerprinting scripts.
+- **No Third-Party Ad Networks**: We do not display commercial advertisements, sponsor banners, or affiliate trackers, and we never sell user data to data brokers.
+- **Self-Hosted Assets**: All stylesheets, scripts, and media are served directly from our dedicated Go binary server, eliminating external tracking surfaces.
 
 ## 2. Client-Side Storage & Local Preferences
 
-We use the standard browser `localStorage` mechanism exclusively on your local machine to store your non-identifying reading preferences:
+We utilize standard client-side browser storage mechanisms (`localStorage` and `sessionStorage`) exclusively on your local machine to preserve your personal viewing preferences:
 
-- Saved articles in your personal Reading List (*Bookmarks*).
-- Active interface theme selection (*Light, Dark, or Sepia mode*).
-- Typography choices and warm screen tint intensity settings.
+- **Saved Dispatches (`bookmarks`)**: The list of bookmarked posts stored in your local reading ledger.
+- **Theme Selection (`theme`)**: Your active color scheme preference (*Light, Dark, or Sepia mode*).
+- **Typography & Accessibility**: Font size scaling, font family selection (*Serif or Sans*), and warm screen tint intensity.
+- **Visited Dispatches Indicator (`readPosts`)**: A local array of recently visited article slugs (capped at 200 items) used solely to indicate previously read content on index pages.
+- **Session Animations (`visited`)**: A temporary session token in `sessionStorage` to prevent redundant entry animations on subsequent page navigations.
 
-**Important**: This preference data never leaves your browser and is never uploaded, synced, or transmitted to our backend database or any external party.
+**Data Sovereignty**: None of this client-side preference data is ever synced, uploaded, or transmitted to our backend database or any third-party entity. You may purge this data at any time by clearing your browser's site storage.
 
-## 3. Server Telemetry & Temporary Security Logs
+## 3. Ephemeral Server Logs & Telemetry
 
-When you connect to Daemontalk, our server logs standard HTTP connection metadata:
+When connecting to Daemontalk over HTTP or SSH, our self-hosted server records standard connection metadata:
 
 - Connecting IP address.
-- HTTP Request URL and Method.
-- User-Agent string and Referrer header.
-- Response Status Code and latency.
+- Request path, HTTP method, and timestamp.
+- User-Agent string and Referrer header (if transmitted by your client).
+- HTTP response status code and execution latency.
 
-**Log Retention Policy**: Connection logs are collected strictly for real-time security auditing, rate limiting against DDoS/brute-force attacks, and server performance debugging. These logs are automatically rotated and permanently purged after **14 days**. They are never shared, sold, or used for behavioral profiling.
+**Retention Policy**: These connection logs are maintained strictly for real-time security monitoring, rate limiting against automated brute-force/DDoS attacks, and infrastructure debugging. All server logs are automatically rotated and permanently purged after **14 days**. We never perform cross-site user profiling or link IP addresses to real-world identities.
 
-## 4. Interactive Submissions (Comments & Guestbook)
+## 4. Interactive Submissions (Comments, Reactions & Guestbook)
 
-When you choose to post a comment on an article or transmit a message in the public Guestbook:
+When engaging with interactive community features:
 
-- **Public Visibility**: The author handle (Callsign) and message content you provide are stored in our SQLite database and rendered publicly on the site.
-- **Honeypot Protection**: Comment forms utilize hidden honeypot fields to filter automated spam bots without requiring intrusive commercial CAPTCHAs.
-- **No Compulsory Email Registration**: You are not required to provide a password, social login, or personal profile to participate in technical discussions.
+- **Public Discussions**: When you submit a comment or guestbook entry, the author handle (Callsign) and message body you supply are stored in our local SQLite database and published publicly.
+- **Post Reactions**: Article reactions (such as Likes or Insightful markers) increment an aggregated numerical counter on the post without storing personal user identifiers.
+- **No Compulsory Registration**: You are never required to provide passwords, email addresses, phone numbers, or OAuth social accounts to participate.
+- **Bot Defense Without Surveillance**: We use lightweight, invisible honeypot fields to filter automated spam bots without employing invasive commercial CAPTCHA widgets.
 
-## 5. Data Retention & Right to Erasure
+## 5. Terminal & Shell Interfaces
 
-You have the right to request the correction or permanent deletion of any comment or guestbook transmission you have previously submitted. To request removal, contact us at **realdaemontalk@gmail.com** with the post slug and your submitted handle.
+- **In-Browser Terminal (`/terminal`)**: The virtual UNIX web shell runs entirely client-side; command execution history remains in your local browser memory and is discarded upon tab closure.
+- **Public SSH Access (`ssh daemontalk.com -p 2222`)**: SSH connections run in ephemeral, isolated processes with zero keystroke logging.
 
-## 6. External Links & Services
+## 6. Data Subject Rights & Content Removal
 
-Articles may contain links to external GitHub repositories, documentation portals, and academic sources. When navigating away from Daemontalk, your browsing activity is governed by the respective privacy policies of those external websites.
+You maintain the right to request the correction or permanent removal of any comment or guestbook transmission you have submitted. To request content removal, contact us at **realdaemontalk@gmail.com** specifying the article slug and your submitted author handle.
 
-## 7. Contact for Privacy Inquiries
+## 7. External References
 
-If you have any questions, suggestions, or concerns regarding privacy practices on this website, feel free to contact us at: **realdaemontalk@gmail.com**.
+Our technical dispatches frequently cite open-source repositories (GitHub), documentation hubs, and academic papers (arXiv, IEEE). When following external hyperlinks, your browsing activity is governed by the privacy policies of the destination services.
+
+## 8. Inquiries & Contact
+
+If you have questions, auditing suggestions, or security disclosures regarding our privacy architecture, reach out directly to: **realdaemontalk@gmail.com**.
