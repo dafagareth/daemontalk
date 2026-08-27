@@ -5,6 +5,7 @@ import (
 	"fmt"
 	stdhtml "html"
 	"html/template"
+	"log/slog"
 	"regexp"
 	"strconv"
 	"strings"
@@ -117,8 +118,10 @@ func Parse(src []byte) (Post, error) {
 		p.Draft = v
 	}
 	if v, ok := fm["date"].(string); ok {
-		if t, err := time.Parse("2006-01-02", v); err == nil {
+		if t, err := parseFrontmatterDate(v); err == nil {
 			p.Date = t
+		} else {
+			slog.Warn("invalid date in post frontmatter", "slug", p.Slug, "date", v, "error", err)
 		}
 	}
 	if v, ok := fm["cover"].(string); ok {
@@ -141,8 +144,10 @@ func Parse(src []byte) (Post, error) {
 		p.SeriesPart = v
 	}
 	if v, ok := fm["publish_at"].(string); ok {
-		if t, err := time.Parse("2006-01-02", v); err == nil {
+		if t, err := parseFrontmatterDate(v); err == nil {
 			p.PublishAt = t
+		} else {
+			slog.Warn("invalid publish_at in post frontmatter", "slug", p.Slug, "publish_at", v, "error", err)
 		}
 	}
 	if v, ok := fm["type"].(string); ok {
@@ -257,4 +262,23 @@ func readTime(html string) int {
 		return 1
 	}
 	return minutes
+}
+
+func parseFrontmatterDate(s string) (time.Time, error) {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return time.Time{}, nil
+	}
+	layouts := []string{
+		"2006-01-02",
+		"2006-01-02 15:04:05",
+		"2006-01-02T15:04:05Z07:00",
+		time.RFC3339,
+	}
+	for _, l := range layouts {
+		if t, err := time.Parse(l, s); err == nil {
+			return t, nil
+		}
+	}
+	return time.Time{}, fmt.Errorf("unsupported date format: %q", s)
 }
