@@ -73,5 +73,5 @@ func renderLinkHTML(rawContent string) string {
     %s
   </a>
 </div>
-`, html.EscapeString(card.URL), html.EscapeString(card.Title), descHTML, siteHTML)
+`, html.EscapeString(safeURL(card.URL)), html.EscapeString(card.Title), descHTML, siteHTML)
 }

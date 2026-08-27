@@ -131,7 +131,7 @@ func renderReferencesHTML(rawContent string) string {
 			} else if strings.HasPrefix(displayURL, "http://") {
 				displayURL = strings.TrimPrefix(displayURL, "http://")
 			}
-			buf.WriteString(fmt.Sprintf("<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-link underline hover:text-text font-mono text-[0.9em] break-all\">%s</a>\n", html.EscapeString(it.URL), html.EscapeString(displayURL)))
+			buf.WriteString(fmt.Sprintf("<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-link underline hover:text-text font-mono text-[0.9em] break-all\">%s</a>\n", html.EscapeString(safeURL(it.URL)), html.EscapeString(displayURL)))
 		}
 
 		buf.WriteString("    </li>\n")
