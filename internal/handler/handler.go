@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -23,6 +24,7 @@ type Handler struct {
 	ContentDir  string // path to content directory (defaults to "content")
 	AllProjects []project.Project
 	FilePosts   []post.Post   // markdown posts from content/posts, loaded once at startup
+	filePostsMu sync.RWMutex  // protects concurrent access/mutations to FilePosts
 	PostDB      *postdb.Store // posts created by web editor (optional)
 	Comments    *comment.Store
 	AdminToken  string // when set, enables comment moderation
@@ -58,16 +60,29 @@ func (h *Handler) AllPosts() []post.Post {
 func (h *Handler) ReloadFilePosts() {
 	postsDir := h.getContentPath("posts")
 	if fps, err := post.LoadAllWithDrafts(postsDir); err == nil {
+		h.filePostsMu.Lock()
 		h.FilePosts = fps
+		h.filePostsMu.Unlock()
 	}
+}
+
+// getFilePosts returns a safe copy of FilePosts.
+func (h *Handler) getFilePosts() []post.Post {
+	h.filePostsMu.RLock()
+	defer h.filePostsMu.RUnlock()
+	out := make([]post.Post, len(h.FilePosts))
+	copy(out, h.FilePosts)
+	return out
 }
 
 // RefreshPosts re-renders posts from DB, merges them with file posts,
 // and replaces snapshot. Called at startup and every time the editor
 // saving/deleting post — new post directly appears without restart.
 func (h *Handler) RefreshPosts() {
+	h.filePostsMu.RLock()
 	merged := make([]post.Post, 0, len(h.FilePosts)+8)
 	merged = append(merged, h.FilePosts...)
+	h.filePostsMu.RUnlock()
 
 	if h.PostDB != nil {
 		webPosts, err := h.PostDB.List()
