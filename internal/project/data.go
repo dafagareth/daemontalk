@@ -17,8 +17,8 @@ var All = []Project{
 	{
 		Name:          "daemontalk",
 		Slug:          "daemontalk",
-		Description:   "This site. Personal engineering notebook and reading platform built with Go, Chi, templ, HTMX, and Tailwind. Fast SSR and zero heavy JS.",
-		DescriptionID: "Situs ini. Buku catatan rekayasa dan platform membaca dengan Go, Chi, templ, HTMX, dan Tailwind. Render cepat di server tanpa JS berat.",
+		Description:   "This site. Personal technology notebook and reading platform built with Go, Chi, templ, HTMX, and Tailwind. Fast SSR and zero heavy JS.",
+		DescriptionID: "Situs ini. Buku catatan eksplorasi teknologi dan platform membaca dengan Go, Chi, templ, HTMX, dan Tailwind. Render cepat di server tanpa JS berat.",
 		TechStack:     []string{"Go", "Chi", "templ", "HTMX", "Tailwind", "SQLite"},
 		RepoURL:       "https://github.com/dafagareth/daemontalk",
 		Status:        StatusActive,
