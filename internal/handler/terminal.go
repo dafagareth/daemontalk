@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	"time"
 
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/project"
@@ -74,6 +75,9 @@ func (h *Handler) TerminalData(w http.ResponseWriter, r *http.Request) {
 
 	for _, p := range h.AllPosts() {
 		if p.Draft {
+			continue
+		}
+		if !p.PublishAt.IsZero() && p.PublishAt.After(time.Now()) {
 			continue
 		}
 		// Clean snippet
