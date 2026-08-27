@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // Manifest serves the PWA web app manifest.
@@ -81,6 +82,12 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 
 	// Blog posts (en + id).
 	for _, post := range h.AllPosts() {
+		if post.Draft {
+			continue
+		}
+		if !post.PublishAt.IsZero() && post.PublishAt.After(time.Now()) {
+			continue
+		}
 		lastmod := post.Date.Format("2006-01-02")
 		writeURL("/blog/"+post.Slug, lastmod)
 		writeURL("/id/blog/"+post.Slug, lastmod)
@@ -157,6 +164,9 @@ func (h *Handler) langSitemap(w http.ResponseWriter, lang string) {
 	// Blog posts
 	for _, post := range h.AllPosts() {
 		if post.Draft {
+			continue
+		}
+		if !post.PublishAt.IsZero() && post.PublishAt.After(time.Now()) {
 			continue
 		}
 		lastmod := post.Date.Format("2006-01-02")
