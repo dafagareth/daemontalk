@@ -869,7 +869,7 @@ func portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[st
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "\" class=\"group py-4 sm:py-5 flex items-start gap-3 text-text visited:text-visited\"><div class=\"flex-1 min-w-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "\" class=\"group py-4 sm:py-5 flex items-start gap-3 text-text\"><div class=\"flex-1 min-w-0\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

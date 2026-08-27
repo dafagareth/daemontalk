@@ -32,7 +32,7 @@ templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang st
 						// Posts List (Teks Only)
 						<div class="flex flex-col divide-y divide-border/40">
 							<article class="group">
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block pb-4 sm:pb-5 text-text visited:text-visited">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block pb-4 sm:pb-5 text-text">
 									<h4 class="display text-[17px] font-bold group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5">
 										{ cat.LeadPost.Title }
 									</h4>
@@ -44,7 +44,7 @@ templ portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang st
 							for j, sub := range cat.SubPosts {
 								if j < 3 {
 									<article class="group">
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block py-4 sm:py-5 text-muted visited:text-visited">
+										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block py-4 sm:py-5 text-muted">
 											<h4 class="display text-[15px] font-medium group-hover:text-text transition-colors leading-snug line-clamp-2 mb-1.5">
 												{ sub.Title }
 											</h4>

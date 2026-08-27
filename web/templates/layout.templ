@@ -269,8 +269,14 @@ templ visitedPostsScript() {
 			var set = {};
 			read.forEach(function(s) { set[s] = true; });
 			function markVisited() {
-				document.querySelectorAll('a[data-slug]').forEach(function(a) {
-					if (set[a.dataset.slug]) {
+				document.querySelectorAll('a[data-slug], a[href*="/blog/"]').forEach(function(a) {
+					var slug = a.dataset.slug;
+					if (!slug) {
+						var href = a.getAttribute('href') || '';
+						var match = href.match(/\/blog\/([^\/\?#]+)$/);
+						if (match) slug = match[1];
+					}
+					if (slug && set[slug]) {
 						var h = a.querySelector('h1,h2,h3,h4,h5,h6');
 						if (h) {
 							h.classList.add('post-visited');

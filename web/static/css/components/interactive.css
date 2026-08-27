@@ -150,5 +150,12 @@
   /* Visited post title indicator (JS-based, applied via localStorage) */
   .post-visited {
     color: var(--c-visited) !important;
+    transition: none !important;
+  }
+
+  .group:hover .post-visited,
+  .post-visited:hover {
+    color: var(--c-link) !important;
+    transition: color 150ms ease !important;
   }
 }

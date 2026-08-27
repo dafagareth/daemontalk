@@ -322,7 +322,7 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 								<div class="text-xs text-muted py-3 text-center">No additional popular posts</div>
 							}
 							for _, p := range popularPosts {
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-4 sm:py-5 flex items-start gap-3 text-text visited:text-visited">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-4 sm:py-5 flex items-start gap-3 text-text">
 									<div class="flex-1 min-w-0">
 										if len(p.Tags) > 0 {
 											<span class="text-accent text-xs font-bold uppercase tracking-wider block mb-1">
