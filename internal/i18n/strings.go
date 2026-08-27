@@ -120,6 +120,53 @@ type UI struct {
 
 	Terms_Title       string
 	Terms_LastUpdated string
+
+	Link_About        string
+	Link_Behind       string
+	Link_Terminal     string
+	Link_ReadingList  string
+	Link_ContribGuide string
+	Link_Guestbook    string
+	Link_Shortcuts    string
+	Link_Contribute   string
+	Link_License      string
+	Link_Accessibility string
+	Link_Resume       string
+	Link_Contact      string
+
+	Modal_ShortcutsTitle string
+	Modal_Cancel         string
+	Modal_Delete         string
+	Search_SeeAll        string
+
+	Nav_All          string
+	Nav_LiveDispatch string
+	Nav_Radar        string
+
+	Portal_TopViews   string
+	Portal_NoPopPosts string
+	Portal_Curated    string
+	Portal_SeeMore    string
+	Portal_ReadMore   string
+
+	Sidebar_FullReader string
+	Sidebar_Themes     string
+	Sidebar_WebLink    string
+	Sidebar_RSS        string
+	Sidebar_JSON       string
+	Sidebar_AuthorBio  string
+
+	GB_OptGeneral  string
+	GB_OptFeedback string
+	GB_OptSystems  string
+	GB_OptArch     string
+	GB_TopicStream string
+	GB_Payload     string
+	GB_Placeholder string
+
+	Post_Current string
+	Post_Serif   string
+
 }
 
 var Strings = map[string]UI{
@@ -135,7 +182,7 @@ var Strings = map[string]UI{
 		Behind_Uses:         "Stack & uses",
 		Behind_Learning:     "Now / learning",
 
-		Footer_Bio:       "Open engineering notebook and learning log. Exploring Go backend, Python, Linux systems, and distributed architecture.",
+		Footer_Bio:       "Open notebook and digital publication. Exploring the technology ecosystem, modern computing, and open-source culture.",
 		Footer_Read:      "Navigation",
 		Footer_Site:      "Site",
 		Footer_Topics:    "Topics",
@@ -178,7 +225,7 @@ var Strings = map[string]UI{
 
 		Post_Views: "views",
 
-		About_Intro:    "An open engineering notebook by a 5th-semester information systems student focusing on Go backend development, Python, Linux systems, and distributed architecture.",
+		About_Intro:    "An open technology notebook by a 5th-semester information systems student exploring the technology ecosystem, modern computing, and open-source culture.",
 		About_Building: "What I'm building",
 		About_Stack:    "Stack",
 		About_Contact:  "Contact",
@@ -243,6 +290,53 @@ var Strings = map[string]UI{
 
 		Terms_Title:       "Terms of Use",
 		Terms_LastUpdated: "Last updated: August 2026",
+
+		Link_About:        "About DaemonTalk",
+		Link_Behind:       "Behind The Lab",
+		Link_Terminal:     "Terminal Shell",
+		Link_ReadingList:  "Reading List",
+		Link_ContribGuide: "Contributing Guide",
+		Link_Guestbook:    "Guestbook Log",
+		Link_Shortcuts:    "Shortcuts",
+		Link_Contribute:   "Contribute",
+		Link_License:      "License",
+		Link_Accessibility: "Accessibility",
+		Link_Resume:       "Resume / CV",
+		Link_Contact:      "Contact",
+
+		Modal_ShortcutsTitle: "Keyboard Shortcuts",
+		Modal_Cancel:         "Cancel",
+		Modal_Delete:         "Delete",
+		Search_SeeAll:        "See all",
+
+		Nav_All:          "ALL",
+		Nav_LiveDispatch: "Live Dispatch",
+		Nav_Radar:        "Systems Radar & Graph",
+
+		Portal_TopViews:   "top views",
+		Portal_NoPopPosts: "No additional popular posts",
+		Portal_Curated:    "curated technical deep-dives",
+		Portal_SeeMore:    "See More",
+		Portal_ReadMore:   "READ MORE",
+
+		Sidebar_FullReader: "Full reader",
+		Sidebar_Themes:     "7 Color themes",
+		Sidebar_WebLink:    "Web & Image link",
+		Sidebar_RSS:        "RSS XML",
+		Sidebar_JSON:       "JSON Feed",
+		Sidebar_AuthorBio:  "Go & Linux Systems",
+
+		GB_OptGeneral:  "General",
+		GB_OptFeedback: "Feedback",
+		GB_OptSystems:  "Systems & Linux",
+		GB_OptArch:     "Architecture",
+		GB_TopicStream: "Topic Stream",
+		GB_Payload:     "Message Payload",
+		GB_Placeholder: "Write your transmission message here...",
+
+		Post_Current: "(Current)",
+		Post_Serif:   "Serif",
+
 	},
 	"id": {
 		Nav_Home:     "Beranda",
@@ -256,7 +350,7 @@ var Strings = map[string]UI{
 		Behind_Uses:         "Stack & uses",
 		Behind_Learning:     "Now / sedang belajar",
 
-		Footer_Bio:       "Buku catatan rekayasa dan portofolio terbuka. Mendalami Go backend, Python, sistem Linux, dan arsitektur backend.",
+		Footer_Bio:       "Buku catatan dan publikasi terbuka. Mengeksplorasi ekosistem teknologi, komputasi modern, dan kultur open-source.",
 		Footer_Read:      "Navigasi",
 		Footer_Site:      "Situs",
 		Footer_Topics:    "Topik",
@@ -299,7 +393,7 @@ var Strings = map[string]UI{
 
 		Post_Views: "dilihat",
 
-		About_Intro:    "Buku catatan terbuka mahasiswa sistem informasi semester 5 yang mendalami Go backend, Python, sistem Linux, dan arsitektur backend. Dibuat untuk mendokumentasikan proses belajar dan eksperimen kode.",
+		About_Intro:    "Buku catatan terbuka mahasiswa sistem informasi semester 5 yang mengeksplorasi ekosistem teknologi, komputasi modern, dan kultur open-source.",
 		About_Building: "Yang sedang saya bangun",
 		About_Stack:    "Stack",
 		About_Contact:  "Kontak",
@@ -327,6 +421,25 @@ var Strings = map[string]UI{
 		Error_SearchPlaceholder: "Cari di seluruh arsip...",
 		Error_Diagnostics:       "DIAGNOSTIK SISTEM",
 
+		Uses_Hardware: "Perangkat Keras",
+		Uses_Software: "Perangkat Lunak",
+		Uses_Desk:     "Meja Kerja",
+
+		Now_WorkingOn: "Sedang Mengerjakan",
+		Now_Reading:   "Sedang Membaca",
+		Now_Learning:  "Sedang Mempelajari",
+
+		Reading_Title:    "Daftar Bacaan",
+		Reading_Subtitle: "Arsip jurnal dan referensi tersimpan untuk dibaca nanti.",
+
+		Stats_PageTitle: "Statistik situs dan rincian lalu lintas.",
+
+		Saved_Title:    "Daftar Bacaan Tersimpan",
+		Saved_Subtitle: "Artikel yang ditandai tersimpan secara lokal di perangkat Anda.",
+		Saved_Empty:    "Belum ada post yang disimpan. Klik ikon bookmark pada post mana pun untuk menyimpannya.",
+		Saved_Clear:    "Hapus semua",
+
+
 		Lang_Switch: "EN",
 
 		Search_Title:      "Cari",
@@ -346,6 +459,53 @@ var Strings = map[string]UI{
 
 		Terms_Title:       "Ketentuan Penggunaan",
 		Terms_LastUpdated: "Terakhir diperbarui: Agustus 2026",
+
+		Link_About:        "Tentang DaemonTalk",
+		Link_Behind:       "Di Balik Layar",
+		Link_Terminal:     "Terminal Shell",
+		Link_ReadingList:  "Daftar Bacaan",
+		Link_ContribGuide: "Panduan Kontribusi",
+		Link_Guestbook:    "Buku Tamu",
+		Link_Shortcuts:    "Pintasan",
+		Link_Contribute:   "Kontribusi",
+		Link_License:      "Lisensi",
+		Link_Accessibility: "Aksesibilitas",
+		Link_Resume:       "Resume / CV",
+		Link_Contact:      "Kontak",
+
+		Modal_ShortcutsTitle: "Pintasan Keyboard",
+		Modal_Cancel:         "Batal",
+		Modal_Delete:         "Hapus",
+		Search_SeeAll:        "Lihat semua",
+
+		Nav_All:          "SEMUA",
+		Nav_LiveDispatch: "Siaran Langsung",
+		Nav_Radar:        "Radar & Grafik Sistem",
+
+		Portal_TopViews:   "dilihat teratas",
+		Portal_NoPopPosts: "Tidak ada post populer lainnya",
+		Portal_Curated:    "kumpulan bedah teknis mendalam",
+		Portal_SeeMore:    "Lihat Semua",
+		Portal_ReadMore:   "BACA SELENGKAPNYA",
+
+		Sidebar_FullReader: "Pembaca penuh",
+		Sidebar_Themes:     "7 Tema warna",
+		Sidebar_WebLink:    "Tautan Web & Gambar",
+		Sidebar_RSS:        "RSS XML",
+		Sidebar_JSON:       "JSON Feed",
+		Sidebar_AuthorBio:  "Sistem Go & Linux",
+
+		GB_OptGeneral:  "Umum",
+		GB_OptFeedback: "Masukan",
+		GB_OptSystems:  "Sistem & Linux",
+		GB_OptArch:     "Arsitektur",
+		GB_TopicStream: "Kategori Topik",
+		GB_Payload:     "Isi Pesan",
+		GB_Placeholder: "Tulis pesan transmisi Anda di sini...",
+
+		Post_Current: "(Saat ini)",
+		Post_Serif:   "Serif",
+
 	},
 }
 
