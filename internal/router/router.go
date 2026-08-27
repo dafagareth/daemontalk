@@ -51,7 +51,7 @@ func New(h *handler.Handler) *chi.Mux {
 	commentLimit := handler.NewRateLimiter(5, time.Minute)
 	contactLimit := handler.NewRateLimiter(3, time.Hour)
 	reactionLimit := handler.NewRateLimiter(10, time.Minute)
-	runLimit := handler.NewRateLimiter(25, time.Minute)
+	// runLimit was used by /api/run which is currently disabled (SEC-002).
 	adminLimit := handler.NewRateLimiter(30, time.Minute) // Protect against brute-forcing the ADMIN_TOKEN
 
 	r.With(handler.StaticCacheControl).Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
@@ -76,7 +76,10 @@ func New(h *handler.Handler) *chi.Mux {
 	r.With(reactionLimit).Post("/blog/{slug}/reactions/{emoji}", h.PostReaction)
 	r.Get("/terminal", h.Terminal)
 	r.Get("/api/terminal/data", h.TerminalData)
-	r.With(runLimit).Post("/api/run", h.RunCode)
+	// SECURITY: Code execution endpoint disabled pending sandbox implementation.
+	// See SEC-002 in audit report. Re-enable only after runner executes in an
+	// isolated container (Docker --network=none --read-only) or external API.
+	// r.With(runLimit).Post("/api/run", h.RunCode)
 	r.Get("/daily", h.CLIDaily)
 	r.Get("/t/{tag}", h.CLITag)
 	r.Get("/p/{slug}", h.CLIPost)
