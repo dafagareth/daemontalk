@@ -1,3 +1,12 @@
+### v1.2.0 (28 Agustus 2026) · Penguatan Keamanan, Lokalisasi Penuh & Refaktor Arsitektur
+
+- **Penguatan Keamanan & Otorisasi**: Memperkuat batasan akses, menerapkan validasi skema URL untuk mencegah XSS, membatasi ukuran muatan POST, serta menutup potensi kebocoran draf artikel pada endpoint feed dan CLI.
+- **Pengalaman Dwibahasa Penuh**: Menuntaskan integrasi kamus UI multibahasa untuk seluruh modal interaktif, pencarian, tautan navigasi, dan buku tamu dalam Bahasa Indonesia (`/id`) dan English.
+- **Perbaikan Pagination & Navigasi**: Memperbaiki celah pagination saat klik "Load More" agar tidak ada artikel yang terlewat, serta memastikan redirect tautan alias tetap mempertahankan bahasa aktif.
+- **Penyederhanaan Tampilan Arsip**: Merapikan daftar *Chronological Archive River* agar berfokus murni pada judul berita, thumbnail, dan metadata tanpa deskripsi panjang yang berulang.
+- **Penyederhanaan Palet Tema**: Menghapus mode lawas Sepia untuk menghadirkan mode Terang dan Gelap yang tajam dengan penyorotan kode yang presisi.
+- **Stabilitas & Konkurensi SSH TUI**: Mengisolasi sesi tema terminal per pengguna, mencegah crash server akibat error pembacaan berkas, dan mengoptimalkan pencarian artikel menjadi O(1).
+
 ### v1.1.0 (27 Agustus 2026) · Optimisasi UI Mobile & Pembersihan Kode
 
 - **Optimisasi Tampilan Mobile**: Menerapkan batasan layar penuh tanpa jarak (*edge-to-edge padding-free*) secara ketat dan rasio gambar 16:9 yang konsisten pada seluruh *thumbnail* di beranda untuk perangkat ponsel.
@@ -18,18 +27,18 @@
 ### v1.0.4 (Agustus 23, 2026) · Pemangkasan Fitur & Optimasi
 
 - **Penghapusan Fitur TIL**: Memusnahkan fitur *micro-blogging* "Today I Learned" (TIL) beserta seluruh jalur *routing*-nya secara permanen. Keputusan ini diambil untuk memfokuskan publikasi pada artikel teknis yang mendalam dan tajam (*long-form*), serta membersihkan antarmuka dari fitur yang berlebihan.
-- **Perbaikan UI Guestbook**: Memindahkan tombol *Submit* pada halaman *Guestbook* ke sudut kanan bawah formulir masukan agar selaras dengan hierarki visual dan tata letak yang lebih rapi.
+- **Perbaikan UI Buku Tamu**: Memindahkan tombol kirim pesan buku tamu ke pojok kanan bawah formulir input untuk tata letak yang lebih rapi dan konsisten.
 
-### v1.0.3 (Agustus 23, 2026) · Perombakan Sidebar Ponsel & Pembersihan UI
+### v1.0.3 (Agustus 23, 2026) · Desain Ulang Sidebar Mobile & Pembersihan UI
 
-- **Desain Ulang Menu Ponsel**: Merombak total antarmuka *drawer* navigasi pada perangkat *mobile*. Memindahkan fitur pencarian ke atas sebagai bilah *input* khusus, mengangkat daftar topik (*Topic Streams*), dan menggunakan *font sans-serif* murni agar lebih ramah sentuh.
-- **Penghapusan Jam Live**: Mencopot elemen jam *real-time* yang berlebihan dari *header* desktop dan ponsel untuk menjaga tampilan navigasi yang lebih bersih dan bebas distraksi.
-- **Ekosistem Sosial**: Menambahkan deretan ikon media sosial khusus (rata kiri) di bagian paling bawah menu ponsel. Menyertakan ikon Facebook baru dan mengganti ikon Threads menjadi format garis luar (*outline*) SVG agar selaras secara estetika. Menyelaraskan seluruh tautan sosial (*handle*) agar langsung mengarah ke `daemontalk`.
-- **Standarisasi Dokumentasi**: Membersihkan markup yang berantakan (*AI slop*) di seluruh file dokumentasi `.md`. Mengubah blok HTML kotor menjadi sintaks *native* ` ```faq ` milik proyek, serta membasmi penomoran *heading* yang kaku pada halaman legal dan pedoman kontribusi.
+- **Perombakan Total Sidebar Mobile**: Mendesain ulang laci navigasi seluler secara penuh. Mengganti tautan *slide-in* generik dengan bilah pencarian atas khusus, topik utama yang menonjol, dan fon *sans-serif* asli demi kenyamanan sentuhan layar ponsel.
+- **Penghapusan Jam Live**: Menghapus indikator jam waktu nyata dari *header* desktop dan seluler guna mempertahankan tampilan yang bersih dan bebas gangguan.
+- **Ekosistem Sosial**: Menambahkan deretan ikon media sosial rata kiri di bagian bawah laci ponsel. Menghadirkan ikon Facebook dan mengganti ikon Threads dari gaya *solid fill* tebal menjadi SVG *outline* ramping sesuai panduan desain platform. Menyesuaikan tautan eksternal langsung ke `daemontalk`.
+- **Standardisasi Dokumentasi**: Menghapus sintaks berlebihan di seluruh fail `.md`. Mengonversi blok HTML `details` yang berantakan ke format bawaan ` ```faq ` serta merapikan penomoran poin pada panduan hukum dan kontribusi.
 
-### v1.0.2 (Agustus 22, 2026) · Pembaruan Jalur CI/CD
+### v1.0.2 (Agustus 22, 2026) · Penyesuaian Pipeline CI/CD
 
-- **Sinkronisasi Deployment**: Memperbaiki *race condition* pada GitHub Actions di mana VPS menarik *Docker image* lawas sebelum *image* terbaru selesai diproses oleh GHCR. *Deployment* kini diatur agar wajib menunggu hingga proses *build* selesai sepenuhnya.
+- **Sinkronisasi Deployment**: Memperbaiki *race condition* pada pipeline otomasi CI/CD di mana VPS menarik *container image* lawas sebelum *image* terbaru selesai diproses. *Deployment* kini diatur agar wajib menunggu hingga proses *build* selesai sepenuhnya.
 
 ### v1.0.1 (Agustus 21, 2026) · Peningkatan UX & Infrastruktur
 

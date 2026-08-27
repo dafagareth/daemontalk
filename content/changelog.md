@@ -1,3 +1,12 @@
+### v1.2.0 (August 28, 2026) · Security Hardening, Full i18n & Architecture Refinements
+
+- **Security & Authorization Hardening**: Strengthened access boundaries, enforced strict URL validation to prevent XSS, added payload size limits, and patched potential draft content leaks across syndication and CLI endpoints.
+- **Universal Bilingual Experience**: Completed full localized UI dictionary coverage across all modals, search dropdowns, footer links, and guestbook components for English and Indonesian (`/id`).
+- **Pagination & Navigation Fixes**: Resolved a pagination gap where articles were skipped on "Load More", and fixed alias redirects to preserve the active language route.
+- **Streamlined Archive River**: Simplified the Chronological Archive River list to focus strictly on headlines, thumbnails, and metadata without description clutter.
+- **Palette Simplification**: Deprecated legacy Sepia mode to deliver refined Light and Dark themes with dedicated code syntax styling.
+- **SSH TUI Concurrency & Resilience**: Isolated themes and states per SSH connection session, eliminated server-crashing error exits, and optimized file lookups to O(1).
+
 ### v1.1.0 (August 27, 2026) · Mobile UI & Codebase Optimization
 
 - **Mobile View Optimizations**: Enforced strict edge-to-edge (padding-free) constraints and consistent 16:9 aspect ratios for thumbnail images on mobile viewports across the portal.
@@ -29,7 +38,7 @@
 
 ### v1.0.2 (August 22, 2026) · CI/CD Pipeline Patch
 
-- **Deployment Synchronization**: Fixed a race condition in GitHub Actions where the VPS would deploy a stale image before the new GHCR Docker image finished building. Deployments now strictly wait for the build pipeline to complete.
+- **Deployment Synchronization**: Fixed a race condition in automated CI/CD deployment pipelines where the VPS would deploy a stale container image before the new build finished. Deployments now strictly wait for the build pipeline to complete.
 
 ### v1.0.1 (August 21, 2026) · UX & Infrastructure Refinements
 
