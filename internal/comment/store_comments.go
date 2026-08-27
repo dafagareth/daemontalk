@@ -97,9 +97,9 @@ func (s *Store) AddWithParent(slug, name, body string, parentID *int64) (Comment
 	return c, nil
 }
 
-// Delete removes a comment by ID and its recursive descendants.
+// Delete removes a comment by ID and its recursive descendants via CASCADE.
 func (s *Store) Delete(id int64) error {
-	_, err := s.db.Exec(`DELETE FROM comments WHERE id = ? OR parent_id = ?`, id, id)
+	_, err := s.db.Exec(`DELETE FROM comments WHERE id = ?`, id)
 	return err
 }
 
