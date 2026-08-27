@@ -42,6 +42,7 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "unavailable", http.StatusServiceUnavailable)
 		return
 	}
+	r.Body = http.MaxBytesReader(w, r.Body, 64*1024)
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
@@ -56,6 +57,10 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 	name := GetVisitorIdentity(w, r)
 	customName := strings.TrimSpace(r.PostFormValue("name"))
 	if customName != "" && len(customName) <= 30 {
+		lower := strings.ToLower(customName)
+		if !h.isAdmin(r) && (lower == "daemontalk" || lower == "dafa gareth" || lower == "admin" || lower == "author") {
+			customName = name
+		}
 		name = customName
 	}
 	if h.isAdmin(r) {
@@ -63,7 +68,13 @@ func (h *Handler) PostGuestbook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	category := strings.TrimSpace(r.PostFormValue("category"))
+	if len([]rune(category)) > 20 {
+		category = string([]rune(category)[:20])
+	}
 	body := strings.TrimSpace(r.PostFormValue("body"))
+	if len([]rune(body)) > comment.MaxBodyLen {
+		body = string([]rune(body)[:comment.MaxBodyLen])
+	}
 	if category != "" && !strings.HasPrefix(body, "[") {
 		body = fmt.Sprintf("[%s] %s", strings.ToUpper(category), body)
 	}
