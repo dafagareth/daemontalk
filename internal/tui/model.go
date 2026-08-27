@@ -2,7 +2,6 @@ package tui
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/viewport"
@@ -32,10 +31,11 @@ func (m Model) GetTheme() Theme {
 }
 
 func NewModel() Model {
-	posts, err := post.LoadAll("content/posts")
+	postsDir := getContentPostsDir()
+	posts, err := post.LoadAll(postsDir)
 	if err != nil {
-		fmt.Printf("Error loading posts: %v\n", err)
-		os.Exit(1)
+		fmt.Printf("Error loading posts from %s: %v\n", postsDir, err)
+		posts = nil
 	}
 
 	items := make([]list.Item, len(posts))
@@ -43,7 +43,7 @@ func NewModel() Model {
 		items[i] = Item{Post: p}
 	}
 
-	l := list.New(items, LazyDelegate{}, 0, 0)
+	l := list.New(items, LazyDelegate{Theme: Themes[0]}, 0, 0)
 	l.SetShowTitle(false)
 	l.SetShowHelp(false)
 	l.SetShowPagination(false)
@@ -69,13 +69,19 @@ func (m *Model) RenderCurrentPost() string {
 		return "No posts found."
 	}
 
-	idx := m.List.Index()
-	if idx < 0 || idx >= len(m.Posts) {
-		return ""
+	var p post.Post
+	if it, ok := m.List.SelectedItem().(Item); ok {
+		p = it.Post
+	} else {
+		idx := m.List.Index()
+		if idx < 0 || idx >= len(m.Posts) {
+			return ""
+		}
+		p = m.Posts[idx]
 	}
 
 	wrapWidth := m.Viewport.Width - 4
-	return RenderPostMarkdown(m.Posts[idx], wrapWidth, m.GetTheme())
+	return RenderPostMarkdown(p, wrapWidth, m.GetTheme())
 }
 
 func (m *Model) RecalcSizes() {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"daemontalk/internal/post"
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -40,11 +41,18 @@ func (m Model) View() string {
 			scrollPercent = "BOT"
 		}
 
-		currentPost := m.Posts[m.List.Index()]
+		var currentPost post.Post
+		if it, ok := m.List.SelectedItem().(Item); ok {
+			currentPost = it.Post
+		} else if len(m.Posts) > 0 {
+			currentPost = m.Posts[0]
+		}
+
 		fullTitle := fmt.Sprintf(" [Reading] %s (%s) ", currentPost.Title, scrollPercent)
 		maxTitleLen := m.Width - 12
-		if len(fullTitle) > maxTitleLen && maxTitleLen > 10 {
-			fullTitle = fullTitle[:maxTitleLen-4] + "... (" + scrollPercent + ") "
+		runes := []rune(fullTitle)
+		if len(runes) > maxTitleLen && maxTitleLen > 10 {
+			fullTitle = string(runes[:maxTitleLen-4]) + "... (" + scrollPercent + ") "
 		}
 		fullTitleStyled := lipgloss.NewStyle().Foreground(theme.ActiveAccent).Bold(true).Render(fullTitle)
 

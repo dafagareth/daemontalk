@@ -96,13 +96,4 @@ var Themes = []Theme{
 	},
 }
 
-var ActiveThemeIdx = 0
-
-func GetActiveTheme() Theme {
-	if ActiveThemeIdx < 0 || ActiveThemeIdx >= len(Themes) {
-		return Themes[0]
-	}
-	return Themes[ActiveThemeIdx]
-}
-
 var ColorSuccess = lipgloss.Color("#a3be8c")

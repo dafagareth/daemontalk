@@ -11,9 +11,34 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+func getContentPostsDir() string {
+	contentDir := os.Getenv("CONTENT_DIR")
+	if contentDir == "" {
+		contentDir = "content"
+	}
+	return filepath.Join(contentDir, "posts")
+}
+
 // FindPostFile locates the exact markdown file corresponding to a given post
 func FindPostFile(p post.Post) string {
-	files, err := os.ReadDir("content/posts")
+	postsDir := getContentPostsDir()
+
+	// 1. Fast path: direct slug match
+	directPath := filepath.Join(postsDir, p.Slug+".md")
+	if _, err := os.Stat(directPath); err == nil {
+		return directPath
+	}
+
+	// 2. Alias match
+	for _, a := range p.Aliases {
+		aliasPath := filepath.Join(postsDir, a+".md")
+		if _, err := os.Stat(aliasPath); err == nil {
+			return aliasPath
+		}
+	}
+
+	// 3. Fallback: scan files only if direct paths were not found
+	files, err := os.ReadDir(postsDir)
 	if err != nil {
 		return ""
 	}
@@ -22,24 +47,10 @@ func FindPostFile(p post.Post) string {
 		if !strings.HasSuffix(f.Name(), ".md") {
 			continue
 		}
-		baseName := strings.TrimSuffix(f.Name(), ".md")
-
-		// 1. Direct slug match
-		if baseName == p.Slug {
-			return filepath.Join("content/posts", f.Name())
-		}
-
-		// 2. Alias match
-		for _, a := range p.Aliases {
-			if baseName == a {
-				return filepath.Join("content/posts", f.Name())
-			}
-		}
-
-		// 3. Fallback: Title matching
-		b, err := os.ReadFile(filepath.Join("content/posts", f.Name()))
+		path := filepath.Join(postsDir, f.Name())
+		b, err := os.ReadFile(path)
 		if err == nil && strings.Contains(string(b), p.Title) {
-			return filepath.Join("content/posts", f.Name())
+			return path
 		}
 	}
 

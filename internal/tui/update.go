@@ -34,16 +34,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "t", "T":
 			// Cycle through the 7 themes
 			m.ThemeIdx = (m.ThemeIdx + 1) % len(Themes)
-			ActiveThemeIdx = m.ThemeIdx
 			theme := m.GetTheme()
+			m.List.SetDelegate(LazyDelegate{Theme: theme})
 			m.FlashMsg = fmt.Sprintf("✓ Theme: %s (%d/%d)", theme.Name, m.ThemeIdx+1, len(Themes))
 			m.Viewport.SetContent(m.RenderCurrentPost())
 			return m, nil
 
 		case "o":
 			// Open cover image in browser (or article if no cover)
-			if len(m.Posts) > 0 {
-				p := m.Posts[m.List.Index()]
+			if it, ok := m.List.SelectedItem().(Item); ok {
+				p := it.Post
 				baseURL := os.Getenv("BASE_URL")
 				if baseURL == "" {
 					baseURL = "https://daemontalk.com"
@@ -69,8 +69,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "w":
 			// Open full article in browser
-			if len(m.Posts) > 0 {
-				p := m.Posts[m.List.Index()]
+			if it, ok := m.List.SelectedItem().(Item); ok {
+				p := it.Post
 				baseURL := os.Getenv("BASE_URL")
 				if baseURL == "" {
 					baseURL = "https://daemontalk.com"
@@ -168,7 +168,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Width = msg.Width
 		m.Height = msg.Height
 		m.Ready = true
-		ActiveThemeIdx = m.ThemeIdx
 		m.RecalcSizes()
 	}
 

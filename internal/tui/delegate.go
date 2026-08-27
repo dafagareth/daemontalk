@@ -22,7 +22,9 @@ func (i Item) Description() string { return i.Post.Date.Format("02 Jan 2006") }
 func (i Item) FilterValue() string { return i.Post.Title + " " + strings.Join(i.Post.Tags, " ") }
 
 // LazyDelegate implements a compact, clean Lazygit-like row delegate
-type LazyDelegate struct{}
+type LazyDelegate struct {
+	Theme Theme
+}
 
 func (d LazyDelegate) Height() int                             { return 2 }
 func (d LazyDelegate) Spacing() int                            { return 0 }
@@ -34,30 +36,35 @@ func (d LazyDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		return
 	}
 
-	theme := GetActiveTheme()
+	theme := d.Theme
+	if theme.Name == "" {
+		theme = Themes[0]
+	}
 	p := it.Post
 	isSelected := index == m.Index()
 	width := m.Width()
 
-	// Title truncation
+	// Title truncation (rune-safe for multi-byte Unicode/emojis)
 	title := p.Title
 	maxTitleWidth := width - 4
 	if maxTitleWidth < 5 {
 		maxTitleWidth = 5
 	}
-	if len(title) > maxTitleWidth {
-		title = title[:maxTitleWidth-1] + "…"
+	titleRunes := []rune(title)
+	if len(titleRunes) > maxTitleWidth {
+		title = string(titleRunes[:maxTitleWidth-1]) + "…"
 	}
 
-	// Subtitle (Date + Tags)
+	// Subtitle (Date + Tags, rune-safe)
 	dateStr := p.Date.Format("02 Jan 2006")
 	tagStr := ""
 	if len(p.Tags) > 0 {
 		tagStr = " • " + strings.Join(p.Tags, ", ")
 	}
 	sub := dateStr + tagStr
-	if len(sub) > maxTitleWidth {
-		sub = sub[:maxTitleWidth-1] + "…"
+	subRunes := []rune(sub)
+	if len(subRunes) > maxTitleWidth {
+		sub = string(subRunes[:maxTitleWidth-1]) + "…"
 	}
 
 	var titleLine, subLine string
