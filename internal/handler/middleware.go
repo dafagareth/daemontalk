@@ -138,7 +138,7 @@ func (rl *rateLimiter) allow(ip string) bool {
 		rl.lastGC = now
 	}
 
-	recent := rl.hits[ip][:0]
+	var recent []time.Time
 	for _, t := range rl.hits[ip] {
 		if t.After(cutoff) {
 			recent = append(recent, t)
@@ -155,42 +155,21 @@ func (rl *rateLimiter) allow(ip string) bool {
 func clientIP(r *http.Request) string {
 	// 1. Cloudflare native header
 	if cfip := r.Header.Get("CF-Connecting-IP"); cfip != "" {
-		return trimSpace(cfip)
+		return strings.TrimSpace(cfip)
 	}
 	// 2. Standard proxies (NGINX, HAProxy, etc)
 	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-		if i := indexByte(xff, ','); i >= 0 {
-			return trimSpace(xff[:i])
+		if i := strings.IndexByte(xff, ','); i >= 0 {
+			return strings.TrimSpace(xff[:i])
 		}
-		return trimSpace(xff)
+		return strings.TrimSpace(xff)
 	}
 	if rip := r.Header.Get("X-Real-IP"); rip != "" {
-		return trimSpace(rip)
+		return strings.TrimSpace(rip)
 	}
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return r.RemoteAddr
 	}
 	return host
-}
-
-func indexByte(s string, b byte) int {
-	for i := 0; i < len(s); i++ {
-		if s[i] == b {
-			return i
-		}
-	}
-	return -1
-}
-
-func trimSpace(s string) string {
-	start := 0
-	for start < len(s) && (s[start] == ' ' || s[start] == '\t') {
-		start++
-	}
-	end := len(s)
-	for end > start && (s[end-1] == ' ' || s[end-1] == '\t') {
-		end--
-	}
-	return s[start:end]
 }
