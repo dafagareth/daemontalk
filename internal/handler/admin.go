@@ -22,6 +22,7 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 					Value:    tok,
 					Path:     "/",
 					HttpOnly: true,
+					Secure:   r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https",
 					SameSite: http.SameSiteLaxMode,
 					MaxAge:   CookieAdminMaxAge,
 				})
@@ -79,7 +80,7 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 
 	stats := templates.AdminStats{
 		Posts:         h.AllPosts(),
-		FilePosts:     h.FilePosts,
+		FilePosts:     h.getFilePosts(),
 		ArchivedPosts: archivedPosts,
 		WebPosts:      webPosts,
 		Views:         views,
