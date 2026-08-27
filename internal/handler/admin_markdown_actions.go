@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,19 +20,20 @@ func (h *Handler) AdminPostExportMD(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := filepath.Join("content/posts", slug+".md")
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		filePath = filepath.Join("content/posts", slug+".md.archive")
-	}
-
+	filePath := filepath.Join(h.getContentPath("posts"), slug+".md")
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		http.NotFound(w, r)
-		return
+		archPath := filepath.Join(h.getContentPath("posts"), slug+".md.archive")
+		data, err = os.ReadFile(archPath)
+		if err != nil {
+			http.Error(w, "Post file not found", http.StatusNotFound)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s.md\"", slug))
+	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(data)
 }
 
@@ -47,10 +49,12 @@ func (h *Handler) AdminPostFileArchive(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := filepath.Join("content/posts", slug+".md")
+	filePath := filepath.Join(h.getContentPath("posts"), slug+".md")
 	if _, err := os.Stat(filePath); err == nil {
-		archPath := filepath.Join("content/posts", slug+".md.archive")
-		_ = os.Rename(filePath, archPath)
+		archPath := filepath.Join(h.getContentPath("posts"), slug+".md.archive")
+		if err := os.Rename(filePath, archPath); err != nil {
+			slog.Error("archive post file failed", "slug", slug, "error", err)
+		}
 	}
 
 	h.ReloadFilePosts()
@@ -70,10 +74,12 @@ func (h *Handler) AdminPostFileRestore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	archPath := filepath.Join("content/posts", slug+".md.archive")
+	archPath := filepath.Join(h.getContentPath("posts"), slug+".md.archive")
 	if _, err := os.Stat(archPath); err == nil {
-		filePath := filepath.Join("content/posts", slug+".md")
-		_ = os.Rename(archPath, filePath)
+		filePath := filepath.Join(h.getContentPath("posts"), slug+".md")
+		if err := os.Rename(archPath, filePath); err != nil {
+			slog.Error("restore post file failed", "slug", slug, "error", err)
+		}
 	}
 
 	h.ReloadFilePosts()
@@ -93,10 +99,14 @@ func (h *Handler) AdminPostFileDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := filepath.Join("content/posts", slug+".md")
-	archPath := filepath.Join("content/posts", slug+".md.archive")
-	_ = os.Remove(filePath)
-	_ = os.Remove(archPath)
+	filePath := filepath.Join(h.getContentPath("posts"), slug+".md")
+	archPath := filepath.Join(h.getContentPath("posts"), slug+".md.archive")
+	if err := os.Remove(filePath); err != nil && !os.IsNotExist(err) {
+		slog.Warn("delete post file failed", "path", filePath, "error", err)
+	}
+	if err := os.Remove(archPath); err != nil && !os.IsNotExist(err) {
+		slog.Warn("delete archived post file failed", "path", archPath, "error", err)
+	}
 
 	imgDir := filepath.Join("web/static/images/posts", slug)
 	_ = os.RemoveAll(imgDir)

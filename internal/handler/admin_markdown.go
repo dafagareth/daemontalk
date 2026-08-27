@@ -96,13 +96,14 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Ensure content/posts directory exists
-		if err := os.MkdirAll("content/posts", 0755); err != nil {
+		postsDir := h.getContentPath("posts")
+		if err := os.MkdirAll(postsDir, 0755); err != nil {
 			slog.Error("mkdir content/posts failed", "error", err)
 			http.Error(w, "Failed to create directory", http.StatusInternalServerError)
 			return
 		}
 
-		targetPath := filepath.Join("content/posts", slug+".md")
+		targetPath := filepath.Join(postsDir, slug+".md")
 		if err := os.WriteFile(targetPath, rawBytes, 0644); err != nil {
 			slog.Error("write uploaded markdown file failed", "path", targetPath, "error", err)
 			http.Error(w, "Failed to save file to disk", http.StatusInternalServerError)
@@ -258,9 +259,10 @@ func (h *Handler) AdminPostFileSave(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := filepath.Join("content/posts", slug+".md")
+	postsDir := h.getContentPath("posts")
+	filePath := filepath.Join(postsDir, slug+".md")
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		archPath := filepath.Join("content/posts", slug+".md.archive")
+		archPath := filepath.Join(postsDir, slug+".md.archive")
 		if _, errArch := os.Stat(archPath); errArch == nil {
 			filePath = archPath
 		}

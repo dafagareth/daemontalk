@@ -46,11 +46,15 @@ func mdToEditorHTML(md string) string {
 }
 
 func (h *Handler) slugTaken(slug string, excludeID int64) bool {
+	h.filePostsMu.RLock()
 	for _, fp := range h.FilePosts {
 		if fp.Slug == slug {
+			h.filePostsMu.RUnlock()
 			return true
 		}
 	}
+	h.filePostsMu.RUnlock()
+
 	if h.PostDB != nil {
 		if existing, err := h.PostDB.GetBySlug(slug); err == nil && existing.ID != excludeID {
 			return true
