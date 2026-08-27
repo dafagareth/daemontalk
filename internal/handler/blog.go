@@ -60,7 +60,7 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 	if page < 1 {
 		page = 1
 	}
-	pageSize := 12
+	pageSize := DefaultPostsPerPage
 	total := len(filtered)
 	totalPages := (total + pageSize - 1) / pageSize
 	if totalPages < 1 {
@@ -124,7 +124,11 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 
 	// If accessed via alias (old slug), redirect 301 to canonical URL.
 	if p.Slug != slug {
-		target := "/blog/" + p.Slug
+		prefix := ""
+		if lang == "id" {
+			prefix = "/id"
+		}
+		target := prefix + "/blog/" + p.Slug
 		if r.URL.RawQuery != "" {
 			target += "?" + r.URL.RawQuery
 		}
