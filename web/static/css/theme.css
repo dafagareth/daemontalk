@@ -28,14 +28,13 @@
   --c-link:      #1d6fa4;
   --c-link-bg:   #e5edf5;
   --c-link-text: #1d6fa4;
-  --c-visited:   var(--c-muted);
+  --c-visited:   #7994b0;
   --c-ok:        #276a45;
   --c-ok-bg:     #e0f0e8;
   --c-warn:      #b03a2e;
   --c-warn-bg:   #faeae8;
   --c-accent:    #ea580c;
 
-  /* GitHub Light Terminal Theme */
   --term-bg:       #ffffff;
   --term-title-bg: #f4f4f7;
   --term-border:   #dcdce4;
@@ -49,7 +48,7 @@
 
 /* System dark preference (fallback when no manual toggle) */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="sepia"]) {
+  :root:not([data-theme="light"]) {
     --c-bg:        #18181b;
     --c-surface:   #222225;
     --c-nav:       #121215;
@@ -60,16 +59,13 @@
     --c-hover:     #323236;
     --c-chip:      #323236;
     --c-link:      #58a6ff;
-    --c-link-bg:   #1f3a5c;
-    --c-link-text: #58a6ff;
-    --c-visited:   var(--c-muted);
+    --c-visited:   #7994b0;
     --c-ok:        #3fb950;
-    --c-ok-bg:     #1b3a2a;
+    --c-ok-bg:     #122619;
     --c-warn:      #f85149;
     --c-warn-bg:   #3d1515;
     --c-accent:    #f97316;
 
-    /* GitHub Dark Terminal Theme */
     --term-bg:       #0d1117;
     --term-title-bg: #161b22;
     --term-border:   #30363d;
@@ -94,16 +90,13 @@
   --c-hover:     #323236;
   --c-chip:      #323236;
   --c-link:      #58a6ff;
-  --c-link-bg:   #1f3a5c;
-  --c-link-text: #58a6ff;
-  --c-visited:   var(--c-muted);
+  --c-visited:   #7994b0;
   --c-ok:        #3fb950;
-  --c-ok-bg:     #1b3a2a;
+  --c-ok-bg:     #122619;
   --c-warn:      #f85149;
   --c-warn-bg:   #3d1515;
   --c-accent:    #f97316;
 
-  /* GitHub Dark Terminal Theme */
   --term-bg:       #0d1117;
   --term-title-bg: #161b22;
   --term-border:   #30363d;
@@ -113,26 +106,4 @@
   --term-link:     #58a6ff;
   --term-chip-bg:  #21262d;
   --term-cursor:   #3fb950;
-}
-
-/* Manual sepia toggle for reading */
-[data-theme="sepia"] {
-  --c-bg:        #fbf0d9;
-  --c-surface:   #f2e5c8;
-  --c-nav:       #f2e5c8;
-  --c-footer:    #ebdcb9;
-  --c-text:      #433422;
-  --c-muted:     #7a6345;
-  --c-border:    #d9c8a9;
-  --c-hover:     #ebdcb9;
-  --c-chip:      #ebdcb9;
-  --c-link:      #1d6fa4;
-  --c-visited:   var(--c-muted);
-  --c-accent:    #c2410c;
-}
-
-/* Colorize SVG icons to dark brown (#433422) in sepia mode (logo stays black) */
-[data-theme="sepia"] .icon-moon,
-[data-theme="sepia"] .icon-sun {
-  filter: sepia(100%) hue-rotate(340deg) saturate(50%) brightness(30%);
 }

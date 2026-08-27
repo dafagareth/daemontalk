@@ -1,6 +1,4 @@
-/* ==========================================================================
-   Editorial Serif / Sans Typography Calibration
-   ========================================================================== */
+/* Editorial Serif / Sans Typography Calibration*/
 #prose-body.prose-serif {
   font-family: var(--font-serif) !important;
   font-optical-sizing: auto;
@@ -94,7 +92,7 @@
   font-family: var(--font-sans) !important;
 }
 
-/* GitHub contribution heatmap cells */
+/* Heatmap cells */
 .contrib-0 { background-color: var(--c-chip); }
 .contrib-1 { background-color: #4ade80; opacity: 0.35; }
 .contrib-2 { background-color: #22c55e; opacity: 0.55; }
@@ -149,9 +147,7 @@
   .prose img { max-width: 100% !important; }
 }
 
-/* ---- Editor post ala Medium (/admin/posts/new, /admin/posts/{id}/edit) ----
-   Tipografi area tulis mengikuti .prose supaya WYSIWYG ≈ hasil akhir;
-   warna pakai CSS vars sehingga otomatis ikut dark mode. */
+/* ---- Editor (/admin/posts/new, /admin/posts/{id}/edit) ----*/
 #ed-title::placeholder {
   color: var(--c-muted);
   opacity: 0.5;
@@ -225,11 +221,9 @@
   font-size: 0.875em;
 }
 
-/* ==========================================================================
-   Fluid Reflow & Zoom Dynamics
+/* Fluid Reflow & Zoom Dynamics
    Prevents layout clipping, horizontal overflows, or aspect ratio breaking
-   when browser is zoomed in (up to 300%+) or zoomed out (down to 33%).
-   ========================================================================== */
+   when browser is zoomed in (up to 300%+) or zoomed out (down to 33%). */
 .blog-item {
   min-width: 0;
   overflow-wrap: break-word;
