@@ -1,6 +1,8 @@
 package templates
 
-const siteBaseURL = "https://www.daemontalk.com"
+// SiteBaseURL is the base canonical domain for social/OG tags and links.
+// It defaults to production and can be configured at startup via BASE_URL.
+var SiteBaseURL = "https://www.daemontalk.com"
 
 // AssetVersion is a cache-busting token appended to static CSS/JS URLs. It is
 // set once at startup (see main.go) so a rebuild of main.css is picked up by
@@ -31,14 +33,14 @@ func (m PageMeta) ogDesc() string {
 	if m.Description != "" {
 		return m.Description
 	}
-	return "Open engineering notebook and learning log. Exploring Go backend, Python, Linux systems, and distributed architecture."
+	return "Open notebook and digital publication. Exploring the technology ecosystem, modern computing, and open-source culture."
 }
 
 func (m PageMeta) ogImage() string {
 	if m.Image != "" {
 		return m.Image
 	}
-	return siteBaseURL + "/og.png"
+	return SiteBaseURL + "/og.png"
 }
 
 // AbsoluteURL turns a site-relative path ("/static/...") into a full URL for
@@ -53,5 +55,5 @@ func AbsoluteURL(path string) string {
 	if path[0] != '/' {
 		path = "/" + path
 	}
-	return siteBaseURL + path
+	return SiteBaseURL + path
 }

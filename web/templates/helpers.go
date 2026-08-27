@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"fmt"
 	"html"
 	"html/template"
 	"regexp"
@@ -8,6 +9,8 @@ import (
 	"strings"
 
 	"daemontalk/internal/post"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 var (
@@ -31,49 +34,22 @@ func highlightHTML(text, query string) template.HTML {
 	if query == "" || text == "" || len(query) < 2 {
 		return template.HTML(html.EscapeString(text))
 	}
-	lowerQ := strings.ToLower(query)
-	lower := strings.ToLower(text)
-	var buf strings.Builder
-	pos := 0
-	for {
-		idx := strings.Index(lower[pos:], lowerQ)
-		if idx < 0 {
-			buf.WriteString(html.EscapeString(text[pos:]))
-			break
-		}
-		buf.WriteString(html.EscapeString(text[pos : pos+idx]))
-		buf.WriteString(`<mark class="bg-yellow-100 dark:bg-yellow-900/40 text-[var(--c-text)] rounded px-0.5">`)
-		buf.WriteString(html.EscapeString(text[pos+idx : pos+idx+len(lowerQ)]))
-		buf.WriteString("</mark>")
-		pos += idx + len(lowerQ)
-		if pos >= len(text) {
-			break
-		}
+	escaped := html.EscapeString(text)
+	escapedQ := html.EscapeString(query)
+	re, err := regexp.Compile("(?i)" + regexp.QuoteMeta(escapedQ))
+	if err != nil {
+		return template.HTML(escaped)
 	}
-	return template.HTML(buf.String())
+	result := re.ReplaceAllStringFunc(escaped, func(match string) string {
+		return `<mark class="bg-yellow-100 dark:bg-yellow-900/40 text-[var(--c-text)] rounded px-0.5">` + match + `</mark>`
+	})
+	return template.HTML(result)
 }
 
 type CategorySection struct {
 	Tag      string
 	LeadPost post.Post
 	SubPosts []post.Post
-}
-
-// mapTagToCategory maps a post tag to the high-level main categories.
-func mapTagToCategory(t string) string {
-	t = strings.ToLower(strings.TrimSpace(t))
-	switch t {
-	case "linux", "kernel", "ebpf":
-		return "linux"
-	case "systems", "rust", "go-compiler", "zig", "assembly", "compiler", "architecture":
-		return "systems"
-	case "backend", "go", "concurrency", "networking", "api", "web", "http", "caddy":
-		return "backend"
-	case "data", "python", "ai", "database", "storage", "clickhouse", "sqlite", "duckdb", "parquet":
-		return "data"
-	default:
-		return t
-	}
 }
 
 // getCategoryCluster finds posts matching a set of tags and builds a CategorySection.
@@ -140,29 +116,6 @@ func getCategoryCluster(posts []post.Post, categoryKey string, matchTags []strin
 	return sec
 }
 
-// collectSlugs gathers all slugs from CategorySections (lead + sub posts).
-func collectSlugs(sections ...CategorySection) []string {
-	var slugs []string
-	for _, s := range sections {
-		if s.LeadPost.Slug != "" {
-			slugs = append(slugs, s.LeadPost.Slug)
-		}
-		for _, p := range s.SubPosts {
-			slugs = append(slugs, p.Slug)
-		}
-	}
-	return slugs
-}
-
-// collectPostSlugs gathers slugs from a slice of posts.
-func collectPostSlugs(posts []post.Post) []string {
-	var slugs []string
-	for _, p := range posts {
-		slugs = append(slugs, p.Slug)
-	}
-	return slugs
-}
-
 // getWirePosts returns quick headline dispatches avoiding already highlighted slugs.
 func getWirePosts(posts []post.Post, excludeSlugs *[]string, limit int) []post.Post {
 	excludeMap := make(map[string]bool)
@@ -192,93 +145,40 @@ func categoryTitle(cat CategorySection, lang string) string {
 
 func categoryDisplayTitle(key string, lang string) string {
 	switch strings.ToLower(key) {
+	case "software":
+		return "Software & Development"
 	case "linux":
-		if lang == "id" {
-			return "Linux & Kernel"
-		}
-		return "Linux & Kernel"
-	case "go", "backend":
-		if lang == "id" {
-			return "Go & Backend"
-		}
-		return "Go & Backend"
-	case "devops":
-		if lang == "id" {
-			return "DevOps & Cloud"
-		}
-		return "DevOps & Cloud"
-	case "security":
-		if lang == "id" {
-			return "Security & Zero-Trust"
-		}
-		return "Security & Zero-Trust"
-	case "systems":
-		if lang == "id" {
-			return "Systems & Low-Level"
-		}
-		return "Systems & Low-Level"
-	case "performance":
-		if lang == "id" {
-			return "Performance & Memory"
-		}
-		return "Performance & Memory"
-	case "docker":
-		if lang == "id" {
-			return "Docker & Containers"
-		}
-		return "Docker & Containers"
-	case "tools":
-		if lang == "id" {
-			return "Tools & CLI"
-		}
-		return "Tools & CLI"
-	case "terminal":
-		if lang == "id" {
-			return "Terminal & Workflow"
-		}
-		return "Terminal & Workflow"
-	case "database":
-		if lang == "id" {
-			return "Database & Storage"
-		}
-		return "Database & Storage"
-	case "networking":
-		if lang == "id" {
-			return "Networking & WireGuard"
-		}
-		return "Networking & WireGuard"
+		return "Linux & OS"
 	case "ai":
-		if lang == "id" {
-			return "AI & Local LLM"
-		}
-		return "AI & Local LLM"
+		return "AI & Machine Learning"
+	case "security":
+		return "Security & Privacy"
+	case "networking":
+		return "Networking & Protocols"
+	case "gaming":
+		return "Gaming & Graphics"
+	case "tools":
+		return "Tools & Workflow"
+	case "science":
+		return "Science & Research"
+	case "policy":
+		return "Tech Policy & Law"
+	case "backend-architecture":
+		return "Backend Architecture"
+	case "systems":
+		return "Systems & Low-Level"
+	case "container-internals":
+		return "Container Internals"
+	case "terminal":
+		return "Terminal & Shell"
+	case "database":
+		return "Database & Storage"
 	case "ebpf":
-		if lang == "id" {
-			return "eBPF & Observability"
-		}
 		return "eBPF & Observability"
-	case "debugging":
-		if lang == "id" {
-			return "Debugging & Dmesg"
-		}
-		return "Debugging & Dmesg"
-	case "shell":
-		if lang == "id" {
-			return "Shell & Automation"
-		}
-		return "Shell & Automation"
-	case "architecture":
-		if lang == "id" {
-			return "Architecture & Design"
-		}
-		return "Architecture & Design"
-	case "storage":
-		if lang == "id" {
-			return "Storage & File Systems"
-		}
-		return "Storage & File Systems"
+	case "crypto":
+		return "Privacy & Crypto"
 	default:
-		return strings.Title(key)
+		return cases.Title(language.English).String(key)
 	}
 }
 
@@ -338,21 +238,23 @@ func getPopularTags(tagCounts map[string]int, limit int) []string {
 // generateDigestText creates a formatted Markdown weekly newsletter from published posts
 func generateDigestText(posts []post.Post) string {
 	var sb strings.Builder
-	sb.WriteString("# ⚡ DaemonTalk Weekly Systems Digest\n\n")
-	sb.WriteString("> Curated deep-dives in Linux Kernel architectures, language runtimes, and storage systems.\n\n")
-	sb.WriteString("## 📚 Featured Engineering Dispatches This Week\n\n")
+	sb.WriteString("# ⚡ DaemonTalk Weekly Tech Digest\n\n")
+	sb.WriteString("> Curated deep-dives in modern computing, AI, and universal technology.\n\n")
+	sb.WriteString("## 📚 Featured Tech Dispatches This Week\n\n")
 
+	base := strings.TrimSuffix(SiteBaseURL, "/")
+	hostDomain := strings.TrimPrefix(strings.TrimPrefix(base, "https://"), "http://")
 	count := 0
 	for _, p := range posts {
 		if p.Draft {
 			continue
 		}
-		sb.WriteString("### [" + p.Title + "](https://daemontalk.com/blog/" + p.Slug + ")\n")
-		sb.WriteString("**Date:** " + p.Date.Format("02 Jan 2006") + "  •  **Read Time:** " + strings.TrimSpace(p.Description) + "\n\n")
+		sb.WriteString("### [" + p.Title + "](" + base + "/blog/" + p.Slug + ")\n")
+		sb.WriteString(fmt.Sprintf("**Date:** %s  •  **Read Time:** %d min read\n\n", p.Date.Format("02 Jan 2006"), p.ReadTime))
 		if p.Description != "" {
 			sb.WriteString(p.Description + "\n\n")
 		}
-		sb.WriteString("[Read full dispatch →](https://daemontalk.com/blog/" + p.Slug + ")\n\n---\n\n")
+		sb.WriteString("[Read full dispatch →](" + base + "/blog/" + p.Slug + ")\n\n---\n\n")
 		count++
 		if count >= 5 {
 			break
@@ -361,8 +263,8 @@ func generateDigestText(posts []post.Post) string {
 
 	sb.WriteString("## 💻 Read Terminal-First\n\n")
 	sb.WriteString("Access DaemonTalk directly in your terminal:\n")
-	sb.WriteString("```bash\n# Instant TUI over SSH\nssh ssh.daemontalk.com -p 2222\n\n# Daily dispatch stream\ncurl -sL daemontalk.com/daily\n```\n\n")
-	sb.WriteString("---\n*Published by [DaemonTalk](https://daemontalk.com) · Independent Systems Journalism.*")
+	sb.WriteString("```bash\n# Instant TUI over SSH\nssh ssh.daemontalk.com -p 2222\n\n# Daily dispatch stream\ncurl -sL " + hostDomain + "/daily\n```\n\n")
+	sb.WriteString("---\n*Published by [DaemonTalk](" + base + ") · Independent Systems Journalism.*")
 
 	return sb.String()
 }
