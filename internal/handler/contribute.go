@@ -14,7 +14,7 @@ import (
 // Contribute handles GET /contribute for both Web and CLI clients.
 func (h *Handler) Contribute(w http.ResponseWriter, r *http.Request) {
 	if IsCLIRequest(r) {
-		h.CLIContribute(w, r)
+		h.cliContribute(w, r)
 		return
 	}
 
@@ -52,8 +52,8 @@ func (h *Handler) DownloadTemplate(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(data)
 }
 
-// CLIContribute outputs the contributor guide in ANSI plain-text.
-func (h *Handler) CLIContribute(w http.ResponseWriter, r *http.Request) {
+// cliContribute outputs the contributor guide in ANSI plain-text.
+func (h *Handler) cliContribute(w http.ResponseWriter, r *http.Request) {
 	color := r.URL.Query().Get("nocolor") != "1"
 
 	data, err := os.ReadFile(h.getContentPath("contribute.md"))
