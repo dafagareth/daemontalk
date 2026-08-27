@@ -15,7 +15,7 @@ Daemontalk operates under a strict zero-tracker philosophy. We believe technical
 We utilize standard client-side browser storage mechanisms (`localStorage` and `sessionStorage`) exclusively on your local machine to preserve your personal viewing preferences:
 
 - **Saved Dispatches (`bookmarks`)**: The list of bookmarked posts stored in your local reading ledger.
-- **Theme Selection (`theme`)**: Your active color scheme preference (*Light, Dark, or Sepia mode*).
+- **Theme Selection (`theme`)**: Your active color scheme preference (*Light or Dark mode*).
 - **Typography & Accessibility**: Font size scaling, font family selection (*Serif or Sans*), and warm screen tint intensity.
 - **Visited Dispatches Indicator (`readPosts`)**: A local array of recently visited article slugs (capped at 200 items) used solely to indicate previously read content on index pages.
 - **Session Animations (`visited`)**: A temporary session token in `sessionStorage` to prevent redundant entry animations on subsequent page navigations.

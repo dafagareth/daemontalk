@@ -6,11 +6,10 @@ Getting straight to the problem, architecture, or code examples in the opening p
 
 ## Article Formats
 
-There are three primary formats shared on Daemontalk:
+There are two primary formats shared on Daemontalk:
 
-- **Technical Deep-Dives**: Detailed explorations of systems concepts such as Linux kernel mechanics, Go concurrency models, or storage engines. Set `type: post` in the frontmatter.
-- **Incident & Debugging Notes (RCA)**: Step-by-step reconstructions of real-world bugs, diagnostic timelines, and root cause resolutions. Set `type: post` with `rca` or `incident` in tags.
-- **Today I Learned (TIL)**: Bite-sized notes focused on a single finding that can be read in a few minutes, such as a handy CLI workflow, compiler flag, or syscall behavior. Set `type: til` in the frontmatter.
+- **Technical Deep-Dives**: Detailed explorations of systems concepts such as Linux kernel mechanics, Go concurrency models, networking protocols, or storage engines.
+- **Incident & Debugging Notes (RCA)**: Step-by-step reconstructions of real-world bugs, diagnostic timelines, and root cause resolutions. Set `tags: ["rca", "incident"]` or relevant systems tags.
 
 ## Frontmatter Specification
 
@@ -21,15 +20,15 @@ Articles are stored in `content/posts/` as Markdown files with YAML frontmatter 
 title: "Zero-Copy I/O with io_uring in Go"
 slug: "7f8a9b1c"
 date: "2026-08-08"
+author: "Your Name or Handle"
 tags: ["linux", "go", "performance", "storage"]
 lang: "en"
 draft: false
-type: "post"
-summary: "Exploring asynchronous I/O batching and ring-buffer submissions using io_uring in Go."
+description: "Exploring asynchronous I/O batching and ring-buffer submissions using io_uring in Go."
 ---
 ```
 
-Use `lang: "en"` for English articles and `lang: "id"` for Indonesian articles. Always specify the language identifier for code blocks (such as go, bash, or c) for proper syntax highlighting.
+Use `lang: "en"` for English articles and `lang: "id"` for Indonesian articles. Always specify the language identifier for code blocks (such as `go`, `bash`, or `c`) for proper syntax highlighting.
 
 You can download the full starter template file here: [Download template.md](/download/template.md).
 
@@ -38,7 +37,7 @@ You can download the full starter template file here: [Download template.md](/do
 **Via GitHub Pull Request**
 1. Fork and clone the repository: `git clone https://github.com/dafagareth/daemontalk`.
 2. Create a new branch: `git checkout -b post/your-topic-slug`.
-3. Add your Markdown file to `content/posts/your-topic-slug.md`.
+3. Add your Markdown file to `content/posts/your-topic-slug.md` (or run `./scripts/post.sh new --uid "Your Title"`).
 4. Test the build locally with `make build`.
 5. Open a Pull Request on GitHub with a brief description of the topic.
 

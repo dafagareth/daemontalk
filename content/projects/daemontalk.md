@@ -31,7 +31,7 @@ The system compiles down to a single standalone Go binary that independently ser
 
 ## Key Capabilities
 
-- Granular typography control (Dark/Light/Sepia themes, Serif/Sans toggle, dynamic font scaling).
+- Granular typography control (Dark/Light themes, Serif/Sans toggle, dynamic font scaling).
 - Automated OpenGraph preview card generation for social sharing.
 - Comprehensive syndication via RSS 2.0 and JSON Feed.
 - Integrated SEO essentials (Sitemap XML, `robots.txt`, structured schema).

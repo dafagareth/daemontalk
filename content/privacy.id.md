@@ -15,7 +15,7 @@ Daemontalk beroperasi dengan prinsip fundamental bebas pelacak (*zero-tracker*).
 Kami menggunakan mekanisme penyimpanan bawaan peramban (`localStorage` dan `sessionStorage`) secara eksklusif pada perangkat lokal Anda untuk menyimpan preferensi kenyamanan membaca:
 
 - **Daftar Bacaan Tersimpan (`bookmarks`)**: Daftar artikel yang Anda simpan di buku besar bacaan (*Reading List*).
-- **Pilihan Tema Tampilan (`theme`)**: Pilihan tema warna aktif (*Mode Terang, Gelap, atau Sepia*).
+- **Pilihan Tema Tampilan (`theme`)**: Pilihan tema warna aktif (*Mode Terang atau Gelap*).
 - **Tipografi & Aksesibilitas**: Skala ukuran fon, pilihan jenis fon (*Serif atau Sans*), serta intensitas kehangatan layar (*warm screen tint*).
 - **Penanda Riwayat Artikel Dibaca (`readPosts`)**: Larik (*array*) lokal berisi *slug* artikel yang telah dibaca (dibatasi maksimal 200 data) semata-mata untuk membedakan artikel baru dan yang sudah dibaca pada halaman indeks.
 - **Animasi Sesi (`visited`)**: Penanda sementara pada `sessionStorage` untuk mencegah pengulangan animasi pembuka saat berpindah halaman dalam satu sesi.

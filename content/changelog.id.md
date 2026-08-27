@@ -47,5 +47,5 @@
 - **Terminal & CLI Interaktif**: Emulator shell UNIX virtual di browser (`/terminal`) dengan riwayat perintah, serta endpoint ramah `curl` (`/daily`, `/recipes`, `/p/:slug`).
 - **Komentar Anonim & Buku Tamu**: Penyimpanan SQLite ringan dengan identitas pengunjung deterministik yang melekat pada cookie (`anonym_<hex>`) dan pengelompokan pesan berturut-turut.
 - **Ekstensi Markdown Editorial**: Penyorotan sintaks kode di server, carousel responsif (` ```carousel `), galeri (` ```gallery `), akordeon FAQ (` ```faq `), kartu profil penulis (` ```author `), catatan kaki, dan daftar isi otomatis.
-- **Pengalaman Membaca**: Pengaturan ukuran font (A+/A-), mode Serif, pemilih palet tema (Light, Sepia, Dark), markah bacaan (*reading list*), dan pencarian artikel *in-memory* yang cepat.
+- **Pengalaman Membaca**: Pengaturan ukuran font (A+/A-), mode Serif, pemilih tema (Light, Dark), markah bacaan (*reading list*), dan pencarian artikel *in-memory* yang cepat.
 - **Feeds & SEO**: Generator otomatis kartu pratinjau OpenGraph, RSS 2.0 feed, JSON Feed, Sitemap XML, dan *Content Security Policy* (CSP) ketat.

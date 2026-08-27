@@ -10,7 +10,7 @@ Seluruh elemen interaktif dapat dioperasikan penuh menggunakan keyboard dengan i
 
 - `?` : Membuka daftar pintasan keyboard.
 - `/` : Fokus langsung ke kotak pencarian.
-- `t` : Mengganti tema tampilan (Light, Dark, Sepia).
+- `t` : Mengganti tema tampilan (Light, Dark).
 - `j` / `k` : Berpindah ke artikel sebelum atau sesudah.
 - `Esc` : Menutup menu, pop-up, atau jendela pencarian.
 - `Tab` : Berpindah antar tautan dan tombol dengan garis fokus kontras.

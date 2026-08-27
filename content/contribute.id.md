@@ -1,16 +1,15 @@
 ## Pendekatan Tulisan
 
-Fokus utama di sini adalah tulisan yang lugas, berbasis eksperimen nyata, dan dapat direproduksi. Jika Anda ingin berbagi catatan eksplorasi lab, investigasi masalah produksi, atau tips perkuliahan, tulisan Anda sangat disambut baik.
+Fokus utama di sini adalah tulisan yang lugas, berbasis eksperimen nyata, dan dapat direproduksi. Jika Anda ingin berbagi catatan eksplorasi lab, investigasi masalah produksi, atau analisis sistem perkuliahan, tulisan Anda sangat disambut baik.
 
 Sebaiknya langsung masuk ke inti masalah, arsitektur, atau contoh kode sejak awal. Hindari kalimat pembuka yang bertele-tele agar pembaca langsung memahami substansi teknis yang dibahas.
 
 ## Format Tulisan
 
-Ada tiga jenis tulisan yang biasa dimuat di Daemontalk:
+Ada dua jenis format tulisan yang biasa dimuat di Daemontalk:
 
-- **Catatan Teknis (Deep-Dives)**: Membahas konsep sistem secara mendalam, seperti eksplorasi kernel Linux, konkurensi Go, atau arsitektur penyimpanan. Pada frontmatter, gunakan `type: post`.
-- **Catatan Insiden & Debugging (RCA)**: Menceritakan proses pencarian akar masalah dari kendala teknis atau bug yang nyata. Sertakan langkah pelacakan log dan solusi perbaikannya. Gunakan `type: post` dengan tag `rca` atau `incident`.
-- **Today I Learned (TIL)**: Catatan ringkas satu topik yang dapat dibaca dalam dua menit. Cocok untuk perintah terminal unik, flag kompilator, atau trik kode singkat. Gunakan `type: til`.
+- **Catatan Teknis Mendalam (Deep-Dives)**: Membahas konsep sistem secara mendalam, seperti eksplorasi kernel Linux, konkurensi Go, protokol jaringan, atau arsitektur penyimpanan.
+- **Catatan Insiden & Debugging (RCA)**: Menceritakan proses pencarian akar masalah dari kendala teknis nyata, langkah pelacakan log diagnostik, serta solusi mitigasinya. Gunakan tag seperti `["rca", "incident"]` atau tag sistem terkait.
 
 ## Format Frontmatter
 
@@ -21,15 +20,15 @@ Setiap artikel disimpan di folder `content/posts/` dalam format file Markdown de
 title: "Zero-Copy I/O dengan io_uring di Go"
 slug: "7f8a9b1c"
 date: "2026-08-08"
+author: "Nama atau Callsign Anda"
 tags: ["linux", "go", "performance", "storage"]
 lang: "id"
 draft: false
-type: "post"
-summary: "Menjelajahi batching I/O asinkron menggunakan antarmuka syscall io_uring Linux di Go."
+description: "Menjelajahi batching I/O asinkron menggunakan antarmuka syscall io_uring Linux di Go."
 ---
 ```
 
-Gunakan `lang: "id"` untuk bahasa Indonesia dan `lang: "en"` untuk bahasa Inggris. Pastikan seluruh cuplikan kode menyertakan penanda bahasa (seperti go, bash, atau c) agar penyorotan sintaks berjalan optimal.
+Gunakan `lang: "id"` untuk bahasa Indonesia dan `lang: "en"` untuk bahasa Inggris. Pastikan seluruh cuplikan kode menyertakan penanda bahasa (seperti `go`, `bash`, atau `c`) agar penyorotan sintaks berjalan optimal.
 
 Anda dapat mengunduh file template contoh lengkap di sini: [Download template.md](/download/template.md).
 
@@ -38,7 +37,7 @@ Anda dapat mengunduh file template contoh lengkap di sini: [Download template.md
 **Melalui GitHub Pull Request**
 1. Fork dan clone repositori ini: `git clone https://github.com/dafagareth/daemontalk`.
 2. Buat branch baru untuk tulisan Anda: `git checkout -b post/topik-anda`.
-3. Tambahkan file Markdown baru di `content/posts/topik-anda.md`.
+3. Tambahkan file Markdown baru di `content/posts/topik-anda.md` (atau jalankan `./scripts/post.sh new --uid "Judul Anda"`).
 4. Uji tampilan dan jalankan build lokal dengan perintah `make build`.
 5. Buka Pull Request di GitHub dengan ringkasan singkat isi tulisan.
 

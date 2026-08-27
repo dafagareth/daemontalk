@@ -31,7 +31,7 @@ Keseluruhan sistem dikompilasi menjadi satu berkas biner Go mandiri yang melayan
 
 ## Kemampuan Utama
 
-- Kontrol tipografi granular (Tema Gelap/Terang/Sepia, peralihan Serif/Sans, penskalaan ukuran huruf dinamis).
+- Kontrol tipografi granular (Tema Gelap/Terang, peralihan Serif/Sans, penskalaan ukuran huruf dinamis).
 - Pembuatan otomatis kartu pratinjau OpenGraph untuk keperluan berbagi di media sosial.
 - Sindikasi komprehensif melalui RSS 2.0 dan JSON Feed.
 - Integrasi SEO esensial (Sitemap XML, `robots.txt`, skema terstruktur).

@@ -10,7 +10,7 @@ All interactive elements support keyboard navigation with visible focus indicato
 
 - `?` : Open the Keyboard Shortcuts Cheat Sheet.
 - `/` : Instant search bar focus.
-- `t` : Switch color themes (Light, Dark, Sepia).
+- `t` : Switch color themes (Light, Dark).
 - `j` / `k` : Navigate previous and next articles.
 - `Esc` : Dismiss active modals and search popups.
 - `Tab` : Step sequentially through all links and actions with high-contrast focus rings.
