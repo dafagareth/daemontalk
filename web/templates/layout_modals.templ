@@ -2,8 +2,7 @@ package templates
 
 import "daemontalk/internal/i18n"
 
-templ shortcutsModal(ui i18n.UI) {
-	<!-- Keyboard shortcuts overlay & modal -->
+templ shortcutsModal(ui i18n.UI, lang string) {
 	<div
 		class="shortcuts-overlay"
 		id="shortcuts-overlay"
@@ -18,17 +17,31 @@ templ shortcutsModal(ui i18n.UI) {
 				>×</button>
 			</div>
 			<div class="flex flex-col gap-2.5">
-				@shortcutRow("?", "Show this help")
-				@shortcutRow("/", "Search posts")
-				@shortcutRow("~ / `", "Open Terminal")
-				@shortcutRow("j / k", "Navigate blog list")
-				@shortcutRow("Enter", "Open focused item")
-				@shortcutRow("g h", "Go to Home")
-				@shortcutRow("g b", "Go to Blog")
-				@shortcutRow("g p", "Go to Projects")
-				@shortcutRow("g t", "Go to Terminal")
-				@shortcutRow("g u", "Go to Uses")
-				@shortcutRow("Esc", "Close / unfocus")
+				if lang == "id" {
+					@shortcutRow("?", "Tampilkan bantuan ini")
+					@shortcutRow("/", "Cari artikel")
+					@shortcutRow("j / k", "Navigasi daftar artikel")
+					@shortcutRow("Enter", "Buka item yang dipilih")
+					@shortcutRow("g h", "Buka Beranda")
+					@shortcutRow("g b", "Buka Blog")
+					@shortcutRow("g p", "Buka Projects")
+					@shortcutRow("g s", "Buka Socket")
+					@shortcutRow("g c", "Buka Colophon")
+					@shortcutRow("Ctrl + Enter", "Kirim komentar / formulir")
+					@shortcutRow("Esc", "Tutup / batal fokus")
+				} else {
+					@shortcutRow("?", "Show this help")
+					@shortcutRow("/", "Search posts")
+					@shortcutRow("j / k", "Navigate blog list")
+					@shortcutRow("Enter", "Open focused item")
+					@shortcutRow("g h", "Go to Home")
+					@shortcutRow("g b", "Go to Blog")
+					@shortcutRow("g p", "Go to Projects")
+					@shortcutRow("g s", "Go to Socket")
+					@shortcutRow("g c", "Go to Colophon")
+					@shortcutRow("Ctrl + Enter", "Submit comment / form")
+					@shortcutRow("Esc", "Close / unfocus")
+				}
 			</div>
 		</div>
 	</div>
@@ -58,7 +71,6 @@ templ confirmModal(ui i18n.UI) {
 			</div>
 		</div>
 	</div>
-	
 }
 
 templ layoutScripts() {
@@ -67,4 +79,5 @@ templ layoutScripts() {
 	<script src={ assetURL("/static/js/layout/nav.js") } defer></script>
 	<script src={ assetURL("/static/js/layout/shortcuts.js") } defer></script>
 	<script src={ assetURL("/static/js/layout/observer.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/math.js") } defer></script>
 }

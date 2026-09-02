@@ -69,7 +69,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 		var templ_7745c5c3_Var3 templ.SafeURL
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(assetURL("/static/css/chroma.css"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 51, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 53, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -82,7 +82,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 		var templ_7745c5c3_Var4 templ.SafeURL
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(assetURL("/static/css/main.css"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 52, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 54, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -105,7 +105,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var5 templ.SafeURL
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(SiteBaseURL + hreflangEN(currentPath))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 58, Col: 83}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 60, Col: 83}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -118,7 +118,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var6 templ.SafeURL
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(SiteBaseURL + "/id" + hreflangEN(currentPath))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 59, Col: 91}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 61, Col: 91}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -131,7 +131,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var7 templ.SafeURL
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(SiteBaseURL + hreflangEN(currentPath))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 60, Col: 90}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 62, Col: 90}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -144,7 +144,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogDesc())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 62, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 64, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -157,7 +157,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(pageTitle(page))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 63, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 65, Col: 54}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
@@ -170,7 +170,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogDesc())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 64, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 66, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {
@@ -183,7 +183,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogType())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 65, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 67, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 			if templ_7745c5c3_Err != nil {
@@ -196,7 +196,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(SiteBaseURL + currentPath)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 66, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 68, Col: 62}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 			if templ_7745c5c3_Err != nil {
@@ -209,7 +209,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogImage())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 67, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 69, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 			if templ_7745c5c3_Err != nil {
@@ -222,7 +222,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(pageTitle(page))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 72, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 74, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 			if templ_7745c5c3_Err != nil {
@@ -235,7 +235,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogDesc())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 73, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 75, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 			if templ_7745c5c3_Err != nil {
@@ -248,7 +248,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogImage())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 74, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 76, Col: 54}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 			if templ_7745c5c3_Err != nil {
@@ -265,7 +265,7 @@ func headTags(page string, currentPath string, meta PageMeta, noindex bool) temp
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<script src=\"https://unpkg.com/htmx.org@2.0.2\" integrity=\"sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ\" crossorigin=\"anonymous\"></script><!-- KaTeX Math / LaTeX Rendering --><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css\" crossorigin=\"anonymous\"><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js\" crossorigin=\"anonymous\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script><script>\n\t\t\tfunction dtAttachMathScrollFade() {\n\t\t\t\trequestAnimationFrame(function() {\n\t\t\t\t\tdocument.querySelectorAll(\".katex-display, .math-display\").forEach(function(el) {\n\t\t\t\t\t\tif (el.parentElement && el.parentElement.classList.contains(\"katex-scroll-wrapper\")) {\n\t\t\t\t\t\t\tvar existingFade = el.parentElement.querySelector(\".katex-fade-right\");\n\t\t\t\t\t\t\tif (existingFade) {\n\t\t\t\t\t\t\t\tvar isOver = el.scrollWidth > (el.clientWidth + 4);\n\t\t\t\t\t\t\t\texistingFade.style.display = isOver ? \"block\" : \"none\";\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar wrapper = document.createElement(\"div\");\n\t\t\t\t\t\twrapper.className = \"katex-scroll-wrapper relative my-4\";\n\t\t\t\t\t\tel.parentNode.insertBefore(wrapper, el);\n\t\t\t\t\t\twrapper.appendChild(el);\n\n\t\t\t\t\t\tvar fade = document.createElement(\"div\");\n\t\t\t\t\t\tfade.className = \"katex-fade-right pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[var(--c-bg)] to-transparent transition-opacity duration-200\";\n\t\t\t\t\t\twrapper.appendChild(fade);\n\n\t\t\t\t\t\tfunction checkOverflow() {\n\t\t\t\t\t\t\tvar isOverflow = el.scrollWidth > (el.clientWidth + 4);\n\t\t\t\t\t\t\tif (!isOverflow) {\n\t\t\t\t\t\t\t\tfade.style.display = \"none\";\n\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\tfade.style.display = \"block\";\n\t\t\t\t\t\t\t\tvar atEnd = (el.scrollWidth - el.scrollLeft - el.clientWidth) < 6;\n\t\t\t\t\t\t\t\tfade.style.opacity = atEnd ? \"0\" : \"1\";\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\tel.addEventListener(\"scroll\", checkOverflow, { passive: true });\n\t\t\t\t\t\tcheckOverflow();\n\t\t\t\t\t\twindow.addEventListener(\"resize\", checkOverflow, { passive: true });\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t}\n\n\t\t\tfunction dtRenderMath() {\n\t\t\t\tif (typeof renderMathInElement === \"function\") {\n\t\t\t\t\trenderMathInElement(document.body, {\n\t\t\t\t\t\tdelimiters: [\n\t\t\t\t\t\t\t{left: \"$$\", right: \"$$\", display: true},\n\t\t\t\t\t\t\t{left: \"$\", right: \"$\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\(\", right: \"\\\\)\", display: false},\n\t\t\t\t\t\t\t{left: \"\\\\[\", right: \"\\\\]\", display: true}\n\t\t\t\t\t\t],\n\t\t\t\t\t\tignoredTags: [\"script\", \"noscript\", \"style\", \"textarea\", \"pre\", \"code\"],\n\t\t\t\t\t\tthrowOnError: false\n\t\t\t\t\t});\n\t\t\t\t\tdtAttachMathScrollFade();\n\t\t\t\t} else {\n\t\t\t\t\tsetTimeout(dtRenderMath, 60);\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (document.readyState === \"loading\") {\n\t\t\t\tdocument.addEventListener(\"DOMContentLoaded\", dtRenderMath);\n\t\t\t} else {\n\t\t\t\tdtRenderMath();\n\t\t\t}\n\t\t</script></head>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<script src=\"https://unpkg.com/htmx.org@2.0.2\" integrity=\"sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ\" crossorigin=\"anonymous\"></script><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css\" crossorigin=\"anonymous\"><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js\" crossorigin=\"anonymous\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -301,7 +301,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(lang)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 151, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layout.templ`, Line: 90, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 		if templ_7745c5c3_Err != nil {
@@ -315,7 +315,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<body class=\"min-h-screen flex flex-col\"><!-- Top nav & Sub-nav -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<body class=\"min-h-screen flex flex-col\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -323,15 +323,11 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<!-- Fullscreen Mobile Navigation Drawer -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = mobileMenu(ui, lang, page, currentPath).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<!-- Content --><main class=\"w-full flex-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<main class=\"w-full flex-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -339,7 +335,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</main><!-- Footer -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -347,15 +343,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<!-- Keyboard Shortcuts Modal -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = shortcutsModal(ui).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<!-- Confirm Modal -->")
+		templ_7745c5c3_Err = shortcutsModal(ui, lang).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -363,7 +351,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<!-- Global Back to Top Floating Button --><button id=\"back-to-top\" onclick=\"window.scrollTo({top:0,behavior:'smooth'})\" aria-label=\"Back to top\" title=\"Back to top\" class=\"fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<button id=\"back-to-top\" onclick=\"window.scrollTo({top:0,behavior:'smooth'})\" aria-label=\"Back to top\" title=\"Back to top\" class=\"hidden sm:block fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -371,15 +359,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</button><!-- Visited Posts Marker -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = visitedPostsScript().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<!-- Layout Interactive Scripts -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -387,7 +367,7 @@ func Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageM
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -403,6 +383,7 @@ func prefix(lang string) string {
 }
 
 func switchLangURL(lang string, currentPath string) string {
+	// 1-Click Toggle: EN <-> ID
 	if lang == "id" {
 		p := strings.TrimPrefix(currentPath, "/id")
 		if p == "" {
@@ -416,6 +397,21 @@ func switchLangURL(lang string, currentPath string) string {
 	return "/id" + currentPath
 }
 
+func toLangURL(targetLang string, currentPath string) string {
+	cleanPath := strings.TrimPrefix(currentPath, "/id")
+	if cleanPath == "" {
+		cleanPath = "/"
+	}
+
+	if targetLang == "id" {
+		if cleanPath == "/" {
+			return "/id"
+		}
+		return "/id" + cleanPath
+	}
+	return cleanPath
+}
+
 func pageTitle(page string) string {
 	suffix := "daemontalk"
 	switch page {
@@ -427,8 +423,8 @@ func pageTitle(page string) string {
 		return "Blog · " + suffix
 	case "about":
 		return "About · " + suffix
-	case "behind":
-		return "Behind · " + suffix
+	case "colophon":
+		return "Colophon · " + suffix
 	case "uses":
 		return "Uses · " + suffix
 	case "now":
@@ -470,35 +466,6 @@ func hreflangEN(path string) string {
 		return "/"
 	}
 	return p
-}
-
-func visitedPostsScript() templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var19 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var19 == nil {
-			templ_7745c5c3_Var19 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<script>\n\t\t(function() {\n\t\t\tvar read = [];\n\t\t\ttry { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}\n\t\t\tif (!read.length) return;\n\t\t\tvar set = {};\n\t\t\tread.forEach(function(s) { set[s] = true; });\n\t\t\tfunction markVisited() {\n\t\t\t\tdocument.querySelectorAll('a[data-slug], a[href*=\"/blog/\"]').forEach(function(a) {\n\t\t\t\t\tvar slug = a.dataset.slug;\n\t\t\t\t\tif (!slug) {\n\t\t\t\t\t\tvar href = a.getAttribute('href') || '';\n\t\t\t\t\t\tvar match = href.match(/\\/blog\\/([^\\/\\?#]+)$/);\n\t\t\t\t\t\tif (match) slug = match[1];\n\t\t\t\t\t}\n\t\t\t\t\tif (slug && set[slug]) {\n\t\t\t\t\t\tvar h = a.querySelector('h1,h2,h3,h4,h5,h6');\n\t\t\t\t\t\tif (h) {\n\t\t\t\t\t\t\th.classList.add('post-visited');\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\ta.classList.add('post-visited');\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\tmarkVisited();\n\t\t\t// Re-apply after HTMX swaps (load more, etc.)\n\t\t\tdocument.addEventListener('htmx:afterSwap', markVisited);\n\t\t\tdocument.addEventListener('htmx:afterSwap', function() {\n\t\t\t\tif (typeof dtRenderMath === 'function') dtRenderMath();\n\t\t\t});\n\t\t})();\n\t</script>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		return nil
-	})
 }
 
 var _ = templruntime.GeneratedTemplate

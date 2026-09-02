@@ -43,7 +43,9 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 					} catch (e) {}
 				})();
 			</script>
-			<noscript><style>.reveal, .anim-fade-up, .anim-fade-in { opacity: 1 !important; transform: none !important; }</style></noscript>
+			<noscript>
+				<style>.reveal, .anim-fade-up, .anim-fade-in { opacity: 1 !important; transform: none !important; }</style>
+			</noscript>
 		}
 		<link rel="preconnect" href="https://fonts.googleapis.com"/>
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -77,72 +79,9 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 			}
 		}
 		<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
-		<!-- KaTeX Math / LaTeX Rendering -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"/>
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
-		<script>
-			function dtAttachMathScrollFade() {
-				requestAnimationFrame(function() {
-					document.querySelectorAll(".katex-display, .math-display").forEach(function(el) {
-						if (el.parentElement && el.parentElement.classList.contains("katex-scroll-wrapper")) {
-							var existingFade = el.parentElement.querySelector(".katex-fade-right");
-							if (existingFade) {
-								var isOver = el.scrollWidth > (el.clientWidth + 4);
-								existingFade.style.display = isOver ? "block" : "none";
-							}
-							return;
-						}
-						var wrapper = document.createElement("div");
-						wrapper.className = "katex-scroll-wrapper relative my-4";
-						el.parentNode.insertBefore(wrapper, el);
-						wrapper.appendChild(el);
-
-						var fade = document.createElement("div");
-						fade.className = "katex-fade-right pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[var(--c-bg)] to-transparent transition-opacity duration-200";
-						wrapper.appendChild(fade);
-
-						function checkOverflow() {
-							var isOverflow = el.scrollWidth > (el.clientWidth + 4);
-							if (!isOverflow) {
-								fade.style.display = "none";
-							} else {
-								fade.style.display = "block";
-								var atEnd = (el.scrollWidth - el.scrollLeft - el.clientWidth) < 6;
-								fade.style.opacity = atEnd ? "0" : "1";
-							}
-						}
-
-						el.addEventListener("scroll", checkOverflow, { passive: true });
-						checkOverflow();
-						window.addEventListener("resize", checkOverflow, { passive: true });
-					});
-				});
-			}
-
-			function dtRenderMath() {
-				if (typeof renderMathInElement === "function") {
-					renderMathInElement(document.body, {
-						delimiters: [
-							{left: "$$", right: "$$", display: true},
-							{left: "$", right: "$", display: false},
-							{left: "\\(", right: "\\)", display: false},
-							{left: "\\[", right: "\\]", display: true}
-						],
-						ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
-						throwOnError: false
-					});
-					dtAttachMathScrollFade();
-				} else {
-					setTimeout(dtRenderMath, 60);
-				}
-			}
-			if (document.readyState === "loading") {
-				document.addEventListener("DOMContentLoaded", dtRenderMath);
-			} else {
-				dtRenderMath();
-			}
-		</script>
 	</head>
 }
 
@@ -151,33 +90,23 @@ templ Layout(ui i18n.UI, lang string, page string, currentPath string, meta Page
 	<html lang={ lang }>
 		@headTags(page, currentPath, meta, false)
 		<body class="min-h-screen flex flex-col">
-			<!-- Top nav & Sub-nav -->
 			@topNav(ui, lang, page, currentPath)
-			<!-- Fullscreen Mobile Navigation Drawer -->
 			@mobileMenu(ui, lang, page, currentPath)
-			<!-- Content -->
 			<main class="w-full flex-1">
 				@content
 			</main>
-			<!-- Footer -->
 			@footer(ui, lang)
-			<!-- Keyboard Shortcuts Modal -->
-			@shortcutsModal(ui)
-			<!-- Confirm Modal -->
+			@shortcutsModal(ui, lang)
 			@confirmModal(ui)
-			<!-- Global Back to Top Floating Button -->
 			<button
 				id="back-to-top"
 				onclick="window.scrollTo({top:0,behavior:'smooth'})"
 				aria-label="Back to top"
 				title="Back to top"
-				class="fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
+				class="hidden sm:block fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
 			>
 				@IconArrowUp()
 			</button>
-			<!-- Visited Posts Marker -->
-			@visitedPostsScript()
-			<!-- Layout Interactive Scripts -->
 			@layoutScripts()
 		</body>
 	</html>
@@ -191,6 +120,7 @@ func prefix(lang string) string {
 }
 
 func switchLangURL(lang string, currentPath string) string {
+	// 1-Click Toggle: EN <-> ID
 	if lang == "id" {
 		p := strings.TrimPrefix(currentPath, "/id")
 		if p == "" {
@@ -204,6 +134,21 @@ func switchLangURL(lang string, currentPath string) string {
 	return "/id" + currentPath
 }
 
+func toLangURL(targetLang string, currentPath string) string {
+	cleanPath := strings.TrimPrefix(currentPath, "/id")
+	if cleanPath == "" {
+		cleanPath = "/"
+	}
+
+	if targetLang == "id" {
+		if cleanPath == "/" {
+			return "/id"
+		}
+		return "/id" + cleanPath
+	}
+	return cleanPath
+}
+
 func pageTitle(page string) string {
 	suffix := "daemontalk"
 	switch page {
@@ -215,8 +160,8 @@ func pageTitle(page string) string {
 		return "Blog · " + suffix
 	case "about":
 		return "About · " + suffix
-	case "behind":
-		return "Behind · " + suffix
+	case "colophon":
+		return "Colophon · " + suffix
 	case "uses":
 		return "Uses · " + suffix
 	case "now":
@@ -258,40 +203,4 @@ func hreflangEN(path string) string {
 		return "/"
 	}
 	return p
-}
-
-templ visitedPostsScript() {
-	<script>
-		(function() {
-			var read = [];
-			try { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}
-			if (!read.length) return;
-			var set = {};
-			read.forEach(function(s) { set[s] = true; });
-			function markVisited() {
-				document.querySelectorAll('a[data-slug], a[href*="/blog/"]').forEach(function(a) {
-					var slug = a.dataset.slug;
-					if (!slug) {
-						var href = a.getAttribute('href') || '';
-						var match = href.match(/\/blog\/([^\/\?#]+)$/);
-						if (match) slug = match[1];
-					}
-					if (slug && set[slug]) {
-						var h = a.querySelector('h1,h2,h3,h4,h5,h6');
-						if (h) {
-							h.classList.add('post-visited');
-						} else {
-							a.classList.add('post-visited');
-						}
-					}
-				});
-			}
-			markVisited();
-			// Re-apply after HTMX swaps (load more, etc.)
-			document.addEventListener('htmx:afterSwap', markVisited);
-			document.addEventListener('htmx:afterSwap', function() {
-				if (typeof dtRenderMath === 'function') dtRenderMath();
-			});
-		})();
-	</script>
 }
