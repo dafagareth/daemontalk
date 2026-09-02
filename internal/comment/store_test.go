@@ -19,14 +19,14 @@ func newTestStore(t *testing.T) *Store {
 func TestAddAndList(t *testing.T) {
 	s := newTestStore(t)
 
-	if _, err := s.Add("post-a", "Alice", "first"); err != nil {
-		t.Fatalf("Add: %v", err)
+	if _, err := s.AddAdvanced(Comment{PostSlug: "post-a", Name: "Alice", Body: "first"}); err != nil {
+		t.Fatalf("AddAdvanced: %v", err)
 	}
-	if _, err := s.Add("post-a", "Bob", "second"); err != nil {
-		t.Fatalf("Add: %v", err)
+	if _, err := s.AddAdvanced(Comment{PostSlug: "post-a", Name: "Bob", Body: "second"}); err != nil {
+		t.Fatalf("AddAdvanced: %v", err)
 	}
-	if _, err := s.Add("post-b", "Carol", "other post"); err != nil {
-		t.Fatalf("Add: %v", err)
+	if _, err := s.AddAdvanced(Comment{PostSlug: "post-b", Name: "Carol", Body: "other post"}); err != nil {
+		t.Fatalf("AddAdvanced: %v", err)
 	}
 
 	got, err := s.ListBySlug("post-a")
@@ -52,8 +52,8 @@ func TestAddValidation(t *testing.T) {
 		{"name", "   "},
 	}
 	for _, c := range cases {
-		if _, err := s.Add("slug", c.name, c.body); err != ErrInvalid {
-			t.Errorf("Add(%q,%q): expected ErrInvalid, got %v", c.name, c.body, err)
+		if _, err := s.AddAdvanced(Comment{PostSlug: "slug", Name: c.name, Body: c.body}); err != ErrInvalid {
+			t.Errorf("AddAdvanced(%q,%q): expected ErrInvalid, got %v", c.name, c.body, err)
 		}
 	}
 }
@@ -65,9 +65,9 @@ func TestAddTrimsAndTruncates(t *testing.T) {
 	for i := 0; i < MaxNameLen+20; i++ {
 		longName += "x"
 	}
-	c, err := s.Add("slug", "  "+longName+"  ", "  hi  ")
+	c, err := s.AddAdvanced(Comment{PostSlug: "slug", Name: "  " + longName + "  ", Body: "  hi  "})
 	if err != nil {
-		t.Fatalf("Add: %v", err)
+		t.Fatalf("AddAdvanced: %v", err)
 	}
 	if len([]rune(c.Name)) != MaxNameLen {
 		t.Errorf("name not truncated: len=%d", len([]rune(c.Name)))
@@ -80,7 +80,7 @@ func TestAddTrimsAndTruncates(t *testing.T) {
 func TestDelete(t *testing.T) {
 	s := newTestStore(t)
 
-	c, _ := s.Add("slug", "Alice", "to delete")
+	c, _ := s.AddAdvanced(Comment{PostSlug: "slug", Name: "Alice", Body: "to delete"})
 	if err := s.Delete(c.ID); err != nil {
 		t.Fatalf("Delete: %v", err)
 	}
@@ -111,9 +111,9 @@ func TestViewCount(t *testing.T) {
 func TestListAll(t *testing.T) {
 	s := newTestStore(t)
 
-	s.Add("post-a", "Alice", "a")
-	s.Add("post-b", "Bob", "b")
-	s.Add("post-a", "Carol", "c")
+	_, _ = s.AddAdvanced(Comment{PostSlug: "post-a", Name: "Alice", Body: "a"})
+	_, _ = s.AddAdvanced(Comment{PostSlug: "post-b", Name: "Bob", Body: "b"})
+	_, _ = s.AddAdvanced(Comment{PostSlug: "post-a", Name: "Carol", Body: "c"})
 
 	all, err := s.ListAll()
 	if err != nil {
@@ -151,25 +151,25 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 	s := newTestStore(t)
 
 	// Root comment 1
-	c1, err := s.Add("post-tree", "Alice", "Root comment 1")
+	c1, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Alice", Body: "Root comment 1"})
 	if err != nil {
 		t.Fatalf("Add root 1: %v", err)
 	}
 
 	// Reply to Root 1
-	c1Reply1, err := s.AddWithParent("post-tree", "Bob", "Reply 1 to Alice", &c1.ID)
+	c1Reply1, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Bob", Body: "Reply 1 to Alice", ParentID: &c1.ID})
 	if err != nil {
 		t.Fatalf("Add reply 1: %v", err)
 	}
 
 	// Nested reply to Reply 1 (grandchild)
-	c1Grandchild, err := s.AddWithParent("post-tree", "Carol", "Reply to Bob", &c1Reply1.ID)
+	c1Grandchild, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Carol", Body: "Reply to Bob", ParentID: &c1Reply1.ID})
 	if err != nil {
 		t.Fatalf("Add grandchild: %v", err)
 	}
 
 	// Root comment 2
-	c2, err := s.Add("post-tree", "Dave", "Root comment 2")
+	c2, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Dave", Body: "Root comment 2"})
 	if err != nil {
 		t.Fatalf("Add root 2: %v", err)
 	}
@@ -216,5 +216,76 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 	}
 	if len(tree[1].Replies) != 0 {
 		t.Errorf("expected 0 replies under Dave, got %d", len(tree[1].Replies))
+	}
+}
+
+func TestReactions(t *testing.T) {
+	s := newTestStore(t)
+
+	// Increment 🚀
+	rx, err := s.IncrementReaction("post-rx", "🚀")
+	if err != nil {
+		t.Fatalf("IncrementReaction: %v", err)
+	}
+	if rx["🚀"] != 1 {
+		t.Errorf("expected 🚀=1, got %d", rx["🚀"])
+	}
+
+	// Increment 🚀 again
+	rx, _ = s.IncrementReaction("post-rx", "🚀")
+	if rx["🚀"] != 2 {
+		t.Errorf("expected 🚀=2, got %d", rx["🚀"])
+	}
+
+	// Increment ❤️
+	rx, _ = s.IncrementReaction("post-rx", "❤️")
+	if rx["❤️"] != 1 {
+		t.Errorf("expected ❤️=1, got %d", rx["❤️"])
+	}
+
+	// Decrement 🚀
+	rx, err = s.DecrementReaction("post-rx", "🚀")
+	if err != nil {
+		t.Fatalf("DecrementReaction: %v", err)
+	}
+	if rx["🚀"] != 1 {
+		t.Errorf("expected 🚀=1 after decrement, got %d", rx["🚀"])
+	}
+
+	// Decrement non-existent (cap at 0)
+	rx, _ = s.DecrementReaction("post-rx", "🎉")
+	if rx["🎉"] != 0 {
+		t.Errorf("expected 🎉=0, got %d", rx["🎉"])
+	}
+}
+
+func TestPageViewsAnalytics(t *testing.T) {
+	s := newTestStore(t)
+
+	if err := s.IncrementPageView("/"); err != nil {
+		t.Fatalf("IncrementPageView: %v", err)
+	}
+	_ = s.IncrementPageView("/")
+	_ = s.IncrementPageView("/colophon")
+	_ = s.IncrementPageView("/blog/post-1")
+	_ = s.IncrementPageView("/wp-admin.php") // Should be filtered out of top views
+
+	total, err := s.TotalPageViews()
+	if err != nil {
+		t.Fatalf("TotalPageViews: %v", err)
+	}
+	if total != 5 {
+		t.Errorf("expected total 5 page views, got %d", total)
+	}
+
+	top, err := s.TopPageViews(5)
+	if err != nil {
+		t.Fatalf("TopPageViews: %v", err)
+	}
+	if len(top) != 3 { // / (count=2), /colophon (count=1), /blog/post-1 (count=1)
+		t.Fatalf("expected 3 clean top page views, got %d: %+v", len(top), top)
+	}
+	if top[0].Path != "/" || top[0].Count != 2 {
+		t.Errorf("expected top path / with count 2, got %+v", top[0])
 	}
 }

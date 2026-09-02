@@ -61,6 +61,10 @@ func Open(path string) (*Store, error) {
 
 	// Migrate existing database instances that might not have parent_id column yet
 	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN parent_id INTEGER DEFAULT NULL REFERENCES comments(id) ON DELETE CASCADE;`)
+	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN user_id INTEGER DEFAULT NULL;`)
+	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN avatar_url TEXT DEFAULT '';`)
+	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN is_verified BOOLEAN DEFAULT 0;`)
+	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN github_url TEXT DEFAULT '';`)
 
 	// Create indexes safely after ensuring all columns exist
 	if _, err := db.Exec(`

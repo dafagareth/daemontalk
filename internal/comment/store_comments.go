@@ -14,7 +14,8 @@ const (
 // ListBySlug returns all comments for a post, oldest first.
 func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at FROM comments WHERE post_slug = ? ORDER BY created_at ASC`,
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		 FROM comments WHERE post_slug = ? ORDER BY created_at ASC`,
 		slug,
 	)
 	if err != nil {
@@ -25,28 +26,32 @@ func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 	var out []Comment
 	for rows.Next() {
 		var c Comment
-		var parentID sql.NullInt64
-		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt); err != nil {
+		var parentID, userID sql.NullInt64
+		var avatarURL, ghURL sql.NullString
+		var isVerified sql.NullBool
+		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL); err != nil {
 			return nil, err
 		}
 		if parentID.Valid {
 			val := parentID.Int64
 			c.ParentID = &val
 		}
+		if userID.Valid {
+			val := userID.Int64
+			c.UserID = &val
+		}
+		c.AvatarURL = avatarURL.String
+		c.IsVerified = isVerified.Bool
+		c.GitHubURL = ghURL.String
 		out = append(out, c)
 	}
 	return out, rows.Err()
 }
 
-// Add validates and inserts a new root comment, returning the stored row.
-func (s *Store) Add(slug, name, body string) (Comment, error) {
-	return s.AddWithParent(slug, name, body, nil)
-}
-
-// AddWithParent validates and inserts a new comment or reply.
-func (s *Store) AddWithParent(slug, name, body string, parentID *int64) (Comment, error) {
-	name = strings.TrimSpace(name)
-	body = strings.TrimSpace(body)
+// AddAdvanced inserts a comment with optional user authentication info.
+func (s *Store) AddAdvanced(c Comment) (Comment, error) {
+	name := strings.TrimSpace(c.Name)
+	body := strings.TrimSpace(c.Body)
 
 	if name == "" || body == "" {
 		return Comment{}, ErrInvalid
@@ -59,42 +64,70 @@ func (s *Store) AddWithParent(slug, name, body string, parentID *int64) (Comment
 	}
 
 	// If replying to a parent comment, verify the parent exists and belongs to the same post
-	if parentID != nil && *parentID > 0 {
+	if c.ParentID != nil && *c.ParentID > 0 {
 		var parentSlug string
-		err := s.db.QueryRow(`SELECT post_slug FROM comments WHERE id = ?`, *parentID).Scan(&parentSlug)
-		if err != nil || parentSlug != slug {
-			// If parent not found or slug mismatch, reject or fallback to root
-			parentID = nil
+		err := s.db.QueryRow(`SELECT post_slug FROM comments WHERE id = ?`, *c.ParentID).Scan(&parentSlug)
+		if err != nil || parentSlug != c.PostSlug {
+			c.ParentID = nil
 		}
 	}
 
-	c := Comment{
-		PostSlug:  slug,
-		Name:      name,
-		Body:      body,
-		ParentID:  parentID,
-		CreatedAt: time.Now().UTC(),
-	}
+	c.Name = name
+	c.Body = body
+	c.CreatedAt = time.Now().UTC()
 
 	var res sql.Result
 	var err error
-	if parentID != nil && *parentID > 0 {
-		res, err = s.db.Exec(
-			`INSERT INTO comments (post_slug, name, body, parent_id, created_at) VALUES (?, ?, ?, ?, ?)`,
-			c.PostSlug, c.Name, c.Body, *c.ParentID, c.CreatedAt,
-		)
-	} else {
-		res, err = s.db.Exec(
-			`INSERT INTO comments (post_slug, name, body, parent_id, created_at) VALUES (?, ?, ?, NULL, ?)`,
-			c.PostSlug, c.Name, c.Body, c.CreatedAt,
-		)
+	var parentArg any
+	if c.ParentID != nil && *c.ParentID > 0 {
+		parentArg = *c.ParentID
+	}
+	var userArg any
+	if c.UserID != nil && *c.UserID > 0 {
+		userArg = *c.UserID
 	}
 
+	query := `
+		INSERT INTO comments (post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`
+	res, err = s.db.Exec(query, c.PostSlug, c.Name, c.Body, parentArg, c.CreatedAt, userArg, c.AvatarURL, c.IsVerified, c.GitHubURL)
 	if err != nil {
 		return Comment{}, err
 	}
 	c.ID, _ = res.LastInsertId()
 	return c, nil
+}
+
+// GetByID retrieves a single comment by ID.
+func (s *Store) GetByID(id int64) (*Comment, error) {
+	var c Comment
+	var parentID, userID sql.NullInt64
+	var avatarURL, ghURL sql.NullString
+	var isVerified sql.NullBool
+	err := s.db.QueryRow(
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		 FROM comments WHERE id = ?`,
+		id,
+	).Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if parentID.Valid {
+		val := parentID.Int64
+		c.ParentID = &val
+	}
+	if userID.Valid {
+		val := userID.Int64
+		c.UserID = &val
+	}
+	c.AvatarURL = avatarURL.String
+	c.IsVerified = isVerified.Bool
+	c.GitHubURL = ghURL.String
+	return &c, nil
 }
 
 // Delete removes a comment by ID and its recursive descendants via CASCADE.
@@ -106,7 +139,8 @@ func (s *Store) Delete(id int64) error {
 // ListAll returns all comments across every post, newest first.
 func (s *Store) ListAll() ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at FROM comments ORDER BY created_at DESC`,
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		 FROM comments ORDER BY created_at DESC`,
 	)
 	if err != nil {
 		return nil, err
@@ -116,14 +150,23 @@ func (s *Store) ListAll() ([]Comment, error) {
 	var out []Comment
 	for rows.Next() {
 		var c Comment
-		var parentID sql.NullInt64
-		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt); err != nil {
+		var parentID, userID sql.NullInt64
+		var avatarURL, ghURL sql.NullString
+		var isVerified sql.NullBool
+		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL); err != nil {
 			return nil, err
 		}
 		if parentID.Valid {
 			val := parentID.Int64
 			c.ParentID = &val
 		}
+		if userID.Valid {
+			val := userID.Int64
+			c.UserID = &val
+		}
+		c.AvatarURL = avatarURL.String
+		c.IsVerified = isVerified.Bool
+		c.GitHubURL = ghURL.String
 		out = append(out, c)
 	}
 	return out, rows.Err()
@@ -175,4 +218,51 @@ func BuildTree(comments []Comment) []Comment {
 		result[i] = convert(r)
 	}
 	return result
+}
+
+// AnonymizeUserComments anonymizes comments authored by a user.
+func (s *Store) AnonymizeUserComments(userID int64) error {
+	_, err := s.db.Exec(`
+		UPDATE comments 
+		SET user_id = NULL, name = 'Deleted User', avatar_url = '/static/images/deleted-user.png', is_verified = 0, github_url = ''
+		WHERE user_id = ?
+	`, userID)
+	return err
+}
+
+// ListByUserID returns all comments authored by a user.
+func (s *Store) ListByUserID(userID int64) ([]Comment, error) {
+	rows, err := s.db.Query(
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		 FROM comments WHERE user_id = ? ORDER BY created_at DESC`,
+		userID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []Comment
+	for rows.Next() {
+		var c Comment
+		var parentID, uid sql.NullInt64
+		var avatarURL, ghURL sql.NullString
+		var isVerified sql.NullBool
+		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &uid, &avatarURL, &isVerified, &ghURL); err != nil {
+			return nil, err
+		}
+		if parentID.Valid {
+			val := parentID.Int64
+			c.ParentID = &val
+		}
+		if uid.Valid {
+			val := uid.Int64
+			c.UserID = &val
+		}
+		c.AvatarURL = avatarURL.String
+		c.IsVerified = isVerified.Bool
+		c.GitHubURL = ghURL.String
+		out = append(out, c)
+	}
+	return out, rows.Err()
 }
