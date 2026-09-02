@@ -76,9 +76,9 @@ func fmtDate(p post.Post, lang string) string {
 	d := p.Date
 	if lang == "id" {
 		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
-		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+		return fmt.Sprintf("%02d %s %d WIB", d.Day(), bulan[d.Month()-1], d.Year())
 	}
-	return d.Format("02 January 2006")
+	return fmt.Sprintf("%s WIB", d.Format("02 January 2006"))
 }
 
 func timeAgoOrDate(d time.Time, lang string) string {
@@ -144,18 +144,18 @@ func fmtDayMonth(d time.Time, lang string) string {
 func fmtDateTime(d time.Time, lang string) string {
 	if lang == "id" {
 		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
-		return fmt.Sprintf("%02d %s %d, %02d:%02d", d.Day(), bulan[d.Month()-1], d.Year(), d.Hour(), d.Minute())
+		return fmt.Sprintf("%02d %s %d, %02d:%02d WIB", d.Day(), bulan[d.Month()-1], d.Year(), d.Hour(), d.Minute())
 	}
-	return d.Format("02 Jan 2006, 15:04")
+	return fmt.Sprintf("%s WIB", d.Format("02 Jan 2006, 15:04"))
 }
 
 func fmtFullDate(d time.Time, lang string) string {
 	if lang == "id" {
 		hari := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
 		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
-		return fmt.Sprintf("%s, %d %s %d", hari[d.Weekday()], d.Day(), bulan[d.Month()-1], d.Year())
+		return fmt.Sprintf("%s, %02d %s %d WIB", hari[d.Weekday()], d.Day(), bulan[d.Month()-1], d.Year())
 	}
-	return d.Format("Monday, 02 January 2006")
+	return fmt.Sprintf("%s WIB", d.Format("Monday, 02 January 2006"))
 }
 
 // searchIndex builds the haystack used by the client-side blog search.
