@@ -1,0 +1,244 @@
+package templates
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/forum"
+	"daemontalk/internal/i18n"
+	"fmt"
+)
+
+templ DiscussionsDetailPage(
+	ui i18n.UI,
+	lang string,
+	currentUser *auth.User,
+	t *forum.Topic,
+	replies []*forum.Reply,
+) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/socket") }
+				class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				<span>
+					if lang == "id" {
+						Kembali ke Socket
+					} else {
+						Back to Socket
+					}
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+				{ t.Title }
+			</h1>
+		</div>
+		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
+			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between text-xs sm:text-sm font-mono select-none flex-wrap gap-3">
+				<div class="flex items-center gap-3 text-text font-bold min-w-0">
+					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+					<code class="text-sm sm:text-base font-mono truncate">cat /dev/socket/{ fmt.Sprintf("%d", t.ID) }</code>
+				</div>
+				<div class="flex items-center gap-2 flex-wrap text-muted">
+					@DiscussionsCategoryBadge(t.Category)
+					if t.IsSolved {
+						<span class="text-link text-xs font-bold font-mono">
+							[✓ SOLVED]
+						</span>
+					}
+					<span>·</span>
+					<span>{ fmt.Sprintf("%d VIEWS", t.ViewsCount) }</span>
+					<span>·</span>
+					<time datetime={ t.CreatedAt.Format("2006-01-02 15:04") }>{ timeAgoOrDate(t.CreatedAt, lang) }</time>
+				</div>
+			</div>
+			<div class="py-6 px-0 sm:p-8 space-y-6">
+				<div class="flex items-center gap-2 text-xs font-mono text-muted">
+					if t.AuthorAvatar != "" {
+						<img src={ t.AuthorAvatar } alt={ t.AuthorUsername } class="w-4 h-4 rounded-none border border-border object-cover"/>
+					} else {
+						<img src="/static/images/deleted-user.png" alt="Deleted User" class="w-4 h-4 rounded-none border border-border object-cover"/>
+					}
+					<span>AUTHOR:</span>
+					if t.AuthorGitHub != "" {
+						<a href={ templ.SafeURL(t.AuthorGitHub) } target="_blank" rel="noopener" class="font-bold text-text hover:text-link hover:underline">
+							{ "@" + t.AuthorUsername }
+						</a>
+					} else if t.AuthorUsername != "" && t.AuthorUsername != "ghost" {
+						<span class="font-bold text-text">{ "@" + t.AuthorUsername }</span>
+					} else {
+						<span class="font-bold text-text">{ t.AuthorName }</span>
+					}
+					if t.AuthorName != "" && t.AuthorName != t.AuthorUsername && t.AuthorName != "Deleted User" {
+						<span class="text-[11px]">({ t.AuthorName })</span>
+					}
+				</div>
+				<div class="prose max-w-none text-text text-sm sm:text-base leading-relaxed font-sans">
+					@templ.Raw(string(t.BodyHTML))
+				</div>
+				<div class="flex items-center justify-between pt-4 border-t border-border/40 text-xs font-mono flex-wrap gap-3">
+					<div class="flex items-center gap-2 flex-wrap">
+						@DiscussionsVoteButton("topic", t.ID, t.VotesCount, t.UserVoted)
+						if len(t.Tags) > 0 {
+							for _, tag := range t.Tags {
+								<a
+									href={ templ.SafeURL(fmt.Sprintf("%s/socket?tag=%s", prefix(lang), tag)) }
+									class="text-accent hover:underline font-mono text-xs font-bold mr-1"
+								>
+									{ "#" + tag }
+								</a>
+							}
+						}
+					</div>
+					<div class="flex items-center gap-4">
+						if currentUser != nil && (currentUser.ID == t.UserID || currentUser.Role == "admin") {
+							<form
+								hx-post={ fmt.Sprintf("/socket/%d/delete", t.ID) }
+								hx-confirm="Yakin ingin menghapus topik diskusi ini secara permanen?"
+								class="inline-block"
+							>
+								<button type="submit" class="text-muted hover:text-rose-500 text-[11px] font-mono cursor-pointer transition-colors">
+									if lang == "id" {
+										Hapus
+									} else {
+										Delete
+									}
+								</button>
+							</form>
+						}
+						<a
+							href="#reply-form"
+							class="text-muted hover:text-text hover:underline"
+						>
+							if lang == "id" {
+								[↩ Balas]
+							} else {
+								[↩ Reply]
+							}
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="border-t border-border">
+				<div class="px-5 sm:px-6 py-3 bg-surface border-b border-border text-xs font-mono flex items-center justify-between text-muted select-none">
+					<div class="flex items-center gap-2 text-text font-bold">
+						<span class="text-link font-black">❯</span>
+						<span>grep --replies /dev/socket/{ fmt.Sprintf("%d", t.ID) }</span>
+					</div>
+					<span class="text-xs text-muted font-bold">
+						if lang == "id" {
+							{ fmt.Sprintf("%d BALASAN", len(replies)) }
+						} else {
+							{ fmt.Sprintf("%d REPLIES", len(replies)) }
+						}
+					</span>
+				</div>
+				if len(replies) == 0 {
+					<div class="p-8 text-center text-xs font-mono text-muted">
+						if lang == "id" {
+							Belum ada balasan untuk topik ini.
+						} else {
+							No replies for this topic yet.
+						}
+					</div>
+				} else {
+					<div class="divide-y divide-border">
+						for _, r := range replies {
+							@DiscussionsReplyItem(ui, lang, currentUser, r, t.ID, t.UserID)
+						}
+					</div>
+				}
+			</div>
+			<div id="reply-form" class="border-t border-border">
+				<div class="border-b border-border bg-surface px-5 sm:px-6 py-3 flex items-center justify-between text-xs font-mono select-none">
+					<div class="flex items-center gap-2 text-text font-bold">
+						<span class="text-link font-black">❯</span>
+						<span>write /dev/socket/{ fmt.Sprintf("%d", t.ID) }/reply</span>
+					</div>
+					if currentUser != nil {
+						<div class="text-muted text-[11px] flex items-center gap-1.5">
+							<span>AUTHOR:</span>
+							<span class="text-text font-bold">{ "@" + currentUser.Username }</span>
+						</div>
+					}
+				</div>
+				<div class="p-6 sm:p-8">
+					if currentUser != nil {
+						<form
+							method="post"
+							action={ templ.SafeURL(fmt.Sprintf("/socket/%d/reply", t.ID)) }
+							class="space-y-4"
+						>
+							<textarea
+								name="body"
+								rows="4"
+								required
+								if lang == "id" {
+									placeholder="Tuliskan jawaban atau analisis teknis Anda (Markdown)..."
+								} else {
+									placeholder="Write your answer or technical analysis (Markdown)..."
+								}
+								class="w-full p-3.5 text-xs font-mono bg-bg border border-border text-text placeholder-muted focus:border-[var(--c-link)] focus:outline-none"
+							></textarea>
+							<div class="flex items-center justify-between gap-3 text-xs font-mono text-muted flex-wrap">
+								<span>
+									if lang == "id" {
+										[SYS] Markdown & kode · <kbd class="px-1 py-0.5 border border-border bg-bg text-[10px]">Ctrl+Enter</kbd> kirim
+									} else {
+										[SYS] Markdown & code · <kbd class="px-1 py-0.5 border border-border bg-bg text-[10px]">Ctrl+Enter</kbd> submit
+									}
+								</span>
+								<button
+									type="submit"
+									class="px-4 py-2 bg-text text-bg font-bold font-mono hover:opacity-90 transition-opacity cursor-pointer text-xs uppercase"
+								>
+									if lang == "id" {
+										KIRIM JAWABAN
+									} else {
+										SUBMIT ANSWER
+									}
+								</button>
+							</div>
+						</form>
+					} else {
+						<div class="p-6 bg-bg border border-border text-center space-y-3 text-xs font-mono">
+							<p class="text-muted">
+								if lang == "id" {
+									Masuk dengan GitHub untuk menulis balasan atau memberikan upvote.
+								} else {
+									Sign in with GitHub to write a reply or upvote.
+								}
+							</p>
+							<a
+								href={ templ.SafeURL("/auth/github?return_to=" + prefix(lang) + "/socket/" + t.Slug) }
+								class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-text text-bg font-bold hover:opacity-90"
+							>
+								@IconGitHub()
+								if lang == "id" {
+									<span>Login dengan GitHub</span>
+								} else {
+									<span>Sign in with GitHub</span>
+								}
+							</a>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="mt-8 pt-4">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/socket") }
+				class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text transition-colors group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				<span>
+					if lang == "id" {
+						Kembali ke Socket
+					} else {
+						Back to Socket
+					}
+				</span>
+			</a>
+		</div>
+	</section>
+}
