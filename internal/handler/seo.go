@@ -75,7 +75,7 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Static pages (en + id).
-	for _, p := range []string{"/", "/behind", "/stats", "/guestbook", "/resume"} {
+	for _, p := range []string{"/", "/colophon", "/stats", "/guestbook", "/resume"} {
 		writeURL(p, "")
 		writeURL("/id"+strings.TrimSuffix(p, "/"), "")
 	}
@@ -128,6 +128,7 @@ func (h *Handler) SitemapEN(w http.ResponseWriter, r *http.Request) {
 // SitemapID serves an Indonesian-only sitemap.
 func (h *Handler) SitemapID(w http.ResponseWriter, r *http.Request) {
 	h.langSitemap(w, "id")
+	h.langSitemap(w, "es")
 }
 
 func (h *Handler) langSitemap(w http.ResponseWriter, lang string) {
@@ -150,7 +151,7 @@ func (h *Handler) langSitemap(w http.ResponseWriter, lang string) {
 	}
 
 	// Static pages
-	for _, p := range []string{"/", "/behind", "/stats", "/guestbook", "/resume", "/changelog", "/links"} {
+	for _, p := range []string{"/", "/colophon", "/stats", "/guestbook", "/resume", "/changelog"} {
 		path := pfx + p
 		if lang != "id" && p == "/" {
 			path = "/"

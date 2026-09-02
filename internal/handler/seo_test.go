@@ -14,8 +14,8 @@ func TestSitemapAfterPivot(t *testing.T) {
 	h.Sitemap(rec, req)
 
 	body := rec.Body.String()
-	if !strings.Contains(body, seoBaseURL+"/behind") {
-		t.Error("sitemap harus memuat /behind")
+	if !strings.Contains(body, seoBaseURL+"/colophon") {
+		t.Error("sitemap harus memuat /colophon")
 	}
 	for _, dead := range []string{"/about", "/uses", "/now", "/projects</loc>", "/blog</loc>"} {
 		if strings.Contains(body, dead) {
