@@ -17,6 +17,8 @@ require (
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0
 	golang.org/x/image v0.41.0
+	golang.org/x/oauth2 v0.36.0
+	golang.org/x/text v0.37.0
 	modernc.org/sqlite v1.51.0
 )
 
@@ -67,7 +69,6 @@ require (
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/term v0.40.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	modernc.org/libc v1.72.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect

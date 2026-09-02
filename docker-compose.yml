@@ -10,7 +10,7 @@ services:
       PORT: "8080"
       SSH_PORT: "2222"
       ENV: "${ENV:-production}"
-      BASE_URL: "${BASE_URL:-https://daemontalk.com}"
+      BASE_URL: "${BASE_URL:-https://www.daemontalk.com}"
       # Comment moderation: login via /admin?admin=TOKEN
       ADMIN_TOKEN: "${ADMIN_TOKEN:-}"
       # SMTP for contact form (optional; form still works without it — messages get logged)
@@ -20,6 +20,9 @@ services:
       SMTP_PASS: "${SMTP_PASS:-}"
       SMTP_TO:   "${SMTP_TO:-}"
       GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
+      GITHUB_CLIENT_ID: "${GITHUB_CLIENT_ID:-}"
+      GITHUB_CLIENT_SECRET: "${GITHUB_CLIENT_SECRET:-}"
+      SESSION_SECRET: "${SESSION_SECRET:-}"
     volumes:
       # Persistent host directory mount for SQLite DBs (comments, views, posts) & SSH keys.
       - ./data:/app/data
