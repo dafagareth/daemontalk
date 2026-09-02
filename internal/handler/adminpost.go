@@ -42,21 +42,6 @@ func (h *Handler) renderEditor(w http.ResponseWriter, r *http.Request, p postdb.
 		templates.AdminPostEditor(p, mdToEditorHTML(p.BodyMD), errMsg)))
 }
 
-// AdminPostNew displays an empty write page (draft created upon first autosave).
-func (h *Handler) AdminPostNew(w http.ResponseWriter, r *http.Request) {
-	if !h.isAdmin(r) {
-		h.NotFound(w, r)
-		return
-	}
-	p := postdb.WebPost{
-		Slug:  h.uniqueShortID(0),
-		Lang:  "en",
-		Draft: true,
-		Date:  time.Now().Format("2006-01-02"),
-	}
-	h.renderEditor(w, r, p, "", http.StatusOK)
-}
-
 // AdminPostEdit displays the editor prefilled with an existing post.
 func (h *Handler) AdminPostEdit(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {

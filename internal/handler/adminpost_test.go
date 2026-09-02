@@ -16,15 +16,18 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func TestAdminPostNewForbiddenWithoutAuth(t *testing.T) {
+func TestAdminPostEditForbiddenWithoutAuth(t *testing.T) {
 	h := &Handler{AdminToken: "secret"}
 
-	req := httptest.NewRequest(http.MethodGet, "/admin/posts/new", nil)
+	req := httptest.NewRequest(http.MethodGet, "/admin/posts/1/edit", nil)
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", "1")
+	req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 	rec := httptest.NewRecorder()
-	h.AdminPostNew(rec, req)
+	h.AdminPostEdit(rec, req)
 
 	if rec.Code != http.StatusNotFound {
-		t.Errorf("unauthenticated GET /admin/posts/new: got %d, want 404", rec.Code)
+		t.Errorf("unauthenticated GET /admin/posts/1/edit: got %d, want 404", rec.Code)
 	}
 }
 
@@ -229,14 +232,21 @@ func TestAdminPostPublishSlugLockedOncePublished(t *testing.T) {
 
 func TestAdminPostEditorDoesNotIncludePublicNav(t *testing.T) {
 	h := newAdminAuthedHandler(t)
+	id, _ := h.PostDB.Create(postdb.WebPost{
+		Slug: "draft-post", Title: "Draft Post", BodyMD: "draft body",
+		Lang: "en", Draft: true, Date: "2026-07-01",
+	})
 
-	req := httptest.NewRequest(http.MethodGet, "/admin/posts/new", nil)
+	req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/admin/posts/%d/edit", id), nil)
 	req.AddCookie(&http.Cookie{Name: "admin_token", Value: h.AdminToken})
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", fmt.Sprintf("%d", id))
+	req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 	rec := httptest.NewRecorder()
-	h.AdminPostNew(rec, req)
+	h.AdminPostEdit(rec, req)
 
 	body := rec.Body.String()
-	for _, notWant := range []string{`href="/behind"`, `href="/search"`, "buymeacoffee.com"} {
+	for _, notWant := range []string{`href="/colophon"`, `href="/search"`, "buymeacoffee.com"} {
 		if strings.Contains(body, notWant) {
 			t.Errorf("editor shell should not include public nav/footer, found %q", notWant)
 		}
@@ -248,11 +258,18 @@ func TestAdminPostEditorDoesNotIncludePublicNav(t *testing.T) {
 
 func TestAdminPostEditorDraftLabelsAreEnglish(t *testing.T) {
 	h := newAdminAuthedHandler(t)
+	id, _ := h.PostDB.Create(postdb.WebPost{
+		Slug: "draft-post-2", Title: "Draft Post 2", BodyMD: "draft body",
+		Lang: "en", Draft: true, Date: "2026-07-01",
+	})
 
-	req := httptest.NewRequest(http.MethodGet, "/admin/posts/new", nil)
+	req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/admin/posts/%d/edit", id), nil)
 	req.AddCookie(&http.Cookie{Name: "admin_token", Value: h.AdminToken})
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", fmt.Sprintf("%d", id))
+	req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 	rec := httptest.NewRecorder()
-	h.AdminPostNew(rec, req)
+	h.AdminPostEdit(rec, req)
 
 	body := rec.Body.String()
 	if !strings.Contains(body, "Publish") {
