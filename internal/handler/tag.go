@@ -29,11 +29,6 @@ func (h *Handler) TagIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if len(filtered) == 0 {
-		h.NotFound(w, r)
-		return
-	}
-
 	var viewCounts map[string]int
 	if h.Comments != nil {
 		if vc, err := h.Comments.AllViewCounts(); err != nil {
@@ -53,8 +48,8 @@ func (h *Handler) TagPostsPartial(w http.ResponseWriter, r *http.Request) {
 	ui := i18n.Get(lang)
 	tag := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("tag")))
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	if offset < 6 {
-		offset = 6
+	if offset < 8 {
+		offset = 8
 	}
 
 	isAdmin := h.isAdmin(r)
@@ -83,5 +78,5 @@ func (h *Handler) TagPostsPartial(w http.ResponseWriter, r *http.Request) {
 	pagePosts := filtered[offset:end]
 	nextOffset := end
 	remaining := total - end
-	h.Render(w, r, templates.TagRiverItems(ui, pagePosts, lang, offset-6, nextOffset, remaining, tag))
+	h.Render(w, r, templates.TagRiverItems(ui, pagePosts, lang, offset, nextOffset, remaining, tag))
 }
