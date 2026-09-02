@@ -44,18 +44,23 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 	posts := h.AllPosts()
 
 	var b strings.Builder
-	banner := `  ____                                _        _ _    
- |  _ \  __ _  ___ _ __ ___   ___  _ __ | |_ __ _| | | __
- | | | |/ _` + "`" + ` |/ _ \ '_ ` + "`" + ` _ \ / _ \| '_ \| __/ _` + "`" + ` | | |/ /
- | |_| | (_| |  __/ | | | | | (_) | | | | || (_| | |   < 
- |____/ \__,_|\___|_| |_| |_|\___/|_| |_|\__\__,_|_|_|\_\`
+	banner := ` ____                                _        _ _    
+|  _ \  __ _  ___ _ __ ___   ___  _ __ | |_ __ _| | | __
+| | | |/ _` + "`" + ` |/ _ \ '_ ` + "`" + ` _ \ / _ \| '_ \| __/ _` + "`" + ` | | |/ /
+| |_| | (_| |  __/ | | | | | (_) | | | | || (_| | |   < 
+|____/ \__,_|\___|_| |_| |_|\___/|_| |_|\__\__,_|_|_|\_\`
+
+	dateStr := time.Now().Format("Monday, 02 January 2006")
+	if len(posts) > 0 && posts[0].Date.After(time.Now()) {
+		dateStr = posts[0].Date.Format("Monday, 02 January 2006")
+	}
 
 	b.WriteString(fmt.Sprintf("%s%s%s\n\n", ansiGreen+ansiBold, banner, ansiReset))
-	b.WriteString(fmt.Sprintf(" %s[ DAEMONTALK DAILY TECH BRIEFING ]%s\n", ansiCyan+ansiBold, ansiReset))
-	b.WriteString(fmt.Sprintf(" %sDate:%s %s | %sHost:%s %s\n", ansiDim, ansiReset, time.Now().Format("Monday, 02 January 2006"), ansiDim, ansiReset, r.Host))
-	b.WriteString(fmt.Sprintf(" %s══════════════════════════════════════════════════════════════════════════%s\n\n", ansiDim, ansiReset))
+	b.WriteString(fmt.Sprintf("%s[ DAEMONTALK DAILY TECH BRIEFING ]%s\n", ansiCyan+ansiBold, ansiReset))
+	b.WriteString(fmt.Sprintf("%sDate: %s | Host: %s%s\n", ansiDim, dateStr, r.Host, ansiReset))
+	b.WriteString(fmt.Sprintf("%s----------------------------------------------------------------------%s\n\n", ansiDim, ansiReset))
 
-	b.WriteString(fmt.Sprintf(" %s%s[ TOP DISPATCHES ]%s\n\n", ansiGreen, ansiBold, ansiReset))
+	b.WriteString(fmt.Sprintf("%s[ TOP DISPATCHES ]%s\n\n", ansiGreen+ansiBold, ansiReset))
 	count := 0
 	for _, p := range posts {
 		if p.Draft {
@@ -68,18 +73,19 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 		if len(p.Tags) > 0 {
 			tags = fmt.Sprintf(" %s[%s]%s", ansiDim, strings.ToUpper(strings.Join(p.Tags, " ")), ansiReset)
 		}
-		b.WriteString(fmt.Sprintf("  %s%d.%s %s%s%s%s\n", ansiYellow, count+1, ansiReset, ansiBold, p.Title, ansiReset, tags))
+		b.WriteString(fmt.Sprintf("%s%d.%s %s%s%s%s\n", ansiYellow, count+1, ansiReset, ansiBold, p.Title, ansiReset, tags))
 		if p.Description != "" {
-			b.WriteString(fmt.Sprintf("     %s%s%s\n", ansiDim, p.Description, ansiReset))
+			b.WriteString(fmt.Sprintf("   %s%s%s\n", ansiDim, p.Description, ansiReset))
 		}
-		b.WriteString(fmt.Sprintf("    curl -sL %s/p/%s\n\n", r.Host, p.Slug))
+		b.WriteString(fmt.Sprintf("   curl -sL %s/p/%s\n\n", r.Host, p.Slug))
 		count++
 		if count >= 8 {
 			break
 		}
 	}
 
-	b.WriteString(fmt.Sprintf(" %s%s[ TERMINAL ENDPOINTS ]%s\n\n", ansiMagenta, ansiBold, ansiReset))
+	b.WriteString(fmt.Sprintf("%s----------------------------------------------------------------------%s\n", ansiDim, ansiReset))
+	b.WriteString(fmt.Sprintf("%s[ TERMINAL ENDPOINTS ]%s\n\n", ansiMagenta+ansiBold, ansiReset))
 	b.WriteString(fmt.Sprintf("  curl -sL %s/daily          %s# Stream full daily tech briefing%s\n", r.Host, ansiDim, ansiReset))
 	b.WriteString(fmt.Sprintf("  curl -sL %s/recipes        %s# Production Linux & sysadmin recipes%s\n", r.Host, ansiDim, ansiReset))
 	b.WriteString(fmt.Sprintf("  curl -sL %s/t/go           %s# Stream Go backend dispatches%s\n", r.Host, ansiDim, ansiReset))
@@ -87,7 +93,7 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(fmt.Sprintf("  curl -sL %s/t/python       %s# Stream Python & backend articles%s\n", r.Host, ansiDim, ansiReset))
 	b.WriteString(fmt.Sprintf("  curl -sL %s/p/<slug>       %s# Read full article in terminal%s\n\n", r.Host, ansiDim, ansiReset))
 
-	b.WriteString(fmt.Sprintf(" %sTip: Run 'curl -sL %s/daily | less -R' for paginated reading.%s\n\n", ansiDim, r.Host, ansiReset))
+	b.WriteString(fmt.Sprintf("%sTip: Run 'curl -sL %s/daily | less -R' for paginated reading.%s\n\n", ansiDim, r.Host, ansiReset))
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -171,7 +177,7 @@ func (h *Handler) CLIPost(w http.ResponseWriter, r *http.Request) {
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf("%s%s# %s%s\n\n", ansiCyan, ansiBold, p.Title, ansiReset))
 	b.WriteString(fmt.Sprintf("%sDate:%s %s | %sLang:%s %s | %sTags:%s [%s]\n", ansiDim, ansiReset, p.Date.Format("2006-01-02"), ansiDim, ansiReset, p.Lang, ansiDim, ansiReset, strings.Join(p.Tags, ", ")))
-	b.WriteString(fmt.Sprintf("%s══════════════════════════════════════════════════════════════════════════%s\n\n", ansiDim, ansiReset))
+	b.WriteString(fmt.Sprintf("%s----------------------------------------------------------------------%s\n\n", ansiDim, ansiReset))
 
 	if p.Description != "" {
 		b.WriteString(fmt.Sprintf("%s> %s%s\n\n", ansiYellow, p.Description, ansiReset))
@@ -179,7 +185,7 @@ func (h *Handler) CLIPost(w http.ResponseWriter, r *http.Request) {
 
 	// Render raw markdown/html body
 	b.WriteString(string(p.Body))
-	b.WriteString(fmt.Sprintf("\n\n%s══════════════════════════════════════════════════════════════════════════%s\n", ansiDim, ansiReset))
+	b.WriteString(fmt.Sprintf("\n\n%s----------------------------------------------------------------------%s\n", ansiDim, ansiReset))
 	b.WriteString(fmt.Sprintf("%sRead on web: https://%s/blog/%s%s\n\n", ansiDim, r.Host, p.Slug, ansiReset))
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
@@ -192,7 +198,7 @@ func (h *Handler) CLIRecipes(w http.ResponseWriter, r *http.Request) {
 
 	recipes := `
  [ PRODUCTION-READY LINUX & eBPF RECIPES ]
- ══════════════════════════════════════════════════════════════════════════
+ ----------------------------------------------------------------------
 
  1. Trace Top System Calls by Process in Real-Time (bpftrace)
     sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @[comm] = count(); }'

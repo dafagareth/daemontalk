@@ -91,7 +91,7 @@ func TestCLIMainAndDaily(t *testing.T) {
 	if recDailyBrowser.Code != http.StatusOK {
 		t.Fatalf("expected 200, got %d", recDailyBrowser.Code)
 	}
-	if !strings.Contains(recDailyBrowser.Body.String(), "Daily Technical Briefing") {
+	if !strings.Contains(recDailyBrowser.Body.String(), "Daily Briefing") {
 		t.Errorf("unexpected CLIDaily Browser response: %s", recDailyBrowser.Body.String())
 	}
 
