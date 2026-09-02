@@ -8,16 +8,19 @@ import (
 
 // Config holds all runtime application configuration loaded from the environment.
 type Config struct {
-	Port        string
-	SSHPort     string
-	Env         string
-	BaseURL     string
-	AdminToken  string
-	ContentDir  string
-	DataDir     string
-	Server      ServerConfig
-	SMTP        SMTPConfig
-	GitHubToken string
+	Port               string
+	SSHPort            string
+	Env                string
+	BaseURL            string
+	AdminToken         string
+	ContentDir         string
+	DataDir            string
+	Server             ServerConfig
+	SMTP               SMTPConfig
+	GitHubToken        string
+	GitHubClientID     string
+	GitHubClientSecret string
+	SessionSecret      string
 }
 
 // ServerConfig holds HTTP server network timeout and memory limits for resilience.
@@ -52,16 +55,25 @@ func (c *Config) HasAdmin() bool {
 	return c.AdminToken != ""
 }
 
+// HasGitHubOAuth returns true if GitHub OAuth credentials are fully configured.
+func (c *Config) HasGitHubOAuth() bool {
+	return c.GitHubClientID != "" && c.GitHubClientSecret != ""
+}
+
 // Load reads and validates configuration from environment variables with sensible defaults.
 func Load() *Config {
+	loadDotEnv()
 	return &Config{
-		Port:       getEnv("PORT", "8080"),
-		SSHPort:    getEnv("SSH_PORT", "2222"),
-		Env:        getEnv("ENV", "development"),
-		BaseURL:    getEnv("BASE_URL", "https://www.daemontalk.com"),
-		AdminToken: getEnv("ADMIN_TOKEN", ""),
-		ContentDir: getEnv("CONTENT_DIR", "content"),
-		DataDir:    getEnv("DATA_DIR", "data"),
+		Port:               getEnv("PORT", "8080"),
+		SSHPort:            getEnv("SSH_PORT", "2222"),
+		Env:                getEnv("ENV", "development"),
+		BaseURL:            getEnv("BASE_URL", "https://www.daemontalk.com"),
+		AdminToken:         getEnv("ADMIN_TOKEN", ""),
+		ContentDir:         getEnv("CONTENT_DIR", "content"),
+		DataDir:            getEnv("DATA_DIR", "data"),
+		GitHubClientID:     getEnv("GITHUB_CLIENT_ID", ""),
+		GitHubClientSecret: getEnv("GITHUB_CLIENT_SECRET", ""),
+		SessionSecret:      getEnv("SESSION_SECRET", "daemontalk-default-insecure-secret-key-32b"),
 		Server: ServerConfig{
 			ReadHeaderTimeout: 10 * time.Second,
 			ReadTimeout:       30 * time.Second,
@@ -76,6 +88,32 @@ func Load() *Config {
 			To:   getEnv("SMTP_TO", ""),
 		},
 		GitHubToken: getEnv("GITHUB_TOKEN", ""),
+	}
+}
+
+func loadDotEnv() {
+	data, err := os.ReadFile(".env")
+	if err != nil {
+		return
+	}
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		line = strings.TrimPrefix(line, "export ")
+		line = strings.TrimSpace(line)
+
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) == 2 {
+			k := strings.TrimSpace(parts[0])
+			v := strings.TrimSpace(parts[1])
+			v = strings.Trim(v, `"'`)
+			if _, exists := os.LookupEnv(k); !exists {
+				_ = os.Setenv(k, v)
+			}
+		}
 	}
 }
 
