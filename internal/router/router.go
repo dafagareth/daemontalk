@@ -147,6 +147,7 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Get("/license", h.License)
 	r.Get("/accessibility", h.Accessibility)
 	r.Get("/projects/{slug}", h.ProjectDetail)
+	r.Get("/api/webhook/github", h.GitHubWebhook)
 	r.Post("/api/webhook/github", h.GitHubWebhook)
 
 	// Admin routes (Protected by AdminToken and Rate Limited)

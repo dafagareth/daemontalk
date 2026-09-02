@@ -2,7 +2,7 @@
 # Automatically manages Let's Encrypt / ZeroSSL certificates
 
 daemontalk.com {
-    redir https://www.daemontalk.com{uri} permanent
+    redir https://www.daemontalk.com{uri} 308
 }
 
 www.daemontalk.com {

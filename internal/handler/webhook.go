@@ -18,6 +18,14 @@ type githubPushPayload struct {
 
 // GitHubWebhook handles POST /api/webhook/github for instant automatic article publishing on merge.
 func (h *Handler) GitHubWebhook(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"status":  "ok",
+			"message": "DaemonTalk GitHub webhook endpoint is active",
+		})
+		return
+	}
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
