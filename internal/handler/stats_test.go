@@ -35,7 +35,7 @@ func TestStatsPage(t *testing.T) {
 
 	body := rec.Body.String()
 	// The stats page displays numbers and summaries. We can assert strings related to stats are present.
-	if !strings.Contains(body, "Posts") {
+	if !strings.Contains(body, "Total Articles Published") {
 		t.Error("expected statistics elements in Stats response page")
 	}
 }

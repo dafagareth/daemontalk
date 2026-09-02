@@ -38,6 +38,18 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 	}
 	data.TotalTags = len(tagSet)
 
+	if h.Forum != nil {
+		fst := h.Forum.GetStats()
+		data.TotalTopics = fst.TotalTopics
+		data.TotalReplies = fst.TotalReplies
+		data.SolvedTopics = fst.SolvedTopics
+		data.TotalVotes = fst.TotalVotes
+	}
+
+	if h.Auth != nil {
+		data.TotalUsers = h.Auth.CountUsers()
+	}
+
 	if h.Comments != nil {
 		if pv, err := h.Comments.TopPageViews(5); err == nil {
 			for _, p := range pv {
@@ -59,5 +71,5 @@ func (h *Handler) Stats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	meta := templates.PageMeta{Description: "Site statistics for daemontalk.com — posts, views, and more."}
-	h.Render(w, r, templates.Layout(ui, lang, "stats", r.URL.Path, meta, templates.StatsPage(ui, data)))
+	h.Render(w, r, templates.Layout(ui, lang, "stats", r.URL.Path, meta, templates.StatsPage(ui, lang, data)))
 }
