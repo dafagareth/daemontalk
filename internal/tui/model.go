@@ -16,6 +16,7 @@ type Model struct {
 	Posts        []post.Post
 	ActivePanel  int // 0 = list, 1 = viewport
 	IsFullReader bool
+	IsCompact    bool // true when terminal width < 72
 	ThemeIdx     int
 	FlashMsg     string
 	Ready        bool
@@ -66,22 +67,31 @@ func (m Model) Init() tea.Cmd {
 
 func (m *Model) RenderCurrentPost() string {
 	if len(m.Posts) == 0 {
-		return "No posts found."
+		return "\n  No dispatches found in content/posts directory."
 	}
 
-	var p post.Post
 	if it, ok := m.List.SelectedItem().(Item); ok {
-		p = it.Post
-	} else {
-		idx := m.List.Index()
-		if idx < 0 || idx >= len(m.Posts) {
-			return ""
+		wrapWidth := m.Viewport.Width - 2
+		if wrapWidth < 20 {
+			wrapWidth = 20
 		}
-		p = m.Posts[idx]
+		return RenderPostMarkdown(it.Post, wrapWidth, m.GetTheme())
 	}
 
-	wrapWidth := m.Viewport.Width - 4
-	return RenderPostMarkdown(p, wrapWidth, m.GetTheme())
+	if m.List.FilterValue() != "" {
+		return fmt.Sprintf("\n  No dispatches match filter: %q\n\n  Press [Esc] to clear search.", m.List.FilterValue())
+	}
+
+	idx := m.List.Index()
+	if idx >= 0 && idx < len(m.Posts) {
+		wrapWidth := m.Viewport.Width - 2
+		if wrapWidth < 20 {
+			wrapWidth = 20
+		}
+		return RenderPostMarkdown(m.Posts[idx], wrapWidth, m.GetTheme())
+	}
+
+	return "\n  Select a dispatch to read."
 }
 
 func (m *Model) RecalcSizes() {
@@ -89,37 +99,57 @@ func (m *Model) RecalcSizes() {
 		return
 	}
 
+	m.IsCompact = m.Width < 72
+
 	// Reserve 2 lines for the 2-row bottom status bar
 	panelHeight := m.Height - 2
 	if panelHeight < 6 {
 		panelHeight = 6
 	}
 
-	if m.IsFullReader {
+	if m.IsFullReader || (m.IsCompact && m.ActivePanel == 1) {
 		contentInnerW := m.Width - 2
+		if contentInnerW < 10 {
+			contentInnerW = 10
+		}
 		contentInnerH := panelHeight - 2
-		m.Viewport.Width = contentInnerW - 4
+		if contentInnerH < 4 {
+			contentInnerH = 4
+		}
+		m.Viewport.Width = contentInnerW - 2
 		m.Viewport.Height = contentInnerH - 1
 		m.Viewport.SetContent(m.RenderCurrentPost())
+	} else if m.IsCompact && m.ActivePanel == 0 {
+		innerWidth := m.Width - 2
+		if innerWidth < 10 {
+			innerWidth = 10
+		}
+		innerHeight := panelHeight - 2
+		if innerHeight < 4 {
+			innerHeight = 4
+		}
+		m.List.SetSize(innerWidth, innerHeight-1)
 	} else {
 		listWidth := m.Width * 35 / 100
-		if listWidth < 34 {
-			listWidth = 34
+		if listWidth < 30 {
+			listWidth = 30
 		}
-		if listWidth > 52 {
-			listWidth = 52
+		if listWidth > 50 {
+			listWidth = 50
 		}
 		contentWidth := m.Width - listWidth
+		if contentWidth < 30 {
+			contentWidth = 30
+		}
 
 		innerWidth := listWidth - 2
 		innerHeight := panelHeight - 2
 
-		// List size: subtract 1 from height for the custom title line
 		m.List.SetSize(innerWidth, innerHeight-1)
 
 		contentInnerW := contentWidth - 2
 		contentInnerH := panelHeight - 2
-		m.Viewport.Width = contentInnerW - 4
+		m.Viewport.Width = contentInnerW - 2
 		m.Viewport.Height = contentInnerH - 1
 		m.Viewport.SetContent(m.RenderCurrentPost())
 	}

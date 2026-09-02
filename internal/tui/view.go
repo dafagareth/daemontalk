@@ -21,7 +21,6 @@ func (m Model) View() string {
 		panelHeight = 6
 	}
 
-	// Dynamic box styles based on active theme
 	inactBox := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(theme.BorderInactive)
@@ -32,8 +31,8 @@ func (m Model) View() string {
 
 	var panels string
 
-	if m.IsFullReader {
-		// Full Reader Mode
+	if m.IsFullReader || (m.IsCompact && m.ActivePanel == 1) {
+		// Full Reader / Compact Reader Mode
 		scrollPercent := fmt.Sprintf("%.0f%%", m.Viewport.ScrollPercent()*100)
 		if m.Viewport.AtTop() {
 			scrollPercent = "TOP"
@@ -49,10 +48,10 @@ func (m Model) View() string {
 		}
 
 		fullTitle := fmt.Sprintf(" [Reading] %s (%s) ", currentPost.Title, scrollPercent)
-		maxTitleLen := m.Width - 12
-		runes := []rune(fullTitle)
-		if len(runes) > maxTitleLen && maxTitleLen > 10 {
-			fullTitle = string(runes[:maxTitleLen-4]) + "... (" + scrollPercent + ") "
+		maxTitleLen := m.Width - 10
+		if maxTitleLen > 12 && len([]rune(fullTitle)) > maxTitleLen {
+			runes := []rune(fullTitle)
+			fullTitle = string(runes[:maxTitleLen-8]) + "... (" + scrollPercent + ") "
 		}
 		fullTitleStyled := lipgloss.NewStyle().Foreground(theme.ActiveAccent).Bold(true).Render(fullTitle)
 
@@ -60,16 +59,32 @@ func (m Model) View() string {
 			Width(m.Width - 2).
 			Height(panelHeight - 2).
 			Render(fullTitleStyled + "\n" + m.Viewport.View())
-	} else {
-		// Split Mode
-		listWidth := m.Width * 35 / 100
-		if listWidth < 34 {
-			listWidth = 34
+	} else if m.IsCompact && m.ActivePanel == 0 {
+		// Compact Single-Column List Mode
+		leftCount := fmt.Sprintf("%d/%d", m.List.Index()+1, len(m.Posts))
+		if m.List.FilterValue() != "" {
+			leftCount = fmt.Sprintf("filter: %q", m.List.FilterValue())
 		}
-		if listWidth > 52 {
-			listWidth = 52
+		leftTitle := fmt.Sprintf(" [Dispatches] (%s) ", leftCount)
+		leftTitleStyled := lipgloss.NewStyle().Foreground(theme.ActiveAccent).Bold(true).Render(leftTitle)
+
+		panels = actBox.
+			Width(m.Width - 2).
+			Height(panelHeight - 2).
+			Render(leftTitleStyled + "\n" + m.List.View())
+	} else {
+		// Split Desktop Mode
+		listWidth := m.Width * 35 / 100
+		if listWidth < 30 {
+			listWidth = 30
+		}
+		if listWidth > 50 {
+			listWidth = 50
 		}
 		contentWidth := m.Width - listWidth
+		if contentWidth < 30 {
+			contentWidth = 30
+		}
 
 		lStyle := inactBox
 		cStyle := inactBox
@@ -133,14 +148,13 @@ func (m Model) View() string {
 		Background(theme.StatusBg).
 		Foreground(theme.TextMuted)
 
-	// 3. Render 2-Line Bottom Status Bar
 	var row1, row2 string
 
-	if m.IsFullReader {
+	if m.IsFullReader || (m.IsCompact && m.ActivePanel == 1) {
 		var row1Items []string
-		row1Items = append(row1Items, sKeyStyle.Render("Esc/Enter/q")+" "+sDescStyle.Render("Back to List"))
+		row1Items = append(row1Items, sKeyStyle.Render("Esc/Enter/q")+" "+sDescStyle.Render("Back"))
 		row1Items = append(row1Items, sKeyStyle.Render("t")+" "+sDescStyle.Render("Theme: "+theme.Name))
-		row1Items = append(row1Items, sKeyStyle.Render("↑/↓,j/k")+" "+sDescStyle.Render("Scroll"))
+		row1Items = append(row1Items, sKeyStyle.Render("j/k,↑/↓")+" "+sDescStyle.Render("Scroll"))
 		row1Items = append(row1Items, sKeyStyle.Render("d/u")+" "+sDescStyle.Render("Half Page"))
 		row1Items = append(row1Items, sKeyStyle.Render("g/G")+" "+sDescStyle.Render("Top/Bottom"))
 		row1 = strings.Join(row1Items, "  │  ")
@@ -150,19 +164,21 @@ func (m Model) View() string {
 		} else {
 			var row2Items []string
 			row2Items = append(row2Items, sKeyStyle.Render("o")+" "+sDescStyle.Render("Open Image"))
-			row2Items = append(row2Items, sKeyStyle.Render("w")+" "+sDescStyle.Render("Open Article on Web"))
+			row2Items = append(row2Items, sKeyStyle.Render("w")+" "+sDescStyle.Render("Open on Web"))
 			row2 = strings.Join(row2Items, "  │  ")
 		}
 	} else {
 		var row1Items []string
-		row1Items = append(row1Items, sKeyStyle.Render("Enter")+" "+sDescStyle.Render("Full Reader"))
+		row1Items = append(row1Items, sKeyStyle.Render("Enter")+" "+sDescStyle.Render("Read"))
 		row1Items = append(row1Items, sKeyStyle.Render("t")+" "+sDescStyle.Render("Theme: "+theme.Name))
-		row1Items = append(row1Items, sKeyStyle.Render("Tab/1/2")+" "+sDescStyle.Render("Switch Panel"))
-		row1Items = append(row1Items, sKeyStyle.Render("↑/↓,j/k")+" "+sDescStyle.Render("Navigate"))
+		if !m.IsCompact {
+			row1Items = append(row1Items, sKeyStyle.Render("Tab/1/2")+" "+sDescStyle.Render("Switch Panel"))
+		}
+		row1Items = append(row1Items, sKeyStyle.Render("j/k,↑/↓")+" "+sDescStyle.Render("Navigate"))
 		if m.ActivePanel == 0 {
 			row1Items = append(row1Items, sKeyStyle.Render("/")+" "+sDescStyle.Render("Search"))
 		} else {
-			row1Items = append(row1Items, sKeyStyle.Render("d/u")+" "+sDescStyle.Render("Scroll Page"))
+			row1Items = append(row1Items, sKeyStyle.Render("d/u")+" "+sDescStyle.Render("Scroll"))
 			row1Items = append(row1Items, sKeyStyle.Render("g/G")+" "+sDescStyle.Render("Top/Bottom"))
 		}
 		row1Items = append(row1Items, sKeyStyle.Render("q")+" "+sDescStyle.Render("Quit"))
@@ -173,7 +189,7 @@ func (m Model) View() string {
 		} else {
 			var row2Items []string
 			row2Items = append(row2Items, sKeyStyle.Render("o")+" "+sDescStyle.Render("Open Image"))
-			row2Items = append(row2Items, sKeyStyle.Render("w")+" "+sDescStyle.Render("Open Article on Web"))
+			row2Items = append(row2Items, sKeyStyle.Render("w")+" "+sDescStyle.Render("Open on Web"))
 			row2 = strings.Join(row2Items, "  │  ")
 		}
 	}

@@ -44,27 +44,44 @@ func (d LazyDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	isSelected := index == m.Index()
 	width := m.Width()
 
-	// Title truncation (rune-safe for multi-byte Unicode/emojis)
-	title := p.Title
 	maxTitleWidth := width - 4
 	if maxTitleWidth < 5 {
 		maxTitleWidth = 5
 	}
-	titleRunes := []rune(title)
-	if len(titleRunes) > maxTitleWidth {
-		title = string(titleRunes[:maxTitleWidth-1]) + "…"
+
+	// Title truncation (visual column width safe)
+	title := p.Title
+	if lipgloss.Width(title) > maxTitleWidth {
+		for len(title) > 0 && lipgloss.Width(title+"…") > maxTitleWidth {
+			runes := []rune(title)
+			title = string(runes[:len(runes)-1])
+		}
+		title += "…"
 	}
 
-	// Subtitle (Date + Tags, rune-safe)
+	// Subtitle (Date + Tags, visual column width safe)
 	dateStr := p.Date.Format("02 Jan 2006")
 	tagStr := ""
 	if len(p.Tags) > 0 {
 		tagStr = " • " + strings.Join(p.Tags, ", ")
 	}
 	sub := dateStr + tagStr
-	subRunes := []rune(sub)
-	if len(subRunes) > maxTitleWidth {
-		sub = string(subRunes[:maxTitleWidth-1]) + "…"
+	if lipgloss.Width(sub) > maxTitleWidth {
+		for len(sub) > 0 && lipgloss.Width(sub+"…") > maxTitleWidth {
+			runes := []rune(sub)
+			sub = string(runes[:len(runes)-1])
+		}
+		sub += "…"
+	}
+
+	// Pad with spaces to fill exact visual column width
+	titlePad := ""
+	if rem := maxTitleWidth - lipgloss.Width(title); rem > 0 {
+		titlePad = strings.Repeat(" ", rem)
+	}
+	subPad := ""
+	if rem := maxTitleWidth - lipgloss.Width(sub); rem > 0 {
+		subPad = strings.Repeat(" ", rem)
 	}
 
 	var titleLine, subLine string
@@ -74,11 +91,11 @@ func (d LazyDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 			Foreground(theme.TextNormal).
 			Background(theme.SelectedBg).
 			Bold(true).
-			Render(fmt.Sprintf("%-*s", maxTitleWidth, title))
+			Render(title + titlePad)
 		subStyled := lipgloss.NewStyle().
 			Foreground(theme.ActiveAccent).
 			Background(theme.SelectedBg).
-			Render(fmt.Sprintf("%-*s", maxTitleWidth, sub))
+			Render(sub + subPad)
 
 		titleLine = cursor + titleStyled
 		subLine = "  " + subStyled

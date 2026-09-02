@@ -37,7 +37,7 @@ var Themes = []Theme{
 		TextNormal:     lipgloss.Color("#c0caf5"),
 		TextMuted:      lipgloss.Color("#565f89"),
 		StatusBg:       lipgloss.Color("#1a1b26"),
-		GlamourStyle:   "tokyo-night",
+		GlamourStyle:   "dark",
 	},
 	{
 		Name:           "Catppuccin Mocha",

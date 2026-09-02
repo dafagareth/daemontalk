@@ -5,18 +5,38 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"daemontalk/internal/post"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 )
 
+var (
+	renderCache sync.Map
+)
+
 func getContentPostsDir() string {
-	contentDir := os.Getenv("CONTENT_DIR")
-	if contentDir == "" {
-		contentDir = "content"
+	candidates := []string{
+		os.Getenv("CONTENT_DIR"),
+		"content",
+		"../content",
+		"../../content",
 	}
-	return filepath.Join(contentDir, "posts")
+
+	for _, c := range candidates {
+		if c == "" {
+			continue
+		}
+		postsPath := filepath.Join(c, "posts")
+		if info, err := os.Stat(postsPath); err == nil && info.IsDir() {
+			return postsPath
+		}
+		if info, err := os.Stat(c); err == nil && info.IsDir() {
+			return c
+		}
+	}
+	return filepath.Join("content", "posts")
 }
 
 // FindPostFile locates the exact markdown file corresponding to a given post
@@ -59,6 +79,17 @@ func FindPostFile(p post.Post) string {
 
 // RenderPostMarkdown formats and renders the full markdown body using Glamour and theme styling
 func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
+	if wrapWidth < 20 {
+		wrapWidth = 20
+	}
+
+	cacheKey := fmt.Sprintf("%s:%d:%s", p.Slug, wrapWidth, theme.Name)
+	if cached, ok := renderCache.Load(cacheKey); ok {
+		if s, isStr := cached.(string); isStr && s != "" {
+			return s
+		}
+	}
+
 	exactFile := FindPostFile(p)
 
 	var rawMD []byte
@@ -76,11 +107,17 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 				content = parts[2]
 			}
 		}
-	} else {
+	} else if p.Description != "" {
 		content = p.Description
+	} else {
+		content = "No content available for this dispatch."
 	}
 
-	// Format inline markdown images cleanly without raw block art
+	// Format custom callouts into clean markdown quotes
+	content = reCalloutOpen.ReplaceAllString(content, "\n> **[$1]** ")
+	content = strings.ReplaceAll(content, "</callout>", "\n")
+
+	// Format inline markdown images cleanly
 	content = reMarkdownImage.ReplaceAllStringFunc(content, func(match string) string {
 		sub := reMarkdownImage.FindStringSubmatch(match)
 		if len(sub) == 3 {
@@ -98,13 +135,12 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 	content = reBlockMath.ReplaceAllString(content, "```math\n$1\n```")
 	content = reInlineMath.ReplaceAllString(content, "`$1`")
 
-	if wrapWidth < 20 {
-		wrapWidth = 20
-	}
+	// Strip remaining raw HTML containers (e.g. <figure>, <details>, <summary>)
+	content = reHTMLTags.ReplaceAllString(content, "")
 
 	// 1. Glamour rendering for body
 	glamourStyle := theme.GlamourStyle
-	if glamourStyle == "" || glamourStyle == "tokyo-night" {
+	if glamourStyle == "" {
 		glamourStyle = "dark"
 	}
 
@@ -126,7 +162,7 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		}
 	}
 
-	// 2. Beautiful Theme-Aware Dynamic Header
+	// 2. Theme-Aware Header
 	titleStyle := lipgloss.NewStyle().
 		Bold(true).
 		Foreground(theme.TextNormal).
@@ -189,5 +225,7 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 	}
 	header.WriteString(dividerStyle.Render(strings.Repeat("─", divWidth)) + "\n\n")
 
-	return header.String() + renderedBody
+	fullOutput := header.String() + renderedBody
+	renderCache.Store(cacheKey, fullOutput)
+	return fullOutput
 }

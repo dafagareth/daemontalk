@@ -3,16 +3,45 @@ package tui
 import (
 	"encoding/base64"
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
 	"runtime"
+	"strings"
 )
 
 var (
 	reMarkdownImage = regexp.MustCompile(`!\[([^\]]*)\]\(([^)]+)\)`)
 	reBlockMath     = regexp.MustCompile(`(?s)\$\$(.*?)\$\$`)
 	reInlineMath    = regexp.MustCompile(`\$([^$\n]+)\$`)
+	reHTMLTags      = regexp.MustCompile(`<[^>]+>`)
+	reCalloutOpen   = regexp.MustCompile(`(?i)<callout\s+type="([^"]+)">`)
 )
+
+// ResolvePostURL resolves a path or slug into a full URL (handling already-absolute http/https URLs)
+func ResolvePostURL(rawPath, fallbackSlug string) string {
+	if rawPath != "" {
+		if strings.HasPrefix(rawPath, "http://") || strings.HasPrefix(rawPath, "https://") {
+			return rawPath
+		}
+		baseURL := os.Getenv("BASE_URL")
+		if baseURL == "" {
+			baseURL = "https://www.daemontalk.com"
+		}
+		baseURL = strings.TrimSuffix(baseURL, "/")
+		if !strings.HasPrefix(rawPath, "/") {
+			rawPath = "/" + rawPath
+		}
+		return fmt.Sprintf("%s%s", baseURL, rawPath)
+	}
+
+	baseURL := os.Getenv("BASE_URL")
+	if baseURL == "" {
+		baseURL = "https://www.daemontalk.com"
+	}
+	baseURL = strings.TrimSuffix(baseURL, "/")
+	return fmt.Sprintf("%s/blog/%s", baseURL, fallbackSlug)
+}
 
 // OSC52Copy generates the ANSI sequence to copy text into the SSH client's local clipboard
 func OSC52Copy(text string) string {
