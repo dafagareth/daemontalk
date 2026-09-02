@@ -28,5 +28,6 @@ services:
       - ./data:/app/data
       # Direct mount for markdown content & post images so article updates take effect immediately
       - ./content:/app/content
+      - ./.git:/app/.git:ro
       - ./web/static/images/posts:/app/web/static/images/posts
     restart: unless-stopped

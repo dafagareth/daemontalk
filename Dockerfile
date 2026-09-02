@@ -21,7 +21,7 @@ RUN templ generate && \
 FROM debian:bookworm-slim
 WORKDIR /app
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates tzdata \
+    && apt-get install -y --no-install-recommends ca-certificates tzdata git \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --system --uid 10001 --home /app app
 
