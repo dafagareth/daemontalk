@@ -1,0 +1,298 @@
+package templates
+
+import (
+	"daemontalk/internal/github"
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/project"
+	"fmt"
+)
+
+templ Colophon(ui i18n.UI, lang string, projects []project.Project, ghStats github.Stats) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh] font-sans">
+		<div class="mb-6 font-sans">
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+				if lang == "id" {
+					Spesifikasi & Kolofon
+				} else {
+					Colophon & Specifications
+				}
+			</h1>
+		</div>
+		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
+			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono text-muted select-none">
+				<div class="flex items-center gap-3 text-text font-bold min-w-0">
+					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+					<code class="text-sm sm:text-base font-mono truncate">uname -a</code>
+				</div>
+				<span class="text-xs font-mono text-muted shrink-0">daemontalk.com</span>
+			</div>
+			<div class="py-6 px-0 sm:p-8 space-y-10 font-sans">
+				<div class="space-y-3">
+					<div class="flex items-center gap-2 pb-2 border-b border-border">
+						<span class="text-link font-mono font-black text-xs">01</span>
+						<h2 class="text-sm font-bold font-sans text-text uppercase tracking-wider">
+							if lang == "id" {
+								Spesifikasi Sistem
+							} else {
+								System Specifications
+							}
+						</h2>
+					</div>
+					<div class="divide-y divide-border/40 font-sans text-xs sm:text-sm">
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">Platform &amp; Host</span>
+							<span class="text-text sm:text-right font-medium">Linux x86_64 VPS · Caddy 2 Reverse Proxy (TLS 1.3)</span>
+						</div>
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">Core Engine</span>
+							<span class="text-text sm:text-right font-medium">Go 1.24 · Chi Router · Templ · Tailwind CSS v4</span>
+						</div>
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">Data Store</span>
+							<span class="text-text sm:text-right font-medium">Pure-Go SQLite (WAL Mode) · Local Disk Storage</span>
+						</div>
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">
+								if lang == "id" {
+									Performa
+								} else {
+									Performance
+								}
+							</span>
+							<span class="text-text sm:text-right font-medium">&lt; 2ms TTFB · ~14MB Single Binary · ~18MB Idle RAM</span>
+						</div>
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">
+								if lang == "id" {
+									Privasi &amp; Tracking
+								} else {
+									Privacy &amp; Tracking
+								}
+							</span>
+							<span class="text-text sm:text-right font-medium">0 Tracking Cookies · Zero Third-Party Analytics</span>
+						</div>
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">
+								if lang == "id" {
+									Lisensi
+								} else {
+									License
+								}
+							</span>
+							<span class="text-text sm:text-right font-medium">CC BY-NC-SA 4.0 (Dispatches) · MIT (Engine)</span>
+						</div>
+						<div class="py-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<span class="text-muted text-xs font-medium shrink-0">
+								if lang == "id" {
+									Pengelola
+								} else {
+									Maintainer
+								}
+							</span>
+							<span class="text-text sm:text-right font-medium">
+								Dafa Gareth (<a href="https://github.com/dafagareth" target="_blank" rel="noopener noreferrer" class="text-link hover:underline font-mono">{ "@dafagareth" }</a>) · 
+								<a href="mailto:realdaemontalk@gmail.com" class="text-link hover:underline">realdaemontalk@gmail.com</a> · 
+								<a href={ templ.SafeURL(prefix(lang) + "/resume") } class="inline-flex items-center gap-1 text-link hover:underline font-semibold">
+									<span>Resume</span>
+									@IconArrowRight("w-3 h-3")
+								</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div id="projects" class="space-y-4 pt-2">
+					<div class="flex items-center justify-between pb-2 border-b border-border">
+						<div class="flex items-center gap-2">
+							<span class="text-link font-mono font-black text-xs">02</span>
+							<h2 class="text-sm font-bold font-sans text-text uppercase tracking-wider">
+								{ ui.About_Building }
+							</h2>
+						</div>
+						<span class="font-mono text-xs text-muted font-bold">{ fmt.Sprintf("%d Projects", len(projects)) }</span>
+					</div>
+					<div class="divide-y divide-border/40 font-sans">
+						for _, p := range projects {
+							<div class="py-4 space-y-2 group first:pt-1">
+								<div class="flex items-baseline justify-between gap-2 flex-wrap">
+									<div class="flex items-center gap-2 flex-wrap">
+										<h3 class="font-bold text-base text-text group-hover:text-link transition-colors font-sans">{ p.Name }</h3>
+										<span class="text-[11px] text-muted font-mono font-semibold">[{ string(p.Status) }]</span>
+									</div>
+									<div class="flex items-center gap-2 flex-wrap text-xs text-muted font-mono">
+										for _, tech := range p.TechStack {
+											<span>#{ tech }</span>
+										}
+									</div>
+								</div>
+								<p class="text-xs sm:text-sm text-muted leading-relaxed font-sans">
+									if lang == "id" && p.DescriptionID != "" {
+										{ p.DescriptionID }
+									} else {
+										{ p.Description }
+									}
+								</p>
+								<div class="flex items-center gap-4 text-xs font-sans font-medium pt-0.5">
+									if p.Slug != "" {
+										<a href={ templ.SafeURL(prefix(lang) + "/projects/" + p.Slug) } class="inline-flex items-center gap-1 text-link hover:underline font-semibold">
+											<span>Details</span>
+											@IconArrowRight("w-3 h-3")
+										</a>
+									}
+									if p.RepoURL != "" {
+										<a href={ templ.SafeURL(p.RepoURL) } target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-muted hover:text-text hover:underline">
+											<span>Source</span>
+											@IconArrowUpRight("w-3 h-3")
+										</a>
+									}
+									if p.DemoURL != "" {
+										<a href={ templ.SafeURL(p.DemoURL) } target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-muted hover:text-text hover:underline">
+											<span>{ demoLabel(p.DemoURL) }</span>
+											@IconArrowUpRight("w-3 h-3")
+										</a>
+									}
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+				<div class="space-y-4 pt-2">
+					<div class="flex items-center gap-2 pb-2 border-b border-border">
+						<span class="text-link font-mono font-black text-xs">03</span>
+						<h2 class="text-sm font-bold font-sans text-text uppercase tracking-wider">
+							if lang == "id" {
+								Aktivitas Engineering
+							} else {
+								System Engineering Activity
+							}
+						</h2>
+					</div>
+					<div class="space-y-3 font-sans">
+						<div class="flex flex-wrap items-center justify-between gap-3 text-xs text-muted">
+							<div class="flex items-center gap-3">
+								<div>
+									<span class="text-text font-bold text-sm sm:text-base">{ fmt.Sprintf("%d", ghStats.TotalContribs) }</span>
+									<span class="text-xs ml-1 font-sans">
+										if lang == "id" {
+											kontribusi (1 tahun terakhir)
+										} else {
+											contributions in the last year
+										}
+									</span>
+								</div>
+								if ghStats.PublicRepos > 0 {
+									<span class="text-muted/50">·</span>
+									<div>
+										<span class="text-text font-bold text-sm sm:text-base">{ fmt.Sprintf("%d", ghStats.PublicRepos) }</span>
+										<span class="text-xs ml-1 font-sans">
+											if lang == "id" {
+												repositori publik
+											} else {
+												public repositories
+											}
+										</span>
+									</div>
+								}
+							</div>
+							<a href="https://github.com/dafagareth" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-link hover:underline font-mono font-bold text-xs">
+								<span>{ "@dafagareth" }</span>
+								@IconArrowUpRight("w-3 h-3")
+							</a>
+						</div>
+						if len(ghStats.Contributions) > 0 {
+							<div class="overflow-x-auto pb-2 pt-1 scrollbar-none">
+								<div class="inline-flex gap-[3px] min-w-max">
+									for _, week := range ghStats.Contributions {
+										<div class="flex flex-col gap-[3px]">
+											for _, day := range week.Days {
+												<div
+													class={ "w-2.5 h-2.5 rounded-[1px] transition-colors " + contribCell(day.Count) }
+													title={ fmt.Sprintf("%s: %d contributions", day.Date, day.Count) }
+												></div>
+											}
+										</div>
+									}
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+				<div class="space-y-4 pt-2">
+					<div class="flex items-center gap-2 pb-2 border-b border-border">
+						<span class="text-link font-mono font-black text-xs">04</span>
+						<h2 class="text-sm font-bold font-sans text-text uppercase tracking-wider">
+							if lang == "id" {
+								Saluran &amp; Kontak
+							} else {
+								Channels &amp; Contact
+							}
+						</h2>
+					</div>
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 font-sans text-xs sm:text-sm">
+						<div class="space-y-1.5">
+							<div class="font-bold text-text flex items-center gap-1.5 text-sm">
+								<span class="text-link font-mono">❯</span>
+								<span>Public Discussions</span>
+							</div>
+							<p class="text-xs text-muted leading-relaxed font-sans">
+								if lang == "id" {
+									Pertanyaan arsitektur sistem &amp; diskusi terbuka di forum komunitas Daemontalk.
+								} else {
+									Architectural discussions and open systems Q&amp;A in community forum.
+								}
+							</p>
+							<a href={ templ.SafeURL(prefix(lang) + "/socket") } class="inline-flex items-center gap-1 text-xs text-link hover:underline font-semibold pt-1">
+								<span>
+									if lang == "id" {
+										Buka /socket
+									} else {
+										Open /socket
+									}
+								</span>
+								@IconArrowRight("w-3 h-3")
+							</a>
+						</div>
+						<div class="space-y-1.5">
+							<div class="font-bold text-text flex items-center gap-1.5 text-sm">
+								<span class="text-link font-mono">❯</span>
+								<span>Direct Dispatch</span>
+							</div>
+							<p class="text-xs text-muted leading-relaxed font-sans">
+								if lang == "id" {
+									Kolaborasi riset sistem, pelaporan celah keamanan, atau pesan privat.
+								} else {
+									Research collaboration, vulnerability reports, or direct inquiries.
+								}
+							</p>
+							<a href="mailto:realdaemontalk@gmail.com" class="inline-flex items-center gap-1 text-xs text-link hover:underline font-semibold pt-1">
+								<span>realdaemontalk@gmail.com</span>
+								@IconArrowUpRight("w-3 h-3")
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a
+			href={ templ.SafeURL(prefix(lang) + "/") }
+			class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-10 font-mono"
+		>
+			@IconArrowLeft("w-3.5 h-3.5")
+			<span>{ ui.Post_Back }</span>
+		</a>
+	</section>
+}
+
+func contribCell(count int) string {
+	switch {
+	case count == 0:
+		return "contrib-0"
+	case count <= 3:
+		return "contrib-1"
+	case count <= 6:
+		return "contrib-2"
+	case count <= 9:
+		return "contrib-3"
+	default:
+		return "contrib-4"
+	}
+}
