@@ -1,49 +1,65 @@
-Copyright (c) 2026 Dafa Gareth (www.daemontalk.com). All rights reserved.
+Copyright (c) 2026 @dafagareth (daemontalk.com).
 
-1. SOURCE CODE LICENSE (Non-Commercial / Source-Available)
+1. SOFTWARE & PLATFORM SOURCE CODE
+PolyForm Noncommercial License 1.0.0
+https://polyformproject.org/licenses/noncommercial/1.0.0
 
-Permission is hereby granted to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to inspect, modify, run,
-and use the Software for PERSONAL, EDUCATIONAL, AND NON-COMMERCIAL PURPOSES ONLY,
-subject to the following conditions:
+Purpose
+This license allows you to use this software, and to develop other software
+using it, for noncommercial purposes only.
 
-- NO COMMERCIAL USE OR MONETIZATION:
-  You may NOT sell, resell, rent, lease, sublicense, commercialize, or monetize
-  the Software or any derivative work based upon it, whether as source code,
-  binary distributions, website templates, or hosted Software-as-a-Service (SaaS),
-  without prior explicit written authorization from the copyright holder.
+Agreement
+In order to receive this license, you have to agree to its rules. Those rules
+are both conditions to your license and promises you make to the licensor.
 
-- ATTRIBUTION:
-  The original copyright notice and this permission notice must be retained in
-  all copies or substantial portions of the Software.
+Notices
+You must ensure that everyone who gets a copy of any part of this software
+from you, with or without changes, also gets the text of this license and
+the contributor notices that accompanied it.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Noncommercial Purposes
+Any noncommercial purpose is an allowed purpose. Commercial purposes are
+not allowed purposes.
 
-2. TRADEMARK & BRAND POLICY (Strict Reservation)
+Fair Use
+You may have "fair use" rights under the law. This license does not affect
+those rights.
 
-The name "daemontalk", domain names ("daemontalk.com"), visual designs, logos,
-and personal brand identifiers are the exclusive intellectual property of
-Dafa Gareth.
+No Other Rights
+This license does not give you any right to use any trademark, service mark,
+or brand name.
 
-This license does NOT grant any permission to use the name "daemontalk", official
-logos, or any confusingly similar branding for any public forks, personal forks,
-or deployments.
+Disclaimer of Warranty
+The software is provided "as is", without warranty of any kind, express or
+implied. In no event shall the authors or copyright holders be liable for any
+claim, damages, or other liability arising from the use of the software.
 
-ANY PUBLIC FORK, RE-HOSTED INSTANCE, OR DERIVATIVE WORK MUST BE FULLY REBRANDED
-UNDER A DIFFERENT NAME AND LOGO.
 
-3. WRITTEN ARTICLES & EDITORIAL CONTENT (CC BY-NC-SA 4.0)
+2. WRITTEN ARTICLES & EDITORIAL RESEARCH
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0)
+https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-All written articles, laboratory notes, and educational documentation published
-on this site (under content/posts/) are licensed under Creative Commons
-Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0).
+All written technical articles, research dispatches, and educational essays
+published under content/posts/ are licensed under CC BY-NC-SA 4.0.
 
-You are free to share and adapt these writings for non-commercial and educational
-purposes, provided you give appropriate attribution and include a direct link
-back to the original article on daemontalk.com.
+You are free to share, copy, and adapt these writings for non-commercial
+purposes, provided you give appropriate credit to Dafa Gareth and include a
+direct link to the original dispatch on daemontalk.com. If you remix or build
+upon the material, you must distribute your contributions under the same license.
+
+
+3. BRAND, TRADEMARK & VISUAL IDENTITY
+All Rights Reserved (Strict Reservation)
+
+The name "Daemontalk", the official logo, visual design tokens, and the
+daemontalk.com domain are the exclusive intellectual property of Dafa Gareth.
+All rights reserved. No permission is granted to use or clone these marks
+for any purpose without prior explicit written authorization.
+
+
+4. ARTICLE CODE SNIPPETS & SYSADMIN CONFIGURATIONS
+Permissive / MIT Terms
+
+Code snippets, sysctl recipes, and Linux configuration samples embedded
+within technical dispatches may be freely copied, modified, and used in
+personal and commercial production environments without royalty obligations.
