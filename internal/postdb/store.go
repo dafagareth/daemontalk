@@ -141,7 +141,12 @@ func (p WebPost) ToMarkdown() []byte {
 	if p.Lang != "" {
 		fmt.Fprintf(&b, "lang: %s\n", p.Lang)
 	}
-	fmt.Fprintf(&b, "draft: %t\n", p.Draft)
+	if p.Draft {
+		b.WriteString("status: draft\n")
+	} else {
+		b.WriteString("status: published\n")
+	}
+	b.WriteString("type: article\n")
 	if p.Cover != "" {
 		fmt.Fprintf(&b, "cover: %q\n", p.Cover)
 	}
