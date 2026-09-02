@@ -8,9 +8,7 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import (
-	"daemontalk/internal/post"
-)
+import "daemontalk/internal/post"
 
 // AdminMarkdownEditor is a distraction-free raw Markdown editor for repository dispatches.
 func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool, errMsg string) templ.Component {
@@ -41,7 +39,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 11, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 9, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -62,7 +60,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 25, Col: 77}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 23, Col: 77}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -100,7 +98,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 			var templ_7745c5c3_Var4 templ.SafeURL
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-restore?slug=" + slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 38, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 35, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -118,7 +116,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 			var templ_7745c5c3_Var5 templ.SafeURL
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-archive?slug=" + slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 44, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 41, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -136,7 +134,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-delete?slug=" + slug))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 50, Col: 87}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 47, Col: 87}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -149,7 +147,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 		var templ_7745c5c3_Var7 templ.SafeURL
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/export?slug=" + slug))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 56, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 53, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -167,7 +165,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 			var templ_7745c5c3_Var8 templ.SafeURL
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/blog/" + slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 64, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 61, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -206,7 +204,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(errMsg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 78, Col: 18}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 74, Col: 18}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -224,7 +222,7 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 84, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 79, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -237,13 +235,13 @@ func AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(rawMD)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 134, Col: 12}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_markdown_editor.templ`, Line: 126, Col: 12}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</textarea></div><!-- Bottom Actions --><div class=\"flex items-center justify-between gap-4 pt-2\"><a href=\"/admin#content\" class=\"text-xs font-mono text-muted hover:text-text\">Cancel</a><div class=\"flex items-center gap-3\"><button type=\"submit\" name=\"action\" value=\"save\" class=\"px-4 py-2 text-xs font-mono font-bold bg-chip border border-border text-text hover:bg-hover transition-colors cursor-pointer\">Save Changes</button> <button type=\"submit\" name=\"action\" value=\"view\" class=\"px-5 py-2 text-xs font-mono font-bold bg-[var(--c-text)] text-[var(--c-bg)] hover:opacity-90 transition-all cursor-pointer shadow-sm\">Save & View Post</button></div></div></form></section><script>\n\t\t// Tab key indent & statistics\n\t\t(function() {\n\t\t\tvar tx = document.getElementById('md-editor-textarea');\n\t\t\tvar charCount = document.getElementById('md-char-count');\n\t\t\tvar wordCount = document.getElementById('md-word-count');\n\n\t\t\tfunction updateCounts() {\n\t\t\t\tvar val = tx.value || \"\";\n\t\t\t\tcharCount.textContent = val.length + \" chars\";\n\t\t\t\tvar words = val.trim().split(/\\s+/).filter(Boolean).length;\n\t\t\t\twordCount.textContent = words + \" words\";\n\t\t\t}\n\n\t\t\tif (tx) {\n\t\t\t\tvar draftKey = 'daemontalk_draft_' + (document.getElementById('md-slug-val').value || 'new');\n\t\t\t\t\n\t\t\t\t// Restore from draft if exists and differs from server\n\t\t\t\tvar savedDraft = localStorage.getItem(draftKey);\n\t\t\t\tif (savedDraft && savedDraft !== tx.value) {\n\t\t\t\t\tif (confirm(\"Found an unsaved draft in your browser. Do you want to restore it?\")) {\n\t\t\t\t\t\ttx.value = savedDraft;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tlocalStorage.removeItem(draftKey);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Auto-save every 3 seconds\n\t\t\t\tvar saveTimeout;\n\t\t\t\ttx.addEventListener('input', function() {\n\t\t\t\t\tclearTimeout(saveTimeout);\n\t\t\t\t\tsaveTimeout = setTimeout(function() {\n\t\t\t\t\t\tlocalStorage.setItem(draftKey, tx.value);\n\t\t\t\t\t}, 3000);\n\t\t\t\t\tupdateCounts();\n\t\t\t\t});\n\n\t\t\t\t// Clear draft on form submit\n\t\t\t\tvar form = tx.closest('form');\n\t\t\t\tif (form) {\n\t\t\t\t\tform.addEventListener('submit', function() {\n\t\t\t\t\t\tlocalStorage.removeItem(draftKey);\n\t\t\t\t\t});\n\t\t\t\t}\n\n\t\t\t\ttx.addEventListener('keydown', function(e) {\n\t\t\t\t\tif (e.key === 'Tab') {\n\t\t\t\t\t\te.preventDefault();\n\t\t\t\t\t\tvar start = this.selectionStart;\n\t\t\t\t\t\tvar end = this.selectionEnd;\n\t\t\t\t\t\tthis.value = this.value.substring(0, start) + \"\\t\" + this.value.substring(end);\n\t\t\t\t\t\tthis.selectionStart = this.selectionEnd = start + 1;\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\ttx.addEventListener('input', updateCounts);\n\t\t\t\tupdateCounts();\n\t\t\t}\n\n\t\t\t// Image upload helper with dynamic YAML frontmatter slug/UID detection\n\t\t\twindow.uploadMarkdownImage = function(input) {\n\t\t\t\tif (!input.files || !input.files[0]) return;\n\t\t\t\tvar file = input.files[0];\n\t\t\t\tvar status = document.getElementById('img-upload-status');\n\t\t\t\tstatus.textContent = \"Uploading \" + file.name + \"...\";\n\n\t\t\t\t// 1. Detect slug or hex UID from YAML frontmatter in textarea (e.g. slug: \"7f4a9b2c\")\n\t\t\t\tvar targetSlug = \"\";\n\t\t\t\tif (tx && tx.value) {\n\t\t\t\t\tvar match = tx.value.match(/^slug:\\s*[\"']?([a-zA-Z0-9_-]+)[\"']?/m);\n\t\t\t\t\tif (match && match[1]) {\n\t\t\t\t\t\ttargetSlug = match[1];\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// 2. Fallback to container data-slug, hidden input, or URL param\n\t\t\t\tif (!targetSlug) {\n\t\t\t\t\tvar rootEl = document.getElementById('md-editor-root');\n\t\t\t\t\ttargetSlug = (rootEl ? rootEl.getAttribute('data-slug') : \"\") || \n\t\t\t\t\t\t\t\t (document.getElementById('md-slug-val') || {}).value || \n\t\t\t\t\t\t\t\t new URLSearchParams(window.location.search).get('slug') || \n\t\t\t\t\t\t\t\t \"uploads\";\n\t\t\t\t}\n\n\t\t\t\tvar formData = new FormData();\n\t\t\t\tformData.append(\"image\", file);\n\t\t\t\tformData.append(\"slug\", targetSlug);\n\n\t\t\t\tfetch(\"/admin/upload-image\", {\n\t\t\t\t\tmethod: \"POST\",\n\t\t\t\t\tbody: formData\n\t\t\t\t})\n\t\t\t\t.then(function(res) {\n\t\t\t\t\tif (!res.ok) throw new Error(\"Upload failed\");\n\t\t\t\t\treturn res.json();\n\t\t\t\t})\n\t\t\t\t.then(function(data) {\n\t\t\t\t\tif (data.markdown && tx) {\n\t\t\t\t\t\tvar start = tx.selectionStart;\n\t\t\t\t\t\tvar end = tx.selectionEnd;\n\t\t\t\t\t\tvar text = tx.value;\n\t\t\t\t\t\tvar insert = \"\\n\" + data.markdown + \"\\n\";\n\t\t\t\t\t\ttx.value = text.substring(0, start) + insert + text.substring(end);\n\t\t\t\t\t\ttx.selectionStart = tx.selectionEnd = start + insert.length;\n\t\t\t\t\t\tstatus.textContent = \"✓ Uploaded to /\" + targetSlug + \": \" + data.filename;\n\t\t\t\t\t\tupdateCounts();\n\t\t\t\t\t}\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\tstatus.textContent = \"Error: \" + err.message;\n\t\t\t\t});\n\t\t\t};\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</textarea></div><!-- Bottom Actions --><div class=\"flex items-center justify-between gap-4 pt-2\"><a href=\"/admin#content\" class=\"text-xs font-mono text-muted hover:text-text\">Cancel</a><div class=\"flex items-center gap-3\"><button type=\"submit\" name=\"action\" value=\"save\" class=\"px-4 py-2 text-xs font-mono font-bold bg-chip border border-border text-text hover:bg-hover transition-colors cursor-pointer\">Save Changes</button> <button type=\"submit\" name=\"action\" value=\"view\" class=\"px-5 py-2 text-xs font-mono font-bold bg-[var(--c-text)] text-[var(--c-bg)] hover:opacity-90 transition-all cursor-pointer shadow-sm\">Save & View Post</button></div></div></form><script src=\"/static/js/admin_markdown.js\" defer></script></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

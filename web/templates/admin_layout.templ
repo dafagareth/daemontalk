@@ -17,7 +17,6 @@ templ AdminLayout(page string, currentPath string, content templ.Component) {
 								@BrandLogo("h-5 w-auto")
 								<span class="text-xs text-muted font-mono">admin</span>
 							</a>
-
 							<nav class="hidden sm:flex items-center gap-3 md:gap-4" id="admin-nav-links">
 								<a href="/admin" onclick="switchAdminTab('dashboard', event)" data-tab="dashboard" data-tab-btn="dashboard" class="admin-tab active">Dashboard</a>
 								<a href="/admin/content" onclick="switchAdminTab('content', event)" data-tab="content" data-tab-btn="content" class="admin-tab">Content</a>
@@ -26,11 +25,7 @@ templ AdminLayout(page string, currentPath string, content templ.Component) {
 								<a href="/admin/digest" onclick="switchAdminTab('digest', event)" data-tab="digest" data-tab-btn="digest" class="admin-tab">Digest</a>
 							</nav>
 						</div>
-
 						<div class="flex items-center gap-3">
-							<a href="/admin/posts/new" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-[var(--c-text)] text-[var(--c-bg)] text-xs font-medium transition-colors hover:opacity-90">
-								<span>+ New Post</span>
-							</a>
 							<a href="/" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1 text-xs text-muted hover:text-text px-2.5 py-1.5 transition-colors">
 								<span>View Site</span>
 								@iconArrowUpRight()
@@ -41,7 +36,6 @@ templ AdminLayout(page string, currentPath string, content templ.Component) {
 							</button>
 						</div>
 					</div>
-
 					<!-- Mobile tabs -->
 					<div class="flex sm:hidden items-center gap-2 pb-2 overflow-x-auto -mt-1">
 						<a href="/admin" onclick="switchAdminTab('dashboard', event)" data-tab="dashboard" data-tab-btn="dashboard" class="admin-tab active text-xs shrink-0">Dashboard</a>
@@ -52,90 +46,10 @@ templ AdminLayout(page string, currentPath string, content templ.Component) {
 					</div>
 				</div>
 			</header>
-
 			<main class="flex-1 w-full bg-bg">
 				@content
 			</main>
-
-			<script>
-				function toggleTheme() {
-					var html = document.documentElement;
-					var current = html.getAttribute("data-theme");
-					var isDark = current === "dark" ||
-						(!current && window.matchMedia("(prefers-color-scheme: dark)").matches);
-					var next = isDark ? "light" : "dark";
-					html.setAttribute("data-theme", next);
-					localStorage.setItem("theme", next);
-				}
-
-				function switchAdminTab(tabName, event) {
-					if (event) {
-						event.preventDefault();
-					}
-					var tabs = ["dashboard", "content", "analytics", "comments", "digest"];
-					var targetEl = document.getElementById("tab-" + tabName);
-					if (!targetEl) {
-						if (document.getElementById("admin-forbidden")) {
-							return;
-						}
-						window.location.href = tabName === "dashboard" ? "/admin" : "/admin/" + tabName;
-						return;
-					}
-
-					tabs.forEach(function(t) {
-						var el = document.getElementById("tab-" + t);
-						if (el) {
-							if (t === tabName) {
-								el.classList.remove("hidden");
-							} else {
-								el.classList.add("hidden");
-							}
-						}
-					});
-
-					var navBtns = document.querySelectorAll("[data-tab-btn]");
-					navBtns.forEach(function(btn) {
-						var btnTab = btn.getAttribute("data-tab-btn");
-						if (btnTab === tabName) {
-							btn.classList.add("active");
-						} else {
-							btn.classList.remove("active");
-						}
-					});
-
-					var targetPath = tabName === "dashboard" ? "/admin" : "/admin/" + tabName;
-					if (window.location.pathname !== targetPath) {
-						history.pushState({ tab: tabName }, "", targetPath);
-					}
-				}
-
-				function initAdminTabFromURL() {
-					var path = window.location.pathname.replace(/\/$/, "");
-					if (path.indexOf("/admin/posts") === 0 || path.indexOf("/admin/post") === 0) {
-						return;
-					}
-					var tabName = "dashboard";
-					if (path === "/admin/content") tabName = "content";
-					else if (path === "/admin/analytics") tabName = "analytics";
-					else if (path === "/admin/comments") tabName = "comments";
-					else if (path === "/admin/digest") tabName = "digest";
-					else {
-						var hash = window.location.hash.replace("#", "");
-						if (hash && ["dashboard", "content", "analytics", "comments", "digest"].indexOf(hash) !== -1) {
-							tabName = hash;
-						}
-					}
-					switchAdminTab(tabName);
-				}
-
-				window.addEventListener("popstate", function() {
-					initAdminTabFromURL();
-				});
-
-				document.addEventListener("DOMContentLoaded", function() {
-					initAdminTabFromURL();
-				});
-			</script>
+			<script src="/static/js/admin.js" defer></script>
 			@confirmModal(i18n.Get("en"))
 		</body>
 	</html>

@@ -1,8 +1,6 @@
 package templates
 
-import (
-	"daemontalk/internal/post"
-)
+import "daemontalk/internal/post"
 
 // AdminMarkdownEditor is a distraction-free raw Markdown editor for repository dispatches.
 templ AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived bool, errMsg string) {
@@ -32,7 +30,6 @@ templ AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived boo
 					}
 				</div>
 			</div>
-
 			<div class="flex items-center gap-2">
 				if isArchived {
 					<form method="post" action={ templ.SafeURL("/admin/posts/file-restore?slug=" + slug) } class="inline">
@@ -71,18 +68,15 @@ templ AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived boo
 				}
 			</div>
 		</div>
-
 		if errMsg != "" {
 			<div class="px-4 py-3 border border-[var(--c-warn)] bg-[var(--c-warn-bg)] text-xs text-[var(--c-warn)] font-mono flex items-center gap-2">
 				@IconError("w-4 h-4 shrink-0")
 				<span>{ errMsg }</span>
 			</div>
 		}
-
 		<!-- Editor & Controls Form -->
 		<form method="post" action="/admin/posts/file-save" class="space-y-4">
 			<input type="hidden" id="md-slug-val" name="slug" value={ slug }/>
-
 			<!-- Toolbar: Image Uploader, Markdown Helpers, Character Count -->
 			<div class="flex flex-wrap items-center justify-between gap-3 p-2.5 bg-surface border border-border text-xs font-mono">
 				<div class="flex items-center gap-2">
@@ -102,14 +96,12 @@ templ AdminMarkdownEditor(slug string, rawMD string, p post.Post, isArchived boo
 					/>
 					<span id="img-upload-status" class="text-muted text-[11px]"></span>
 				</div>
-
 				<div class="flex items-center gap-4 text-muted text-[11px]">
 					<span id="md-char-count">0 chars</span>
 					<span>·</span>
 					<span id="md-word-count">0 words</span>
 				</div>
 			</div>
-
 			<!-- Raw Markdown Textarea -->
 			<div class="relative border border-border bg-bg">
 				<textarea
@@ -133,7 +125,6 @@ description: Write a brief description of this dispatch.
 Write content here..."
 				>{ rawMD }</textarea>
 			</div>
-
 			<!-- Bottom Actions -->
 			<div class="flex items-center justify-between gap-4 pt-2">
 				<a href="/admin#content" class="text-xs font-mono text-muted hover:text-text">
@@ -159,119 +150,6 @@ Write content here..."
 				</div>
 			</div>
 		</form>
+		<script src="/static/js/admin_markdown.js" defer></script>
 	</section>
-
-	<script>
-		// Tab key indent & statistics
-		(function() {
-			var tx = document.getElementById('md-editor-textarea');
-			var charCount = document.getElementById('md-char-count');
-			var wordCount = document.getElementById('md-word-count');
-
-			function updateCounts() {
-				var val = tx.value || "";
-				charCount.textContent = val.length + " chars";
-				var words = val.trim().split(/\s+/).filter(Boolean).length;
-				wordCount.textContent = words + " words";
-			}
-
-			if (tx) {
-				var draftKey = 'daemontalk_draft_' + (document.getElementById('md-slug-val').value || 'new');
-				
-				// Restore from draft if exists and differs from server
-				var savedDraft = localStorage.getItem(draftKey);
-				if (savedDraft && savedDraft !== tx.value) {
-					if (confirm("Found an unsaved draft in your browser. Do you want to restore it?")) {
-						tx.value = savedDraft;
-					} else {
-						localStorage.removeItem(draftKey);
-					}
-				}
-
-				// Auto-save every 3 seconds
-				var saveTimeout;
-				tx.addEventListener('input', function() {
-					clearTimeout(saveTimeout);
-					saveTimeout = setTimeout(function() {
-						localStorage.setItem(draftKey, tx.value);
-					}, 3000);
-					updateCounts();
-				});
-
-				// Clear draft on form submit
-				var form = tx.closest('form');
-				if (form) {
-					form.addEventListener('submit', function() {
-						localStorage.removeItem(draftKey);
-					});
-				}
-
-				tx.addEventListener('keydown', function(e) {
-					if (e.key === 'Tab') {
-						e.preventDefault();
-						var start = this.selectionStart;
-						var end = this.selectionEnd;
-						this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-						this.selectionStart = this.selectionEnd = start + 1;
-					}
-				});
-				tx.addEventListener('input', updateCounts);
-				updateCounts();
-			}
-
-			// Image upload helper with dynamic YAML frontmatter slug/UID detection
-			window.uploadMarkdownImage = function(input) {
-				if (!input.files || !input.files[0]) return;
-				var file = input.files[0];
-				var status = document.getElementById('img-upload-status');
-				status.textContent = "Uploading " + file.name + "...";
-
-				// 1. Detect slug or hex UID from YAML frontmatter in textarea (e.g. slug: "7f4a9b2c")
-				var targetSlug = "";
-				if (tx && tx.value) {
-					var match = tx.value.match(/^slug:\s*["']?([a-zA-Z0-9_-]+)["']?/m);
-					if (match && match[1]) {
-						targetSlug = match[1];
-					}
-				}
-
-				// 2. Fallback to container data-slug, hidden input, or URL param
-				if (!targetSlug) {
-					var rootEl = document.getElementById('md-editor-root');
-					targetSlug = (rootEl ? rootEl.getAttribute('data-slug') : "") || 
-								 (document.getElementById('md-slug-val') || {}).value || 
-								 new URLSearchParams(window.location.search).get('slug') || 
-								 "uploads";
-				}
-
-				var formData = new FormData();
-				formData.append("image", file);
-				formData.append("slug", targetSlug);
-
-				fetch("/admin/upload-image", {
-					method: "POST",
-					body: formData
-				})
-				.then(function(res) {
-					if (!res.ok) throw new Error("Upload failed");
-					return res.json();
-				})
-				.then(function(data) {
-					if (data.markdown && tx) {
-						var start = tx.selectionStart;
-						var end = tx.selectionEnd;
-						var text = tx.value;
-						var insert = "\n" + data.markdown + "\n";
-						tx.value = text.substring(0, start) + insert + text.substring(end);
-						tx.selectionStart = tx.selectionEnd = start + insert.length;
-						status.textContent = "✓ Uploaded to /" + targetSlug + ": " + data.filename;
-						updateCounts();
-					}
-				})
-				.catch(function(err) {
-					status.textContent = "Error: " + err.message;
-				});
-			};
-		})();
-	</script>
 }

@@ -2,21 +2,16 @@ package templates
 
 import ()
 
-
 templ AdminPage(stats AdminStats) {
 	<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-10 sm:space-y-12">
 		<!-- TAB 1: DASHBOARD -->
 		@adminDashboardTab(stats)
-
 		<!-- TAB 2: CONTENT -->
 		@adminContentTab(stats)
-
 		<!-- TAB 3: ANALYTICS -->
 		@adminAnalyticsTab(stats)
-
 		<!-- TAB 4: COMMENTS -->
 		@adminCommentsTab(stats)
-
 		<!-- TAB 5: WEEKLY DIGEST GENERATOR -->
 		@adminDigestTab(stats)
 	</div>

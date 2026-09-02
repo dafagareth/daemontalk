@@ -1,8 +1,6 @@
 package templates
 
-import (
-	"fmt"
-)
+import "fmt"
 
 templ adminDigestTab(stats AdminStats) {
 	<div id="tab-digest" class="hidden space-y-6">
@@ -15,14 +13,12 @@ templ adminDigestTab(stats AdminStats) {
 				Copy Markdown
 			</button>
 		</div>
-
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 			<!-- Markdown Output -->
 			<div class="space-y-2">
 				<label class="block text-xs font-mono text-muted uppercase tracking-wider">Raw Markdown Digest</label>
 				<textarea id="digest-markdown" readonly class="w-full h-[460px] p-3 text-xs font-mono bg-[var(--c-surface)] border border-[var(--c-border)] text-[var(--c-text)] resize-none focus:outline-none">{ generateDigestText(stats.Posts) }</textarea>
 			</div>
-
 			<!-- Live Visual Preview -->
 			<div class="space-y-2">
 				<label class="block text-xs font-mono text-muted uppercase tracking-wider">Digest Live Breakdown</label>
@@ -46,19 +42,4 @@ templ adminDigestTab(stats AdminStats) {
 			</div>
 		</div>
 	</div>
-
-	<script>
-	function copyDigestMarkdown() {
-		var copyText = document.getElementById("digest-markdown");
-		if (!copyText) return;
-		copyText.select();
-		navigator.clipboard.writeText(copyText.value);
-		var btn = document.getElementById("copy-digest-btn");
-		if (btn) {
-			var old = btn.innerText;
-			btn.innerText = "✓ Copied!";
-			setTimeout(function() { btn.innerText = old; }, 2000);
-		}
-	}
-	</script>
 }

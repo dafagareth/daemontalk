@@ -1,13 +1,10 @@
 package templates
 
-import (
-	"fmt"
-)
+import "fmt"
 
 templ adminDashboardTab(stats AdminStats) {
 	<div id="tab-dashboard" class="space-y-8 sm:space-y-10">
 		<h1 class="text-lg font-semibold text-text">Channel Dashboard</h1>
-
 		<!-- Stats row -->
 		<dl class="flex flex-wrap gap-x-8 gap-y-2 text-sm border-b border-border pb-4">
 			<div>
@@ -27,7 +24,6 @@ templ adminDashboardTab(stats AdminStats) {
 				<dd class="font-mono font-semibold text-text">{ fmt.Sprintf("%d", len(stats.Comments)) }</dd>
 			</div>
 		</dl>
-
 		<!-- Latest post -->
 		if len(stats.Posts) > 0 {
 			{{ latest := stats.Posts[0] }}
@@ -38,12 +34,11 @@ templ adminDashboardTab(stats AdminStats) {
 					if latest.Draft {
 						<span class="badge badge-draft">Draft</span>
 					}
-					<span class="text-xs font-mono text-muted">{ fmtDate(latest) }</span>
+					<span class="text-xs font-mono text-muted">{ fmtDate(latest, "en") }</span>
 					<span class="text-xs font-mono text-muted">{ fmt.Sprintf("%d", stats.Views[latest.Slug]) } views</span>
 				</div>
 			</div>
 		}
-
 		<!-- Top 5 posts -->
 		{{ sorted := adminSortedByViews(stats.Posts, stats.Views) }}
 		if len(sorted) > 0 {
@@ -68,7 +63,6 @@ templ adminDashboardTab(stats AdminStats) {
 				</div>
 			</div>
 		}
-
 		<!-- Recent comments -->
 		if len(stats.Comments) > 0 {
 			<div>
@@ -78,7 +72,7 @@ templ adminDashboardTab(stats AdminStats) {
 						<div class="py-2.5 text-sm">
 							<div class="flex items-baseline justify-between gap-2">
 								<span class="font-medium text-text">{ c.Name }</span>
-								<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt) }</span>
+								<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt, "en") }</span>
 							</div>
 							<a href={ templ.SafeURL("/blog/" + c.PostSlug) } class="text-xs font-mono text-link hover:underline">/{ c.PostSlug }</a>
 							<p class="text-xs text-muted mt-1 line-clamp-1">{ c.Body }</p>
@@ -87,7 +81,6 @@ templ adminDashboardTab(stats AdminStats) {
 				</div>
 			</div>
 		}
-
 		<!-- System Feature Modules Control -->
 		<div class="border border-border bg-surface p-5 space-y-3">
 			<div class="flex flex-wrap items-center justify-between gap-4">

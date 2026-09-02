@@ -1,8 +1,8 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/postdb"
+	"fmt"
 )
 
 // AdminPostEditor is a distraction-free post editor.
@@ -39,14 +39,12 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 				}
 			</button>
 		</div>
-
 		if errMsg != "" {
 			<div class="mb-6 px-4 py-3 rounded-none border border-[var(--c-warn)] bg-[var(--c-warn-bg)] text-sm text-[var(--c-warn)] flex items-center gap-2">
 				@IconError("w-4 h-4 shrink-0")
 				<span>{ errMsg }</span>
 			</div>
 		}
-
 		<!-- Post Title Input -->
 		<input
 			id="ed-title"
@@ -57,13 +55,11 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 			autocomplete="off"
 			class="display w-full bg-transparent border-0 outline-none text-3xl sm:text-4xl font-bold text-text mb-6 placeholder:text-muted/50"
 		/>
-
 		<!-- Quill Editor Body -->
 		<div id="ed-body" class="min-h-[350px] text-base leading-relaxed">
 			@templ.Raw(editorHTML)
 		</div>
 	</section>
-
 	<!-- Publish / Post Details Modal -->
 	<div id="ed-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
 		<div class="w-full max-w-lg mt-10 sm:mt-16 rounded-none border border-border bg-bg p-6 sm:p-8 shadow-2xl">
@@ -80,7 +76,6 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 				</div>
 				<button type="button" id="ed-modal-close" aria-label="Close" class="w-8 h-8 rounded-none hover:bg-hover text-muted hover:text-text flex items-center justify-center text-xl leading-none transition-colors">&times;</button>
 			</div>
-
 			<form id="ed-publish-form" method="post" action={ publishAction(p) } class="flex flex-col gap-4">
 				<input type="hidden" id="pub-hidden-title" name="title" value={ p.Title }/>
 				<input type="hidden" id="pub-hidden-body" name="body" value={ p.BodyMD }/>
@@ -92,7 +87,6 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 						<input id="pub-slug" type="text" name="slug" value={ p.Slug } readonly aria-label="Slug (locked once published)" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-chip text-muted cursor-not-allowed"/>
 					}
 				</div>
-
 				<div class="grid grid-cols-2 gap-4">
 					<div>
 						<label for="pub-date" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Date</label>
@@ -106,22 +100,18 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 						</select>
 					</div>
 				</div>
-
 				<div>
 					<label for="pub-tags" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Tags (comma separated)</label>
 					<input id="pub-tags" type="text" name="tags" value={ p.Tags } maxlength="200" placeholder="go, linux, web" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]"/>
 				</div>
-
 				<div>
 					<label for="pub-cover" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Cover URL (optional)</label>
 					<input id="pub-cover" type="text" name="cover" value={ p.Cover } maxlength="500" placeholder="/static/images/cover.png" class="w-full px-3.5 py-2.5 text-sm font-mono rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)]"/>
 				</div>
-
 				<div>
 					<label for="pub-desc" class="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">Description (optional &mdash; defaults to first paragraph)</label>
 					<textarea id="pub-desc" name="description" maxlength="300" rows="2" class="w-full px-3.5 py-2.5 text-sm rounded-none border border-border bg-surface text-text focus:outline-none focus:border-[var(--c-link)] focus:ring-1 focus:ring-[var(--c-link)] resize-y">{ p.Description }</textarea>
 				</div>
-
 				<div class="flex items-center justify-end gap-3 pt-4 border-t border-border/60 mt-2">
 					<button type="submit" name="action" value="draft" class="btn btn-secondary px-4 py-2 text-sm font-medium">
 						Save as Draft
@@ -137,7 +127,6 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 			</form>
 		</div>
 	</div>
-
 	<script src="/static/js/quill.min.js"></script>
 	<script src="/static/js/turndown.min.js"></script>
 	<script src="/static/js/admin_editor.js" defer></script>

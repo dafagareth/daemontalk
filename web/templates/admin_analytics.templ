@@ -31,7 +31,6 @@ templ adminAnalyticsTab(stats AdminStats) {
 	<!-- TAB 3: ANALYTICS -->
 	<div id="tab-analytics" class="hidden space-y-6">
 		<h1 class="text-lg font-semibold text-text">Analytics</h1>
-
 		<dl class="flex flex-wrap gap-x-8 gap-y-2 text-sm border-b border-border pb-4">
 			<div>
 				<dt class="text-muted text-xs">Total hits</dt>
@@ -52,7 +51,6 @@ templ adminAnalyticsTab(stats AdminStats) {
 				</dd>
 			</div>
 		</dl>
-
 		<!-- Top pages -->
 		if len(stats.TopPages) > 0 {
 			<div>
@@ -79,7 +77,6 @@ templ adminAnalyticsTab(stats AdminStats) {
 				</div>
 			</div>
 		}
-
 		<!-- Views by Category -->
 		if len(stats.Posts) > 0 {
 			<div class="space-y-4">
@@ -89,7 +86,6 @@ templ adminAnalyticsTab(stats AdminStats) {
 						{ fmt.Sprintf("%d categories", len(adminGroupPostsByCategory(stats.Posts, stats.Views))) }
 					</span>
 				</div>
-
 				<div class="space-y-4">
 					for _, group := range adminGroupPostsByCategory(stats.Posts, stats.Views) {
 						<div class="border border-border rounded-none overflow-hidden">
@@ -101,7 +97,6 @@ templ adminAnalyticsTab(stats AdminStats) {
 								</div>
 								<span class="text-xs font-mono font-semibold text-text">{ fmt.Sprintf("%d views", group.TotalViews) }</span>
 							</div>
-
 							<!-- Post Rows -->
 							<table class="w-full text-sm text-left">
 								<tbody class="divide-y divide-[var(--c-border)]/60">
