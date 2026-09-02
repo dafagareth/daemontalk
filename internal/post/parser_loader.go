@@ -83,7 +83,12 @@ func loadDir(dir string, includeDrafts bool) ([]Post, error) {
 	return posts, nil
 }
 
-func parseFile(path string) (Post, error) {
+func ParseFile(path string) (Post, error) {
+	fi, err := os.Stat(path)
+	if err != nil {
+		return Post{}, fmt.Errorf("stat file: %w", err)
+	}
+
 	src, err := os.ReadFile(path)
 	if err != nil {
 		return Post{}, fmt.Errorf("read file: %w", err)
@@ -97,7 +102,15 @@ func parseFile(path string) (Post, error) {
 		base := filepath.Base(path)
 		p.Slug = strings.TrimSuffix(base, ".md")
 	}
+	// Fallback if frontmatter does not define date
+	if p.Date.IsZero() {
+		p.Date = fi.ModTime()
+	}
 	return p, nil
+}
+
+func parseFile(path string) (Post, error) {
+	return ParseFile(path)
 }
 
 func FindBySlug(posts []Post, slug string) (Post, bool) {

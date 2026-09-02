@@ -363,3 +363,92 @@ Mari kita uji inline math: $n_{\text{layers}}$ dan $\text{seq\_len}$.
 		t.Errorf("Escaped seq\\_len was mangled: %s", body)
 	}
 }
+
+func TestPostStatusParsing(t *testing.T) {
+	tests := []struct {
+		name       string
+		yaml       string
+		wantStatus string
+		wantDraft  bool
+		wantType   string
+	}{
+		{
+			name: "explicit status published",
+			yaml: `---
+title: "Published Article"
+slug: pub-1
+status: published
+type: article
+---
+Body text.`,
+			wantStatus: "published",
+			wantDraft:  false,
+			wantType:   "article",
+		},
+		{
+			name: "explicit status draft",
+			yaml: `---
+title: "Draft Article"
+slug: draft-1
+status: draft
+---
+Body text.`,
+			wantStatus: "draft",
+			wantDraft:  true,
+			wantType:   "article",
+		},
+		{
+			name: "legacy draft false",
+			yaml: `---
+title: "Legacy Published"
+slug: leg-pub
+draft: false
+---
+Body text.`,
+			wantStatus: "published",
+			wantDraft:  false,
+			wantType:   "article",
+		},
+		{
+			name: "legacy draft true",
+			yaml: `---
+title: "Legacy Draft"
+slug: leg-draft
+draft: true
+---
+Body text.`,
+			wantStatus: "draft",
+			wantDraft:  true,
+			wantType:   "article",
+		},
+		{
+			name: "default without status or draft",
+			yaml: `---
+title: "Default Article"
+slug: def-1
+---
+Body text.`,
+			wantStatus: "published",
+			wantDraft:  false,
+			wantType:   "article",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			p, err := Parse([]byte(tc.yaml))
+			if err != nil {
+				t.Fatalf("Parse error: %v", err)
+			}
+			if p.Status != tc.wantStatus {
+				t.Errorf("Status = %q, want %q", p.Status, tc.wantStatus)
+			}
+			if p.Draft != tc.wantDraft {
+				t.Errorf("Draft = %v, want %v", p.Draft, tc.wantDraft)
+			}
+			if p.Type != tc.wantType {
+				t.Errorf("Type = %q, want %q", p.Type, tc.wantType)
+			}
+		})
+	}
+}

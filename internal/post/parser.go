@@ -102,7 +102,10 @@ func Parse(src []byte) (Post, error) {
 	rawHTML = strings.ReplaceAll(rawHTML, "xDTASTx", "*")
 
 	p := Post{
-		Body: template.HTML(rawHTML),
+		Body:   template.HTML(rawHTML),
+		Type:   "article",
+		Status: "published",
+		Draft:  false,
 	}
 
 	if v, ok := fm["title"].(string); ok {
@@ -114,8 +117,16 @@ func Parse(src []byte) (Post, error) {
 	if v, ok := fm["lang"].(string); ok {
 		p.Lang = v
 	}
-	if v, ok := fm["draft"].(bool); ok {
+	if v, ok := fm["status"].(string); ok && strings.TrimSpace(v) != "" {
+		p.Status = strings.ToLower(strings.TrimSpace(v))
+		p.Draft = (p.Status == "draft")
+	} else if v, ok := fm["draft"].(bool); ok {
 		p.Draft = v
+		if v {
+			p.Status = "draft"
+		} else {
+			p.Status = "published"
+		}
 	}
 	if v, ok := fm["date"].(string); ok {
 		if t, err := parseFrontmatterDate(v); err == nil {
@@ -156,6 +167,22 @@ func Parse(src []byte) (Post, error) {
 	if v, ok := fm["author"].(string); ok {
 		p.Author = v
 	}
+	if v, ok := fm["author_github"].(string); ok {
+		p.AuthorGitHub = strings.TrimPrefix(strings.TrimSpace(v), "@")
+	} else if v, ok := fm["authorGithub"].(string); ok {
+		p.AuthorGitHub = strings.TrimPrefix(strings.TrimSpace(v), "@")
+	}
+	if v, ok := fm["author_avatar"].(string); ok && strings.TrimSpace(v) != "" {
+		p.AuthorAvatar = strings.TrimSpace(v)
+	} else if p.AuthorGitHub != "" {
+		p.AuthorAvatar = "https://github.com/" + p.AuthorGitHub + ".png?size=48"
+	} else if strings.HasPrefix(strings.TrimSpace(p.Author), "@") {
+		handle := strings.TrimPrefix(strings.TrimSpace(p.Author), "@")
+		p.AuthorGitHub = handle
+		p.AuthorAvatar = "https://github.com/" + handle + ".png?size=48"
+	} else {
+		p.AuthorAvatar = "/static/images/icon-192.png"
+	}
 	if v, ok := fm["description"].(string); ok && strings.TrimSpace(v) != "" {
 		p.Description = stdhtml.UnescapeString(strings.TrimSpace(v))
 	}
@@ -188,6 +215,27 @@ func Parse(src []byte) (Post, error) {
 	if v, ok := fm["alias"].(string); ok && v != "" {
 		p.Aliases = append(p.Aliases, v)
 	}
+
+	if raw, ok := fm["contributors"]; ok {
+		switch v := raw.(type) {
+		case []interface{}:
+			for _, t := range v {
+				if s, ok := t.(string); ok && strings.TrimSpace(s) != "" {
+					p.Contributors = append(p.Contributors, strings.TrimSpace(s))
+				}
+			}
+		case []string:
+			for _, s := range v {
+				if strings.TrimSpace(s) != "" {
+					p.Contributors = append(p.Contributors, strings.TrimSpace(s))
+				}
+			}
+		case string:
+			if strings.TrimSpace(v) != "" {
+				p.Contributors = append(p.Contributors, strings.TrimSpace(v))
+			}
+		}
+	}
 	if p.Lang == "en" {
 		rawHTML = strings.ReplaceAll(rawHTML, `<h2 id="referensi">Referensi</h2>`, `<h2 id="references">References</h2>`)
 		rawHTML = strings.ReplaceAll(rawHTML, `<h3 id="referensi">Referensi</h3>`, `<h3 id="references">References</h3>`)
@@ -203,6 +251,8 @@ func Parse(src []byte) (Post, error) {
 	if p.Description == "" {
 		p.Description = extractDescription(rendered)
 	}
+	cleanBody := reTag.ReplaceAllString(rawHTML, " ")
+	p.SearchHaystack = strings.ToLower(p.Title + " " + p.Description + " " + strings.Join(p.Tags, " ") + " " + cleanBody)
 	return p, nil
 }
 
