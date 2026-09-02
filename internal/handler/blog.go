@@ -23,7 +23,7 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 			h.CLITag(w, r)
 			return
 		}
-		h.CLIDaily(w, r)
+		h.CLIMain(w, r)
 		return
 	}
 

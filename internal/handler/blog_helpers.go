@@ -110,27 +110,27 @@ func relatedPosts(posts []post.Post, current post.Post) []post.Post {
 	// Combine same language first, fallback to other languages if needed
 	var out []post.Post
 	out = append(out, sameLang...)
-	if len(out) < 3 {
+	if len(out) < 4 {
 		out = append(out, otherLang...)
 	}
 
-	// If still less than 3, backfill with latest posts so 3 boxes are always fully populated
-	if len(out) < 3 {
+	// If still less than 4, backfill with latest posts so 4 boxes are always fully populated
+	if len(out) < 4 {
 		for _, p := range posts {
 			if p.Draft || seen[p.Slug] {
 				continue
 			}
 			seen[p.Slug] = true
 			out = append(out, p)
-			if len(out) >= 3 {
+			if len(out) >= 4 {
 				break
 			}
 		}
 	}
 
-	// Cap at 3 posts for clean 3-box wireframe
-	if len(out) > 3 {
-		out = out[:3]
+	// Cap at 4 posts for clean 1+3 editorial layout
+	if len(out) > 4 {
+		out = out[:4]
 	}
 	return out
 }
