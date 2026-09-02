@@ -1,0 +1,112 @@
+package templates
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/forum"
+	"daemontalk/internal/i18n"
+)
+
+templ UserProfilePage(ui i18n.UI, profileUser *auth.User, stats forum.UserStats, recentTopics []*forum.Topic, lang string, currentPath string) {
+	if profileUser != nil {
+		@Layout(ui, lang, "profile", currentPath, PageMeta{
+			Description: "Public profile for " + profileUser.Username,
+			Type:        "website",
+		}, userProfileContent(ui, profileUser, stats, recentTopics, lang, currentPath))
+	} else {
+		@Layout(ui, lang, "profile", currentPath, PageMeta{
+			Description: "User not found",
+			Type:        "website",
+		}, userProfileContent(ui, profileUser, stats, recentTopics, lang, currentPath))
+	}
+}
+
+templ userProfileContent(ui i18n.UI, profileUser *auth.User, stats forum.UserStats, recentTopics []*forum.Topic, lang string, currentPath string) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text transition-colors group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				<span>
+					if lang == "id" {
+						Kembali ke Beranda
+					} else {
+						Back to Dispatches
+					}
+				</span>
+			</a>
+		</div>
+		if profileUser == nil {
+			<div class="border border-border bg-surface p-12 text-center font-mono text-xs text-muted shadow-xl">
+				if lang == "id" {
+					Pengguna tidak ditemukan di dalam sistem.
+				} else {
+					User not found in the system.
+				}
+			</div>
+		} else {
+			<div class="border border-border bg-surface shadow-xl overflow-hidden font-sans">
+				<div class="border-b border-border bg-surface p-4 sm:p-5 flex items-center justify-between text-xs font-mono select-none flex-wrap gap-2">
+					<div class="flex items-center gap-2 text-text font-bold">
+						<span class="text-link font-black">❯</span>
+						<span>finger { profileUser.Username }</span>
+					</div>
+					<div class="flex items-center gap-2 text-xs font-mono font-bold uppercase">
+						if profileUser.Role == "admin" {
+							<span class="px-2 py-0.5 border border-amber-500 text-amber-500 bg-amber-500/10">[ADMIN]</span>
+						} else if profileUser.Role == "contributor" {
+							<span class="px-2 py-0.5 border border-link text-link bg-link/10">[CONTRIBUTOR]</span>
+						} else {
+							<span class="text-muted">ROLE: { profileUser.Role }</span>
+						}
+					</div>
+				</div>
+				<div class="p-6 sm:p-8 space-y-6">
+					<div class="flex flex-col sm:flex-row items-start gap-5">
+						if profileUser.AvatarURL != "" {
+							<img
+								src={ profileUser.AvatarURL }
+								alt={ profileUser.Username }
+								class="w-16 h-16 sm:w-20 sm:h-20 rounded-none border-2 border-border object-cover shrink-0"
+							/>
+						} else {
+							<img
+								src="/static/images/deleted-user.png"
+								alt="User"
+								class="w-16 h-16 sm:w-20 sm:h-20 rounded-none border-2 border-border object-cover shrink-0"
+							/>
+						}
+						<div class="space-y-2 text-xs sm:text-sm font-mono flex-1">
+							<div class="flex items-baseline gap-4">
+								<span class="text-muted w-24 shrink-0 select-none">USERNAME:</span>
+								<span class="font-bold text-text">{ "@" + profileUser.Username }</span>
+							</div>
+							<div class="flex items-baseline gap-4">
+								<span class="text-muted w-24 shrink-0 select-none">DISPLAY:</span>
+								<span class="text-text">{ profileUser.DisplayName }</span>
+							</div>
+							if profileUser.GitHubURL != "" {
+								<div class="flex items-baseline gap-4">
+									<span class="text-muted w-24 shrink-0 select-none">GITHUB:</span>
+									<a
+										href={ templ.SafeURL(profileUser.GitHubURL) }
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-link hover:underline break-all"
+									>
+										{ profileUser.GitHubURL }
+									</a>
+								</div>
+							}
+							<div class="flex items-baseline gap-4">
+								<span class="text-muted w-24 shrink-0 select-none">JOINED:</span>
+								<span class="text-text">{ profileUser.CreatedAt.Format("02 Jan 2006") }</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</section>
+}
