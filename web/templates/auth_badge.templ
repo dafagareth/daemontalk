@@ -1,0 +1,241 @@
+package templates
+
+import "daemontalk/internal/auth"
+
+templ AuthNavBadge(user *auth.User, returnTo string, lang string, currentPath string) {
+	if user != nil {
+		<div class="relative" id="user-menu-container">
+			<button
+				type="button"
+				onclick="var m=document.getElementById('user-menu-dropdown'); if(m) m.classList.toggle('hidden');"
+				class="w-10 h-10 block p-0 border border-border bg-surface hover:border-[var(--c-link)] transition-colors cursor-pointer overflow-hidden shrink-0"
+				aria-label="User menu"
+				title={ "@" + user.Username }
+			>
+				if user.AvatarURL != "" {
+					<img src={ user.AvatarURL } alt={ user.Username } class="w-full h-full object-cover rounded-none"/>
+				} else {
+					<div class="w-full h-full bg-chip flex items-center justify-center font-mono font-bold text-text text-sm">
+						{ string([]rune(user.Username)[:1]) }
+					</div>
+				}
+			</button>
+			<div
+				id="user-menu-dropdown"
+				class="hidden absolute right-0 top-full mt-1.5 w-60 bg-surface border border-border shadow-2xl z-50 overflow-hidden font-mono text-xs select-none"
+			>
+				<div class="border-b border-border bg-surface p-3 space-y-0.5">
+					<div class="flex items-center justify-between gap-2">
+						<span class="text-xs font-bold text-text truncate">{ "@" + user.Username }</span>
+						<span class="border border-border bg-chip px-1.5 py-0.2 text-[9px] uppercase font-bold text-muted shrink-0">{ user.Role }</span>
+					</div>
+					if user.DisplayName != "" && user.DisplayName != user.Username {
+						<div class="text-[11px] text-muted truncate">{ user.DisplayName }</div>
+					}
+				</div>
+				<div class="py-1 text-xs">
+					<a
+						href={ templ.SafeURL("/u/" + user.Username) }
+						class="block px-3.5 py-2 text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						if lang == "id" {
+							Profil Publik
+						} else {
+							Public Profile
+						}
+					</a>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/discussions?author=" + user.Username) }
+						class="block px-3.5 py-2 text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						if lang == "id" {
+							Topik & Balasan
+						} else {
+							Topics & Replies
+						}
+					</a>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/saved") }
+						class="block px-3.5 py-2 text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						Reading List
+					</a>
+					if user.GitHubURL != "" {
+						<a
+							href={ templ.SafeURL(user.GitHubURL) }
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex items-center justify-between px-3.5 py-2 text-text hover:bg-hover hover:text-link transition-colors"
+						>
+							<span>GitHub</span>
+							@IconArrowUpRight("w-3 h-3 text-muted")
+						</a>
+					}
+				</div>
+				<div class="border-t border-border/80"></div>
+				<div class="py-1 text-xs">
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/settings") }
+						class="block px-3.5 py-2 text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						if lang == "id" {
+							Pengaturan
+						} else {
+							Settings
+						}
+					</a>
+				</div>
+				<div class="border-t border-border/80"></div>
+				<div class="py-1 text-xs">
+					<a
+						href="/auth/logout"
+						class="block px-3.5 py-2 text-muted hover:text-rose-500 hover:bg-hover transition-colors font-bold"
+					>
+						Logout
+					</a>
+				</div>
+			</div>
+		</div>
+	} else {
+		<div class="relative flex items-center gap-1.5" id="guest-menu-container">
+			<a
+				href={ templ.SafeURL("/auth/github?return_to=" + returnTo) }
+				class="flex items-center gap-1.5 border border-border bg-surface hover:bg-hover px-2.5 h-10 text-xs font-mono font-bold text-text transition-colors"
+				title="Login with GitHub"
+			>
+				@IconGitHub()
+				<span class="hidden lg:inline">Login</span>
+			</a>
+			<button
+				type="button"
+				onclick="var m=document.getElementById('guest-menu-dropdown'); if(m) m.classList.toggle('hidden');"
+				class="w-10 h-10 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer"
+				aria-label="Settings"
+				title="Settings"
+			>
+				<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+				</svg>
+			</button>
+			<div
+				id="guest-menu-dropdown"
+				class="hidden absolute right-0 top-full mt-1.5 w-52 bg-surface border-2 border-border shadow-2xl z-50 py-2 font-mono text-xs space-y-2"
+			>
+				<div class="px-3.5 text-[10px] font-mono text-muted uppercase tracking-wider">
+					if lang == "id" {
+						Pengaturan
+					} else {
+						Preferences
+					}
+				</div>
+				<div class="flex items-center justify-between px-3.5">
+					<span class="text-muted">
+						if lang == "id" {
+							Tema
+						} else {
+							Theme
+						}
+					</span>
+					<button
+						type="button"
+						onclick="toggleTheme()"
+						class="inline-flex items-center gap-1.5 px-2 py-0.5 border border-border bg-chip hover:bg-hover text-text text-[11px] font-bold transition-colors cursor-pointer"
+					>
+						@sunIcon()
+						@moonIcon()
+						<span>
+							if lang == "id" {
+								Ganti
+							} else {
+								Toggle
+							}
+						</span>
+					</button>
+				</div>
+				<div class="flex items-center justify-between px-3.5">
+					<span class="text-muted">
+						if lang == "id" {
+							Bahasa
+						} else {
+							Language
+						}
+					</span>
+					<div class="flex items-center gap-1">
+						<a
+							href={ templ.SafeURL(toLangURL("id", currentPath)) }
+							class={ "px-1.5 py-0.5 border text-[11px] font-bold transition-colors", templ.KV("border-border bg-chip text-text", lang == "id"), templ.KV("border-transparent text-muted hover:text-text", lang != "id") }
+						>
+							ID
+						</a>
+						<a
+							href={ templ.SafeURL(toLangURL("en", currentPath)) }
+							class={ "px-1.5 py-0.5 border text-[11px] font-bold transition-colors", templ.KV("border-border bg-chip text-text", lang == "en" || lang == ""), templ.KV("border-transparent text-muted hover:text-text", lang != "en" && lang != "") }
+						>
+							EN
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ AuthNavBadgeMobile(user *auth.User, returnTo string, lang string, currentPath string) {
+	if user != nil {
+		<div class="border border-border bg-bg p-3.5 flex flex-col gap-3">
+			<div class="flex items-center gap-3">
+				if user.AvatarURL != "" {
+					<img src={ user.AvatarURL } alt={ user.Username } class="w-10 h-10 object-cover border border-border shrink-0"/>
+				} else {
+					<div class="w-10 h-10 bg-chip flex items-center justify-center font-mono font-bold text-text text-sm border border-border shrink-0">
+						{ string([]rune(user.Username)[:1]) }
+					</div>
+				}
+				<div class="min-w-0 flex-1">
+					<div class="flex items-center gap-2">
+						<span class="text-sm font-mono font-bold text-text truncate">{ "@" + user.Username }</span>
+						<span class="border border-border bg-chip px-1.5 py-0.2 text-[9px] uppercase font-mono font-bold text-muted shrink-0">{ user.Role }</span>
+					</div>
+					if user.DisplayName != "" && user.DisplayName != user.Username {
+						<div class="text-xs text-muted truncate">{ user.DisplayName }</div>
+					}
+				</div>
+			</div>
+			<div class="flex items-center justify-between pt-2.5 border-t border-border/40 text-xs font-mono">
+				<a href={ templ.SafeURL("/u/" + user.Username) } class="text-text hover:text-link transition-colors">
+					if lang == "id" {
+						Profil
+					} else {
+						Profile
+					}
+				</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/settings") } class="text-text hover:text-link transition-colors">
+					if lang == "id" {
+						Pengaturan
+					} else {
+						Settings
+					}
+				</a>
+				<a href="/auth/logout" class="text-rose-500 hover:underline font-bold">
+					Logout
+				</a>
+			</div>
+		</div>
+	} else {
+		<a
+			href={ templ.SafeURL("/auth/github?return_to=" + returnTo) }
+			class="flex items-center justify-center gap-2.5 w-full py-3 px-4 bg-text text-bg hover:opacity-90 font-mono text-xs font-bold uppercase tracking-wider transition-opacity"
+			title="Login with GitHub"
+		>
+			@IconGitHub()
+			<span>
+				if lang == "id" {
+					Masuk dengan GitHub
+				} else {
+					Login with GitHub
+				}
+			</span>
+		</a>
+	}
+}
