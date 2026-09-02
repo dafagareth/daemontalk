@@ -11,7 +11,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	"daemontalk/internal/auth"
 	"daemontalk/internal/comment"
+	"daemontalk/internal/forum"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
 	"daemontalk/internal/postdb"
@@ -21,13 +23,17 @@ import (
 )
 
 type Handler struct {
-	ContentDir  string // path to content directory (defaults to "content")
-	AllProjects []project.Project
-	FilePosts   []post.Post   // markdown posts from content/posts, loaded once at startup
-	filePostsMu sync.RWMutex  // protects concurrent access/mutations to FilePosts
-	PostDB      *postdb.Store // posts created by web editor (optional)
-	Comments    *comment.Store
-	AdminToken  string // when set, enables comment moderation
+	ContentDir   string // path to content directory (defaults to "content")
+	AllProjects  []project.Project
+	FilePosts    []post.Post   // markdown posts from content/posts, loaded once at startup
+	filePostsMu  sync.RWMutex  // protects concurrent access/mutations to FilePosts
+	PostDB       *postdb.Store // posts created by web editor (optional)
+	Comments     *comment.Store
+	Auth         *auth.Store
+	GitHubOAuth  *auth.GitHubOAuth
+	Forum        *forum.Store
+	IsProduction bool
+	AdminToken   string // when set, enables comment moderation
 
 	// merged = FilePosts + render PostDB, urut tanggal desc. Di-swap utuh oleh
 	// RefreshPosts sehingga pembaca tidak perlu lock.
@@ -182,4 +188,11 @@ func (h *Handler) renderMarkdownPage(w http.ResponseWriter, r *http.Request,
 	}
 
 	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, meta, render(ui, body, lang)))
+}
+
+func urlPrefix(lang string) string {
+	if lang == "id" {
+		return "/id"
+	}
+	return ""
 }
