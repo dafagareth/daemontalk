@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"daemontalk/internal/auth"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
@@ -41,10 +42,7 @@ func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 	ui := i18n.Get(lang)
 	slug := chi.URLParam(r, "slug")
 
-	if !h.isAdmin(r) {
-		http.Error(w, "forbidden", http.StatusForbidden)
-		return
-	}
+	isAdmin := h.isAdmin(r)
 	if h.Comments == nil {
 		http.Error(w, "comments unavailable", http.StatusServiceUnavailable)
 		return
@@ -55,10 +53,27 @@ func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
+
+	visitorName := GetVisitorIdentity(w, r)
+	user := auth.GetUser(r.Context())
+
+	if !isAdmin {
+		c, err := h.Comments.GetByID(id)
+		if err != nil || c == nil {
+			http.Error(w, "comment not found", http.StatusNotFound)
+			return
+		}
+		isOwner := (user != nil && c.UserID != nil && *c.UserID == user.ID) || (c.Name == visitorName)
+		if !isOwner {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+	}
+
 	if err := h.Comments.Delete(id); err != nil {
 		slog.Error("delete comment failed", "id", id, "error", err)
 	}
-	h.renderCommentList(w, r, ui, slug, true)
+	h.renderCommentList(w, r, ui, slug, isAdmin)
 }
 func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 	lang := langFromRequest(r)
@@ -88,9 +103,22 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isAdmin := h.isAdmin(r)
+	authUser := auth.GetUser(r.Context())
+
 	name := GetVisitorIdentity(w, r)
-	if isAdmin {
+	var avatarURL, ghURL string
+	var isVerified bool
+	var userID *int64
+
+	if authUser != nil {
+		name = authUser.Username
+		avatarURL = authUser.AvatarURL
+		ghURL = authUser.GitHubURL
+		isVerified = true
+		userID = &authUser.ID
+	} else if isAdmin {
 		name = "daemontalk"
+		isVerified = true
 	}
 	body := r.PostFormValue("body")
 
@@ -107,7 +135,16 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := h.Comments.AddWithParent(slug, name, body, parentID); err != nil {
+	if _, err := h.Comments.AddAdvanced(comment.Comment{
+		PostSlug:   slug,
+		Name:       name,
+		Body:       body,
+		ParentID:   parentID,
+		UserID:     userID,
+		AvatarURL:  avatarURL,
+		IsVerified: isVerified,
+		GitHubURL:  ghURL,
+	}); err != nil {
 		if err == comment.ErrInvalid {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		} else {

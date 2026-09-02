@@ -111,8 +111,8 @@ func TestPostCommentAndReply(t *testing.T) {
 func TestDeleteCommentWithReplies(t *testing.T) {
 	h, cs := newTestCommentHandler(t)
 
-	c1, _ := cs.Add("test-post", "Alice", "Root comment")
-	_, _ = cs.AddWithParent("test-post", "Bob", "Reply to Alice", &c1.ID)
+	c1, _ := cs.AddAdvanced(comment.Comment{PostSlug: "test-post", Name: "Alice", Body: "Root comment"})
+	_, _ = cs.AddAdvanced(comment.Comment{PostSlug: "test-post", Name: "Bob", Body: "Reply to Alice", ParentID: &c1.ID})
 
 	// Delete as Admin
 	req := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/blog/test-post/comments/%d/delete", c1.ID), nil)
