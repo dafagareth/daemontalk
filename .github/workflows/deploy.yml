@@ -31,4 +31,5 @@ jobs:
             else
               cd /opt/daemontalk
             fi
-            ./scripts/deploy.sh
+            chmod +x ./scripts/deploy.sh
+            bash ./scripts/deploy.sh
