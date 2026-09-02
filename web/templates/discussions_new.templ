@@ -1,0 +1,197 @@
+package templates
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/forum"
+	"daemontalk/internal/i18n"
+)
+
+templ DiscussionsNewPage(
+	ui i18n.UI,
+	lang string,
+	currentUser *auth.User,
+	categories []forum.Category,
+	selectedCategory string,
+) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/socket") }
+				class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				<span>
+					if lang == "id" {
+						Kembali ke Socket
+					} else {
+						Back to Socket
+					}
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+				if lang == "id" {
+					Mulai Topik Diskusi
+				} else {
+					Start Discussion Topic
+				}
+			</h1>
+		</div>
+		if currentUser == nil {
+			<div class="border border-border bg-surface p-8 sm:p-12 text-center space-y-4 font-mono shadow-xl">
+				<div class="w-12 h-12 bg-chip border border-border mx-auto flex items-center justify-center text-text">
+					@IconGitHub()
+				</div>
+				<h2 class="text-base font-bold text-text">
+					if lang == "id" {
+						Login Diperlukan
+					} else {
+						Authentication Required
+					}
+				</h2>
+				<p class="text-xs text-muted max-w-md mx-auto leading-relaxed">
+					if lang == "id" {
+						Untuk menjaga kualitas diskusi dan mencegah bot, pembuatan topik baru memerlukan autentikasi akun GitHub.
+					} else {
+						To maintain discussion quality and prevent spam, creating a new topic requires GitHub authentication.
+					}
+				</p>
+				<a
+					href={ templ.SafeURL("/auth/github?return_to=" + prefix(lang) + "/socket/new") }
+					class="inline-flex items-center gap-2 px-4 py-2 bg-text text-bg text-xs font-bold hover:opacity-90 transition-opacity"
+				>
+					@IconGitHub()
+					<span>
+						if lang == "id" {
+							Masuk dengan GitHub
+						} else {
+							Sign in with GitHub
+						}
+					</span>
+				</a>
+			</div>
+		} else {
+			<form
+				method="post"
+				action={ templ.SafeURL(prefix(lang) + "/socket/new") }
+				class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans"
+			>
+				<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between text-xs sm:text-sm font-mono select-none flex-wrap gap-3">
+					<div class="flex items-center gap-3 text-text font-bold min-w-0">
+						<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+						<code class="text-sm sm:text-base font-mono truncate">cat &gt; /dev/socket/new.md</code>
+					</div>
+					<div class="text-muted text-[11px] flex items-center gap-1.5">
+						<span>AUTHOR:</span>
+						<span class="text-text font-bold">{ "@" + currentUser.Username }</span>
+					</div>
+				</div>
+				<div class="py-6 px-0 sm:p-8 space-y-4">
+					<div>
+						<input
+							type="text"
+							name="title"
+							required
+							if lang == "id" {
+								placeholder="Judul topik atau pertanyaan teknis..."
+							} else {
+								placeholder="Topic title or technical question..."
+							}
+							class="w-full text-lg sm:text-xl md:text-2xl font-bold bg-transparent border-0 border-b border-border/40 focus:border-[var(--c-link)] focus:ring-0 focus:outline-none text-text placeholder:text-muted/60 pb-3 transition-colors"
+						/>
+					</div>
+					<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 pb-2">
+						<div class="shrink-0 flex items-center gap-2">
+							<span class="text-xs font-mono text-muted select-none">
+								if lang == "id" {
+									Kategori:
+								} else {
+									Category:
+								}
+							</span>
+							<select
+								name="category"
+								required
+								class="h-8 px-2.5 text-xs font-mono bg-bg border border-border text-text focus:border-[var(--c-link)] focus:outline-none"
+							>
+								for _, c := range categories {
+									if c.Slug != "all" {
+										if c.Slug == selectedCategory || (selectedCategory == "" && c.Slug == "qna") {
+											<option value={ c.Slug } selected>
+												if lang == "id" {
+													{ c.NameID }
+												} else {
+													{ c.NameEN }
+												}
+											</option>
+										} else {
+											<option value={ c.Slug }>
+												if lang == "id" {
+													{ c.NameID }
+												} else {
+													{ c.NameEN }
+												}
+											</option>
+										}
+									}
+								}
+							</select>
+						</div>
+						<div class="flex-1 flex items-center gap-1.5">
+							<span class="text-xs font-mono text-muted select-none">#</span>
+							<input
+								type="text"
+								name="tags"
+								placeholder="Tags: linux, kernel, performance, go"
+								class="w-full h-8 px-2.5 text-xs font-mono bg-bg border border-border text-text placeholder:text-muted/60 focus:border-[var(--c-link)] focus:outline-none"
+							/>
+						</div>
+					</div>
+					<div>
+						<textarea
+							name="body"
+							rows="14"
+							required
+							if lang == "id" {
+								placeholder="Tuliskan konteks permasalahan, arsitektur, cuplikan kode, atau log diagnostik (Markdown & kode)..."
+							} else {
+								placeholder="Describe problem context, system architecture, code snippets, or diagnostics (Markdown & code)..."
+							}
+							class="w-full p-0 pt-3 text-sm sm:text-base font-mono bg-transparent border-0 border-t border-border/40 focus:ring-0 focus:outline-none text-text placeholder:text-muted/50 leading-relaxed resize-y"
+						></textarea>
+					</div>
+				</div>
+				<div class="border-t border-border bg-surface/50 px-6 sm:px-8 py-4 flex items-center justify-between text-xs font-mono text-muted flex-wrap gap-4 select-none">
+					<span>
+						if lang == "id" {
+							[SYS] Gunakan ```go atau ```bash · <kbd class="px-1 py-0.5 border border-border bg-bg text-[10px]">Ctrl+Enter</kbd> kirim
+						} else {
+							[SYS] Use ```go or ```bash · <kbd class="px-1 py-0.5 border border-border bg-bg text-[10px]">Ctrl+Enter</kbd> submit
+						}
+					</span>
+					<div class="flex items-center gap-4">
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/socket") }
+							class="text-muted hover:text-text transition-colors"
+						>
+							if lang == "id" {
+								Batal
+							} else {
+								Cancel
+							}
+						</a>
+						<button
+							type="submit"
+							class="px-4 py-2 bg-text text-bg font-bold hover:opacity-90 transition-opacity cursor-pointer text-xs uppercase"
+						>
+							if lang == "id" {
+								PUBLIKASIKAN TOPIK
+							} else {
+								PUBLISH TOPIC
+							}
+						</button>
+					</div>
+				</div>
+			</form>
+		}
+	</section>
+}
