@@ -21,8 +21,8 @@ func TestContributePage(t *testing.T) {
 	}
 
 	body := rec.Body.String()
-	if !strings.Contains(body, "Download template.md") {
-		t.Error("body missing 'Download template.md' button")
+	if !strings.Contains(body, "Download daemontalk-template.md") {
+		t.Error("body missing 'Download daemontalk-template.md' button")
 	}
 }
 
@@ -31,17 +31,17 @@ func TestDownloadTemplate(t *testing.T) {
 		ContentDir: "../../content",
 	}
 
-	req := httptest.NewRequest(http.MethodGet, "/download/template.md", nil)
+	req := httptest.NewRequest(http.MethodGet, "/download/daemontalk-template.md", nil)
 	rec := httptest.NewRecorder()
 	h.DownloadTemplate(rec, req)
 
 	if rec.Code != http.StatusOK {
-		t.Fatalf("GET /download/template.md: got status %d, want 200", rec.Code)
+		t.Fatalf("GET /download/daemontalk-template.md: got status %d, want 200", rec.Code)
 	}
 
 	disp := rec.Header().Get("Content-Disposition")
-	if !strings.Contains(disp, "attachment") || !strings.Contains(disp, "template.md") {
-		t.Errorf("expected attachment header for template.md, got %q", disp)
+	if !strings.Contains(disp, "attachment") || !strings.Contains(disp, "daemontalk-template.md") {
+		t.Errorf("expected attachment header for daemontalk-template.md, got %q", disp)
 	}
 
 	body := rec.Body.String()
