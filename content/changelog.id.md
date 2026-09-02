@@ -77,3 +77,10 @@
 - **Ekstensi Markdown Editorial**: Penyorotan sintaks kode di server, carousel responsif (` ```carousel `), galeri (` ```gallery `), akordeon FAQ (` ```faq `), kartu profil penulis (` ```author `), catatan kaki, dan daftar isi otomatis.
 - **Pengalaman Membaca**: Pengaturan ukuran font (A+/A-), mode Serif, pemilih tema (Light, Dark), markah bacaan (*reading list*), dan pencarian artikel *in-memory* yang cepat.
 - **Feeds & SEO**: Generator otomatis kartu pratinjau OpenGraph, RSS 2.0 feed, JSON Feed, Sitemap XML, dan *Content Security Policy* (CSP) ketat.
+
+### v1.3.3 (2026-09-02)
+- **Fix**: Implementasi *fallback* otomatis menggunakan *Git Log History* untuk tanggal artikel. Artikel kini tidak wajib memiliki `date:` di *frontmatter*.
+- **Fix**: Menghapus baris `date:` dari *template CLI* `new-post` untuk menyerahkan penentuan waktu 100% pada *Git commit*.
+- **CI/CD**: Menambahkan jalur cepat (Fast-Track) sinkronisasi artikel via `.github/workflows/sync-content.yml`.
+- **CI/CD**: Mengecualikan folder `content/**` dari antrean *build* Docker, memangkas waktu *publish* artikel dari 5 menit menjadi 5 detik.
+- **Chore**: Mengubah *metadata OG image* dan deskripsi *JSON Feed* agar lebih relevan dengan visi platform baru.

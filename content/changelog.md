@@ -77,3 +77,10 @@
 - **Editorial Markdown Engine**: Server-rendered syntax highlighting, responsive carousels (` ```carousel `), galleries (` ```gallery `), accordions (` ```faq `), author cards (` ```author `), footnotes, and table of contents.
 - **Reading Experience**: Font scaling (A+/A-), Serif toggle, theme switcher (Light, Dark), reading list bookmarks, and in-memory fulltext search.
 - **Feeds & SEO**: Automated OpenGraph card generator, RSS 2.0 feed, JSON Feed, Sitemap XML, and hardened Content Security Policy (CSP).
+
+### v1.3.3 (2026-09-02)
+- **Fix**: Implemented Git Log history fallback for article dates (posts no longer require frontmatter `date`).
+- **Fix**: Removed `date:` field from `new-post` CLI template.
+- **CI/CD**: Added Fast-Track content sync via `.github/workflows/sync-content.yml`.
+- **CI/CD**: Ignored `content/**` changes in Docker builds to speed up publishing from 5 minutes to 5 seconds.
+- **Chore**: Updated OG default meta title and JSON Feed description to "Technology publication & community portal".

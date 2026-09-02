@@ -6,9 +6,11 @@ import (
 	"html/template"
 	"log/slog"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/yuin/goldmark/parser"
 )
@@ -83,6 +85,19 @@ func loadDir(dir string, includeDrafts bool) ([]Post, error) {
 	return posts, nil
 }
 
+func getGitCreationDate(path string) (time.Time, error) {
+	cmd := exec.Command("git", "log", "--reverse", "--format=%aI", "--", path)
+	out, err := cmd.Output()
+	if err != nil {
+		return time.Time{}, err
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	if len(lines) == 0 || lines[0] == "" {
+		return time.Time{}, fmt.Errorf("no git history")
+	}
+	return time.Parse(time.RFC3339, lines[0])
+}
+
 func ParseFile(path string) (Post, error) {
 	fi, err := os.Stat(path)
 	if err != nil {
@@ -104,7 +119,12 @@ func ParseFile(path string) (Post, error) {
 	}
 	// Fallback if frontmatter does not define date
 	if p.Date.IsZero() {
-		p.Date = fi.ModTime()
+		if gitDate, err := getGitCreationDate(path); err == nil && !gitDate.IsZero() {
+			p.Date = gitDate
+		} else {
+			// Untracked files fallback to file modification time
+			p.Date = fi.ModTime()
+		}
 	}
 	return p, nil
 }

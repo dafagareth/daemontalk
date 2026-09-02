@@ -3,6 +3,8 @@ name: Docker Image CI/CD
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'content/**'
 
 env:
   REGISTRY: ghcr.io

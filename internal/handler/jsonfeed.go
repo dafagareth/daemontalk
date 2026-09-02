@@ -48,7 +48,7 @@ func (h *Handler) JSONFeed(w http.ResponseWriter, r *http.Request) {
 		Title:       "daemontalk",
 		HomePageURL: seoBaseURL,
 		FeedURL:     seoBaseURL + "/feed.json",
-		Description: "Software developer building developer tools in Go.",
+		Description: "Technology publication & community portal.",
 		Items:       items,
 	}
 

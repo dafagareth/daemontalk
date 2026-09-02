@@ -69,9 +69,6 @@ cmd_new() {
     fi
 
     mkdir -p "${POSTS_DIR}" "${img_dir}"
-    local today
-    today=$(date +%Y-%m-%d)
-
     local aliases_str="[]"
     if [ "$use_uid" = "true" ] && [ -n "$readable_slug" ] && [ "$slug" != "$readable_slug" ]; then
         aliases_str="[\"${readable_slug}\"]"
@@ -82,7 +79,6 @@ cmd_new() {
 title: "${title}"
 slug: "${slug}"
 aliases: ${aliases_str}
-date: ${today}
 author: "daemontalk team"
 tags: ["tag1", "tag2"]
 lang: "en"

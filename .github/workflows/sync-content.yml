@@ -1,0 +1,31 @@
+name: Fast Content Sync
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'content/**'
+
+jobs:
+  sync:
+    name: Sync Markdown to VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Sync Content
+        if: env.VPS_HOST != ''
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER || 'root' }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            if [ -d "/var/www/daemontalk" ]; then
+              cd /var/www/daemontalk
+            else
+              cd /opt/daemontalk
+            fi
+            export GITHUB_WEBHOOK_SECRET="${{ secrets.GITHUB_WEBHOOK_SECRET }}"
+            bash ./scripts/sync-content.sh

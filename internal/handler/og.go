@@ -66,9 +66,9 @@ func (h *Handler) SiteOGImage(w http.ResponseWriter, r *http.Request) {
 	if !hit {
 		var buf bytes.Buffer
 		card := og.Card{
-			Title:    "Dafa — developer tools in Go",
-			Subtitle: "Go · CLI · systems",
-			Site:     "daemontalk.com",
+			Title:    "DaemonTalk",
+			Subtitle: "Technology publication & community portal.",
+			Site:     "www.daemontalk.com",
 		}
 		if err := og.Render(&buf, card); err != nil {
 			http.Error(w, "render error", http.StatusInternalServerError)
