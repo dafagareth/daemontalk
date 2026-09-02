@@ -92,4 +92,75 @@
 
   html[lang="id"] .fig-count::after { content: " Gambar"; }
   html[lang="en"] .fig-count::after { content: " Figures"; }
+
+  /* ── Drop Cap ── */
+  /* Multi-letter drop cap controlled by the author. Usage in markdown:
+     <span class="drop-cap">THE</span> rest of the paragraph... */
+  .prose .drop-cap {
+    float: left;
+    font-size: 3.4em;
+    line-height: 0.82;
+    padding-right: 0.08em;
+    margin-top: 0.05em;
+    font-weight: 900;
+    font-family: inherit; /* Auto follows Serif/Sans user choice */
+    color: var(--c-text);
+  }
+
+  /* ── Text Wrapping with Images ── */
+  /* Use class="float-right" or class="float-left" on <img> inside markdown
+     to wrap text around the image. Example in .md file:
+     <img src="/static/images/posts/example.webp" alt="Diagram" class="float-right"> */
+  .prose img.float-right {
+    float: right;
+    display: inline;
+    max-width: 40%;
+    margin: 0.25rem 0 1rem 1.5rem;
+    border: 1px solid var(--c-border);
+  }
+  .prose img.float-left {
+    float: left;
+    display: inline;
+    max-width: 40%;
+    margin: 0.25rem 1.5rem 1rem 0;
+    border: 1px solid var(--c-border);
+  }
+  @media (max-width: 640px) {
+    .prose img.float-right,
+    .prose img.float-left {
+      float: none;
+      display: block;
+      max-width: 100%;
+      margin: 1.5rem auto;
+    }
+  }
+
+  /* ── Cross-Reference Links ── */
+  /* Use title="cross-ref" on markdown links to style them as internal
+     article cross-references. Example in .md file:
+     [Head-of-Line Blocking](/p/protocols-http3 "cross-ref") */
+  .prose a[title="cross-ref"] {
+    text-decoration: none;
+    border-bottom: 1px dashed var(--c-muted);
+    font-style: italic;
+    transition: border-color 0.2s;
+  }
+  .prose a[title="cross-ref"]:hover {
+    border-bottom-color: var(--c-link);
+  }
+  .prose a[title="cross-ref"]::after {
+    content: " →";
+    font-size: 0.8em;
+    opacity: 0.5;
+    font-style: normal;
+  }
+
+  /* ── Acronyms / Abbreviations ── */
+  /* Usage in markdown: <abbr title="Transmission Control Protocol">TCP</abbr> */
+  .prose abbr[title] {
+    text-decoration: underline dotted;
+    text-decoration-color: var(--c-muted);
+    text-underline-offset: 4px;
+    cursor: help;
+  }
 }

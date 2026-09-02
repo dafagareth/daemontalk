@@ -153,9 +153,89 @@
     transition: none !important;
   }
 
-  .group:hover .post-visited,
+  a:hover .post-visited,
+  a:hover > .post-visited,
+  article.group:hover .post-visited,
+  .group\/lead:hover .post-visited,
+  .group\/sub:hover .post-visited,
   .post-visited:hover {
     color: var(--c-link) !important;
     transition: color 150ms ease !important;
+  }
+  /* Wikipedia Hover Cards */
+  .wiki-tooltip {
+    position: absolute;
+    z-index: 50;
+    max-width: 320px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--c-text);
+    pointer-events: none; /* Initially ignore pointer to prevent flickering */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out, visibility 0.15s;
+    overflow: hidden;
+  }
+  .wiki-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto; /* Let user hover the tooltip itself */
+  }
+  .wiki-thumb {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--c-border);
+    display: block;
+  }
+  .wiki-content {
+    padding: 1rem;
+  }
+  .wiki-title {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--c-text);
+  }
+  .wiki-extract {
+    margin: 0 0 1rem 0;
+    color: var(--c-muted);
+  }
+  .wiki-footer {
+    font-size: 0.7rem;
+    color: var(--c-muted);
+    font-style: italic;
+    border-top: 1px dashed var(--c-border);
+    padding-top: 0.5rem;
+  }
+  .wiki-loading, .wiki-error {
+    padding: 1rem;
+    font-style: italic;
+    color: var(--c-muted);
+    text-align: center;
+  }
+
+  /* ── Zen Mode (Focus) ── */
+  body.zen-mode #site-header-wrapper,
+  body.zen-mode footer,
+  body.zen-mode aside:first-of-type {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.4s ease;
+  }
+  /* Sembunyikan semua div di sidebar kanan, KECUALI div yang mengandung tombol Zen */
+  body.zen-mode aside:last-of-type > div:not(:has(#zen-toggle-btn)) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.4s ease;
+  }
+  body.zen-mode #zen-toggle-btn {
+    color: var(--c-text) !important;
   }
 }
