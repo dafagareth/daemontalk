@@ -19,8 +19,10 @@ import (
 	"syscall"
 	"time"
 
+	"daemontalk/internal/auth"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/config"
+	"daemontalk/internal/forum"
 	"daemontalk/internal/handler"
 	"daemontalk/internal/highlight"
 	"daemontalk/internal/post"
@@ -82,6 +84,33 @@ func main() {
 	}
 	defer comments.Close()
 
+	// Unified Application Database (Auth, Users, Discussions Forum)
+	appDBPath := filepath.Join(cfg.DataDir, "daemontalk.db")
+
+	authStore, err := auth.Open(appDBPath)
+	if err != nil {
+		slog.Error("open auth db failed", "error", err)
+		os.Exit(1)
+	}
+	defer authStore.Close()
+
+	forumStore, err := forum.Open(appDBPath)
+	if err != nil {
+		slog.Error("open forum db failed", "error", err)
+		os.Exit(1)
+	}
+	defer forumStore.Close()
+
+	var ghOAuth *auth.GitHubOAuth
+	if cfg.HasGitHubOAuth() {
+		ghOAuth = auth.NewGitHubOAuth(
+			cfg.GitHubClientID,
+			cfg.GitHubClientSecret,
+			strings.TrimSuffix(cfg.BaseURL, "/")+"/auth/github/callback",
+		)
+		slog.Info("github oauth enabled", "client_id", cfg.GitHubClientID)
+	}
+
 	// Post buatan editor web — persisten di volume data/ bersama comments.db.
 	pdb, err := postdb.Open(filepath.Join(cfg.DataDir, "posts.db"))
 	if err != nil {
@@ -91,18 +120,22 @@ func main() {
 	defer pdb.Close()
 
 	h := &handler.Handler{
-		ContentDir:  cfg.ContentDir,
-		AllProjects: project.All,
-		FilePosts:   posts,
-		PostDB:      pdb,
-		Comments:    comments,
-		AdminToken:  cfg.AdminToken,
-		SMTPHost:    cfg.SMTP.Host,
-		SMTPPort:    cfg.SMTP.Port,
-		SMTPUser:    cfg.SMTP.User,
-		SMTPPass:    cfg.SMTP.Pass,
-		SMTPTo:      cfg.SMTP.To,
-		GitHubToken: cfg.GitHubToken,
+		ContentDir:   cfg.ContentDir,
+		AllProjects:  project.All,
+		FilePosts:    posts,
+		PostDB:       pdb,
+		Comments:     comments,
+		Auth:         authStore,
+		GitHubOAuth:  ghOAuth,
+		Forum:        forumStore,
+		IsProduction: cfg.IsProduction(),
+		AdminToken:   cfg.AdminToken,
+		SMTPHost:     cfg.SMTP.Host,
+		SMTPPort:     cfg.SMTP.Port,
+		SMTPUser:     cfg.SMTP.User,
+		SMTPPass:     cfg.SMTP.Pass,
+		SMTPTo:       cfg.SMTP.To,
+		GitHubToken:  cfg.GitHubToken,
 	}
 	h.RefreshPosts()
 	if cfg.HasAdmin() {
