@@ -23,6 +23,7 @@ services:
       GITHUB_CLIENT_ID: "${GITHUB_CLIENT_ID:-}"
       GITHUB_CLIENT_SECRET: "${GITHUB_CLIENT_SECRET:-}"
       SESSION_SECRET: "${SESSION_SECRET:-}"
+      TZ: "Asia/Jakarta"
     volumes:
       # Persistent host directory mount for SQLite DBs (comments, views, posts) & SSH keys.
       - ./data:/app/data

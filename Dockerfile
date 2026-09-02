@@ -32,6 +32,7 @@ COPY --from=builder /app/google*.html ./
 COPY --from=builder /app/web/static/ web/static/
 COPY --from=builder /app/content/ content/
 RUN mkdir -p data content/posts web/static/images/posts && chown -R app:app data content web/static
+RUN git config --system --add safe.directory /app
 
 USER app
 EXPOSE 8080
