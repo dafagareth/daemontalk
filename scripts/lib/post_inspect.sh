@@ -81,8 +81,8 @@ cmd_validate() {
             errors=$((errors + 1))
         fi
         if ! grep -q "^date:" "$f"; then
-            echo "[error] $fname: Missing 'date' in frontmatter"
-            errors=$((errors + 1))
+            echo "[warn]  $fname: Missing 'date' in frontmatter (will fallback to git commit time)"
+            warnings=$((warnings + 1))
         fi
         if ! grep -q "^type:" "$f"; then
             echo "[warn]  $fname: Missing 'type' in frontmatter (defaults to 'article')"
