@@ -1,23 +1,45 @@
-# daemontalk License & Terms
+# Daemontalk License & Legal Terms
 
-Copyright (c) 2026 daemontalk. All rights reserved.
+**Copyright © 2026 Dafa Gareth (daemontalk.com).**
 
-daemontalk is an open engineering notebook and software project. To ensure transparency while protecting original work, the project is governed by three distinct licensing tiers:
+Daemontalk is an independent systems engineering publication, low-level computing research notebook, and standalone software project. Licensing terms across the platform are organized as follows:
 
-## Source Code (Non-Commercial Use)
+---
 
-The source code for this website is open for inspection, learning, and personal educational use. You are welcome to study the codebase, run it locally, and build personal experiments based on it.
+## 1. Platform & Server Source Code (*PolyForm Noncommercial 1.0.0*)
 
-However, commercial use is strictly prohibited. You may not sell, resell, monetize, sub-license, or distribute this software (or any derivative version) as a commercial product, paid template, or hosted SaaS application without prior written permission from the author.
+The source code of the Daemontalk platform (Go backend, Templ views, Tailwind stylesheets, Wish SSH server, and TUI engine) is licensed under the **[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0)**.
 
-## Brand & Visual Identity (All Rights Reserved)
+- **Permitted Non-Commercial Use**: You are free to inspect, study, fork, modify, and develop other software using this codebase for personal, educational, academic, and noncommercial purposes.
+- **Prohibition on Commercial Exploitation**: You may **not** sell, resell, lease, sublicense, monetize, or deploy this software as a commercial product, paid website template, or hosted Software-as-a-Service (SaaS) without prior explicit written authorization from Dafa Gareth.
+- **Reciprocal Notice**: Any distribution of the code (with or without modifications) must include the PolyForm Noncommercial License notice.
 
-The name "daemontalk", the official logo, visual design assets, and the daemontalk.com domain are proprietary brand assets. 
+---
 
-This license does not grant permission to use the daemontalk name or branding for any public forks, alternative deployments, or third-party platforms. If you deploy a modified version of this software, you must rebrand it completely with your own distinct name and logo before publication.
+## 2. Written Articles & Research Content (*CC BY-NC-SA 4.0*)
 
-## Written Articles & Content (CC BY-NC-SA 4.0)
+All written technical articles, research dispatches, architecture breakdowns, and editorial essays published under `content/posts/` are licensed under the **[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)** license.
 
-All written articles, laboratory notes, and educational documentation published on this site are licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0).
+- **Share & Adapt**: You are free to copy, cite, and adapt these writings for non-commercial educational purposes.
+- **Attribution**: You must give clear credit to Dafa Gareth and include a direct link back to the original source article on Daemontalk.
+- **Share-Alike**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license.
 
-You are free to share and adapt these writings for non-commercial and educational purposes, provided you give appropriate attribution and include a direct link back to the original article on daemontalk.
+---
+
+## 3. Brand, Trademark & Visual Identity (*All Rights Reserved*)
+
+The **Daemontalk** name, domain (`daemontalk.com`), mechanical daemon logo, design tokens, visual styling, and brand identity are the exclusive intellectual property of **Dafa Gareth**. **All rights reserved.** No permission is granted to clone or use these marks for any purpose without prior explicit written permission.
+
+---
+
+## 4. Article Code Snippets & Sysadmin Configurations (*Permissive / MIT*)
+
+All source code snippets, Linux kernel tuning parameters, sysctl configurations, shell scripts, and database schema samples embedded within technical articles are released under permissive terms. You are free to copy, modify, and execute these samples in personal or commercial production systems without royalty obligations.
+
+---
+
+## 5. Software Warranty Disclaimer (*As-Is Terms*)
+
+The software and technical materials are provided "as-is", without warranty of any kind. In no event shall the copyright holder be liable for any claim, damages, data loss, kernel panics, or server downtime arising from using or testing this software.
+
+Inquiries regarding commercial permissions or custom licensing agreements should be directed to: **realdaemontalk@gmail.com**.
