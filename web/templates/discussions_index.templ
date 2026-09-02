@@ -1,0 +1,205 @@
+package templates
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/forum"
+	"daemontalk/internal/i18n"
+	"fmt"
+)
+
+templ DiscussionsIndexPage(
+	ui i18n.UI,
+	lang string,
+	currentUser *auth.User,
+	topics []*forum.Topic,
+	categories []forum.Category,
+	selectedCategory string,
+	sortOrder string,
+	searchQuery string,
+	author string,
+	totalCount int,
+	page int,
+	totalPages int,
+) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="flex items-center justify-between gap-4 mb-6 font-sans">
+			<div>
+				<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+					Socket
+				</h1>
+				<p class="text-xs font-mono text-muted mt-0.5">
+					if author != "" {
+						{ fmt.Sprintf("topics by @%s (%d total)", author, totalCount) }
+					} else if searchQuery != "" {
+						{ fmt.Sprintf("search results for \"%s\" (%d total)", searchQuery, totalCount) }
+					} else {
+						{ fmt.Sprintf("%d topics indexed", totalCount) }
+					}
+				</p>
+			</div>
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/socket/new" + getCategoryQuery(selectedCategory)) }
+				class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-chip hover:bg-hover text-text font-mono font-bold text-xs uppercase tracking-wider transition-colors shrink-0"
+			>
+				<span class="text-link font-black">+</span>
+				<span>{ ui.Discussions_New }</span>
+			</a>
+		</div>
+		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
+			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-5 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono select-none">
+				<div class="flex items-center gap-2.5 text-text font-bold min-w-0">
+					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+					<code class="text-xs sm:text-sm font-mono truncate">nc -l /dev/socket</code>
+				</div>
+				<div class="flex items-center gap-2 sm:gap-3 shrink-0 text-xs font-mono">
+					<a
+						href={ templ.SafeURL(fmt.Sprintf("%s/socket?category=%s&sort=latest", prefix(lang), selectedCategory)) }
+						class={ "transition-colors uppercase font-bold", templ.KV("text-link", sortOrder == "latest" || sortOrder == ""), templ.KV("text-muted hover:text-text", sortOrder != "latest" && sortOrder != "") }
+					>
+						latest
+					</a>
+					<span class="text-muted/40">·</span>
+					<a
+						href={ templ.SafeURL(fmt.Sprintf("%s/socket?category=%s&sort=votes", prefix(lang), selectedCategory)) }
+						class={ "transition-colors uppercase font-bold", templ.KV("text-link", sortOrder == "votes"), templ.KV("text-muted hover:text-text", sortOrder != "votes") }
+					>
+						votes
+					</a>
+					<span class="text-muted/40">·</span>
+					<a
+						href={ templ.SafeURL(fmt.Sprintf("%s/socket?category=%s&sort=views", prefix(lang), selectedCategory)) }
+						class={ "transition-colors uppercase font-bold", templ.KV("text-link", sortOrder == "views"), templ.KV("text-muted hover:text-text", sortOrder != "views") }
+					>
+						views
+					</a>
+				</div>
+			</div>
+			<div class="border-b border-border/70 bg-surface/30 px-4 sm:px-6 py-2.5 flex items-center gap-3 sm:gap-4 overflow-x-auto scrollbar-none text-xs font-mono select-none mt-4 sm:mt-0">
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/socket" + getSortQuery(sortOrder)) }
+					class={ "transition-colors uppercase font-bold whitespace-nowrap shrink-0", templ.KV("text-link underline underline-offset-4 decoration-2", selectedCategory == "" || selectedCategory == "all"), templ.KV("text-muted hover:text-text", selectedCategory != "" && selectedCategory != "all") }
+				>
+					#all
+				</a>
+				for _, c := range categories {
+					if c.Slug != "all" {
+						<a
+							href={ templ.SafeURL(fmt.Sprintf("%s/socket?category=%s%s", prefix(lang), c.Slug, getSortQueryParam(sortOrder))) }
+							class={ "transition-colors uppercase font-bold whitespace-nowrap shrink-0", templ.KV("text-link underline underline-offset-4 decoration-2", selectedCategory == c.Slug), templ.KV("text-muted hover:text-text", selectedCategory != c.Slug) }
+						>
+							#{ c.Slug }
+						</a>
+					}
+				}
+			</div>
+			if len(topics) == 0 {
+				<div class="p-12 text-center font-mono">
+					<p class="text-sm font-bold text-text mb-1">No Topics Found</p>
+					<p class="text-xs text-muted mb-4">Start the first topic or ask an architectural question.</p>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/socket/new?category=" + selectedCategory) }
+						class="inline-flex items-center gap-1 text-xs font-mono text-link hover:underline font-bold"
+					>
+						<span>+ Start New Topic</span>
+						@IconArrowRight("w-3 h-3")
+					</a>
+				</div>
+			} else {
+				<div class="divide-y divide-border mt-2 sm:mt-0">
+					for _, t := range topics {
+						<div class="px-0 py-3.5 sm:p-5 flex items-start gap-3 sm:gap-4 hover:bg-hover transition-colors group">
+							<div class="shrink-0 pt-0.5">
+								@DiscussionsVoteButton("topic", t.ID, t.VotesCount, t.UserVoted)
+							</div>
+							<div class="min-w-0 flex-1 space-y-1">
+								<div class="flex items-baseline gap-2 flex-wrap">
+									<a
+										href={ templ.SafeURL(prefix(lang) + "/socket/" + t.Slug) }
+										class="font-bold text-text text-sm sm:text-base group-hover:text-link leading-snug transition-colors break-words"
+									>
+										{ t.Title }
+									</a>
+									if t.IsSolved {
+										<span class="text-link text-[11px] font-mono font-bold shrink-0">
+											[✓ solved]
+										</span>
+									}
+								</div>
+								<div class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono text-muted flex-wrap">
+									@DiscussionsCategoryBadge(t.Category)
+									<span>·</span>
+									if t.AuthorUsername != "" && t.AuthorUsername != "ghost" {
+										<span class="text-text font-medium">{ "@" + t.AuthorUsername }</span>
+										<span>·</span>
+									} else if t.AuthorName != "" {
+										<span class="text-text font-medium">{ t.AuthorName }</span>
+										<span>·</span>
+									}
+									<time datetime={ t.CreatedAt.Format("2006-01-02") }>
+										{ fmtShortDate(t.CreatedAt, lang) }
+									</time>
+									<span>·</span>
+									<span>{ fmt.Sprintf("%d views", t.ViewsCount) }</span>
+									<span>·</span>
+									<span class="font-bold text-text">
+										if lang == "id" {
+											{ fmt.Sprintf("%d balasan", t.RepliesCount) }
+										} else {
+											{ fmt.Sprintf("%d replies", t.RepliesCount) }
+										}
+									</span>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+				if totalPages > 1 {
+					<div class="border-t border-border bg-surface px-5 sm:px-7 py-3 flex items-center justify-between text-xs font-mono text-muted select-none">
+						if page > 1 {
+							<a
+								href={ templ.SafeURL(fmt.Sprintf("%s/socket?category=%s&sort=%s&p=%d", prefix(lang), selectedCategory, sortOrder, page-1)) }
+								class="inline-flex items-center gap-1 text-link hover:underline font-bold"
+							>
+								@IconArrowLeft("w-3.5 h-3.5")
+								<span>PREV</span>
+							</a>
+						} else {
+							<div></div>
+						}
+						<span>{ fmt.Sprintf("PAGE %d / %d", page, totalPages) }</span>
+						if page < totalPages {
+							<a
+								href={ templ.SafeURL(fmt.Sprintf("%s/socket?category=%s&sort=%s&p=%d", prefix(lang), selectedCategory, sortOrder, page+1)) }
+								class="inline-flex items-center gap-1 text-link hover:underline font-bold"
+							>
+								<span>NEXT</span>
+								@IconArrowRight("w-3.5 h-3.5")
+							</a>
+						}
+					</div>
+				}
+			}
+		</div>
+	</section>
+}
+
+func getCategoryQuery(cat string) string {
+	if cat != "" {
+		return "?category=" + cat
+	}
+	return ""
+}
+
+func getSortQuery(sort string) string {
+	if sort != "" {
+		return "?sort=" + sort
+	}
+	return ""
+}
+
+func getSortQueryParam(sort string) string {
+	if sort != "" {
+		return "&sort=" + sort
+	}
+	return ""
+}
