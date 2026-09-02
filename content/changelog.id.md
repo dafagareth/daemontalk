@@ -1,3 +1,8 @@
+### v1.3.1 (2 September 2026) · Penanganan Metode Webhook & Dukungan Push Tag
+
+- **Ketahanan Metode Webhook & GET**: Menangani request `GET` secara adaptif pada endpoint `/api/webhook/github` serta mengonfigurasi Caddy dengan redirect HTTP 308 untuk menjaga metode POST saat melewati reverse proxy.
+- **Dukungan Push Tag Git**: Memperluas listener webhook GitHub agar memicu reload artikel secara otomatis saat terjadi push tag rilis (`refs/tags/*`) selain push branch utama.
+
 ### v1.3.0 (2 September 2026) · GitHub OAuth2, Forum Diskusi Socket & Lisensi Modular
 
 - **Autentikasi GitHub OAuth2 & Profil Pengguna**: Menghadirkan sistem login GitHub resmi (`/auth/github`), sesi pengguna berbasis SQLite, badge profil navigasi desktop dan mobile, serta kartu profil publik (`/u/:username`).

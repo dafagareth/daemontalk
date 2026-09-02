@@ -1,3 +1,8 @@
+### v1.3.1 (September 2, 2026) · Webhook Method Handling & Tag Push Support
+
+- **Webhook GET & Method Resilience**: Handled `GET` requests gracefully on `/api/webhook/github` and configured Caddy with HTTP 308 permanent redirect to preserve HTTP methods across reverse proxies.
+- **Git Tag Push Support**: Extended the GitHub webhook listener to trigger automatic article reloads on git release tag pushes (`refs/tags/*`) in addition to branch pushes.
+
 ### v1.3.0 (September 2, 2026) · GitHub OAuth2, Socket Discussions & Modular Licensing
 
 - **GitHub OAuth2 & User Profiles**: Integrated seamless GitHub authentication (`/auth/github`), user session persistence via SQLite, dynamic navbar badge, and clean user profile pages (`/u/:username`).
