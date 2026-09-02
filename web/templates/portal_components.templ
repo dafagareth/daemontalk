@@ -1,9 +1,9 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
+	"fmt"
 )
 
 templ portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) {
@@ -33,7 +33,7 @@ templ portalStrictLeadStory(ui i18n.UI, p post.Post, lang string, hideTag bool) 
 				}
 			</span>
 			<span>·</span>
-			<span>{ p.Date.Format("02 Jan 2006") }</span>
+			<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 		</div>
 	</article>
 }
@@ -65,7 +65,7 @@ templ portalStrictSubStory(ui i18n.UI, p post.Post, lang string, hideTag bool) {
 				}
 			</span>
 			<span>·</span>
-			<span>{ p.Date.Format("02 Jan 2006") }</span>
+			<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 		</div>
 	</article>
 }
@@ -74,9 +74,7 @@ templ portalStrictFeatureStory(ui i18n.UI, p post.Post, lang string) {
 	<article class="group relative aspect-[16/9] w-full bg-surface overflow-hidden">
 		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="block w-full h-full">
 			@postThumbnailImg(p)
-			// Gradient overlay
 			<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-			// Text at bottom
 			<div class="absolute bottom-0 left-0 w-full px-3 sm:px-4 py-5 sm:py-6">
 				<h4 class="display text-white text-sm sm:text-base font-extrabold leading-snug line-clamp-2 shadow-sm">
 					{ p.Title }
@@ -115,14 +113,11 @@ templ portalResponsiveTagSubStory(ui i18n.UI, p post.Post, lang string) {
 					{ p.Title }
 				</h3>
 			</a>
-
-			<!-- Meta Row -->
 			<div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1 sm:mb-2 text-[9px] sm:text-[11px] font-mono text-muted uppercase tracking-wider">
-				<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p) }</time>
+				<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 				<span class="hidden sm:inline">·</span>
 				<span class="hidden sm:inline">{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
 			</div>
-
 			if p.Description != "" {
 				<p class="hidden lg:line-clamp-2 text-sm text-muted leading-relaxed mb-4">
 					{ p.Description }

@@ -9,217 +9,203 @@ import (
 templ portalSidebarWithCategories(ui i18n.UI, categories []CategorySection, tagCounts map[string]int, lang string) {
 	<div class="border-0 sm:border sm:border-border w-full mb-12 sm:mb-0 sm:my-8 bg-bg">
 		<div class="flex flex-col-reverse lg:flex-row divide-y divide-y-reverse lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
-
-		// LEFT BOX: Sidebar cards stacked vertically
-		<div class="hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]">
-			
-			// Card 1: Popular Tags
-			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
-					@IconHashtag("w-3.5 h-3.5 text-accent")
-					if lang == "id" {
-						5 TAG POPULER
-					} else {
-						5 POPULAR TAGS
-					}
-				</h3>
-				<div class="flex flex-col gap-3">
-					for _, tag := range getPopularTags(tagCounts, 5) {
-						<div class="flex items-center justify-between border-b border-border/40 pb-2 last:border-b-0 last:pb-0">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + tag) } class="text-xs font-mono text-text hover:text-link transition-colors uppercase tracking-wider">
-								#{ tag }
-							</a>
-							<span class="text-xs font-mono text-muted bg-surface border border-border/50 px-1.5 py-0.5 rounded-none">{ fmt.Sprintf("%d", tagCounts[tag]) }</span>
-						</div>
-					}
-				</div>
-			</div>
-
-			// Card 2: Terminal TUI Interface
-			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
-					@IconCommandLine("w-3.5 h-3.5 text-accent")
-					TERMINAL TUI INTERFACE
-				</h3>
-				<p class="text-xs text-muted line-clamp-2 mb-3 leading-relaxed">
-					if lang == "id" {
-						Baca artikel interaktif langsung dari terminal dengan antarmuka TUI.
-					} else {
-						Read interactive dispatches directly from your terminal with a rich TUI.
-					}
-				</p>
-				<div class="relative bg-surface border border-border text-text font-mono text-xs p-3 pr-10 overflow-hidden mb-3 group">
-					<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
-						<span class="text-muted mr-1.5 select-none">$</span>ssh ssh.daemontalk.com -p 2222
-					</div>
-					<button 
-						onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='var(--color-accent)'; setTimeout(()=>i.style.color='', 1000);" 
-						title="Copy command" 
-						aria-label="Copy command" 
-						class="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-text transition-colors opacity-70 group-hover:opacity-100 cursor-pointer"
-					>
-						@IconCopy("w-4 h-4 transition-colors")
-					</button>
-				</div>
-				<div class="flex flex-col gap-2">
-					<div class="flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5">
-						<kbd class="px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text">Enter</kbd>
-						<span>Full reader</span>
-					</div>
-					<div class="flex items-center justify-between text-[11px] font-mono text-muted border-b border-border/40 pb-1.5">
-						<kbd class="px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text">t</kbd>
-						<span>7 Color themes</span>
-					</div>
-					<div class="flex items-center justify-between text-[11px] font-mono text-muted">
-						<kbd class="px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text">w / o</kbd>
-						<span>Web &amp; Image link</span>
-					</div>
-				</div>
-			</div>
-
-			// Card 3: RSS Feed
-			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center gap-1.5">
-					@IconRSSAlt("w-3.5 h-3.5 text-accent")
-					if lang == "id" {
-						BERLANGGANAN FEED
-					} else {
-						SUBSCRIBE FEED
-					}
-				</h3>
-				<p class="text-xs text-muted line-clamp-2 mb-4 leading-relaxed">
-					if lang == "id" {
-						Tetap terupdate menggunakan RSS Reader favorit Anda.
-					} else {
-						Stay updated using your favorite RSS Reader feed.
-					}
-				</p>
-				<div class="flex flex-col gap-2">
-					<a href="/rss.xml" class="flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full group">
-						<span>RSS XML</span>
-						@IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5")
-					</a>
-					<a href="/feed.json" class="flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full group">
-						<span>JSON Feed</span>
-						@IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5")
-					</a>
-				</div>
-			</div>
-
-			// Card 4: About / Author
-			<div class="p-5 flex flex-col">
-				<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-4 pb-2 border-b border-border flex items-center justify-between">
-					<span class="flex items-center gap-1.5">
-						@IconInfo("w-3.5 h-3.5 text-accent")
+			<div class="hidden lg:flex lg:w-72 xl:w-80 shrink-0 flex-col divide-y divide-[var(--c-border)]">
+				<div class="p-5 flex flex-col">
+					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
+						@IconHashtag("w-3.5 h-3.5 text-accent")
 						if lang == "id" {
-							PENULIS
+							5 TAG POPULER
 						} else {
-							AUTHOR
+							5 POPULAR TAGS
 						}
-					</span>
-					<span class="text-[10px] font-mono text-muted uppercase">daemontalk</span>
-				</h3>
-
-				<!-- Top row: PFP on left, Name & Role on right -->
-				<div class="flex items-center gap-3 mb-3">
-					<div class="w-10 h-10 shrink-0 rounded-full border border-border bg-surface flex items-center justify-center p-1.5 shadow-sm overflow-hidden">
-						@BrandIcon("w-full h-full object-contain")
-					</div>
-					<div class="flex flex-col min-w-0">
-						<span class="text-sm font-bold text-text truncate">Dafa Gareth</span>
-						<span class="text-[11px] font-mono text-muted truncate">Go &amp; Linux Systems</span>
-					</div>
-				</div>
-
-				<!-- Bottom row: Description spanning horizontally underneath -->
-				<p class="text-xs text-muted line-clamp-2 leading-relaxed mb-4">
-					if lang == "id" {
-						Mahasiswa sistem informasi yang mendalami Go backend, sistem operasi Linux, dan arsitektur backend.
-					} else {
-						Information systems student focusing on Go backend, Linux systems mechanics, and distributed architecture.
-					}
-				</p>
-
-				<!-- Bottom actions -->
-				<div class="flex items-center justify-between pt-2 border-t border-border/50 text-[11px] font-mono">
-					<a href={ templ.SafeURL(prefix(lang) + "/about") } class="text-[10px] font-bold uppercase tracking-widest text-accent hover:text-link flex items-center gap-1 transition-colors group">
-						<span>{ ui.Portal_ReadMore }</span>
-						@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
-					</a>
-					<div class="flex items-center gap-2.5 text-muted">
-						<a href="https://github.com/dafagareth" target="_blank" rel="noopener" class="hover:text-text transition-colors" title="GitHub">
-							@IconGitHub()
-						</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/resume") } class="hover:text-text transition-colors font-bold text-[11px]" title="Resume">
-							CV
-						</a>
-					</div>
-				</div>
-			</div>
-
-
-		</div>
-
-		// RIGHT BOX: Categories
-		<div class="flex-1 min-w-0">
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 lg:divide-x divide-border/40 sm:divide-border h-full">
-				for i, cat := range categories {
-					<div class={
-						"py-4 sm:p-4 lg:p-5 flex flex-col border-border/40 sm:border-border",
-						templ.KV("border-t", i > 0),
-						templ.KV("sm:border-t-0", i < 2),
-						templ.KV("sm:border-t", i >= 2),
-						templ.KV("sm:border-l-0", i%2 == 0),
-						templ.KV("sm:border-l", i%2 != 0),
-						templ.KV("lg:border-l-0", true), // Handled by lg:divide-x
-					}>
-						// Category Header
-						<div class="flex items-center justify-between pb-2 mb-4 border-b-0 sm:border-b-4 border-[var(--c-text)]">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-sm font-black uppercase tracking-widest text-text hover:text-link pr-2">
-								{ categoryTitle(cat, lang) }
-							</a>
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap">
-								<span>{ ui.Portal_SeeMore }</span>
-								@IconArrowRight("w-3 h-3")
-							</a>
-						</div>
-
-						// Lead Post
-						<article class="group mb-5">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 overflow-hidden">
-								@postThumbnailImg(cat.LeadPost)
-							</a>
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block">
-								<h4 class="text-base font-extrabold text-text group-hover:text-link leading-tight line-clamp-3">
-									{ cat.LeadPost.Title }
-								</h4>
-							</a>
-						</article>
-
-						// Sub Posts
-						if len(cat.SubPosts) > 0 {
-							<div class="flex flex-col sm:divide-y sm:divide-[var(--c-border)]/60 sm:border-t sm:border-border/60 mt-2 sm:mt-4">
-								for _, sub := range cat.SubPosts {
-									// Single Responsive DOM Node: List on Mobile, Stacked on Desktop
-									<article class="group py-3 lg:py-4 flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch">
-										<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-2 overflow-hidden">
-											@postThumbnailImg(sub)
-										</a>
-										<div class="flex-1 min-w-0 flex flex-col justify-between lg:justify-start h-full lg:h-auto">
-
-											<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } data-slug={ sub.Slug } class="display block text-sm sm:text-base font-bold text-text lg:text-muted group-hover:text-link lg:group-hover:text-text transition-colors line-clamp-3 leading-snug">
-												{ sub.Title }
-											</a>
-										</div>
-									</article>
-								}
+					</h3>
+					<div class="flex flex-col gap-2">
+						for _, tag := range getPopularTags(tagCounts, 5) {
+							<div class="flex items-center justify-between py-1">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + tag) } class="text-xs font-mono text-text hover:text-link transition-colors uppercase tracking-wider">
+									#{ tag }
+								</a>
+								<span class="text-xs font-mono text-muted bg-surface border border-border/50 px-1.5 py-0.5 rounded-none">{ fmt.Sprintf("%d", tagCounts[tag]) }</span>
 							</div>
 						}
 					</div>
-				}
+				</div>
+				<div class="p-5 flex flex-col">
+					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
+						@IconCommandLine("w-3.5 h-3.5 text-accent")
+						TERMINAL TUI INTERFACE
+					</h3>
+					<p class="text-xs text-muted line-clamp-2 mb-3 leading-relaxed">
+						if lang == "id" {
+							Baca artikel interaktif langsung dari terminal dengan antarmuka TUI.
+						} else {
+							Read interactive dispatches directly from your terminal with a rich TUI.
+						}
+					</p>
+					<div class="relative bg-surface border border-border text-text font-mono text-xs p-3 pr-10 overflow-hidden mb-3 group">
+						<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
+							<span class="text-muted mr-1.5 select-none">$</span>ssh ssh.daemontalk.com -p 2222
+						</div>
+						<button
+							onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='var(--color-accent)'; setTimeout(()=>i.style.color='', 1000);"
+							title="Copy command"
+							aria-label="Copy command"
+							class="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-text transition-colors opacity-70 group-hover:opacity-100 cursor-pointer"
+						>
+							@IconCopy("w-4 h-4 transition-colors")
+						</button>
+					</div>
+					<div class="flex flex-col gap-2">
+						<div class="flex items-center justify-between text-[11px] font-mono text-muted py-0.5">
+							<kbd class="px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text">Enter</kbd>
+							if lang == "id" {
+								<span>Mode baca penuh</span>
+							} else {
+								<span>Full reader</span>
+							}
+						</div>
+						<div class="flex items-center justify-between text-[11px] font-mono text-muted py-0.5">
+							<kbd class="px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text">t</kbd>
+							if lang == "id" {
+								<span>7 Tema warna</span>
+							} else {
+								<span>7 Color themes</span>
+							}
+						</div>
+						<div class="flex items-center justify-between text-[11px] font-mono text-muted py-0.5">
+							<kbd class="px-1.5 py-0.5 bg-surface border border-border text-[10px] text-text">w / o</kbd>
+							if lang == "id" {
+								<span>Buka web / gambar</span>
+							} else {
+								<span>Web &amp; Image link</span>
+							}
+						</div>
+					</div>
+				</div>
+				<div class="p-5 flex flex-col">
+					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
+						@IconRSSAlt("w-3.5 h-3.5 text-accent")
+						if lang == "id" {
+							BERLANGGANAN FEED
+						} else {
+							SUBSCRIBE FEED
+						}
+					</h3>
+					<p class="text-xs text-muted line-clamp-2 mb-4 leading-relaxed">
+						if lang == "id" {
+							Tetap terupdate menggunakan RSS Reader favorit Anda.
+						} else {
+							Stay updated using your favorite RSS Reader feed.
+						}
+					</p>
+					<div class="flex flex-col gap-2">
+						<a href="/rss.xml" class="flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full group">
+							<span>RSS XML</span>
+							@IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5")
+						</a>
+						<a href="/feed.json" class="flex items-center justify-between text-xs px-3 py-2 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider w-full group">
+							<span>JSON Feed</span>
+							@IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5")
+						</a>
+					</div>
+				</div>
+				<div class="p-5 flex flex-col">
+					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center justify-between">
+						<span class="flex items-center gap-1.5">
+							@IconInfo("w-3.5 h-3.5 text-accent")
+							if lang == "id" {
+								PENULIS
+							} else {
+								AUTHOR
+							}
+						</span>
+						<span class="text-[10px] font-mono text-muted uppercase">daemontalk</span>
+					</h3>
+					<div class="flex items-center gap-3 mb-3">
+						<div class="w-10 h-10 shrink-0 rounded-full border border-border bg-surface flex items-center justify-center p-1.5 shadow-sm overflow-hidden">
+							@BrandIcon("w-full h-full object-contain")
+						</div>
+						<div class="flex flex-col min-w-0">
+							<span class="text-sm font-bold text-text truncate">Dafa Gareth</span>
+							<span class="text-[11px] font-mono text-muted truncate">Go &amp; Linux Systems</span>
+						</div>
+					</div>
+					<p class="text-xs text-muted line-clamp-2 leading-relaxed mb-4">
+						if lang == "id" {
+							Mahasiswa sistem informasi yang mendalami Go backend, sistem operasi Linux, dan arsitektur backend.
+						} else {
+							Information systems student focusing on Go backend, Linux systems mechanics, and distributed architecture.
+						}
+					</p>
+					<div class="flex items-center justify-between pt-2 text-[11px] font-mono">
+						<a href={ templ.SafeURL(prefix(lang) + "/about") } class="text-[10px] font-bold uppercase tracking-widest text-accent hover:text-link flex items-center gap-1 transition-colors group">
+							<span>{ ui.Portal_ReadMore }</span>
+							@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+						</a>
+						<div class="flex items-center gap-2.5 text-muted">
+							<a href="https://github.com/dafagareth" target="_blank" rel="noopener" class="hover:text-text transition-colors" title="GitHub">
+								@IconGitHub()
+							</a>
+							<a href={ templ.SafeURL(prefix(lang) + "/resume") } class="hover:text-text transition-colors font-bold text-[11px]" title="Resume">
+								CV
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-
+			<div class="flex-1 min-w-0">
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 lg:divide-x divide-border/40 sm:divide-border h-full">
+					for i, cat := range categories {
+						<div
+							class={
+								"py-4 sm:p-4 lg:p-5 flex flex-col border-border/40 sm:border-border",
+								templ.KV("border-t", i > 0),
+								templ.KV("sm:border-t-0", i < 2),
+								templ.KV("sm:border-t", i >= 2),
+								templ.KV("sm:border-l-0", i%2 == 0),
+								templ.KV("sm:border-l", i%2 != 0),
+								templ.KV("lg:border-l-0", true), // Handled by lg:divide-x
+							}
+						>
+							<div class="flex items-center justify-between pb-2 mb-4 border-b-0 sm:border-b-4 border-[var(--c-text)]">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-sm font-black uppercase tracking-widest text-text hover:text-link pr-2">
+									{ categoryTitle(cat, lang) }
+								</a>
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-link flex items-center gap-1 group shrink-0 whitespace-nowrap">
+									<span>{ ui.Portal_SeeMore }</span>
+									@IconArrowRight("w-3 h-3")
+								</a>
+							</div>
+							<article class="group mb-5">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 overflow-hidden">
+									@postThumbnailImg(cat.LeadPost)
+								</a>
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block">
+									<h4 class="text-base font-extrabold text-text group-hover:text-link leading-tight line-clamp-3">
+										{ cat.LeadPost.Title }
+									</h4>
+								</a>
+							</article>
+							if len(cat.SubPosts) > 0 {
+								<div class="flex flex-col sm:divide-y sm:divide-[var(--c-border)]/60 sm:border-t sm:border-border/60 mt-2 sm:mt-4">
+									for _, sub := range cat.SubPosts {
+										<article class="group py-3 lg:py-4 flex flex-row lg:flex-col gap-4 lg:gap-0 items-start lg:items-stretch">
+											<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } class="block relative w-24 sm:w-32 lg:w-full lg:h-auto aspect-[16/9] bg-surface shrink-0 lg:mb-2 overflow-hidden">
+												@postThumbnailImg(sub)
+											</a>
+											<div class="flex-1 min-w-0 flex flex-col justify-between lg:justify-start h-full lg:h-auto">
+												<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + sub.Slug) } data-slug={ sub.Slug } class="display block text-sm sm:text-base font-bold text-text lg:text-muted group-hover:text-link lg:group-hover:text-text transition-colors line-clamp-3 leading-snug">
+													{ sub.Title }
+												</a>
+											</div>
+										</article>
+									}
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
 		</div>
 	</div>
 }

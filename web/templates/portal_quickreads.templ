@@ -1,18 +1,14 @@
 package templates
 
-import (
-	"daemontalk/internal/i18n"
-)
+import "daemontalk/internal/i18n"
 
 templ portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) {
-	// BOX 4: QUICK TOPICS (3:3:3:3) - SEAMLESS WIREFRAME
 	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--c-border)]">
 			for _, cat := range categories {
 				<div class="px-4 sm:px-5 py-6 sm:py-8 lg:py-12 flex flex-col justify-between">
 					<div>
-						// Category Header
-						<div class="flex items-center justify-between pb-2 mb-3 border-b border-border">
+						<div class="flex items-center justify-between mb-3">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
 								{ categoryTitle(cat, lang) }
 							</a>
@@ -20,8 +16,6 @@ templ portalQuickReads(ui i18n.UI, categories []CategorySection, lang string) {
 								@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
 							</a>
 						</div>
-
-						// Posts List (Teks Only)
 						<div class="flex flex-col divide-y divide-border/40">
 							<article class="py-2.5 first:pt-0">
 								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="group block">
