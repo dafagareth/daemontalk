@@ -1,3 +1,7 @@
+### v1.3.2 (2 September 2026) · Perbaikan Izin Eksekusi Skrip Deployment CI/CD
+
+- **Izin Eksekusi Deployment VPS**: Menambahkan `chmod +x` otomatis dan pemanggilan `bash` eksplisit pada workflow GitHub Actions CD untuk mencegah galat *permission denied* saat eksekusi skrip di server VPS.
+
 ### v1.3.1 (2 September 2026) · Penanganan Metode Webhook & Dukungan Push Tag
 
 - **Ketahanan Metode Webhook & GET**: Menangani request `GET` secara adaptif pada endpoint `/api/webhook/github` serta mengonfigurasi Caddy dengan redirect HTTP 308 untuk menjaga metode POST saat melewati reverse proxy.

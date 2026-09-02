@@ -1,3 +1,7 @@
+### v1.3.2 (September 2, 2026) · CI/CD Deploy Script Execution Fix
+
+- **VPS Deployment Permissions**: Added automatic `chmod +x` and explicit `bash` invocation in GitHub Actions CD deployment workflow to prevent execution permission errors on remote hosts.
+
 ### v1.3.1 (September 2, 2026) · Webhook Method Handling & Tag Push Support
 
 - **Webhook GET & Method Resilience**: Handled `GET` requests gracefully on `/api/webhook/github` and configured Caddy with HTTP 308 permanent redirect to preserve HTTP methods across reverse proxies.
