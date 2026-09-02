@@ -33,7 +33,7 @@ func (m PageMeta) ogDesc() string {
 	if m.Description != "" {
 		return m.Description
 	}
-	return "Open notebook and digital publication. Exploring the technology ecosystem, modern computing, and open-source culture."
+	return "An independent technology publication and research notebook exploring modern computing, software architecture, and systems engineering."
 }
 
 func (m PageMeta) ogImage() string {

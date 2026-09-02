@@ -35,7 +35,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8\"><!-- Header --><div class=\"border-b border-[var(--c-border)] pb-6 mb-8\"><div class=\"flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--c-muted)] mb-2\"><span>Systems Radar</span> <span>·</span> <span>Interactive Knowledge Graph</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8\"><div class=\"border-b border-[var(--c-border)] pb-6 mb-8\"><div class=\"flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--c-muted)] mb-2\"><span>Systems Radar</span> <span>·</span> <span>Interactive Knowledge Graph</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,7 +50,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><!-- Interactive Graph Container --><div class=\"grid grid-cols-1 lg:grid-cols-3 gap-8\"><!-- Canvas Panel --><div class=\"lg:col-span-2 border border-[var(--c-border)] bg-[var(--c-surface)] relative overflow-hidden h-[540px] flex flex-col\"><div class=\"flex items-center justify-between px-4 py-2.5 border-b border-[var(--c-border)] bg-[var(--c-bg)] text-xs font-mono text-[var(--c-muted)]\"><span>Interactive Network Canvas</span> <span>Drag nodes · Click to inspect</span></div><div class=\"relative flex-1\"><canvas id=\"knowledge-canvas\" class=\"w-full h-full cursor-grab active:cursor-grabbing block\"></canvas><div id=\"canvas-overlay\" class=\"absolute bottom-3 left-3 pointer-events-none text-[11px] font-mono text-[var(--c-muted)] bg-[var(--c-bg)]/80 px-2 py-1 border border-[var(--c-border)] backdrop-blur\">Nodes: 7 domains · 108 dispatches</div></div></div><!-- Topic Inspector / Article List --><div class=\"border border-[var(--c-border)] bg-[var(--c-surface)] p-6 flex flex-col h-[540px]\"><div class=\"border-b border-[var(--c-border)] pb-4 mb-4\"><span id=\"inspector-tag\" class=\"text-xs font-mono uppercase tracking-wider text-[var(--c-muted)] block mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"grid grid-cols-1 lg:grid-cols-3 gap-8\"><div class=\"lg:col-span-2 border border-[var(--c-border)] bg-[var(--c-surface)] relative overflow-hidden h-[540px] flex flex-col\"><div class=\"flex items-center justify-between px-4 py-2.5 border-b border-[var(--c-border)] bg-[var(--c-bg)] text-xs font-mono text-[var(--c-muted)]\"><span>Interactive Network Canvas</span> <span>Drag nodes · Click to inspect</span></div><div class=\"relative flex-1\"><canvas id=\"knowledge-canvas\" class=\"w-full h-full cursor-grab active:cursor-grabbing block\"></canvas><div id=\"canvas-overlay\" class=\"absolute bottom-3 left-3 pointer-events-none text-[11px] font-mono text-[var(--c-muted)] bg-[var(--c-bg)]/80 px-2 py-1 border border-[var(--c-border)] backdrop-blur\">Nodes: 7 domains · 108 dispatches</div></div></div><div class=\"border border-[var(--c-border)] bg-[var(--c-surface)] p-6 flex flex-col h-[540px]\"><div class=\"border-b border-[var(--c-border)] pb-4 mb-4\"><span id=\"inspector-tag\" class=\"text-xs font-mono uppercase tracking-wider text-[var(--c-muted)] block mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -108,7 +108,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 				var templ_7745c5c3_Var2 templ.SafeURL
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 80, Col: 68}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 73, Col: 68}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -119,9 +119,9 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Date.Format("02 Jan 2006"))
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmtShortDate(p.Date, lang))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 82, Col: 39}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 75, Col: 37}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -132,9 +132,9 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d min", p.ReadTime))
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 82, Col: 80}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 75, Col: 94}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -147,7 +147,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 85, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 78, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -159,7 +159,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div></div></div><!-- Topic Matrix / Directory Breakdown --><div class=\"mt-12 border-t border-[var(--c-border)] pt-8\"><h2 class=\"text-xl font-serif font-bold text-[var(--c-text)] mb-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div></div></div><div class=\"mt-12 border-t border-[var(--c-border)] pt-8\"><h2 class=\"text-xl font-serif font-bold text-[var(--c-text)] mb-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -181,7 +181,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/tag/linux"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 107, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 98, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -202,7 +202,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 		var templ_7745c5c3_Var7 templ.SafeURL
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/tag/go"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 115, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 106, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -223,7 +223,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 		var templ_7745c5c3_Var8 templ.SafeURL
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/tag/storage"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 123, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 114, Col: 63}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -244,7 +244,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 		var templ_7745c5c3_Var9 templ.SafeURL
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/tag/security"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 131, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 122, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -258,7 +258,20 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</a></div></div></div></div><script>\n\t(function() {\n\t\tconst canvas = document.getElementById('knowledge-canvas');\n\t\tif (!canvas) return;\n\t\tconst ctx = canvas.getContext('2d');\n\n\t\t// Resize canvas to high DPI\n\t\tfunction resize() {\n\t\t\tconst rect = canvas.getBoundingClientRect();\n\t\t\tcanvas.width = rect.width * window.devicePixelRatio;\n\t\t\tcanvas.height = rect.height * window.devicePixelRatio;\n\t\t\tctx.scale(window.devicePixelRatio, window.devicePixelRatio);\n\t\t}\n\t\twindow.addEventListener('resize', resize);\n\t\tresize();\n\n\t\t// Graph Nodes Definition\n\t\tconst nodes = [\n\t\t\t{ id: 'linux', label: 'Linux Kernel & eBPF', x: 180, y: 140, vx: 0, vy: 0, r: 24, tag: 'linux', color: '#88c0d0' },\n\t\t\t{ id: 'go', label: 'Go Runtimes & GC', x: 380, y: 120, vx: 0, vy: 0, r: 22, tag: 'go', color: '#81a1c1' },\n\t\t\t{ id: 'rust', label: 'Rust Memory Safety', x: 340, y: 280, vx: 0, vy: 0, r: 20, tag: 'rust', color: '#d08770' },\n\t\t\t{ id: 'storage', label: 'Storage & Btrfs/DB', x: 160, y: 320, vx: 0, vy: 0, r: 20, tag: 'storage', color: '#a3be8c' },\n\t\t\t{ id: 'security', label: 'Zero Trust & LSM', x: 500, y: 220, vx: 0, vy: 0, r: 22, tag: 'security', color: '#bf616a' },\n\t\t\t{ id: 'docker', label: 'Containers & OCI', x: 260, y: 440, vx: 0, vy: 0, r: 18, tag: 'docker', color: '#b48ead' },\n\t\t\t{ id: 'ai', label: 'AI Open-Weight', x: 520, y: 380, vx: 0, vy: 0, r: 18, tag: 'ai', color: '#ebcb8b' }\n\t\t];\n\n\t\tconst links = [\n\t\t\t{ source: 'linux', target: 'go' },\n\t\t\t{ source: 'linux', target: 'rust' },\n\t\t\t{ source: 'linux', target: 'storage' },\n\t\t\t{ source: 'linux', target: 'security' },\n\t\t\t{ source: 'linux', target: 'docker' },\n\t\t\t{ source: 'go', target: 'security' },\n\t\t\t{ source: 'rust', target: 'security' },\n\t\t\t{ source: 'rust', target: 'linux' },\n\t\t\t{ source: 'docker', target: 'storage' },\n\t\t\t{ source: 'ai', target: 'go' },\n\t\t\t{ source: 'ai', target: 'rust' }\n\t\t];\n\n\t\tlet selectedNode = null;\n\t\tlet hoveredNode = null;\n\t\tlet isDragging = false;\n\t\tlet dragNode = null;\n\n\t\tfunction getMousePos(evt) {\n\t\t\tconst rect = canvas.getBoundingClientRect();\n\t\t\treturn {\n\t\t\t\tx: evt.clientX - rect.left,\n\t\t\t\ty: evt.clientY - rect.top\n\t\t\t};\n\t\t}\n\n\t\tcanvas.addEventListener('mousedown', (e) => {\n\t\t\tconst pos = getMousePos(e);\n\t\t\tfor (const n of nodes) {\n\t\t\t\tconst dx = pos.x - n.x;\n\t\t\t\tconst dy = pos.y - n.y;\n\t\t\t\tif (dx * dx + dy * dy < n.r * n.r) {\n\t\t\t\t\tisDragging = true;\n\t\t\t\t\tdragNode = n;\n\t\t\t\t\tselectNode(n);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\twindow.addEventListener('mousemove', (e) => {\n\t\t\tconst pos = getMousePos(e);\n\t\t\tif (isDragging && dragNode) {\n\t\t\t\tdragNode.x = pos.x;\n\t\t\t\tdragNode.y = pos.y;\n\t\t\t} else {\n\t\t\t\tlet found = null;\n\t\t\t\tfor (const n of nodes) {\n\t\t\t\t\tconst dx = pos.x - n.x;\n\t\t\t\t\tconst dy = pos.y - n.y;\n\t\t\t\t\tif (dx * dx + dy * dy < n.r * n.r) {\n\t\t\t\t\t\tfound = n;\n\t\t\t\t\t\tbreak;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tif (hoveredNode !== found) {\n\t\t\t\t\thoveredNode = found;\n\t\t\t\t\tcanvas.style.cursor = found ? 'pointer' : 'grab';\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\twindow.addEventListener('mouseup', () => {\n\t\t\tisDragging = false;\n\t\t\tdragNode = null;\n\t\t});\n\n\t\tfunction selectNode(node) {\n\t\t\tselectedNode = node;\n\t\t\tdocument.getElementById('inspector-tag').innerText = 'Domain: ' + node.tag.toUpperCase();\n\t\t\tdocument.getElementById('inspector-title').innerText = node.label;\n\t\t\tdocument.getElementById('inspector-desc').innerText = 'Filtered engineering dispatches under #' + node.tag;\n\t\t}\n\n\t\t// Animation loop\n\t\tfunction draw() {\n\t\t\tconst rect = canvas.getBoundingClientRect();\n\t\t\tconst w = rect.width;\n\t\t\tconst h = rect.height;\n\n\t\t\tctx.clearRect(0, 0, w, h);\n\n\t\t\tconst isDark = document.documentElement.getAttribute('data-theme') !== 'light';\n\t\t\tconst lineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.1)';\n\t\t\tconst textColor = isDark ? '#eceff4' : '#1a202c';\n\n\t\t\t// Draw Links\n\t\t\tctx.lineWidth = 1.5;\n\t\t\tfor (const link of links) {\n\t\t\t\tconst src = nodes.find(n => n.id === link.source);\n\t\t\t\tconst tgt = nodes.find(n => n.id === link.target);\n\t\t\t\tif (!src || !tgt) continue;\n\n\t\t\t\tctx.beginPath();\n\t\t\t\tctx.moveTo(src.x, src.y);\n\t\t\t\tctx.lineTo(tgt.x, tgt.y);\n\t\t\t\tctx.strokeStyle = lineColor;\n\t\t\t\tctx.stroke();\n\t\t\t}\n\n\t\t\t// Draw Nodes\n\t\t\tfor (const n of nodes) {\n\t\t\t\tctx.beginPath();\n\t\t\t\tctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);\n\t\t\t\tctx.fillStyle = n.color;\n\t\t\t\tctx.fill();\n\n\t\t\t\tif (n === selectedNode || n === hoveredNode) {\n\t\t\t\t\tctx.lineWidth = 3;\n\t\t\t\t\tctx.strokeStyle = '#ffffff';\n\t\t\t\t\tctx.stroke();\n\t\t\t\t}\n\n\t\t\t\t// Label\n\t\t\t\tctx.font = '600 11px system-ui, sans-serif';\n\t\t\t\tctx.fillStyle = textColor;\n\t\t\t\tctx.textAlign = 'center';\n\t\t\t\tctx.fillText(n.label, n.x, n.y + n.r + 14);\n\t\t\t}\n\n\t\t\trequestAnimationFrame(draw);\n\t\t}\n\n\t\tdraw();\n\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</a></div></div></div></div><script src=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var10 string
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(assetURL("/static/js/graph.js"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/graph.templ`, Line: 130, Col: 46}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" defer></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -8,7 +8,9 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func ResumePage() templ.Component {
+import "daemontalk/internal/i18n"
+
+func ResumePage(ui i18n.UI, lang string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +31,7 @@ func ResumePage() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12\"><div class=\"max-w-3xl\"><!-- Header --><div class=\"pb-6 mb-8\"><div class=\"flex items-start justify-between gap-4\"><div><h1 class=\"display text-2xl sm:text-3xl font-semibold text-text\">Dafa</h1><p class=\"text-sm text-muted mt-1\">Information Systems Student · Go Backend Enthusiast</p><div class=\"flex flex-wrap gap-x-4 gap-y-1 mt-3\"><a href=\"mailto:dafagareth@gmail.com\" class=\"text-xs text-muted hover:text-link transition-colors\">dafagareth@gmail.com</a> <a href=\"https://github.com/dafagareth\" target=\"_blank\" rel=\"noopener\" class=\"text-xs text-muted hover:text-link transition-colors\">github.com/dafagareth</a> <a href=\"https://daemontalk.com\" class=\"text-xs text-muted hover:text-link transition-colors\">daemontalk.com</a></div></div><button onclick=\"window.print()\" class=\"shrink-0 text-xs px-3 py-1.5 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono\">Print / PDF</button></div></div><!-- Summary --><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-3\">Summary</h2><p class=\"text-sm text-text leading-relaxed\">Software engineer and systems enthusiast focusing on Go backend development, REST API design, Linux system mechanics, and distributed architecture. Passionate about building fast, reliable, and minimal open-source software.</p></section><!-- Education --><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-4\">Education</h2><div><p class=\"text-sm font-medium text-text\">Bachelor of Information Systems</p><p class=\"text-xs text-muted mt-1 leading-relaxed\">Relevant Coursework: Data Structures, Algorithms, Relational Database Systems (SQL), Operating Systems, Computer Networks.</p></div></section><!-- Key Projects --><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-5\">Independent & Open Source Projects</h2><div class=\"flex flex-col gap-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12\"><div class=\"max-w-3xl\"><div class=\"pb-6 mb-8\"><div class=\"flex items-start justify-between gap-4\"><div><h1 class=\"display text-2xl sm:text-3xl font-semibold text-text\">Dafa</h1><p class=\"text-sm text-muted mt-1\">Information Systems Student · Go Backend Enthusiast</p><div class=\"flex flex-wrap gap-x-4 gap-y-1 mt-3\"><a href=\"mailto:dafagareth@gmail.com\" class=\"text-xs text-muted hover:text-link transition-colors\">dafagareth@gmail.com</a> <a href=\"https://github.com/dafagareth\" target=\"_blank\" rel=\"noopener\" class=\"text-xs text-muted hover:text-link transition-colors\">github.com/dafagareth</a> <a href=\"https://daemontalk.com\" class=\"text-xs text-muted hover:text-link transition-colors\">daemontalk.com</a></div></div><button onclick=\"window.print()\" class=\"shrink-0 text-xs px-3 py-1.5 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono\">Print / PDF</button></div></div><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-3\">Summary</h2><p class=\"text-sm text-text leading-relaxed\">Software engineer and systems enthusiast focusing on Go backend development, REST API design, Linux system mechanics, and distributed architecture. Passionate about building fast, reliable, and minimal open-source software.</p></section><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-4\">Education</h2><div><p class=\"text-sm font-medium text-text\">Bachelor of Information Systems</p><p class=\"text-xs text-muted mt-1 leading-relaxed\">Relevant Coursework: Data Structures, Algorithms, Relational Database Systems (SQL), Operating Systems, Computer Networks.</p></div></section><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-5\">Independent & Open Source Projects</h2><div class=\"flex flex-col gap-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -48,7 +50,41 @@ func ResumePage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></section><!-- Technical Skills --><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-3\">Technical Skills & Roadmap</h2><div class=\"text-xs text-muted space-y-1.5 leading-relaxed\"><p><strong class=\"text-text font-semibold\">Languages:</strong> Go, Python, SQL, Bash, HTML/CSS, C & Rust (Planned Roadmap)</p><p><strong class=\"text-text font-semibold\">Backend & Web:</strong> Go (chi/stdlib), templ, HTMX, SQLite, PostgreSQL, REST APIs</p><p><strong class=\"text-text font-semibold\">Tools & OS:</strong> Linux, Git, Neovim, Make, Docker</p></div></section></div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></section><section class=\"mb-8\"><h2 class=\"text-xs font-semibold text-muted uppercase tracking-wider mb-3\">Technical Skills & Roadmap</h2><div class=\"text-xs text-muted space-y-1.5 leading-relaxed\"><p><strong class=\"text-text font-semibold\">Languages:</strong> Go, Python, SQL, Bash, HTML/CSS, C & Rust (Planned Roadmap)</p><p><strong class=\"text-text font-semibold\">Backend & Web:</strong> Go (chi/stdlib), templ, HTMX, SQLite, PostgreSQL, REST APIs</p><p><strong class=\"text-text font-semibold\">Tools & OS:</strong> Linux, Git, Neovim, Make, Docker</p></div></section><a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 templ.SafeURL
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/colophon"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 63, Col: 52}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-mono\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowLeft("w-3.5 h-3.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Nav_Colophon)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 67, Col: 27}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></a></div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -72,87 +108,87 @@ func resumeRole(title string, company string, period string, location string, bu
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div><div class=\"flex items-start justify-between gap-4\"><div><p class=\"text-sm font-medium text-text\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 73, Col: 52}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><p class=\"text-xs text-muted\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(company)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 74, Col: 43}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " · ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div><div class=\"flex items-start justify-between gap-4\"><div><p class=\"text-sm font-medium text-text\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(location)
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 74, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 77, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</p></div><span class=\"text-xs text-muted shrink-0 font-mono\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p><p class=\"text-xs text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(period)
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(company)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 76, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 78, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></div><ul class=\"mt-2 flex flex-col gap-1 pl-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " · ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(location)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 78, Col: 59}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p></div><span class=\"text-xs text-muted shrink-0 font-mono\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(period)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 80, Col: 63}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</span></div><ul class=\"mt-2 flex flex-col gap-1 pl-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, b := range bullets {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<li class=\"text-xs text-muted leading-relaxed list-disc list-inside\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<li class=\"text-xs text-muted leading-relaxed list-disc list-inside\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(b)
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(b)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 80, Col: 76}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/resume.templ`, Line: 84, Col: 76}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

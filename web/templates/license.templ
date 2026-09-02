@@ -1,34 +1,22 @@
 package templates
 
-import "html/template"
-import "daemontalk/internal/i18n"
+import (
+	"daemontalk/internal/i18n"
+	"html/template"
+)
 
 templ LicensePage(ui i18n.UI, body template.HTML, lang string) {
 	<section class="container-page py-8 sm:py-12">
 		<div class="flex items-center gap-2 mb-3 font-mono text-xs text-muted">
-			<span class="px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold">OPEN SOURCE</span>
+			<span class="px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold uppercase">LEGAL</span>
 			<span>·</span>
-			<span>LICENSE</span>
+			<span>LICENSE & COPYRIGHT</span>
 		</div>
-		<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">
-			if lang == "id" {
-				Lisensi & Hak Cipta
-			} else {
-				License & Copyright
-			}
-		</h1>
-		<p class="text-sm text-muted mb-8">
-			if lang == "id" {
-				Kebijakan hak cipta, lisensi kode sumber, dan lisensi konten tertulis untuk daemontalk.
-			} else {
-				Copyright policy, source code license, and written content license for daemontalk.
-			}
-		</p>
 		<div class="prose max-w-none font-sans">
 			@templ.Raw(string(body))
 		</div>
 		<a href={ templ.SafeURL(blogPrefix(lang) + "/") } class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-mono">
-			@iconArrowLeft()
+			@IconArrowLeft("w-3.5 h-3.5")
 			<span>{ ui.Post_Back }</span>
 		</a>
 	</section>

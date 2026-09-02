@@ -1,20 +1,93 @@
 package templates
 
-import "html/template"
+import (
+	"daemontalk/internal/i18n"
+	"fmt"
+)
 
-templ ChangelogPage(body template.HTML, lang string) {
-	<section class="container-page py-8 sm:py-12">
-		<div class="max-w-5xl">
-		if lang == "id" {
-			<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">Catatan Perubahan</h1>
-			<p class="text-sm text-muted mb-10">Daftar fitur dan perubahan yang dirilis untuk situs ini.</p>
-		} else {
-			<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">Changelog</h1>
-			<p class="text-sm text-muted mb-10">A running log of features and changes shipped to this site.</p>
-		}
-		<div class="prose">
-			@templ.Raw(string(body))
+type ChangelogItem struct {
+	Scope string
+	Desc  string
+}
+
+type ChangelogRelease struct {
+	Version string
+	Date    string
+	Title   string
+	Items   []ChangelogItem
+}
+
+templ ChangelogPage(ui i18n.UI, lang string, releases []ChangelogRelease) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6 font-sans">
+			<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+				<div>
+					<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight mb-1">
+						{ ui.Changelog_Title }
+					</h1>
+					<p class="text-xs font-mono text-muted">
+						if lang == "id" {
+							{ fmt.Sprintf("%d rilis dideploy ke sistem", len(releases)) }
+						} else {
+							{ fmt.Sprintf("%d releases deployed to production", len(releases)) }
+						}
+					</p>
+				</div>
+				if len(releases) > 0 {
+					<div class="flex items-center gap-2 text-xs font-mono text-muted select-none">
+						<span class="text-link font-bold">LATEST:</span>
+						<span class="px-2 py-0.5 border border-text text-text font-bold uppercase">{ releases[0].Version }</span>
+					</div>
+				}
+			</div>
 		</div>
+		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
+			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono text-muted select-none">
+				<div class="flex items-center gap-3 text-text font-bold min-w-0">
+					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+					<code class="text-sm sm:text-base font-mono truncate">git log --tags --oneline</code>
+				</div>
+				<span class="text-xs font-mono text-muted shrink-0">{ fmt.Sprintf("%d BUILDS", len(releases)) }</span>
+			</div>
+			<div class="py-6 px-0 sm:p-10">
+				<div class="relative border-l-2 border-border/80 ml-2 sm:ml-4 space-y-10 sm:space-y-12">
+					for _, rel := range releases {
+						<div class="relative pl-6 sm:pl-8 group">
+							<div class="absolute -left-[6px] top-1 w-2.5 h-2.5 rounded-full bg-surface border-2 border-text group-hover:border-link group-hover:bg-link transition-colors select-none"></div>
+							<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-3">
+								<div class="flex items-baseline gap-2.5 sm:gap-3 min-w-0">
+									<span class="font-mono font-bold text-xs px-2 py-0.5 border border-text text-text shrink-0 select-none">
+										{ rel.Version }
+									</span>
+									<h2 class="text-sm sm:text-base font-bold text-text leading-snug">
+										{ rel.Title }
+									</h2>
+								</div>
+								<time class="text-xs font-mono text-muted shrink-0">
+									{ rel.Date }
+								</time>
+							</div>
+							<div class="space-y-2 text-xs sm:text-sm leading-relaxed text-text pt-1">
+								for _, item := range rel.Items {
+									<div class="leading-relaxed">
+										if item.Scope != "" {
+											<strong class="font-bold text-text mr-1.5 font-sans">{ item.Scope }:</strong>
+										}
+										<span class="text-muted leading-relaxed font-sans">{ item.Desc }</span>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			</div>
 		</div>
+		<a
+			href={ templ.SafeURL(prefix(lang) + "/") }
+			class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-10 font-mono"
+		>
+			@IconArrowLeft("w-3.5 h-3.5")
+			<span>{ ui.Post_Back }</span>
+		</a>
 	</section>
 }

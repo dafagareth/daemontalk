@@ -11,21 +11,6 @@ templ NotFound(ui i18n.UI, lang string) {
 	@ErrorPage(404, ui.NotFound_Title, ui.NotFound_Body, ui.NotFound_Home, ui, lang)
 }
 
-// Forbidden renders a minimal 403 Forbidden page.
-templ Forbidden(ui i18n.UI, lang string, reason string) {
-	@ErrorPage(403, ui.Forbidden_Title, ui.Forbidden_Body, ui.Forbidden_Home, ui, lang)
-}
-
-// ServerError renders a minimal 500 Internal Server Error page.
-templ ServerError(ui i18n.UI, lang string, detail string) {
-	@ErrorPage(500, ui.ServerError_Title, ui.ServerError_Body, ui.ServerError_Home, ui, lang)
-}
-
-// CustomError renders a custom HTTP status error page.
-templ CustomError(code int, title string, message string, ui i18n.UI, lang string) {
-	@ErrorPage(code, title, message, ui.NotFound_Home, ui, lang)
-}
-
 // ErrorPage renders a simple, minimalist error page.
 templ ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) {
 	<div class="max-w-3xl mx-auto px-6 py-20 sm:py-32">
@@ -47,10 +32,10 @@ templ ErrorPage(code int, title string, message string, homeLabel string, ui i18
 					{ homeLabel }
 				</a>
 				<a
-					href={ templ.SafeURL(prefix(lang) + "/behind") }
+					href={ templ.SafeURL(prefix(lang) + "/colophon") }
 					class="text-xs font-medium px-4 py-2 border border-border text-muted hover:text-text hover:bg-hover transition-colors"
 				>
-					{ ui.Nav_Behind }
+					{ ui.Nav_Colophon }
 				</a>
 			</div>
 		</div>

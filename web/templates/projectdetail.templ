@@ -8,13 +8,6 @@ import (
 
 templ ProjectDetailPage(ui i18n.UI, p project.Project, lang string, toc []post.TOCEntry) {
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-		<a
-			href={ templ.SafeURL(prefix(lang) + "/behind#projects") }
-			class="text-sm text-link hover:underline inline-flex items-center gap-1.5 mb-8"
-		>
-			@iconArrowLeft()
-			<span>{ ui.Nav_Behind }</span>
-		</a>
 		<div class="mb-8">
 			<div class="flex items-start gap-3 mb-3">
 				<h1 class="display text-2xl sm:text-3xl font-semibold text-text font-mono flex-1">{ p.Name }</h1>
@@ -54,7 +47,7 @@ templ ProjectDetailPage(ui i18n.UI, p project.Project, lang string, toc []post.T
 						class="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 border border-border rounded-none text-muted hover:bg-hover hover:text-text transition-colors font-mono"
 					>
 						<span>{ demoLabel(p.DemoURL) }</span>
-						@iconArrowUpRight()
+						@IconArrowUpRight("w-3 h-3")
 					</a>
 				}
 			</div>
@@ -102,5 +95,12 @@ templ ProjectDetailPage(ui i18n.UI, p project.Project, lang string, toc []post.T
 			</div>
 			<script src="/static/js/project.js" defer></script>
 		}
+		<a
+			href={ templ.SafeURL(prefix(lang) + "/colophon#projects") }
+			class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-mono"
+		>
+			@IconArrowLeft("w-3.5 h-3.5")
+			<span>{ ui.Nav_Colophon }</span>
+		</a>
 	</div>
 }

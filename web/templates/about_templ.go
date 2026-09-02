@@ -8,9 +8,12 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "daemontalk/internal/i18n"
+import (
+	"daemontalk/internal/i18n"
+	"html/template"
+)
 
-func AboutPage(ui i18n.UI, lang string) templ.Component {
+func AboutPage(ui i18n.UI, body template.HTML, lang string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,22 +34,64 @@ func AboutPage(ui i18n.UI, lang string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12\"><div class=\"max-w-3xl\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12\"><div class=\"flex items-center gap-2 mb-3 font-mono text-xs text-muted\"><span class=\"px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold uppercase\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<h1 class=\"display text-3xl font-bold text-text mb-6\">Tentang Daemontalk</h1><div class=\"prose prose-sm md:prose-base text-text space-y-4\"><p>Daemontalk adalah buku catatan terbuka dan portofolio tempat saya mendokumentasikan proses belajar seputar Go backend, Python, sistem operasi Linux, dan arsitektur backend.</p><h3>Tujuan Situs</h3><p>Situs ini saya bangun sebagai wadah portofolio serta arsip catatan kuliah sistem informasi. Alih-alih hanya mencatat teori, saya berusaha menguji langsung cara kerja sistem, menganalisis perilaku runtime, dan merangkum eksperimen kode yang dapat dijalankan secara nyata.</p><h3>Pendekatan Belajar</h3><p>Saya lebih menyukai catatan yang ringkas dan langsung pada inti masalah. Setiap tulisan di sini mengutamakan reproduksibilitas: mulai dari perintah shell, skrip pengujian performa, hingga arsitektur kode sumber yang terbuka untuk dipelajari bersama.</p><h3>Teknologi di Balik Layar</h3><p>Web ini dibangun sebagai satu berkas biner Go mandiri menggunakan router chi, mesin templat templ, dan TailwindCSS. Semuanya dirender di sisi server tanpa framework JavaScript berat agar tetap ringan, cepat diakses, dan ramah sumber daya.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "LAB CATATAN TERBUKA")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<h1 class=\"display text-3xl font-bold text-text mb-6\">About Daemontalk</h1><div class=\"prose prose-sm md:prose-base text-text space-y-4\"><p>Daemontalk is an open technology notebook and personal portfolio where I document my learning journey in Go backend development, Python, Linux systems, and backend architecture.</p><h3>Purpose</h3><p>I built this site to serve as a working archive for my information systems studies and practical projects. Rather than keeping abstract notes, I focus on testing system mechanics directly, inspecting runtime behavior, and writing reproducible technical explorations.</p><h3>Learning Approach</h3><p>I prefer concise notes that get straight to the technical core. Every article emphasizes practical verification: shell diagnostics, performance experiments, and open-source code snippets designed to be run and tested.</p><h3>Technology Stack</h3><p>The site runs as a single Go binary powered by chi for routing, templ for type-safe HTML generation, and TailwindCSS. Everything is server-rendered with zero heavy client-side JavaScript to keep the reading experience fast, simple, and resource-friendly.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "OPEN SYSTEMS NOTEBOOK")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span> <span>·</span> <span>DAEMONTALK</span></div><div class=\"prose max-w-none font-sans text-text leading-relaxed\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.Raw(string(body)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 templ.SafeURL
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/about.templ`, Line: 24, Col: 49}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-mono\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowLeft("w-3.5 h-3.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_Back)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/about.templ`, Line: 26, Col: 23}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span></a></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

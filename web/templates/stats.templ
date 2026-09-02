@@ -2,6 +2,7 @@ package templates
 
 import (
 	"fmt"
+
 	"daemontalk/internal/i18n"
 )
 
@@ -11,6 +12,11 @@ type StatsData struct {
 	TotalTags     int
 	TotalViews    int
 	TotalComments int
+	TotalTopics   int
+	TotalReplies  int
+	SolvedTopics  int
+	TotalUsers    int
+	TotalVotes    int
 	LangEN        int
 	LangID        int
 	TopPages      []StatTopPage
@@ -31,39 +37,93 @@ func fmtNumber(n int) string {
 	return fmt.Sprintf("%d", n)
 }
 
-templ StatsPage(ui i18n.UI, data StatsData) {
-	<section class="container-page py-12 sm:py-20 flex flex-col items-center justify-center min-h-[60vh]">
-		<div class="w-full max-w-3xl flex flex-col font-mono">
-			<!-- CLI Output Area -->
-			<div class="text-text text-sm leading-loose w-full">
-				<div class="flex flex-col gap-4 w-full uppercase">
-					@statCliLine("Total Articles Published", fmtNumber(data.TotalPosts))
-					@statCliLine("Total Words Written (Est.)", fmtNumber(data.TotalWords))
-					@statCliLine("Unique System Tags Used", fmtNumber(data.TotalTags))
-					
-					<div class="my-4 border-b border-border/50 border-dashed"></div>
-					
-					@statCliLine("Total Raw Page Views", fmtNumber(data.TotalViews))
-					@statCliLine("User Comments Received", fmtNumber(data.TotalComments))
-					
-					<div class="my-4 border-b border-border/50 border-dashed"></div>
-					
-					@statCliLine("EN Locale Documents", fmtNumber(data.LangEN))
-					@statCliLine("ID Locale Documents", fmtNumber(data.LangID))
+templ StatsPage(ui i18n.UI, lang string, data StatsData) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				<span>
+					if lang == "id" {
+						Kembali ke Beranda
+					} else {
+						Back to Dispatches
+					}
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+				{ ui.Stats_Title }
+			</h1>
+		</div>
+		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
+			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono text-muted select-none">
+				<div class="flex items-center gap-3 text-text font-bold">
+					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+					<span class="text-sm sm:text-base font-mono">cat /proc/daemontalk/sys</span>
 				</div>
-				
-				<div class="mt-16 text-center text-[10px] text-muted font-bold tracking-widest animate-pulse">
-					[ EOF ]
+				<span class="text-xs font-mono text-muted font-bold shrink-0">SYS_STATUS: OK</span>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+				<div class="py-6 px-0 sm:p-10 space-y-9">
+					<div>
+						<p class="text-xs font-bold text-link uppercase tracking-wider mb-4 font-mono">
+							{ ui.Stats_SecPub }
+						</p>
+						<div class="space-y-4 sm:space-y-5 text-sm sm:text-base text-text">
+							@statRow(ui.Stats_TotalArticles, fmtNumber(data.TotalPosts))
+							@statRow(ui.Stats_TotalWords, fmtNumber(data.TotalWords))
+							@statRow(ui.Stats_SystemTags, fmtNumber(data.TotalTags))
+							@statRow(ui.Stats_PageViews, fmtNumber(data.TotalViews))
+							@statRow(ui.Stats_Comments, fmtNumber(data.TotalComments))
+						</div>
+					</div>
+					<div class="border-t border-border"></div>
+					<div>
+						<p class="text-xs font-bold text-link uppercase tracking-wider mb-4 font-mono">
+							{ ui.Stats_SecLocales }
+						</p>
+						<div class="space-y-4 sm:space-y-5 text-sm sm:text-base text-text">
+							@statRow(ui.Stats_LangID, fmtNumber(data.LangID))
+							@statRow(ui.Stats_LangEN, fmtNumber(data.LangEN))
+						</div>
+					</div>
+				</div>
+				<div class="py-6 px-0 sm:p-10 space-y-9">
+					<div>
+						<p class="text-xs font-bold text-link uppercase tracking-wider mb-4 font-mono">
+							{ ui.Stats_SecCommunity }
+						</p>
+						<div class="space-y-4 sm:space-y-5 text-sm sm:text-base text-text">
+							@statRow(ui.Stats_Topics, fmtNumber(data.TotalTopics))
+							@statRow(ui.Stats_Replies, fmtNumber(data.TotalReplies))
+							@statRow(ui.Stats_Solved, fmtNumber(data.SolvedTopics))
+							@statRow(ui.Stats_Members, fmtNumber(data.TotalUsers))
+							@statRow(ui.Stats_Votes, fmtNumber(data.TotalVotes))
+						</div>
+					</div>
+					<div class="border-t border-border"></div>
+					<div>
+						<p class="text-xs font-bold text-link uppercase tracking-wider mb-4 font-mono">
+							{ ui.Stats_SecEngine }
+						</p>
+						<div class="space-y-4 sm:space-y-5 text-sm sm:text-base text-text">
+							@statRow(ui.Stats_DBStorage, "SQLite3 WAL")
+							@statRow(ui.Stats_ServerArch, "Go Monolith")
+							@statRow(ui.Stats_TemplateEngine, "Templ + HTMX")
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 }
 
-templ statCliLine(label string, value string) {
-	<div class="flex items-end w-full">
-		<span class="shrink-0 font-bold text-muted">{ label }</span>
-		<div class="flex-1 mx-3 mb-1 border-b-[3px] border-dotted border-border/70"></div>
-		<span class="shrink-0 font-bold tracking-widest text-text">[ <span class="text-link">{ value }</span> ]</span>
+templ statRow(label string, val string) {
+	<div class="flex items-baseline justify-between gap-2">
+		<span class="text-muted font-medium truncate">{ label }</span>
+		<div class="flex-1 border-b-2 border-dotted border-border/80 mx-3 mb-1"></div>
+		<span class="font-bold text-text shrink-0 font-mono tracking-wide">[ <span class="text-link font-bold">{ val }</span> ]</span>
 	</div>
 }

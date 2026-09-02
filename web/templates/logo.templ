@@ -2,13 +2,13 @@ package templates
 
 // BrandIcon renders the standalone moth icon image, adapting to light/dark themes.
 templ BrandIcon(class string) {
-	<img src="/static/logo/icon-light.webp" alt="Moth Icon" class={ "logo-light object-contain " + class } width="32" height="32" />
-	<img src="/static/logo/icon-dark.webp" alt="Moth Icon" class={ "logo-dark object-contain " + class } width="32" height="32" />
+	<img src="/static/logo/icon-light.webp" alt="Moth Icon" class={ "logo-light object-contain " + class } width="32" height="32"/>
+	<img src="/static/logo/icon-dark.webp" alt="Moth Icon" class={ "logo-dark object-contain " + class } width="32" height="32"/>
 }
 
 // BrandLogo renders the complete combined logo image (Icon + "daemontalk" wordmark as a single unified graphic),
 // adapting seamlessly to light and dark themes using optimized WebP with PNG fallback.
 templ BrandLogo(class string) {
-	<img src="/static/logo/logo-light.webp" alt="daemontalk" class={ "logo-light object-contain " + class } />
-	<img src="/static/logo/logo-dark.webp" alt="daemontalk" class={ "logo-dark object-contain " + class } />
+	<img src="/static/logo/logo-light.webp" alt="daemontalk" class={ "logo-light object-contain " + class }/>
+	<img src="/static/logo/logo-dark.webp" alt="daemontalk" class={ "logo-dark object-contain " + class }/>
 }
