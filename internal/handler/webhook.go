@@ -66,11 +66,13 @@ func (h *Handler) GitHubWebhook(w http.ResponseWriter, r *http.Request) {
 
 	var payload githubPushPayload
 	if err := json.Unmarshal(body, &payload); err == nil {
-		if payload.Ref != "" && !strings.HasSuffix(payload.Ref, "/main") && !strings.HasSuffix(payload.Ref, "/master") {
+		isMain := strings.HasSuffix(payload.Ref, "/main") || strings.HasSuffix(payload.Ref, "/master")
+		isTag := strings.HasPrefix(payload.Ref, "refs/tags/")
+		if payload.Ref != "" && !isMain && !isTag {
 			w.Header().Set("Content-Type", "application/json")
 			_ = json.NewEncoder(w).Encode(map[string]any{
 				"status":  "ignored",
-				"message": "Push is not to main branch (" + payload.Ref + ")",
+				"message": "Push is not to main branch or release tag (" + payload.Ref + ")",
 			})
 			return
 		}
