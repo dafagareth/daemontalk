@@ -2,7 +2,6 @@
 title: "Kenapa Developer Indonesia Dibayar Murah — Dan Itu Salah Kita Sendiri"
 slug: "developer-indonesia-dibayar-murah"
 aliases: []
-date: 2026-09-02
 author: "daemontalk team"
 contributors: []
 tags: ["opinion", "career", "industry", "indonesia"]
