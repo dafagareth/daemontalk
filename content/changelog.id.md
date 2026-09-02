@@ -1,3 +1,13 @@
+### v1.3.0 (2 September 2026) · GitHub OAuth2, Forum Diskusi Socket & Lisensi Modular
+
+- **Autentikasi GitHub OAuth2 & Profil Pengguna**: Menghadirkan sistem login GitHub resmi (`/auth/github`), sesi pengguna berbasis SQLite, badge profil navigasi desktop dan mobile, serta kartu profil publik (`/u/:username`).
+- **Forum Diskusi Socket**: Membangun platform forum komunitas mandiri yang dirender di sisi server (`/socket`) dengan dukungan kategori topik, balasan bertingkat, sistem voting, dan penanda solusi terverifikasi.
+- **Lisensi PolyForm Noncommercial & CC BY-NC-SA 4.0**: Mengadopsi lisensi PolyForm Noncommercial 1.0.0 untuk kode sumber, lisensi CC BY-NC-SA 4.0 untuk artikel riset, serta perlindungan hak cipta merek penuh (*All Rights Reserved*).
+- **Publikasi Otomatis via GitHub Webhook**: Menambahkan endpoint webhook terverifikasi HMAC-SHA256 (`/api/webhook/github`) untuk me-reload artikel secara instan saat terjadi merge ke branch utama tanpa *downtime*.
+- **Desain Ulang Portal Topik & Antarmuka**: Memperbarui portal arsip tag (`/blog/tag/:tag`) dengan kisi kartu 4 kolom minimalis, merapikan navigasi *drawer mobile*, dan menyederhanakan direktori kontributor.
+- **Pembersihan Modul Lawas**: Menghapus modul usang seperti `/links`, web `/terminal`, `/guestbook`, dan engine eksekusi runner yang tidak terpakai.
+- **Spesifikasi Colophon**: Menambahkan halaman arsitektur perangkat keras dan tumpukan perangkat lunak peladen (`/colophon`).
+
 ### v1.2.0 (28 Agustus 2026) · Penguatan Keamanan, Lokalisasi Penuh & Refaktor Arsitektur
 
 - **Penguatan Keamanan & Otorisasi**: Memperkuat batasan akses, menerapkan validasi skema URL untuk mencegah XSS, membatasi ukuran muatan POST, serta menutup potensi kebocoran draf artikel pada endpoint feed dan CLI.

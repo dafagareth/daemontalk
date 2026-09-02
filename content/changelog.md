@@ -1,3 +1,13 @@
+### v1.3.0 (September 2, 2026) · GitHub OAuth2, Socket Discussions & Modular Licensing
+
+- **GitHub OAuth2 & User Profiles**: Integrated seamless GitHub authentication (`/auth/github`), user session persistence via SQLite, dynamic navbar badge, and clean user profile pages (`/u/:username`).
+- **Socket Discussions Forum**: Built a native, server-rendered community discussion platform (`/socket`) featuring topic categorization, threaded replies, upvoting, and solution validation.
+- **PolyForm Noncommercial & CC BY-NC-SA 4.0 Licensing**: Standardized codebase under the PolyForm Noncommercial License 1.0.0, editorial dispatches under CC BY-NC-SA 4.0, and strict All Rights Reserved brand protection.
+- **Git-Driven Instant Publishing**: Implemented HMAC-SHA256 verified GitHub webhook (`/api/webhook/github`) for hot-reloading markdown dispatches automatically on push with zero downtime.
+- **Tag Portal & UI Redesign**: Overhauled tag archive portals (`/blog/tag/:tag`) with a modern 4-column framed grid, streamlined mobile navigation drawer, and modernized the Contributor Directory.
+- **Legacy Architecture Pruning**: Completely eradicated legacy modules including `/links`, web `/terminal`, `/guestbook`, and obsolete runner engines.
+- **Colophon Specification**: Added a dedicated system architecture and infrastructure blueprint page (`/colophon`).
+
 ### v1.2.0 (August 28, 2026) · Security Hardening, Full i18n & Architecture Refinements
 
 - **Security & Authorization Hardening**: Strengthened access boundaries, enforced strict URL validation to prevent XSS, added payload size limits, and patched potential draft content leaks across syndication and CLI endpoints.
