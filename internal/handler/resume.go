@@ -12,5 +12,5 @@ func (h *Handler) Resume(w http.ResponseWriter, r *http.Request) {
 	ui := i18n.Get(lang)
 
 	meta := templates.PageMeta{Description: "Dafa — Software Engineer. Resume and CV."}
-	h.Render(w, r, templates.Layout(ui, lang, "resume", r.URL.Path, meta, templates.ResumePage()))
+	h.Render(w, r, templates.Layout(ui, lang, "resume", r.URL.Path, meta, templates.ResumePage(ui, lang)))
 }
