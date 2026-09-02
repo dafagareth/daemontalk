@@ -97,7 +97,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"reactions-bar\" class=\"w-full mt-6 flex items-center justify-between gap-2 sm:gap-3 select-none font-mono text-xs not-prose\"><!-- Left Group: 3 Authentic Emoji Reactions --><div class=\"flex items-center gap-1.5 sm:gap-3 flex-nowrap\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"reactions-bar\" class=\"w-full mt-6 flex items-center justify-between gap-2 sm:gap-3 select-none font-mono text-xs not-prose\"><div class=\"flex items-center gap-1.5 sm:gap-3 flex-nowrap\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -119,7 +119,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(blogPrefix(lang) + "/blog/" + slug + "/reactions/" + emoji)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 37, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 35, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -145,7 +145,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(reactionName(emoji))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 45, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 43, Col: 32}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -158,7 +158,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(reactionName(emoji))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 46, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 44, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -198,7 +198,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 50, Col: 165}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 48, Col: 165}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -214,46 +214,118 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><!-- Right Group: Pure Save Icon & Share Dock --><div class=\"flex items-center gap-1 sm:gap-2 relative shrink-0\"><!-- Pure Save Icon (Bookmark) --><button type=\"button\" onclick=\"toggleBookmark(this)\" data-slug=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><div class=\"flex items-center gap-1 sm:gap-2 relative shrink-0\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(slug)
+		var templ_7745c5c3_Var12 templ.SafeURL
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("https://github.com/dafagareth/daemontalk/edit/main/content/posts/" + slug + ".md"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 63, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 55, Col: 108}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" data-title=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(title)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 64, Col: 22}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 flex items-center justify-center cursor-pointer\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" data-date=\"")
+		if lang == "id" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " title=\"Saran perbaikan artikel (Edit di GitHub)\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, " title=\"Suggest an edit on GitHub\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, " aria-label=\"Suggest an edit\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconEditSuggest("w-4 h-4 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</a> <a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var13 templ.SafeURL
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/contribute"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 69, Col: 54}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" class=\"p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 flex items-center justify-center cursor-pointer\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "id" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, " title=\"Tulis artikel baru (Pedoman Kontribusi)\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, " title=\"Write a dispatch (Contribution Guide)\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, " aria-label=\"Contribution Guide\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconContribute("w-4 h-4 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</a> <button type=\"button\" onclick=\"toggleBookmark(this)\" data-slug=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var14 string
-		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(date)
+		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 65, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 83, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"bookmark-btn p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center\" title=\"Save / Bookmark post\" aria-label=\"Save post\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" data-title=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var15 string
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(title)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 84, Col: 22}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" data-date=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(date)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_reactions.templ`, Line: 85, Col: 20}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" class=\"bookmark-btn p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center\" title=\"Save / Bookmark post\" aria-label=\"Save post\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -261,7 +333,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</button><!-- Share Button & Horizontal Dock Popover --><div class=\"relative\"><button type=\"button\" onclick=\"toggleSharePopover(event)\" class=\"p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group\" title=\"Share article\" aria-label=\"Share article\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</button><div class=\"relative\"><button type=\"button\" onclick=\"toggleSharePopover(event)\" class=\"p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group\" title=\"Share article\" aria-label=\"Share article\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -269,7 +341,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</button><!-- The Micro Horizontal Dock Popover --><div id=\"share-popover-menu\" class=\"hidden absolute right-0 bottom-full mb-3 bg-surface border border-border shadow-2xl z-40 p-1 font-mono text-xs rounded-none select-none whitespace-nowrap\"><div class=\"flex items-center gap-1\"><!-- 1. Copy Link Button --><button type=\"button\" onclick=\"copyPostUrl(this, event)\" class=\"px-2.5 py-1.5 text-muted hover:text-text hover:bg-hover flex items-center gap-1.5 cursor-pointer rounded-none transition-colors group font-bold text-xs\" title=\"Copy link to clipboard\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</button><div id=\"share-popover-menu\" class=\"hidden absolute right-0 bottom-full mb-3 bg-surface border border-border shadow-2xl z-40 p-1 font-mono text-xs rounded-none select-none whitespace-nowrap\"><div class=\"flex items-center gap-1\"><button type=\"button\" onclick=\"copyPostUrl(this, event)\" class=\"px-2.5 py-1.5 text-muted hover:text-text hover:bg-hover flex items-center gap-1.5 cursor-pointer rounded-none transition-colors group font-bold text-xs\" title=\"Copy link to clipboard\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -277,37 +349,37 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<span class=\"share-label-text\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<span class=\"share-label-text\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "Salin")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "Salin")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "Copy")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "Copy")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</span> <span class=\"share-copied-status hidden text-accent font-bold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</span> <span class=\"share-copied-status hidden text-accent font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "Tersalin")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "Tersalin")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "Copied")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "Copied")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</span></button><div class=\"h-4 w-px bg-border/60 mx-0.5\"></div><!-- 2. X / Twitter --><button type=\"button\" onclick=\"shareToTwitter(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on X\" aria-label=\"Share on X\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span></button><div class=\"h-4 w-px bg-border/60 mx-0.5\"></div><button type=\"button\" onclick=\"shareToTwitter(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on X\" aria-label=\"Share on X\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -315,7 +387,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</button><!-- 3. Bluesky --><button type=\"button\" onclick=\"shareToBluesky(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on Bluesky\" aria-label=\"Share on Bluesky\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</button> <button type=\"button\" onclick=\"shareToBluesky(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on Bluesky\" aria-label=\"Share on Bluesky\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -323,7 +395,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</button><!-- 4. LinkedIn --><button type=\"button\" onclick=\"shareToLinkedIn(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on LinkedIn\" aria-label=\"Share on LinkedIn\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</button> <button type=\"button\" onclick=\"shareToLinkedIn(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on LinkedIn\" aria-label=\"Share on LinkedIn\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -331,7 +403,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</button><!-- 5. Threads --><button type=\"button\" onclick=\"shareToThreads(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on Threads\" aria-label=\"Share on Threads\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</button> <button type=\"button\" onclick=\"shareToThreads(event)\" class=\"p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center\" title=\"Share on Threads\" aria-label=\"Share on Threads\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -339,7 +411,7 @@ func ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</button></div></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</button></div></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

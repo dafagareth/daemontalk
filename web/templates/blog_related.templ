@@ -1,137 +1,107 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
+	"fmt"
 )
 
 templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang string) {
 	if len(related) > 0 {
-		<section class="w-full">
-			<!-- Unified 3-Box Monolith Wireframe Grid (Full-Cover Hero Overlay + Dual Stacked Cards) -->
-			<div class="border-2 border-border divide-y lg:divide-y-0 lg:divide-x divide-border bg-surface/20 w-full overflow-hidden">
-				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border items-stretch">
-					
-					<!-- BOX 1: Hero Full-Bleed Image with Bottom Gradient Overlay (6 Cols / 50%) -->
-					if len(related) > 0 {
-						<article class="lg:col-span-6 relative overflow-hidden group min-h-[280px] sm:min-h-[320px] flex flex-col justify-end hover:bg-hover/20 transition-colors">
-							<!-- Full Background Image -->
-							<div class="absolute inset-0 w-full h-full overflow-hidden bg-bg">
+		<section class="w-full font-sans">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 divide-y lg:divide-y-0 lg:divide-x divide-border/60 items-start">
+				if len(related) > 0 {
+					<article class="lg:col-span-6 flex flex-col justify-between group">
+						<div class="space-y-4">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } class="block w-full aspect-[16/9] overflow-hidden bg-surface border border-border">
 								@postThumbnailImg(related[0])
-							</div>
-
-							<!-- Dark Bottom Gradient Fade -->
-							<div class="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)] via-[var(--c-bg)]/80 to-transparent/10 pointer-events-none transition-opacity duration-300"></div>
-
-							<!-- Overlayed Content at the Bottom -->
-							<div class="relative z-10 p-5 sm:p-6 flex flex-col justify-end h-full">
-								<div>
-									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
-										if len(related[0].Tags) > 0 {
-											<span class="text-xs font-mono font-bold uppercase text-accent">#{ related[0].Tags[0] }</span>
-											<span>·</span>
-										}
-										<time datetime={ related[0].Date.Format("2006-01-02") }>{ fmtDate(related[0]) }</time>
+							</a>
+							<div class="space-y-2">
+								<div class="flex items-center gap-2 text-xs sm:text-sm font-mono text-muted flex-wrap">
+									if len(related[0].Tags) > 0 {
+										<span class="font-bold uppercase text-accent">#{ related[0].Tags[0] }</span>
 										<span>·</span>
-										<span>{ fmt.Sprintf("%d %s", related[0].ReadTime, ui.Blog_MinRead) }</span>
-									</div>
-
-									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } data-slug={ related[0].Slug } class="block mb-1 sm:mb-2">
-										<h4 class="text-base sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug line-clamp-2">
-											{ related[0].Title }
-										</h4>
-									</a>
+									}
+									<time datetime={ related[0].Date.Format("2006-01-02") }>{ fmtDate(related[0], lang) }</time>
+									<span>·</span>
+									<span>{ fmt.Sprintf("%d %s", related[0].ReadTime, ui.Blog_MinRead) }</span>
 								</div>
-
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } class="mt-2 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">
-									<span class="text-[11px] font-bold uppercase tracking-wider">Read Full Dispatch</span>
-									@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) } data-slug={ related[0].Slug } class="block">
+									<h3 class="text-xl sm:text-2xl lg:text-[26px] font-extrabold text-text group-hover:text-link transition-colors leading-tight line-clamp-2">
+										{ related[0].Title }
+									</h3>
 								</a>
+								if related[0].Description != "" {
+									<p class="text-sm sm:text-base text-muted line-clamp-3 leading-relaxed font-sans pt-1">
+										{ related[0].Description }
+									</p>
+								}
 							</div>
-						</article>
-					}
-
-					<!-- BOX 2: Secondary Dispatch 1 (3 Cols / 25% - Flush Top Thumbnail) -->
-					if len(related) > 1 {
-						<article class="lg:col-span-3 flex flex-col overflow-hidden group hover:bg-hover/20 transition-colors">
-							<!-- Flush Top Thumbnail (Zero outer padding) -->
-							<div class="relative w-full aspect-[16/10] overflow-hidden bg-bg border-b border-border">
-								@postThumbnail(related[1], blogPrefix(lang) + "/blog/" + related[1].Slug)
-							</div>
-
-							<!-- Padded Text Content -->
-							<div class="p-5 flex-1 flex flex-col justify-between">
-								<div>
-									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
-										if len(related[1].Tags) > 0 {
-											<span class="text-xs font-mono font-bold uppercase text-accent">#{ related[1].Tags[0] }</span>
+						</div>
+						<div class="pt-3 mt-auto">
+							<a
+								href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[0].Slug) }
+								class="inline-flex items-center justify-between w-full text-xs sm:text-sm font-mono text-text font-bold group-hover:text-link transition-colors"
+							>
+								<span>
+									if lang == "id" {
+										Baca Artikel Lengkap
+									} else {
+										Read Full Dispatch
+									}
+								</span>
+								@IconArrowRight("w-4 h-4 transition-transform group-hover:translate-x-1")
+							</a>
+						</div>
+					</article>
+				}
+				<div class="lg:col-span-6 lg:pl-10 flex flex-col divide-y divide-border/60 pt-6 lg:pt-0">
+					for i := 1; i < len(related) && i <= 3; i++ {
+						<article class={ templ.KV("pb-5", i < 3 && i < len(related)-1), templ.KV("pt-5", i > 1), "flex flex-col sm:flex-row gap-5 items-start group" }>
+							<a
+								href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[i].Slug) }
+								class="w-full sm:w-44 lg:w-48 xl:w-52 aspect-[16/9] overflow-hidden bg-surface border border-border shrink-0 block"
+							>
+								@postThumbnailImg(related[i])
+							</a>
+							<div class="flex-1 min-w-0 space-y-1.5 flex flex-col justify-between">
+								<div class="space-y-1.5">
+									<div class="flex items-center gap-2 text-xs font-mono text-muted flex-wrap">
+										if len(related[i].Tags) > 0 {
+											<span class="font-bold uppercase text-accent">#{ related[i].Tags[0] }</span>
 											<span>·</span>
 										}
-										<span>{ fmt.Sprintf("%d %s", related[1].ReadTime, ui.Blog_MinRead) }</span>
+										<span>{ fmt.Sprintf("%d %s", related[i].ReadTime, ui.Blog_MinRead) }</span>
 									</div>
-
-									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[1].Slug) } data-slug={ related[1].Slug } class="block mb-1.5">
-										<h4 class="text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
-											{ related[1].Title }
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[i].Slug) } data-slug={ related[i].Slug } class="block">
+										<h4 class="text-base sm:text-lg lg:text-xl font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
+											{ related[i].Title }
 										</h4>
 									</a>
-
-									if related[1].Description != "" {
-										<p class="text-[11px] text-muted line-clamp-2 leading-relaxed font-sans">
-											{ related[1].Description }
+									if related[i].Description != "" {
+										<p class="text-xs sm:text-sm text-muted line-clamp-2 leading-relaxed font-sans">
+											{ related[i].Description }
 										</p>
 									}
 								</div>
-
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[1].Slug) } class="mt-4 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">
-									<span class="text-[11px] font-bold uppercase tracking-wider">Read Dispatch</span>
-									@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
-								</a>
-							</div>
-						</article>
-					}
-
-					<!-- BOX 3: Secondary Dispatch 2 (3 Cols / 25% - Flush Top Thumbnail) -->
-					if len(related) > 2 {
-						<article class="lg:col-span-3 flex flex-col overflow-hidden group hover:bg-hover/20 transition-colors">
-							<!-- Flush Top Thumbnail (Zero outer padding) -->
-							<div class="relative w-full aspect-[16/10] overflow-hidden bg-bg border-b border-border">
-								@postThumbnail(related[2], blogPrefix(lang) + "/blog/" + related[2].Slug)
-							</div>
-
-							<!-- Padded Text Content -->
-							<div class="p-5 flex-1 flex flex-col justify-between">
-								<div>
-									<div class="flex items-center gap-1.5 mb-1.5 text-[10px] font-mono text-muted">
-										if len(related[2].Tags) > 0 {
-											<span class="text-xs font-mono font-bold uppercase text-accent">#{ related[2].Tags[0] }</span>
-											<span>·</span>
-										}
-										<span>{ fmt.Sprintf("%d %s", related[2].ReadTime, ui.Blog_MinRead) }</span>
-									</div>
-
-									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[2].Slug) } data-slug={ related[2].Slug } class="block mb-1.5">
-										<h4 class="text-sm font-bold text-text group-hover:text-link transition-colors line-clamp-2 leading-snug">
-											{ related[2].Title }
-										</h4>
+								<div class="pt-2">
+									<a
+										href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[i].Slug) }
+										class="inline-flex items-center gap-1 text-xs sm:text-sm font-mono text-link hover:underline font-bold"
+									>
+										<span>
+											if lang == "id" {
+												Baca Riset
+											} else {
+												Read Dispatch
+											}
+										</span>
+										@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
 									</a>
-
-									if related[2].Description != "" {
-										<p class="text-[11px] text-muted line-clamp-2 leading-relaxed font-sans">
-											{ related[2].Description }
-										</p>
-									}
 								</div>
-
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + related[2].Slug) } class="mt-4 flex items-center justify-between text-xs font-mono text-muted group-hover:text-text transition-colors">
-									<span class="text-[11px] font-bold uppercase tracking-wider">Read Dispatch</span>
-									@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
-								</a>
 							</div>
 						</article>
 					}
-
 				</div>
 			</div>
 		</section>

@@ -1,27 +1,21 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
+	"fmt"
+	"strings"
 )
 
 templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comment.Comment, views int, isAdmin bool, lang string, reactions map[string]int, seriesParts []post.Post, nav PostNav, userReaction string, visitorName string) {
-	<!-- Main Post Article Container (3-Column Layout) -->
 	<div class="container-page max-w-7xl mx-auto py-8 sm:py-12 transition-all">
-		
-		<!-- 1. The Article Reading 3-Column Block (Left-Aligned with Subnav ALL) -->
 		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14 relative">
-			
-			<!-- LEFT RAIL: Sticky Back Link + Table of Contents (Aligned with ALL) -->
 			<aside class="hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5">
-				<!-- Back Link -->
-				<a href={ templ.SafeURL(homeURL(lang)) } onclick="if(document.referrer.includes(window.location.host)) { history.back(); return false; }" class="inline-flex items-center gap-1.5 text-muted hover:text-text font-bold text-xs font-mono uppercase tracking-wider transition-colors group">
+				<a href={ templ.SafeURL(homeURL(lang)) } class="inline-flex items-center gap-1.5 text-muted hover:text-text font-bold text-xs font-mono uppercase tracking-wider transition-colors group">
 					@IconArrowLeft("w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5")
 					<span>{ ui.Post_Back }</span>
 				</a>
-
 				if len(p.TOC) > 0 {
 					<div class="space-y-3 pt-1">
 						<div class="text-[11px] font-mono font-bold uppercase tracking-widest text-muted pb-2 border-b border-border/60">
@@ -33,8 +27,6 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 					</div>
 				}
 			</aside>
-
-			<!-- CENTER READING CANVAS: Pure Typography (Narrowed 42rem) -->
 			<main class="w-full max-w-[42rem] min-w-0 flex-1 relative">
 				<article class="relative z-10">
 					@blogHeader(ui, p, lang, seriesParts)
@@ -43,47 +35,13 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 						@seriesBottomNav(ui, seriesParts, p, lang)
 					}
 				</article>
-
-				<!-- Contributing Callout (End of Article) -->
-				<div class="mt-8 mb-8 border border-border bg-surface p-6 font-sans">
-					<h3 class="text-base font-bold text-text mb-2">
-						if lang == "id" {
-							Punya catatan teknis untuk dibagikan?
-						} else {
-							Have technical notes to share?
-						}
-					</h3>
-					<p class="text-sm text-muted mb-4 leading-relaxed">
-						if lang == "id" {
-							DaemonTalk menerima kontribusi berupa panduan sistem, riset arsitektur, atau eksperimen teknologi. Kirimkan draft Anda via GitHub Pull Request.
-						} else {
-							DaemonTalk accepts contributions for systems guides, architecture research, or tech experiments. Submit your drafts via GitHub Pull Request.
-						}
-					</p>
-					<a href={ templ.SafeURL(prefix(lang) + "/contribute") } class="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-link hover:text-accent transition-colors group">
-						if lang == "id" {
-							Baca Pedoman Kontribusi
-						} else {
-							Read the Contributing Guide
-						}
-						@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
-					</a>
-				</div>
-
-				<!-- Unified Card Reaction Bar (Directly below content) -->
 				@ReactionsBar(ui, reactions, p.Slug, lang, userReaction, len(comments), p.Title, p.Date.Format("2006-01-02"))
 			</main>
-
-			<!-- RIGHT RAIL: Sticky Reading Tools (Desktop) -->
 			<aside class="hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none">
-				
-				<!-- Font Size Controls (no card box) -->
 				<div class="flex items-center gap-1">
 					<button onclick="adjustProseSize(-1)" aria-label="Decrease font size" title="Decrease font size" class="px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none">A-</button>
 					<button onclick="adjustProseSize(1)" aria-label="Increase font size" title="Increase font size" class="px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none">A+</button>
 				</div>
-
-				<!-- Serif / Sans Font Family Toggle -->
 				<div>
 					<button
 						id="serif-toggle-btn"
@@ -96,30 +54,151 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 						<span id="serif-toggle-label">{ ui.Post_Serif }</span>
 					</button>
 				</div>
-
+				<div>
+					<button
+						id="zen-toggle-btn"
+						onclick="document.body.classList.toggle('zen-mode')"
+						class="inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs"
+						title="Toggle Focus Mode (Press Z)"
+						aria-label="Toggle Focus Mode"
+					>
+						<span class="font-mono font-bold tracking-widest">[Z]</span>
+						<span>Focus</span>
+					</button>
+				</div>
+				<div>
+					<button
+						onclick="copyBibtex(this)"
+						data-bibtex={ bibtex(p) }
+						class="inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs"
+						title="Copy BibTeX Citation"
+						aria-label="Copy BibTeX Citation"
+					>
+						<span class="font-mono font-bold tracking-widest">["]</span>
+						<span>Cite</span>
+					</button>
+				</div>
 			</aside>
-
 		</div>
-
-		<!-- Inline Comments Section (Below 3-Column, Centered under article) -->
 		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14">
 			<div class="hidden xl:block w-52 shrink-0"></div>
 			<div class="w-full max-w-[42rem] min-w-0 flex-1">
 				@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName)
 			</div>
-			<div class="hidden lg:block w-32 xl:w-36 shrink-0"></div>
 		</div>
-
-		<!-- 2. Post-Article Footer Area (Full-Width Related Dispatches) -->
 		if len(related) > 0 {
 			<div class="w-full mt-16 pt-10 border-t border-border">
 				@blogRelated(ui, related, p.Tags, lang)
 			</div>
 		}
-
+		@mobileReadingModal(ui, p, lang)
 	</div>
-
 	@blogPostScripts()
+}
+
+templ mobileReadingModal(ui i18n.UI, p post.Post, lang string) {
+	<div
+		id="mobile-reading-modal-overlay"
+		class="hidden fixed inset-0 z-50 bg-bg/80 backdrop-blur-sm p-4 flex items-center justify-center font-mono select-none"
+		onclick="if(event.target===this) toggleMobileReadingModal()"
+	>
+		<div class="w-full max-w-xs bg-surface border border-border shadow-2xl p-4 font-mono space-y-4">
+			<div class="flex items-center justify-between pb-2.5 border-b border-border text-xs">
+				<span class="text-text font-bold">
+					if lang == "id" {
+						Opsi Baca
+					} else {
+						Reading Tools
+					}
+				</span>
+				<button
+					type="button"
+					onclick="toggleMobileReadingModal()"
+					class="text-muted hover:text-text px-1 cursor-pointer transition-colors"
+					aria-label="Close"
+				>
+					✕
+				</button>
+			</div>
+			<div class="space-y-3 text-xs">
+				<div class="flex items-center justify-between">
+					<span class="text-muted">
+						if lang == "id" {
+							Ukuran Teks
+						} else {
+							Text Size
+						}
+					</span>
+					<div class="flex items-center gap-1">
+						<button
+							type="button"
+							onclick="adjustProseSize(-1)"
+							class="w-8 h-7 flex items-center justify-center border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors"
+						>
+							A-
+						</button>
+						<button
+							type="button"
+							onclick="adjustProseSize(1)"
+							class="w-8 h-7 flex items-center justify-center border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors"
+						>
+							A+
+						</button>
+					</div>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-muted">
+						if lang == "id" {
+							Jenis Huruf
+						} else {
+							Font
+						}
+					</span>
+					<button
+						type="button"
+						id="modal-serif-btn"
+						onclick="toggleSerif()"
+						class="px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs"
+					>
+						<span id="serif-toggle-label-modal">{ ui.Post_Serif }</span>
+					</button>
+				</div>
+				<div class="flex items-center justify-between">
+					<span class="text-muted">
+						if lang == "id" {
+							Fokus
+						} else {
+							Focus Mode
+						}
+					</span>
+					<button
+						type="button"
+						onclick="document.body.classList.toggle('zen-mode'); toggleMobileReadingModal();"
+						class="px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs"
+					>
+						Toggle
+					</button>
+				</div>
+				<div class="flex items-center justify-between pt-2 border-t border-border">
+					<span class="text-muted">
+						if lang == "id" {
+							Sitasi
+						} else {
+							Citation
+						}
+					</span>
+					<button
+						type="button"
+						onclick="copyBibtex(this)"
+						data-bibtex={ bibtex(p) }
+						class="px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs"
+					>
+						Copy BibTeX
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 }
 
 templ tocList(entries []post.TOCEntry) {
@@ -191,7 +270,10 @@ templ seriesBottomNav(ui i18n.UI, parts []post.Post, current post.Post, lang str
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					if prevPart != nil {
 						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + prevPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors group">
-							<span class="text-[10px] font-mono text-muted flex items-center gap-1">@IconArrowLeft("w-3 h-3") Previous in Series</span>
+							<span class="text-[10px] font-mono text-muted flex items-center gap-1">
+								@IconArrowLeft("w-3 h-3")
+								Previous in Series
+							</span>
 							<span class="text-xs font-bold text-text group-hover:text-link line-clamp-1">{ prevPart.Title }</span>
 						</a>
 					} else {
@@ -207,4 +289,13 @@ templ seriesBottomNav(ui i18n.UI, parts []post.Post, current post.Post, lang str
 			</div>
 		}
 	}
+}
+
+func bibtex(p post.Post) string {
+	return fmt.Sprintf(`@article{daemontalk_%s,
+  title = "{%s}",
+  author = {Daemontalk Team},
+  year = "%s",
+  url = "https://daemontalk.com/blog/%s"
+}`, strings.ReplaceAll(p.Slug, "-", "_"), p.Title, p.Date.Format("2006"), p.Slug)
 }

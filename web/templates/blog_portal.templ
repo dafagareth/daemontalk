@@ -1,43 +1,36 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
+	"fmt"
 )
 
 templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, lang string, viewCounts map[string]int) {
 	{{
-		// DYNAMIC CATEGORY AGGREGATION FOR 8 MONOLITHIC BOXES
-		// With global deduplication: once a post appears, it won't repeat.
-
-		// Hero posts (Box 1) use posts[0..5], collect their slugs first
+		// Deduplicate post slugs across homepage sections
 		var usedSlugs []string
-		for i := 0; i <= 5 && i < len(posts); i++ {
+		for i := 0; i <= 6 && i < len(posts); i++ {
 			usedSlugs = append(usedSlugs, posts[i].Slug)
 		}
 
-		// Box 2 (4:4:4): The Trio
 		box2Cats := []CategorySection{
-			getCategoryCluster(posts, "software", []string{"software", "development", "programming", "coding"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "linux", []string{"linux", "os", "archlinux", "ubuntu"}, 3, &usedSlugs),
-			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "firewall", "authentication"}, 3, &usedSlugs),
+			getCategoryCluster(posts, "software", []string{"software", "development", "programming", "coding"}, 4, &usedSlugs),
+			getCategoryCluster(posts, "linux", []string{"linux", "os", "archlinux", "ubuntu"}, 4, &usedSlugs),
+			getCategoryCluster(posts, "security", []string{"security", "zero-trust", "firewall", "authentication"}, 4, &usedSlugs),
 		}
 
-		// Box 3 (Deep Dive Spotlight): AI & Backend Architecture (Limited to 2 for desktop/mobile consistency)
 		box3Cats := []CategorySection{
 			getCategoryCluster(posts, "ai", []string{"ai", "machine-learning", "llm", "models", "agents"}, 2, &usedSlugs),
 			getCategoryCluster(posts, "backend-architecture", []string{"backend", "go", "architecture", "distributed", "api"}, 2, &usedSlugs),
 		}
 
-		// Box 4 (8:4): Split River
 		box4LeftCats := []CategorySection{
 			getCategoryCluster(posts, "networking", []string{"networking", "protocols", "wireguard", "ssh", "dns", "tcp"}, 2, &usedSlugs),
 			getCategoryCluster(posts, "gaming", []string{"gaming", "graphics", "gpu", "simulation"}, 2, &usedSlugs),
 		}
 		box4WirePosts := getWirePosts(posts, &usedSlugs, 4)
 
-		// Box 5 (3:3:3:3): Quad Matrix
 		box5Cats := []CategorySection{
 			getCategoryCluster(posts, "tools", []string{"tools", "workflow", "git", "automation"}, 2, &usedSlugs),
 			getCategoryCluster(posts, "science", []string{"science", "research", "physics", "computing"}, 2, &usedSlugs),
@@ -45,11 +38,9 @@ templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, 
 			getCategoryCluster(posts, "container-internals", []string{"containers", "docker", "podman", "namespaces", "cgroups"}, 2, &usedSlugs),
 		}
 
-		// Box 6 (7:5): Essay Banner (Tech Policy)
 		box6Essay := getCategoryCluster(posts, "policy", []string{"policy", "law", "censorship", "government"}, 2, &usedSlugs)
 		box6SidePosts := getWirePosts(posts, &usedSlugs, 3)
 
-		// Box 7 (3:3:3:3 Dense Text): Knowledge Index
 		box7Cats := []CategorySection{
 			getCategoryCluster(posts, "terminal", []string{"terminal", "shell", "bash", "cli", "tmux", "zsh"}, 3, &usedSlugs),
 			getCategoryCluster(posts, "database", []string{"database", "storage", "sqlite", "duckdb", "sql"}, 3, &usedSlugs),
@@ -57,283 +48,189 @@ templ portalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, 
 			getCategoryCluster(posts, "crypto", []string{"privacy", "cryptography", "encryption"}, 3, &usedSlugs),
 		}
 	}}
-
-	// THE 8-BOX CONTINUOUS MONOLITH (FUSED WIREFRAME GRID)
-
-	// Box 1
 	@portalHeroTop(ui, posts, lang, viewCounts, true)
-
-	// Box 2
 	@portalBox8Cockpit(ui, tagCounts, lang, len(posts))
-
-	// Box 3
-	@portalCategoryTrio(ui, box2Cats, lang)
-
-	// Box 4
+	@portalCategoryStackedRows(ui, box2Cats, lang)
 	@portalDeepDive(ui, box3Cats, lang)
-
-	// Box 5
 	@portalBox4SplitRiver(ui, box4LeftCats, box4WirePosts, lang)
-
-	// Box 6
 	@portalBox5QuadMatrix(ui, box5Cats, lang)
-
-	// Box 7
 	@portalBox6EssayBanner(ui, box6Essay, box6SidePosts, lang)
-
-	// Box 8
 	@portalBox7KnowledgeIndex(ui, box7Cats, lang)
 }
 
 templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int, showSidebarTabs bool) {
 	{{
 		var excludeSlugs []string
-		for i := 0; i <= 5 && i < len(posts); i++ {
+		for i := 0; i <= 6 && i < len(posts); i++ {
 			excludeSlugs = append(excludeSlugs, posts[i].Slug)
 		}
-		popularPosts := getPopularPostsExcluding(posts, viewCounts, excludeSlugs, 3)
+		popularPosts := getPopularPostsExcluding(posts, viewCounts, excludeSlugs, 5)
 	}}
-	// TECH EDITORIAL HERO (3:6:3 ASYMMETRIC GRID)
 	<div class="border-0 sm:border border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="w-full">
 			<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
-			
-				// Col 1
-				<div class="order-2 lg:order-1 lg:col-span-4 flex flex-col divide-y divide-[var(--c-border)] bg-bg">
-					// Dispatch 1 (Lead Headline on Left)
-					if len(posts) > 1 {
-						<div class="flex flex-col flex-1">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[1].Slug) } class="group flex flex-col">
-								if posts[1].Cover != "" {
-									<div class="block lg:hidden w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
-										@postThumbnailImg(posts[1])
-									</div>
-								}
-								<div class="px-5 sm:px-6 py-6 sm:py-8 lg:py-12 flex-1 flex flex-col">
-									if len(posts[1].Tags) > 0 {
-										<span class="text-accent text-xs font-bold uppercase tracking-wider mb-1.5 lg:mb-2 inline-block">
-											{ posts[1].Tags[0] }
-										</span>
-									}
-									<h2 class="display text-lg sm:text-xl lg:text-2xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
-										{ posts[1].Title }
-									</h2>
-									if posts[1].Description != "" {
-										<p class="text-sm text-muted line-clamp-2 leading-relaxed mb-3">
-											{ posts[1].Description }
-										</p>
-									}
-									<div class="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-2 pt-2 sm:pt-3 border-t border-border/30">
-										<time datetime={ posts[1].Date.Format("2006-01-02") } class="hidden sm:inline">{ fmtDate(posts[1]) }</time>
-										<span class="hidden sm:inline">·</span>
-										<span>{ fmt.Sprintf("%d %s", posts[1].ReadTime, ui.Blog_MinRead) }</span>
-									</div>
-								</div>
-							</a>
-						</div>
-					}
-
-					// Dispatch 2 (Secondary Headline)
-					if len(posts) > 2 {
-						<div class="flex flex-col flex-1">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[2].Slug) } class="group flex flex-col">
-								if posts[2].Cover != "" {
-									<div class="block lg:hidden w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
-										@postThumbnailImg(posts[2])
-									</div>
-								}
-								<div class="px-5 sm:px-6 py-6 sm:py-8 lg:py-12 flex-1 flex flex-col">
-									if len(posts[2].Tags) > 0 {
-										<span class="text-accent text-[11px] font-bold uppercase tracking-wider mb-1 lg:mb-1.5 inline-block">
-											{ posts[2].Tags[0] }
-										</span>
-									}
-									<h3 class="display text-[15px] sm:text-lg lg:text-xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
-										{ posts[2].Title }
-									</h3>
-									if posts[2].Description != "" {
-										<p class="text-[13px] text-muted line-clamp-2 leading-relaxed mb-2">
-											{ posts[2].Description }
-										</p>
-									}
-									<div class="text-[10px] sm:text-[11px] font-mono text-muted mt-2 pt-2 border-t border-border/30">
-										<span>{ fmt.Sprintf("%d %s", posts[2].ReadTime, ui.Blog_MinRead) }</span>
-									</div>
-								</div>
-							</a>
-						</div>
-					}
-
-					// Dispatch 3 (Compact Headline)
-					if len(posts) > 3 {
-						<div class="flex flex-col flex-1">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[3].Slug) } class="group flex flex-col">
-								if posts[3].Cover != "" {
-									<div class="block lg:hidden w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
-										@postThumbnailImg(posts[3])
-									</div>
-								}
-								<div class="px-5 sm:px-6 py-6 sm:py-8 lg:py-10 flex-1 flex flex-col">
-									if len(posts[3].Tags) > 0 {
-										<span class="text-accent text-[11px] lg:text-xs font-bold uppercase tracking-wider mb-1 lg:mb-1.5 inline-block">
-											{ posts[3].Tags[0] }
-										</span>
-									}
-									<h3 class="display text-[14px] sm:text-base lg:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
-										{ posts[3].Title }
-									</h3>
-									if posts[3].Description != "" {
-										<p class="text-[12px] text-muted line-clamp-2 leading-relaxed mb-2">
-											{ posts[3].Description }
-										</p>
-									}
-									<div class="text-[10px] sm:text-[11px] font-mono text-muted mt-2 pt-2 border-t border-border/30">
-										<span>{ fmt.Sprintf("%d %s", posts[3].ReadTime, ui.Blog_MinRead) }</span>
-									</div>
-								</div>
-							</a>
-						</div>
-					}
-				</div>
-
-				// Col 2
-				<div class="order-1 lg:order-2 lg:col-span-5 flex flex-col bg-bg">
+				<div class="lg:col-span-6 flex flex-col divide-y divide-[var(--c-border)] bg-bg order-1 lg:order-2">
 					if len(posts) > 0 {
-						// Visual Hero Image (Strict 16:9)
-						<div class="relative w-full aspect-[16/9] bg-surface overflow-hidden border-b border-border">
-							@postThumbnailImg(posts[0])
-						</div>
-
-						// Story Details below image
-						<div class="px-5 sm:px-6 py-10 sm:py-12 lg:px-8 lg:py-14 flex flex-col">
-							if len(posts[0].Tags) > 0 {
-								<div class="flex items-center gap-2 mb-2.5">
-									<span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-accent/15 text-accent uppercase tracking-wider">
-										{ posts[0].Tags[0] }
-									</span>
+						<div class="flex flex-col">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[0].Slug) } class="group block px-5 sm:px-6 py-6 sm:py-8 lg:px-8 lg:py-10">
+								<div class="relative w-full aspect-[16/9] bg-surface overflow-hidden border border-border mb-6 lg:mb-8">
+									@postThumbnailImg(posts[0])
 								</div>
-							}
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[0].Slug) } class="group block mb-3">
-								<h1 class="display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text group-hover:text-link transition-colors leading-[1.15] tracking-tight">
+								if len(posts[0].Tags) > 0 {
+									<div class="flex items-center gap-2 mb-3">
+										<span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-accent/15 text-accent uppercase tracking-wider">
+											{ posts[0].Tags[0] }
+										</span>
+									</div>
+								}
+								<h1 class="display text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-text group-hover:text-link transition-colors leading-[1.1] tracking-tight mb-4">
 									{ posts[0].Title }
 								</h1>
-							</a>
-							if posts[0].Description != "" {
-								<p class="text-sm sm:text-base text-muted line-clamp-2  leading-relaxed mb-4">
-									{ posts[0].Description }
-								</p>
-							}
-							<div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-muted mt-2 pt-3 border-t border-border/40">
-								<div class="flex items-center gap-2">
+								if posts[0].Description != "" {
+									<p class="text-base text-muted line-clamp-3 leading-relaxed mb-5">
+										{ posts[0].Description }
+									</p>
+								}
+								<div class="flex items-center gap-2 text-xs font-mono text-muted mt-4 pt-1">
 									<span class="font-bold text-text">
 										if posts[0].Author != "" {
 											{ posts[0].Author }
 										} else {
-											daemontalk
+											daemontalk editorial
 										}
 									</span>
 									<span>·</span>
-									<time datetime={ posts[0].Date.Format("2006-01-02") }>{ fmtDate(posts[0]) }</time>
+									<time datetime={ posts[0].Date.Format("2006-01-02") }>{ fmtDate(posts[0], lang) }</time>
 								</div>
-								<div class="text-text font-semibold">
-									{ fmt.Sprintf("%d %s", posts[0].ReadTime, ui.Blog_MinRead) }
+							</a>
+						</div>
+					}
+					if len(posts) > 5 {
+						for _, idx := range []int{5, 6} {
+							if idx < len(posts) {
+								<div class="flex flex-col flex-1">
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[idx].Slug) } class="group block px-5 sm:px-6 py-6 sm:py-8 lg:px-8 lg:py-10 flex flex-row-reverse sm:flex-row gap-4 sm:gap-6 lg:gap-8 items-start sm:items-stretch justify-between">
+										<div class="w-28 xs:w-32 sm:w-2/5 shrink-0 aspect-[16/9] bg-surface overflow-hidden border border-border">
+											@postThumbnailImg(posts[idx])
+										</div>
+										<div class="flex-1 min-w-0 flex flex-col">
+											if len(posts[idx].Tags) > 0 {
+												<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1 sm:mb-2 block">
+													{ posts[idx].Tags[0] }
+												</span>
+											}
+											<h2 class="display text-lg sm:text-2xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-1.5 sm:mb-2 line-clamp-3 sm:line-clamp-none">
+												{ posts[idx].Title }
+											</h2>
+											<div class="text-[10px] font-mono text-muted mt-auto pt-1 sm:pt-2">
+												<time datetime={ posts[idx].Date.Format("2006-01-02") }>{ fmtDate(posts[idx], lang) }</time>
+											</div>
+										</div>
+									</a>
 								</div>
+							}
+						}
+					}
+				</div>
+				<div class="lg:col-span-3 flex flex-col divide-y divide-[var(--c-border)] bg-bg order-2 lg:order-1">
+					for _, i := range []int{1, 4} {
+						if i < len(posts) {
+							<div class="flex flex-col flex-1">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[i].Slug) } class="group block px-5 sm:px-6 py-6 sm:py-8 lg:py-10">
+									<div class="flex flex-row-reverse sm:flex-col items-start gap-4 sm:gap-0 justify-between">
+										<div class="w-28 xs:w-32 sm:w-full aspect-[16/9] bg-surface overflow-hidden border border-border shrink-0 sm:mb-4">
+											@postThumbnailImg(posts[i])
+										</div>
+										<div class="flex-1 min-w-0">
+											if len(posts[i].Tags) > 0 {
+												<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1 sm:mb-2 block">
+													{ posts[i].Tags[0] }
+												</span>
+											}
+											<h2 class="display text-lg sm:text-2xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-1.5 sm:mb-2 line-clamp-3 sm:line-clamp-none">
+												{ posts[i].Title }
+											</h2>
+											if posts[i].Description != "" {
+												<p class="hidden sm:block text-[13px] text-muted line-clamp-3 leading-relaxed mb-3">
+													{ posts[i].Description }
+												</p>
+											}
+											<div class="text-[10px] font-mono text-muted mt-auto pt-1 sm:pt-2">
+												<time datetime={ posts[i].Date.Format("2006-01-02") }>{ fmtDate(posts[i], lang) }</time>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+						}
+					}
+				</div>
+				<div class="lg:col-span-3 flex flex-col divide-y divide-[var(--c-border)] bg-bg order-3 lg:order-3">
+					if len(posts) > 2 {
+						<div class="px-5 sm:px-5 py-6 sm:py-6 flex flex-col">
+							<div class="text-[10px] font-mono font-bold uppercase tracking-wider text-accent mb-4 flex items-center gap-1.5">
+								<span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+								if lang == "id" {
+									TERKAIT
+								} else {
+									RELATED
+								}
+							</div>
+							<div class="flex flex-col gap-5 sm:gap-6">
+								for i := 2; i <= 3 && i < len(posts); i++ {
+									<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[i].Slug) } class="group block">
+										<div class="flex flex-row-reverse sm:flex-col items-start gap-4 sm:gap-0 justify-between">
+											<div class="w-28 xs:w-32 sm:w-full aspect-[16/9] bg-surface overflow-hidden border border-border shrink-0 sm:mb-3">
+												@postThumbnailImg(posts[i])
+											</div>
+											<div class="flex-1 min-w-0">
+												<h3 class="display text-base sm:text-2xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-1.5 line-clamp-3 sm:line-clamp-none">
+													{ posts[i].Title }
+												</h3>
+												<div class="text-[11px] font-mono text-muted">
+													<span>{ fmt.Sprintf("%d %s", posts[i].ReadTime, ui.Blog_MinRead) }</span>
+												</div>
+											</div>
+										</div>
+									</a>
+								}
 							</div>
 						</div>
 					}
-
-					// Secondary Dispatch below Hero (fills the void)
-					if len(posts) > 5 {
-						<div class="hidden lg:block border-t border-border px-5 sm:px-6 py-8 sm:py-10 lg:px-8">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[5].Slug) } class="group block">
-								if len(posts[5].Tags) > 0 {
-									<span class="text-accent text-xs font-bold uppercase tracking-wider mb-2 inline-block">
-										{ posts[5].Tags[0] }
-									</span>
-								}
-								<h3 class="display text-lg sm:text-xl font-bold text-text group-hover:text-link transition-colors leading-snug mb-2">
-									{ posts[5].Title }
-								</h3>
-								if posts[5].Description != "" {
-									<p class="text-sm text-muted line-clamp-2 leading-relaxed mb-3">
-										{ posts[5].Description }
-									</p>
-								}
-								<div class="text-xs font-mono text-muted mt-2 pt-2 border-t border-border/30">
-									<span>{ fmt.Sprintf("%d %s", posts[5].ReadTime, ui.Blog_MinRead) }</span>
-								</div>
-							</a>
-						</div>
-					}
-				</div>
-
-				// Col 3
-				<div class="order-3 lg:order-3 lg:col-span-3 flex flex-col divide-y divide-[var(--c-border)] bg-bg">
-					// Featured Card (Post 4) with flush image (Strict 16:9)
-					if len(posts) > 4 {
-						<div class="flex flex-col">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + posts[4].Slug) } class="group block">
-								<div class="relative aspect-[16/9] w-full bg-surface overflow-hidden border-b border-border">
-									@postThumbnailImg(posts[4])
-								</div>
-								<div class="px-5 sm:px-6 py-8 sm:py-8 lg:py-12">
-									if len(posts[4].Tags) > 0 {
-										<span class="text-accent text-[10px] font-bold uppercase tracking-wider mb-1.5 block">
-											{ posts[4].Tags[0] }
-										</span>
-									}
-									<h3 class="display text-[17px] font-bold text-text group-hover:text-link transition-colors leading-snug  mb-2">
-										{ posts[4].Title }
-									</h3>
-									<div class="text-[11px] font-mono text-muted">
-										{ fmt.Sprintf("%d %s", posts[4].ReadTime, ui.Blog_MinRead) }
-									</div>
-								</div>
-							</a>
-						</div>
-					}
-
-					// Deduplicated Popular News List ( "In Case You Missed It" style)
 					<div class="flex flex-col flex-1 bg-surface/30">
-						// Header
-						<div class="flex items-center justify-between px-4 py-2.5 border-b border-border bg-surface text-xs font-bold uppercase font-mono tracking-wider">
-							<div class="flex items-center gap-1.5 text-accent">
+						<div class="flex items-center justify-between px-5 py-3.5 border-b border-border text-xs font-bold uppercase font-mono tracking-wider">
+							<span class="text-text flex items-center gap-1.5">
 								<span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
 								if lang == "id" {
 									POPULER
 								} else {
-									POPULAR DISPATCHES
+									POPULAR
 								}
-							</div>
-							<span class="text-[10px] text-muted font-normal lowercase font-mono">{ ui.Portal_TopViews }</span>
+							</span>
+							<span class="text-[10px] text-muted font-normal lowercase">{ ui.Portal_TopViews }</span>
 						</div>
-
-						// Deduplicated Content List with 16:9 Mini Thumbnails
-						<div class="px-3 sm:px-4 py-5 sm:py-6 flex flex-col divide-y divide-border/40">
+						<div class="flex flex-col divide-y divide-border/40 px-5 sm:px-5 py-2">
 							if len(popularPosts) == 0 {
-								<div class="text-xs text-muted py-3 text-center">{ ui.Portal_NoPopPosts }</div>
+								<div class="text-xs text-muted py-6 text-center">{ ui.Portal_NoPopPosts }</div>
 							}
 							for _, p := range popularPosts {
-								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group py-4 sm:py-5 flex items-start gap-3 text-text">
-									<div class="flex-1 min-w-0">
+								<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group block py-4 sm:py-4">
+									<div class="flex items-center justify-between mb-1.5">
 										if len(p.Tags) > 0 {
-											<span class="text-accent text-xs font-bold uppercase tracking-wider block mb-1">
+											<span class="text-accent text-[10px] font-bold uppercase tracking-wider">
 												{ p.Tags[0] }
 											</span>
 										}
-										<h4 class="display text-[14px] sm:text-[15px] font-bold group-hover:text-link transition-colors leading-snug">
-											{ p.Title }
-										</h4>
-										<div class="text-[11px] font-mono text-muted mt-1.5">
-											{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }
-										</div>
+										<time class="text-[10px] font-mono text-muted">{ fmtDayMonth(p.Date, lang) }</time>
 									</div>
+									<h4 class="display text-base sm:text-base font-bold text-text group-hover:text-link transition-colors leading-snug">
+										{ p.Title }
+									</h4>
 								</a>
 							}
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -341,18 +238,12 @@ templ portalHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[s
 
 templ portalTagHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts map[string]int) {
 	<div class="border-0 sm:border sm:border-border w-full mb-4 sm:mb-8 sm:mt-4 bg-bg flex flex-col">
-		
-		// ROW 1: 1 Big Left, 2 Stacked Right
 		if len(posts) > 0 {
 			<div class="w-full border-b border-border">
 				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[var(--c-border)]">
-					
-					// LEFT COLUMN (65% -> 8 cols) - 1 Big Post
 					<div class="lg:col-span-8 py-4 sm:p-4 lg:p-5 flex flex-col">
 						@portalStrictLeadStory(ui, posts[0], lang, true)
 					</div>
-
-					// RIGHT COLUMN (35% -> 4 cols) - 2 Posts
 					<div class="lg:col-span-4 flex flex-col divide-y divide-[var(--c-border)]">
 						for i := 1; i <= 2 && i < len(posts); i++ {
 							<div class="py-4 sm:p-4 lg:p-5 flex-1 flex flex-col justify-center">
@@ -360,12 +251,9 @@ templ portalTagHeroTop(ui i18n.UI, posts []post.Post, lang string, viewCounts ma
 							</div>
 						}
 					</div>
-
 				</div>
 			</div>
 		}
-
-		// ROW 2: 3 Posts (Boxes from left to right)
 		if len(posts) > 3 {
 			<div class="w-full">
 				<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--c-border)]">

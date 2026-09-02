@@ -141,13 +141,13 @@ func tagIcon(t string, sizeClass string) templ.Component {
 	})
 }
 
-func fmtDate(p post.Post) string {
-	if p.Lang == "id" {
+func fmtDate(p post.Post, lang string) string {
+	d := p.Date
+	if lang == "id" {
 		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
-		d := p.Date
 		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
 	}
-	return p.Date.Format("02 January 2006")
+	return d.Format("02 January 2006")
 }
 
 func timeAgoOrDate(d time.Time, lang string) string {
@@ -155,31 +155,76 @@ func timeAgoOrDate(d time.Time, lang string) string {
 	if dur < 0 {
 		dur = 0
 	}
-	days := int(dur.Hours() / 24)
-	if days == 0 {
-		hrs := int(dur.Hours())
-		if hrs <= 1 {
-			if lang == "id" {
-				return "Baru saja"
-			}
-			return "Just now"
+	mins := int(dur.Minutes())
+	if mins < 1 {
+		if lang == "id" {
+			return "baru saja"
 		}
+		return "just now"
+	}
+	if mins < 60 {
+		if lang == "id" {
+			return fmt.Sprintf("%d menit lalu", mins)
+		}
+		if mins == 1 {
+			return "1 min ago"
+		}
+		return fmt.Sprintf("%d mins ago", mins)
+	}
+	hrs := int(dur.Hours())
+	if hrs < 24 {
 		if lang == "id" {
 			return fmt.Sprintf("%d jam lalu", hrs)
 		}
-		return fmt.Sprintf("%d hrs ago", hrs)
+		if hrs == 1 {
+			return "1 hour ago"
+		}
+		return fmt.Sprintf("%d hours ago", hrs)
 	}
-	if days < 7 {
+	days := int(dur.Hours() / 24)
+	if days <= 7 {
 		if lang == "id" {
 			return fmt.Sprintf("%d hari lalu", days)
 		}
+		if days == 1 {
+			return "1 day ago"
+		}
 		return fmt.Sprintf("%d days ago", days)
 	}
+	return fmtShortDate(d, lang)
+}
+
+func fmtShortDate(d time.Time, lang string) string {
 	if lang == "id" {
 		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
-		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+		return fmt.Sprintf("%02d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
 	}
 	return d.Format("02 Jan 2006")
+}
+
+func fmtDayMonth(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
+		return fmt.Sprintf("%02d %s", d.Day(), bulan[d.Month()-1])
+	}
+	return d.Format("02 Jan")
+}
+
+func fmtDateTime(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
+		return fmt.Sprintf("%02d %s %d, %02d:%02d", d.Day(), bulan[d.Month()-1], d.Year(), d.Hour(), d.Minute())
+	}
+	return d.Format("02 Jan 2006, 15:04")
+}
+
+func fmtFullDate(d time.Time, lang string) string {
+	if lang == "id" {
+		hari := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		return fmt.Sprintf("%s, %d %s %d", hari[d.Weekday()], d.Day(), bulan[d.Month()-1], d.Year())
+	}
+	return d.Format("Monday, 02 January 2006")
 }
 
 // searchIndex builds the haystack used by the client-side blog search.
@@ -232,7 +277,7 @@ func postThumbnail(p post.Post, linkURL string) templ.Component {
 			var templ_7745c5c3_Var5 templ.SafeURL
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(linkURL))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 139, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 184, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -290,7 +335,7 @@ func postThumbnailImg(p post.Post) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Cover)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 151, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 196, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -303,7 +348,7 @@ func postThumbnailImg(p post.Post) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 152, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 197, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -361,8 +406,112 @@ func langBadge(lang string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if lang == "en" {
+		} else {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-mono\">EN</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		return nil
+	})
+}
+
+func categoryMultiLinks(tagKey string, lang string, linkClass string, separatorClass string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		links := getCategoryTagLinks(tagKey)
+		for i, l := range links {
+			if i > 0 {
+				var templ_7745c5c3_Var11 = []any{separatorClass}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var11...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<span class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var12 string
+				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var11).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\">&</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var13 = []any{linkClass}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var13...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var14 templ.SafeURL
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + l.Slug))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 226, Col: 67}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var15 string
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var13).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var16 string
+			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(l.Name)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 227, Col: 11}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -72,13 +72,13 @@ templ tagIcon(t string, sizeClass string) {
 	}
 }
 
-func fmtDate(p post.Post) string {
-	if p.Lang == "id" {
+func fmtDate(p post.Post, lang string) string {
+	d := p.Date
+	if lang == "id" {
 		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
-		d := p.Date
 		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
 	}
-	return p.Date.Format("02 January 2006")
+	return d.Format("02 January 2006")
 }
 
 func timeAgoOrDate(d time.Time, lang string) string {
@@ -86,31 +86,76 @@ func timeAgoOrDate(d time.Time, lang string) string {
 	if dur < 0 {
 		dur = 0
 	}
-	days := int(dur.Hours() / 24)
-	if days == 0 {
-		hrs := int(dur.Hours())
-		if hrs <= 1 {
-			if lang == "id" {
-				return "Baru saja"
-			}
-			return "Just now"
+	mins := int(dur.Minutes())
+	if mins < 1 {
+		if lang == "id" {
+			return "baru saja"
 		}
+		return "just now"
+	}
+	if mins < 60 {
+		if lang == "id" {
+			return fmt.Sprintf("%d menit lalu", mins)
+		}
+		if mins == 1 {
+			return "1 min ago"
+		}
+		return fmt.Sprintf("%d mins ago", mins)
+	}
+	hrs := int(dur.Hours())
+	if hrs < 24 {
 		if lang == "id" {
 			return fmt.Sprintf("%d jam lalu", hrs)
 		}
-		return fmt.Sprintf("%d hrs ago", hrs)
+		if hrs == 1 {
+			return "1 hour ago"
+		}
+		return fmt.Sprintf("%d hours ago", hrs)
 	}
-	if days < 7 {
+	days := int(dur.Hours() / 24)
+	if days <= 7 {
 		if lang == "id" {
 			return fmt.Sprintf("%d hari lalu", days)
 		}
+		if days == 1 {
+			return "1 day ago"
+		}
 		return fmt.Sprintf("%d days ago", days)
 	}
+	return fmtShortDate(d, lang)
+}
+
+func fmtShortDate(d time.Time, lang string) string {
 	if lang == "id" {
 		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
-		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+		return fmt.Sprintf("%02d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
 	}
 	return d.Format("02 Jan 2006")
+}
+
+func fmtDayMonth(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
+		return fmt.Sprintf("%02d %s", d.Day(), bulan[d.Month()-1])
+	}
+	return d.Format("02 Jan")
+}
+
+func fmtDateTime(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
+		return fmt.Sprintf("%02d %s %d, %02d:%02d", d.Day(), bulan[d.Month()-1], d.Year(), d.Hour(), d.Minute())
+	}
+	return d.Format("02 Jan 2006, 15:04")
+}
+
+func fmtFullDate(d time.Time, lang string) string {
+	if lang == "id" {
+		hari := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		return fmt.Sprintf("%s, %d %s %d", hari[d.Weekday()], d.Day(), bulan[d.Month()-1], d.Year())
+	}
+	return d.Format("Monday, 02 January 2006")
 }
 
 // searchIndex builds the haystack used by the client-side blog search.
@@ -167,8 +212,19 @@ func postCover(p post.Post) string {
 templ langBadge(lang string) {
 	if lang == "id" {
 		<span class="text-xs px-2 py-0.5 bg-[var(--c-warn-bg)] text-[var(--c-warn)] rounded-none font-mono">ID</span>
-	} else if lang == "en" {
+	} else {
 		<span class="text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-mono">EN</span>
 	}
 }
 
+templ categoryMultiLinks(tagKey string, lang string, linkClass string, separatorClass string) {
+	{{ links := getCategoryTagLinks(tagKey) }}
+	for i, l := range links {
+		if i > 0 {
+			<span class={ separatorClass }>&</span>
+		}
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + l.Slug) } class={ linkClass }>
+			{ l.Name }
+		</a>
+	}
+}
