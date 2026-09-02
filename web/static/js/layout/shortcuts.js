@@ -15,6 +15,29 @@ window.openShortcuts = function() {
 		return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
 	}
 
+	// Global Ctrl+Enter / Cmd+Enter shortcut for textareas to submit forms directly
+	document.addEventListener('keydown', function(e) {
+		if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+			var target = e.target;
+			if (target && (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT')) {
+				var form = target.form || target.closest('form');
+				if (form) {
+					e.preventDefault();
+					var submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+					if (submitBtn) {
+						submitBtn.click();
+					} else if (window.htmx) {
+						htmx.trigger(form, 'submit');
+					} else if (form.requestSubmit) {
+						form.requestSubmit();
+					} else {
+						form.submit();
+					}
+				}
+			}
+		}
+	});
+
 	document.addEventListener('keydown', function(e) {
 		if (e.metaKey || e.ctrlKey || e.altKey) return;
 
@@ -51,18 +74,11 @@ window.openShortcuts = function() {
 			return;
 		}
 
-		if (e.key === '`' || e.key === '~') {
-			e.preventDefault();
-			pendingG = false;
-			window.location.href = '/terminal';
-			return;
-		}
-
 		if (pendingG) {
 			pendingG = false;
 			clearTimeout(gTimer);
 			e.preventDefault();
-			var destinations = { h: '/', b: '/blog', p: '/projects', u: '/uses', t: '/terminal', l: '/til' };
+			var destinations = { h: '/', b: '/', p: '/colophon#projects', c: '/colophon', s: '/socket', l: '/saved' };
 			if (destinations[e.key]) window.location.href = destinations[e.key];
 			return;
 		}

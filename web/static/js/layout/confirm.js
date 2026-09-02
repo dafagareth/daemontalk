@@ -5,9 +5,22 @@
 	if (!overlay || !msgEl) return;
 	var pendingResolve = null;
 
+	var okBtn = overlay.querySelector('[data-confirm-ok]');
+	var cancelBtn = overlay.querySelector('[data-confirm-cancel]');
+
 	function humanConfirm(message) {
 		return new Promise(function(resolve) {
 			msgEl.textContent = message;
+			var isDelete = /hapus|delete|remove|destroy/i.test(message);
+			if (okBtn) {
+				if (isDelete) {
+					okBtn.textContent = 'Hapus';
+					okBtn.className = 'text-sm px-4 py-2 rounded-none bg-[var(--c-warn)] text-white font-medium hover:brightness-110 transition-all cursor-pointer';
+				} else {
+					okBtn.textContent = 'OK';
+					okBtn.className = 'text-sm px-4 py-2 rounded-none bg-[var(--c-link)] text-white font-medium hover:brightness-110 transition-all cursor-pointer';
+				}
+			}
 			overlay.classList.add('open');
 			pendingResolve = resolve;
 		});
@@ -16,8 +29,6 @@
 		overlay.classList.remove('open');
 		if (pendingResolve) { pendingResolve(result); pendingResolve = null; }
 	}
-	var okBtn = overlay.querySelector('[data-confirm-ok]');
-	var cancelBtn = overlay.querySelector('[data-confirm-cancel]');
 	if (okBtn) okBtn.addEventListener('click', function() { close(true); });
 	if (cancelBtn) cancelBtn.addEventListener('click', function() { close(false); });
 	document.addEventListener('keydown', function(e) {

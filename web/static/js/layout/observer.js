@@ -13,6 +13,41 @@
 	els.forEach(function(el) { io.observe(el); });
 })();
 
+// Visited / Read post styling marker
+(function() {
+	function markVisited() {
+		var read = [];
+		try { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}
+		if (!read.length) return;
+		var set = {};
+		read.forEach(function(s) { set[s] = true; });
+
+		document.querySelectorAll('a[data-slug], a[href*="/blog/"]').forEach(function(a) {
+			var slug = a.dataset.slug;
+			if (!slug) {
+				var href = a.getAttribute('href') || '';
+				var match = href.match(/\/blog\/([^\/\?#]+)$/);
+				if (match) slug = match[1];
+			}
+			if (slug && set[slug]) {
+				var h = a.querySelector('h1,h2,h3,h4,h5,h6');
+				if (h) {
+					h.classList.add('post-visited');
+				} else {
+					a.classList.add('post-visited');
+				}
+			}
+		});
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', markVisited);
+	} else {
+		markVisited();
+	}
+	document.addEventListener('htmx:afterSwap', markVisited);
+})();
+
 (function() {
 	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 	function formatTimes() {

@@ -175,25 +175,29 @@ document.addEventListener("click", function(e) {
 	}
 });
 
-// Guestbook filter handler
-window.filterGuestbook = function(tag) {
-	var btns = document.querySelectorAll('.gb-filter-btn');
-	btns.forEach(function(b) {
-		if (b.getAttribute('data-tag') === tag) {
-			b.classList.remove('bg-surface', 'text-muted');
-			b.classList.add('bg-text', 'text-bg', 'font-bold');
-		} else {
-			b.classList.remove('bg-text', 'text-bg', 'font-bold');
-			b.classList.add('bg-surface', 'text-muted');
+// Clear search input helper (search page)
+window.clearSearchInput = function() {
+	var input = document.getElementById('search-input');
+	if (input) {
+		input.value = '';
+		input.focus();
+		if (typeof htmx !== 'undefined') {
+			htmx.trigger(input, 'search');
 		}
-	});
-
-	var cards = document.querySelectorAll('.gb-entry-card');
-	cards.forEach(function(c) {
-		if (tag === 'ALL' || c.getAttribute('data-category') === tag) {
-			c.classList.remove('hidden');
-		} else {
-			c.classList.add('hidden');
-		}
-	});
+	}
 };
+
+// User & Guest menu dismiss on outside click
+document.addEventListener('click', function(e) {
+	var userContainer = document.getElementById('user-menu-container');
+	var userDropdown = document.getElementById('user-menu-dropdown');
+	if (userDropdown && userContainer && !userContainer.contains(e.target)) {
+		userDropdown.classList.add('hidden');
+	}
+
+	var guestContainer = document.getElementById('guest-menu-container');
+	var guestDropdown = document.getElementById('guest-menu-dropdown');
+	if (guestDropdown && guestContainer && !guestContainer.contains(e.target)) {
+		guestDropdown.classList.add('hidden');
+	}
+});
