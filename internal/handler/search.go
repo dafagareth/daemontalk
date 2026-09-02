@@ -4,14 +4,11 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"regexp"
 	"strings"
 
 	"daemontalk/internal/i18n"
 	"daemontalk/web/templates"
 )
-
-var reHTMLTag = regexp.MustCompile(`<[^>]+>`)
 
 func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	lang := langFromRequest(r)
@@ -20,24 +17,24 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 	query := strings.TrimSpace(r.URL.Query().Get("q"))
 
-	var viewCounts map[string]int
+	visiblePosts := h.VisiblePosts(isAdmin)
 	var results []templates.SearchResult
 
 	if query != "" {
 		q := strings.ToLower(query)
-		for _, p := range h.VisiblePosts(isAdmin) {
-			cleanBody := reHTMLTag.ReplaceAllString(string(p.Body), " ")
-			haystack := strings.ToLower(p.Title + " " + p.Description + " " + strings.Join(p.Tags, " ") + " " + cleanBody)
-			if strings.Contains(haystack, q) {
+		for _, p := range visiblePosts {
+			if strings.Contains(p.SearchHaystack, q) {
 				results = append(results, templates.SearchResult{Post: p})
 			}
 		}
-		if h.Comments != nil {
-			if vc, err := h.Comments.AllViewCounts(); err == nil {
-				viewCounts = vc
-			} else {
-				slog.Error("search all view counts failed", "error", err)
-			}
+	}
+
+	var viewCounts map[string]int
+	if h.Comments != nil {
+		if vc, err := h.Comments.AllViewCounts(); err == nil {
+			viewCounts = vc
+		} else {
+			slog.Error("search all view counts failed", "error", err)
 		}
 	}
 
