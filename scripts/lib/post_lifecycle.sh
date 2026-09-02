@@ -18,12 +18,14 @@ cmd_publish() {
     fi
 
     local today
-    today=$(date +%Y-%m-%d)
-
-    sed -i -E 's/^draft:[[:space:]]*true/draft: false/' "$file"
+    if grep -q "^status:" "$file"; then
+        sed -i -E 's/^status:[[:space:]]*["'"'"']?draft["'"'"']?/status: published/' "$file"
+    elif grep -q "^draft:" "$file"; then
+        sed -i -E 's/^draft:[[:space:]]*true/status: published/' "$file"
+    fi
     sed -i -E "s/^date:[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2}/date: ${today}/" "$file"
 
-    echo "[ok] Post '$slug' published with release date: $today."
+    echo "[ok] Article '$slug' published with release date: $today."
 }
 
 cmd_draft() {
@@ -36,12 +38,16 @@ cmd_draft() {
     local file
     file=$(find_post_file "$slug" || true)
     if [ -z "$file" ]; then
-        echo "[error] Post with slug '$slug' not found."
+        echo "[error] Article with slug '$slug' not found."
         exit 1
     fi
 
-    sed -i -E 's/^draft:[[:space:]]*false/draft: true/' "$file"
-    echo "[ok] Post '$slug' reverted to draft."
+    if grep -q "^status:" "$file"; then
+        sed -i -E 's/^status:[[:space:]]*["'"'"']?published["'"'"']?/status: draft/' "$file"
+    elif grep -q "^draft:" "$file"; then
+        sed -i -E 's/^draft:[[:space:]]*false/status: draft/' "$file"
+    fi
+    echo "[ok] Article '$slug' reverted to draft."
 }
 
 cmd_archive() {

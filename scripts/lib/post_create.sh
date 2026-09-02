@@ -83,18 +83,19 @@ title: "${title}"
 slug: "${slug}"
 aliases: ${aliases_str}
 date: ${today}
-author: "Write your name here"
+author: "daemontalk team"
 tags: ["tag1", "tag2"]
 lang: "en"
-draft: true
-description: "Write a brief description of this dispatch."
+type: article
+status: draft
+description: "Write a brief summary of this technical article."
 cover: "/static/images/posts/${slug}/cover.webp"
 coverCaption: "Cover illustration description"
 coverSource: "https://unsplash.com"
 readTime: 5
 ---
 
-Write the technical dispatch body here using GitHub Flavored Markdown.
+Write the technical article body here using GitHub Flavored Markdown.
 EOF
 
     echo "[ok] Post draft created: $filename"
