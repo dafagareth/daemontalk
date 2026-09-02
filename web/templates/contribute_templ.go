@@ -8,9 +8,22 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "html/template"
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"fmt"
+	"html/template"
+)
 
-func ContributePage(body template.HTML, lang string) templ.Component {
+type ContributeSections struct {
+	Dispatches   template.HTML
+	Engine       template.HTML
+	Corrections  template.HTML
+	I18n         template.HTML
+	Contributors []post.ContributorStats
+}
+
+func ContributePage(ui i18n.UI, sections ContributeSections, lang string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,37 +44,22 @@ func ContributePage(body template.HTML, lang string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12\"><div class=\"max-w-5xl\"><div class=\"flex items-center gap-2 mb-3 font-mono text-xs text-muted\"><span class=\"px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold\">OPEN NOTEBOOK</span> <span>·</span> <span>CATATAN TEKNIS</span></div><div class=\"flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-border\"><div><h1 class=\"display text-2xl sm:text-3xl font-semibold text-text mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"container-page py-8 sm:py-12 min-h-[75vh] font-sans\"><div class=\"mb-6 font-sans\"><h1 class=\"display text-2xl sm:text-3xl font-black text-text tracking-tight\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Panduan Menulis & Berbagi Catatan")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Panduan Menulis & Kontribusi")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Writing Guide & Sharing Notes")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Writing & Contributor Guide")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h1><p class=\"text-sm text-muted\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Panduan struktur penulisan artikel, dokumentasi lab, dan kontribusi catatan untuk Daemontalk.")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "Guide for formatting technical articles, lab documentation, and notes on Daemontalk.")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p></div><div><a href=\"/download/template.md\" download=\"template.md\" class=\"inline-flex items-center gap-2 text-xs font-mono px-3.5 py-2 border border-border bg-surface text-text hover:bg-hover hover:border-[var(--c-link)] transition-colors shrink-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h1></div><div class=\"sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans\"><div class=\"border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-3.5 sm:p-6 flex items-center justify-between gap-3 select-none\"><div class=\"flex items-center gap-2.5 sm:gap-3 font-mono text-text font-bold min-w-0\"><span class=\"text-link font-black font-mono text-base sm:text-lg shrink-0 select-none\">❯</span> <code class=\"text-xs sm:text-base font-mono truncate\">man 7 contributing</code></div><div class=\"flex items-center gap-1.5 sm:gap-2 font-mono text-xs shrink-0\"><a href=\"/download/daemontalk-template.md\" download=\"daemontalk-template.md\" class=\"inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 border border-border bg-chip text-text hover:border-link transition-colors font-bold\" title=\"Download daemontalk-template.md\" aria-label=\"Download template markdown\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -69,15 +67,255 @@ func ContributePage(body template.HTML, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<span>Download template.md</span></a></div></div><div class=\"prose max-w-none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<span class=\"hidden sm:inline ml-1.5\">Download daemontalk-template.md</span></a> <a href=\"https://github.com/dafagareth/daemontalk\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 border border-border bg-chip text-link hover:border-link transition-colors font-bold\" title=\"GitHub Repository\" aria-label=\"GitHub Repository\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.Raw(string(body)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconGitHub().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"hidden sm:inline ml-1.5\">GitHub</span> <span class=\"hidden sm:inline\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowUpRight("w-3 h-3 ml-0.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></a></div></div><div class=\"mt-4 sm:mt-0 border border-border sm:border-0 sm:border-b sm:border-border flex items-center justify-between overflow-x-auto text-xs font-mono select-none\" id=\"contribute-tabs\"><div class=\"flex items-center shrink-0\"><button type=\"button\" onclick=\"switchContributeTab('dispatches')\" id=\"tab-btn-dispatches\" class=\"contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors bg-surface text-text font-bold border-b-2 border-b-link whitespace-nowrap\">01. Dispatches</button> <button type=\"button\" onclick=\"switchContributeTab('engine')\" id=\"tab-btn-engine\" class=\"contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap\">02. Core Engine</button> <button type=\"button\" onclick=\"switchContributeTab('corrections')\" id=\"tab-btn-corrections\" class=\"contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap\">03. Corrections</button> <button type=\"button\" onclick=\"switchContributeTab('i18n')\" id=\"tab-btn-i18n\" class=\"contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap\">04. Localization</button> <button type=\"button\" onclick=\"switchContributeTab('contributors')\" id=\"tab-btn-contributors\" class=\"contribute-tab-btn px-4 sm:px-5 py-3 cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap flex items-center gap-1.5\"><span>05. Contributors</span> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if len(sections.Contributors) > 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<span class=\"px-1.5 py-0.2 bg-chip border border-border text-[10px] text-link font-bold\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(sections.Contributors)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 105, Col: 55}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</button></div></div><div class=\"py-6 px-0 sm:p-8 min-h-[350px]\"><div id=\"panel-dispatches\" class=\"contribute-panel prose max-w-none font-sans\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.Raw(string(sections.Dispatches)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><div id=\"panel-engine\" class=\"contribute-panel hidden prose max-w-none font-sans\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.Raw(string(sections.Engine)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div id=\"panel-corrections\" class=\"contribute-panel hidden prose max-w-none font-sans\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.Raw(string(sections.Corrections)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><div id=\"panel-i18n\" class=\"contribute-panel hidden prose max-w-none font-sans\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.Raw(string(sections.I18n)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><div id=\"panel-contributors\" class=\"contribute-panel hidden font-sans space-y-6\"><div><h2 class=\"text-xl font-bold text-text font-mono\">Contributors Directory</h2></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if len(sections.Contributors) > 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-2 font-mono text-xs\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, c := range sections.Contributors {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"flex items-center gap-3 py-2\"><img src=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var3 string
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(c.AvatarURL)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 135, Col: 27}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" alt=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(c.Username)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 136, Col: 26}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\" class=\"w-10 h-10 rounded-none border border-border object-cover shrink-0\" loading=\"lazy\"> <a href=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var5 templ.SafeURL
+				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(c.GitHubURL))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 141, Col: 43}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"font-bold text-text hover:text-link hover:underline truncate text-sm\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var6 string
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("@" + c.Username)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 146, Col: 28}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</a></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"p-8 text-center font-mono text-xs text-muted\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "id" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "Belum ada data kontributor yang terdaftar.")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "No contributors registered yet.")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div class=\"pt-6 border-t border-border/40 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4\"><div><strong class=\"text-text block mb-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "id" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "Ingin Nama Anda Tercantum di Sini?")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "Want Your Name Listed Here?")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</strong> <span class=\"text-muted font-sans text-xs\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "id" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "Kirimkan draf riset teknis Anda atau ajukan perbaikan artikel di GitHub.")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "Submit your research drafts or contribute technical corrections on GitHub.")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</span></div><a href=\"https://github.com/dafagareth/daemontalk\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"inline-flex items-center gap-1.5 px-3 py-1.5 border border-border bg-surface text-link hover:border-link transition-colors font-bold shrink-0\"><span>GitHub</span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowUpRight("w-3 h-3").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</a></div></div></div></div><a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 templ.SafeURL
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 191, Col: 47}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\" class=\"inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-10 font-mono\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconArrowLeft("w-3.5 h-3.5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_Back)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 195, Col: 23}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span></a><script src=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(assetURL("/static/js/contribute.js"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/contribute.templ`, Line: 197, Col: 52}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\" defer></script></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

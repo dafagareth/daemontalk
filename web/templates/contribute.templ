@@ -1,46 +1,199 @@
 package templates
 
-import "html/template"
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"fmt"
+	"html/template"
+)
 
-templ ContributePage(body template.HTML, lang string) {
-	<section class="container-page py-8 sm:py-12">
-		<div class="max-w-5xl">
-		<div class="flex items-center gap-2 mb-3 font-mono text-xs text-muted">
-			<span class="px-2 py-0.5 rounded-none bg-chip border border-border text-text font-semibold">OPEN NOTEBOOK</span>
-			<span>·</span>
-			<span>CATATAN TEKNIS</span>
+type ContributeSections struct {
+	Dispatches   template.HTML
+	Engine       template.HTML
+	Corrections  template.HTML
+	I18n         template.HTML
+	Contributors []post.ContributorStats
+}
+
+templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh] font-sans">
+		<div class="mb-6 font-sans">
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+				if lang == "id" {
+					Panduan Menulis & Kontribusi
+				} else {
+					Writing & Contributor Guide
+				}
+			</h1>
 		</div>
-		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
-			<div>
-				<h1 class="display text-2xl sm:text-3xl font-semibold text-text mb-2">
-					if lang == "id" {
-						Panduan Menulis & Berbagi Catatan
-					} else {
-						Writing Guide & Sharing Notes
-					}
-				</h1>
-				<p class="text-sm text-muted">
-					if lang == "id" {
-						Panduan struktur penulisan artikel, dokumentasi lab, dan kontribusi catatan untuk Daemontalk.
-					} else {
-						Guide for formatting technical articles, lab documentation, and notes on Daemontalk.
-					}
-				</p>
+		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
+			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-3.5 sm:p-6 flex items-center justify-between gap-3 select-none">
+				<div class="flex items-center gap-2.5 sm:gap-3 font-mono text-text font-bold min-w-0">
+					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+					<code class="text-xs sm:text-base font-mono truncate">man 7 contributing</code>
+				</div>
+				<div class="flex items-center gap-1.5 sm:gap-2 font-mono text-xs shrink-0">
+					<a
+						href="/download/daemontalk-template.md"
+						download="daemontalk-template.md"
+						class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 border border-border bg-chip text-text hover:border-link transition-colors font-bold"
+						title="Download daemontalk-template.md"
+						aria-label="Download template markdown"
+					>
+						@IconDownload("w-3.5 h-3.5 text-muted")
+						<span class="hidden sm:inline ml-1.5">Download daemontalk-template.md</span>
+					</a>
+					<a
+						href="https://github.com/dafagareth/daemontalk"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 border border-border bg-chip text-link hover:border-link transition-colors font-bold"
+						title="GitHub Repository"
+						aria-label="GitHub Repository"
+					>
+						@IconGitHub()
+						<span class="hidden sm:inline ml-1.5">GitHub</span>
+						<span class="hidden sm:inline">
+							@IconArrowUpRight("w-3 h-3 ml-0.5")
+						</span>
+					</a>
+				</div>
 			</div>
-			<div>
-				<a
-					href="/download/template.md"
-					download="template.md"
-					class="inline-flex items-center gap-2 text-xs font-mono px-3.5 py-2 border border-border bg-surface text-text hover:bg-hover hover:border-[var(--c-link)] transition-colors shrink-0"
-				>
-					@IconDownload("w-3.5 h-3.5 text-muted")
-					<span>Download template.md</span>
-				</a>
+			<div class="mt-4 sm:mt-0 border border-border sm:border-0 sm:border-b sm:border-border flex items-center justify-between overflow-x-auto text-xs font-mono select-none" id="contribute-tabs">
+				<div class="flex items-center shrink-0">
+					<button
+						type="button"
+						onclick="switchContributeTab('dispatches')"
+						id="tab-btn-dispatches"
+						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors bg-surface text-text font-bold border-b-2 border-b-link whitespace-nowrap"
+					>
+						01. Dispatches
+					</button>
+					<button
+						type="button"
+						onclick="switchContributeTab('engine')"
+						id="tab-btn-engine"
+						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap"
+					>
+						02. Core Engine
+					</button>
+					<button
+						type="button"
+						onclick="switchContributeTab('corrections')"
+						id="tab-btn-corrections"
+						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap"
+					>
+						03. Corrections
+					</button>
+					<button
+						type="button"
+						onclick="switchContributeTab('i18n')"
+						id="tab-btn-i18n"
+						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap"
+					>
+						04. Localization
+					</button>
+					<button
+						type="button"
+						onclick="switchContributeTab('contributors')"
+						id="tab-btn-contributors"
+						class="contribute-tab-btn px-4 sm:px-5 py-3 cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap flex items-center gap-1.5"
+					>
+						<span>05. Contributors</span>
+						if len(sections.Contributors) > 0 {
+							<span class="px-1.5 py-0.2 bg-chip border border-border text-[10px] text-link font-bold">
+								{ fmt.Sprintf("%d", len(sections.Contributors)) }
+							</span>
+						}
+					</button>
+				</div>
+			</div>
+			<div class="py-6 px-0 sm:p-8 min-h-[350px]">
+				<div id="panel-dispatches" class="contribute-panel prose max-w-none font-sans">
+					@templ.Raw(string(sections.Dispatches))
+				</div>
+				<div id="panel-engine" class="contribute-panel hidden prose max-w-none font-sans">
+					@templ.Raw(string(sections.Engine))
+				</div>
+				<div id="panel-corrections" class="contribute-panel hidden prose max-w-none font-sans">
+					@templ.Raw(string(sections.Corrections))
+				</div>
+				<div id="panel-i18n" class="contribute-panel hidden prose max-w-none font-sans">
+					@templ.Raw(string(sections.I18n))
+				</div>
+				<div id="panel-contributors" class="contribute-panel hidden font-sans space-y-6">
+					<div>
+						<h2 class="text-xl font-bold text-text font-mono">
+							Contributors Directory
+						</h2>
+					</div>
+					if len(sections.Contributors) > 0 {
+						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-2 font-mono text-xs">
+							for _, c := range sections.Contributors {
+								<div class="flex items-center gap-3 py-2">
+									<img
+										src={ c.AvatarURL }
+										alt={ c.Username }
+										class="w-10 h-10 rounded-none border border-border object-cover shrink-0"
+										loading="lazy"
+									/>
+									<a
+										href={ templ.SafeURL(c.GitHubURL) }
+										target="_blank"
+										rel="noopener noreferrer"
+										class="font-bold text-text hover:text-link hover:underline truncate text-sm"
+									>
+										{ "@" + c.Username }
+									</a>
+								</div>
+							}
+						</div>
+					} else {
+						<div class="p-8 text-center font-mono text-xs text-muted">
+							if lang == "id" {
+								Belum ada data kontributor yang terdaftar.
+							} else {
+								No contributors registered yet.
+							}
+						</div>
+					}
+					<div class="pt-6 border-t border-border/40 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+						<div>
+							<strong class="text-text block mb-1">
+								if lang == "id" {
+									Ingin Nama Anda Tercantum di Sini?
+								} else {
+									Want Your Name Listed Here?
+								}
+							</strong>
+							<span class="text-muted font-sans text-xs">
+								if lang == "id" {
+									Kirimkan draf riset teknis Anda atau ajukan perbaikan artikel di GitHub.
+								} else {
+									Submit your research drafts or contribute technical corrections on GitHub.
+								}
+							</span>
+						</div>
+						<a
+							href="https://github.com/dafagareth/daemontalk"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-border bg-surface text-link hover:border-link transition-colors font-bold shrink-0"
+						>
+							<span>GitHub</span>
+							@IconArrowUpRight("w-3 h-3")
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="prose max-w-none">
-			@templ.Raw(string(body))
-		</div>
-		</div>
+		<a
+			href={ templ.SafeURL(blogPrefix(lang) + "/") }
+			class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-10 font-mono"
+		>
+			@IconArrowLeft("w-3.5 h-3.5")
+			<span>{ ui.Post_Back }</span>
+		</a>
+		<script src={ assetURL("/static/js/contribute.js") } defer></script>
 	</section>
 }
