@@ -34,7 +34,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-surface/20\"><div class=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[var(--c-border)] divide-y sm:divide-y-0 divide-[var(--c-border)]\"><div class=\"hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-b sm:border-r lg:border-none border-[var(--c-border)]\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-b sm:border-y sm:border-x border-border w-full mb-0 bg-surface/50\"><div class=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4\"><div class=\"hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-r lg:border-b-0 border-border\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -65,7 +65,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</button></div></div><div class=\"flex items-center justify-between text-[10px] font-mono text-muted border-t border-border/40 pt-2\"><span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px]\">Enter</kbd> Reader</span> <span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px]\">t</kbd> 7 Themes</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-b lg:border-none border-[var(--c-border)]\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</button></div></div><div class=\"flex items-center justify-between text-[10px] font-mono text-muted pt-2\"><span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px]\">Enter</kbd> Reader</span> <span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px]\">t</kbd> 7 Themes</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 lg:border-b-0 lg:border-r border-border/40\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -96,7 +96,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			var templ_7745c5c3_Var2 templ.SafeURL
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + tag))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 61, Col: 70}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 56, Col: 70}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -109,7 +109,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(tag)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 62, Col: 15}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 57, Col: 15}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -122,7 +122,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", tagCounts[tag]))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 64, Col: 148}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 59, Col: 148}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -133,7 +133,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div></div><div class=\"hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-r lg:border-none border-[var(--c-border)]\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div></div><div class=\"hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 sm:border-r border-border\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -172,7 +172,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</a></div></div><div class=\"text-[9px] sm:text-[10px] font-mono text-muted border-t border-border/40 pt-2 mt-3\"><span>Format: Full-text</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</a></div></div><div class=\"text-[9px] sm:text-[10px] font-mono text-muted pt-2 mt-3\"><span>Format: Full-text</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -181,12 +181,12 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "BUKU TAMU & CATATAN")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "FORUM & DISKUSI")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "GUESTBOOK & NOTES")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "DISCUSSIONS & Q&A")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -196,12 +196,12 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Tinggalkan catatan, feedback, atau usulan topik arsitektur sistem.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Tanya jawab teknis, studi kasus arsitektur, dan kolaborasi rekayasa sistem.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Leave a note, feedback, or request system architecture topics.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Technical Q&A, system architecture case studies, and engineering exchange.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -211,9 +211,9 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 templ.SafeURL
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/guestbook"))
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/discussions"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 120, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 111, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -224,12 +224,12 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "BUKA BUKU TAMU")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "BUKA DISKUSI")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "OPEN GUESTBOOK")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "OPEN DISCUSSIONS")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -242,7 +242,22 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</a></div><div class=\"text-[9px] sm:text-[10px] font-mono text-muted border-t border-border/40 pt-2 mt-3 flex items-center justify-between\"><span class=\"truncate pr-1\">Public Ledger</span></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</a></div><div class=\"text-[9px] sm:text-[10px] font-mono text-muted pt-2 mt-3 flex items-center justify-between\"><span class=\"truncate pr-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "id" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "Forum Komunitas")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "Community Forum")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</span></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

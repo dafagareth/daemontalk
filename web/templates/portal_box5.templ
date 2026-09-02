@@ -1,28 +1,24 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/i18n"
+	"fmt"
 )
 
 templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string) {
-	// Box 5
 	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
 		<div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:divide-x sm:divide-y-0 divide-[var(--c-border)]">
 			for _, cat := range categories {
 				<div class="shrink-0 w-[85vw] sm:w-auto snap-center px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 flex flex-col justify-between border-r sm:border-r-0 border-[var(--c-border)] last:border-r-0">
 					<div>
-						// Header
 						<div class="flex items-center justify-between mb-4 sm:mb-5">
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-black uppercase tracking-widest text-text hover:text-link">
-								{ categoryTitle(cat, lang) }
-							</a>
+							<div class="text-xs font-mono font-black uppercase tracking-widest text-text flex items-center gap-1.5">
+								@categoryMultiLinks(cat.Tag, lang, "hover:text-link transition-colors", "text-muted/60 select-none")
+							</div>
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-[10px] font-mono font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group shrink-0" aria-label="Explore topic">
 								@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5")
 							</a>
 						</div>
-
-						// Post
 						<article class="group mb-4">
 							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + cat.LeadPost.Slug) } class="block relative aspect-[16/9] w-full bg-surface mb-3 sm:mb-4 overflow-hidden border border-border">
 								@postThumbnailImg(cat.LeadPost)
@@ -37,8 +33,6 @@ templ portalBox5QuadMatrix(ui i18n.UI, categories []CategorySection, lang string
 							</div>
 						</article>
 					</div>
-
-					// Subposts
 					if len(cat.SubPosts) > 0 {
 						<div class="flex flex-col mt-auto pt-2 border-t border-border/40">
 							for j, sub := range cat.SubPosts {

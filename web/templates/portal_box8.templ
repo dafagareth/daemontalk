@@ -1,17 +1,14 @@
 package templates
 
 import (
-	"fmt"
 	"daemontalk/internal/i18n"
+	"fmt"
 )
 
 templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalPosts int) {
-	// Box 2
-	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-surface/20">
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[var(--c-border)] divide-y sm:divide-y-0 divide-[var(--c-border)]">
-			
-			// Col 1
-			<div class="hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-b sm:border-r lg:border-none border-[var(--c-border)]">
+	<div class="border-b sm:border-y sm:border-x border-border w-full mb-0 bg-surface/50">
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-r lg:border-b-0 border-border">
 				<div>
 					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconCommandLine("w-3.5 h-3.5 text-accent")
@@ -28,24 +25,22 @@ templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, total
 						<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
 							<span class="text-muted mr-1.5 select-none">$</span>ssh ssh.daemontalk.com -p 2222
 						</div>
-						<button 
-							onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='var(--color-accent)'; setTimeout(()=>i.style.color='', 1000);" 
-							title="Copy command" 
-							aria-label="Copy command" 
+						<button
+							onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='var(--color-accent)'; setTimeout(()=>i.style.color='', 1000);"
+							title="Copy command"
+							aria-label="Copy command"
 							class="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-text transition-colors opacity-80 group-hover:opacity-100 cursor-pointer"
 						>
 							@IconCopy("w-3.5 h-3.5 transition-colors")
 						</button>
 					</div>
 				</div>
-				<div class="flex items-center justify-between text-[10px] font-mono text-muted border-t border-border/40 pt-2">
+				<div class="flex items-center justify-between text-[10px] font-mono text-muted pt-2">
 					<span class="flex items-center gap-1"><kbd class="px-1 py-0.2 bg-surface border border-border text-[9px]">Enter</kbd> Reader</span>
 					<span class="flex items-center gap-1"><kbd class="px-1 py-0.2 bg-surface border border-border text-[9px]">t</kbd> 7 Themes</span>
 				</div>
 			</div>
-
-			// Col 2
-			<div class="flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-b lg:border-none border-[var(--c-border)]">
+			<div class="flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 lg:border-b-0 lg:border-r border-border/40">
 				<div>
 					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconHashtag("w-3.5 h-3.5 text-accent")
@@ -67,9 +62,7 @@ templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, total
 					</div>
 				</div>
 			</div>
-
-			// Col 3
-			<div class="hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between sm:border-r lg:border-none border-[var(--c-border)]">
+			<div class="hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 sm:border-r border-border">
 				<div>
 					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconRSSAlt("w-3.5 h-3.5 text-accent")
@@ -93,48 +86,51 @@ templ portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, total
 						</a>
 					</div>
 				</div>
-				<div class="text-[9px] sm:text-[10px] font-mono text-muted border-t border-border/40 pt-2 mt-3">
+				<div class="text-[9px] sm:text-[10px] font-mono text-muted pt-2 mt-3">
 					<span>Format: Full-text</span>
 				</div>
 			</div>
-
-			// Col 4
-			<div class="flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between">
+			<div class="flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between">
 				<div>
 					<h3 class="font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5">
 						@IconTerminalPrompt("w-3.5 h-3.5 text-accent")
 						if lang == "id" {
-							BUKU TAMU & CATATAN
+							FORUM & DISKUSI
 						} else {
-							GUESTBOOK & NOTES
+							DISCUSSIONS & Q&A
 						}
 					</h3>
 					<p class="text-[10px] sm:text-xs text-muted mb-4 leading-relaxed line-clamp-2">
 						if lang == "id" {
-							Tinggalkan catatan, feedback, atau usulan topik arsitektur sistem.
+							Tanya jawab teknis, studi kasus arsitektur, dan kolaborasi rekayasa sistem.
 						} else {
-							Leave a note, feedback, or request system architecture topics.
+							Technical Q&A, system architecture case studies, and engineering exchange.
 						}
 					</p>
 					<a
-						href={ templ.SafeURL(prefix(lang) + "/guestbook") }
+						href={ templ.SafeURL(prefix(lang) + "/discussions") }
 						class="flex items-center justify-between text-[10px] sm:text-xs px-3 py-2 border border-border bg-surface hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider group mt-auto"
 					>
 						<span class="font-bold">
 							if lang == "id" {
-								BUKA BUKU TAMU
+								BUKA DISKUSI
 							} else {
-								OPEN GUESTBOOK
+								OPEN DISCUSSIONS
 							}
 						</span>
 						@IconArrowRight("w-3.5 h-3.5 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5 shrink-0")
 					</a>
 				</div>
-				<div class="text-[9px] sm:text-[10px] font-mono text-muted border-t border-border/40 pt-2 mt-3 flex items-center justify-between">
-					<span class="truncate pr-1">Public Ledger</span>
+				<div class="text-[9px] sm:text-[10px] font-mono text-muted pt-2 mt-3 flex items-center justify-between">
+					<span class="truncate pr-1">
+						if lang == "id" {
+							Forum Komunitas
+						} else {
+							Community Forum
+						}
+					</span>
 				</div>
 			</div>
-
 		</div>
 	</div>
 }
