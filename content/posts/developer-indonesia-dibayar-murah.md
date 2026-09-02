@@ -17,7 +17,7 @@ series: ""
 series_part: 0
 ---
 
-<span class="drop-cap">M</span>ARI kita bicarakan satu realita pahit yang jarang banget dibahas terang-terangan di berbagai *meetup* teknologi: standar gaji developer di Indonesia itu, jujur saja, cukup menyedihkan. Bayangkan ada *software engineer* yang sudah punya pengalaman 3 tahun tapi masih ditawar dengan nominal setara UMR. Kalau kondisinya sudah begini, jelas ada yang salah dengan ekosistem kita. Tapi yang bikin nyesek, tanpa sadar kita sendiri yang ikut merusak harga pasar itu.
+<span class="drop-cap">M</span>ari kita bicarakan satu realita pahit yang jarang banget dibahas terang-terangan di berbagai *meetup* teknologi: standar gaji developer di Indonesia itu, jujur saja, cukup menyedihkan. Bayangkan ada *software engineer* yang sudah punya pengalaman 3 tahun tapi masih ditawar dengan nominal setara UMR. Kalau kondisinya sudah begini, jelas ada yang salah dengan ekosistem kita. Tapi yang bikin nyesek, tanpa sadar kita sendiri yang ikut merusak harga pasar itu.
 
 Sebelum buru-buru emosi lalu menyalahkan perusahaan, startup yang lagi *funding winter*, atau kondisi ekonomi makro, mari kita bedah dulu realita di lapangannya seperti apa.
 
