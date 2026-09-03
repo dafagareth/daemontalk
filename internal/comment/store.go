@@ -44,6 +44,15 @@ func Open(path string) (*Store, error) {
 			count     INTEGER NOT NULL DEFAULT 0
 		);
 
+		CREATE TABLE IF NOT EXISTS post_views (
+			post_slug  TEXT NOT NULL,
+			viewer_key TEXT NOT NULL,
+			created_at DATETIME NOT NULL,
+			PRIMARY KEY (post_slug, viewer_key)
+		);
+
+		CREATE INDEX IF NOT EXISTS idx_post_views_slug ON post_views(post_slug);
+
 		CREATE TABLE IF NOT EXISTS pageviews (
 			path  TEXT PRIMARY KEY,
 			count INTEGER NOT NULL DEFAULT 0

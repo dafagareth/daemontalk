@@ -289,3 +289,33 @@ func TestPageViewsAnalytics(t *testing.T) {
 		t.Errorf("expected top path / with count 2, got %+v", top[0])
 	}
 }
+
+func TestRecordPostViewDeduplication(t *testing.T) {
+	s := newTestStore(t)
+
+	// First view from user 10
+	n, rec, err := s.RecordPostView("my-article", "u:10")
+	if err != nil || !rec || n != 1 {
+		t.Fatalf("expected recorded=true, count=1, got rec=%v, n=%d, err=%v", rec, n, err)
+	}
+
+	// Refresh 10 times by same user 10 -> count remains 1!
+	for i := 0; i < 10; i++ {
+		n, rec, err := s.RecordPostView("my-article", "u:10")
+		if err != nil || rec || n != 1 {
+			t.Fatalf("expected recorded=false, count=1, got rec=%v, n=%d, err=%v", rec, n, err)
+		}
+	}
+
+	// New visitor views
+	n, rec, err = s.RecordPostView("my-article", "v:visitor_b")
+	if err != nil || !rec || n != 2 {
+		t.Fatalf("expected recorded=true, count=2, got rec=%v, n=%d, err=%v", rec, n, err)
+	}
+
+	// Refresh by visitor_b
+	n, rec, err = s.RecordPostView("my-article", "v:visitor_b")
+	if err != nil || rec || n != 2 {
+		t.Fatalf("expected recorded=false, count=2, got rec=%v, n=%d, err=%v", rec, n, err)
+	}
+}

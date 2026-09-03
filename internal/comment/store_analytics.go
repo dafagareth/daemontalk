@@ -2,6 +2,7 @@ package comment
 
 import (
 	"database/sql"
+	"time"
 )
 
 // PageView is one row of the lightweight per-path analytics counter.
@@ -19,6 +20,30 @@ func (s *Store) IncrementView(slug string) (int, error) {
 		return 0, err
 	}
 	return s.ViewCount(slug)
+}
+
+// RecordPostView records a unique viewer for a post and increments views count only if new.
+func (s *Store) RecordPostView(slug string, viewerKey string) (int, bool, error) {
+	if viewerKey == "" {
+		n, err := s.ViewCount(slug)
+		return n, false, err
+	}
+	res, err := s.db.Exec(`
+		INSERT INTO post_views (post_slug, viewer_key, created_at)
+		VALUES (?, ?, ?)
+		ON CONFLICT(post_slug, viewer_key) DO NOTHING
+	`, slug, viewerKey, time.Now().UTC())
+	if err != nil {
+		n, _ := s.ViewCount(slug)
+		return n, false, err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil || rows == 0 {
+		n, err := s.ViewCount(slug)
+		return n, false, err
+	}
+	n, err := s.IncrementView(slug)
+	return n, true, err
 }
 
 // ViewCount returns the current view total for a post.
