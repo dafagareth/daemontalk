@@ -4,7 +4,10 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
+
+	"daemontalk/internal/auth"
 )
 
 // GetVisitorIdentity checks for a visitor tracking cookie. If it doesn't exist,
@@ -31,6 +34,43 @@ func GetVisitorIdentity(w http.ResponseWriter, r *http.Request) string {
 	}
 
 	return generateAnonymousName(visitorID)
+}
+
+// GetViewerKey returns a unique, deduplicated identifier for the person viewing:
+// - Logged in user: "u:<userID>"
+// - Guest visitor: "v:<visitorID>"
+func GetViewerKey(w http.ResponseWriter, r *http.Request, user *auth.User) string {
+	if user != nil && user.ID > 0 {
+		return fmt.Sprintf("u:%d", user.ID)
+	}
+	cookie, err := r.Cookie(CookieVisitorID)
+	if err == nil && cookie.Value != "" {
+		return fmt.Sprintf("v:%s", cookie.Value)
+	}
+	_ = GetVisitorIdentity(w, r)
+	if c, err := r.Cookie(CookieVisitorID); err == nil && c.Value != "" {
+		return fmt.Sprintf("v:%s", c.Value)
+	}
+	return fmt.Sprintf("ip:%s", clientIP(r))
+}
+
+// isBot checks whether the request is from a known automated web crawler or bot.
+func isBot(r *http.Request) bool {
+	ua := strings.ToLower(r.UserAgent())
+	if ua == "" {
+		return true
+	}
+	botKeywords := []string{
+		"bot", "crawler", "spider", "googlebot", "bingbot",
+		"yandex", "baidu", "duckduck", "slurp", "headless",
+		"curl", "wget", "python", "httpclient", "ahrefs", "semrush",
+	}
+	for _, kw := range botKeywords {
+		if strings.Contains(ua, kw) {
+			return true
+		}
+	}
+	return false
 }
 
 // generateAnonymousName deterministically hashes the visitor ID into an anonym_<hex> handle.
