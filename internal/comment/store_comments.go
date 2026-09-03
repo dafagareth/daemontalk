@@ -14,7 +14,7 @@ const (
 // ListBySlug returns all comments for a post, oldest first.
 func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
 		 FROM comments WHERE post_slug = ? ORDER BY created_at ASC`,
 		slug,
 	)
@@ -29,7 +29,8 @@ func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 		var parentID, userID sql.NullInt64
 		var avatarURL, ghURL sql.NullString
 		var isVerified sql.NullBool
-		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL); err != nil {
+		var isReported sql.NullBool
+		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL, &isReported); err != nil {
 			return nil, err
 		}
 		if parentID.Valid {
@@ -43,6 +44,7 @@ func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 		c.AvatarURL = avatarURL.String
 		c.IsVerified = isVerified.Bool
 		c.GitHubURL = ghURL.String
+		c.IsReported = isReported.Bool
 		out = append(out, c)
 	}
 	return out, rows.Err()
@@ -105,11 +107,12 @@ func (s *Store) GetByID(id int64) (*Comment, error) {
 	var parentID, userID sql.NullInt64
 	var avatarURL, ghURL sql.NullString
 	var isVerified sql.NullBool
+		var isReported sql.NullBool
 	err := s.db.QueryRow(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
 		 FROM comments WHERE id = ?`,
 		id,
-	).Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL)
+	).Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL, &isReported)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -127,6 +130,7 @@ func (s *Store) GetByID(id int64) (*Comment, error) {
 	c.AvatarURL = avatarURL.String
 	c.IsVerified = isVerified.Bool
 	c.GitHubURL = ghURL.String
+		c.IsReported = isReported.Bool
 	return &c, nil
 }
 
@@ -139,7 +143,7 @@ func (s *Store) Delete(id int64) error {
 // ListAll returns all comments across every post, newest first.
 func (s *Store) ListAll() ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
 		 FROM comments ORDER BY created_at DESC`,
 	)
 	if err != nil {
@@ -153,7 +157,8 @@ func (s *Store) ListAll() ([]Comment, error) {
 		var parentID, userID sql.NullInt64
 		var avatarURL, ghURL sql.NullString
 		var isVerified sql.NullBool
-		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL); err != nil {
+		var isReported sql.NullBool
+		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL, &isReported); err != nil {
 			return nil, err
 		}
 		if parentID.Valid {
@@ -167,6 +172,7 @@ func (s *Store) ListAll() ([]Comment, error) {
 		c.AvatarURL = avatarURL.String
 		c.IsVerified = isVerified.Bool
 		c.GitHubURL = ghURL.String
+		c.IsReported = isReported.Bool
 		out = append(out, c)
 	}
 	return out, rows.Err()
@@ -233,7 +239,7 @@ func (s *Store) AnonymizeUserComments(userID int64) error {
 // ListByUserID returns all comments authored by a user.
 func (s *Store) ListByUserID(userID int64) ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
 		 FROM comments WHERE user_id = ? ORDER BY created_at DESC`,
 		userID,
 	)
@@ -248,7 +254,8 @@ func (s *Store) ListByUserID(userID int64) ([]Comment, error) {
 		var parentID, uid sql.NullInt64
 		var avatarURL, ghURL sql.NullString
 		var isVerified sql.NullBool
-		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &uid, &avatarURL, &isVerified, &ghURL); err != nil {
+		var isReported sql.NullBool
+		if err := rows.Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &uid, &avatarURL, &isVerified, &ghURL, &isReported); err != nil {
 			return nil, err
 		}
 		if parentID.Valid {
@@ -262,7 +269,20 @@ func (s *Store) ListByUserID(userID int64) ([]Comment, error) {
 		c.AvatarURL = avatarURL.String
 		c.IsVerified = isVerified.Bool
 		c.GitHubURL = ghURL.String
+		c.IsReported = isReported.Bool
 		out = append(out, c)
 	}
 	return out, rows.Err()
+}
+
+// UpdateBody updates the body of a comment by ID.
+func (s *Store) UpdateBody(id int64, body string) error {
+	_, err := s.db.Exec(`UPDATE comments SET body = ? WHERE id = ?`, body, id)
+	return err
+}
+
+// Report marks a comment as reported
+func (s *Store) Report(id int64) error {
+	_, err := s.db.Exec(`UPDATE comments SET is_reported = 1 WHERE id = ?`, id)
+	return err
 }
