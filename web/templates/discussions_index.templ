@@ -135,8 +135,8 @@ templ DiscussionsIndexPage(
 										<span class="text-text font-medium">{ t.AuthorName }</span>
 										<span>·</span>
 									}
-									<time datetime={ t.CreatedAt.Format("2006-01-02") }>
-										{ fmtShortDate(t.CreatedAt, lang) }
+									<time datetime={ t.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time">
+										{ timeAgoOrDate(t.CreatedAt, lang) }
 									</time>
 									<span>·</span>
 									<span>{ fmt.Sprintf("%d views", t.ViewsCount) }</span>
