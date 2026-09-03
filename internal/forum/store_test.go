@@ -2,6 +2,7 @@ package forum
 
 import (
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -128,5 +129,106 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 	deletedTopic, _ := store.GetTopicBySlug(t1.Slug, 42)
 	if deletedTopic != nil {
 		t.Errorf("expected nil topic after deletion")
+	}
+}
+
+func TestRecordTopicViewDeduplication(t *testing.T) {
+	tmpDir := t.TempDir()
+	dbPath := filepath.Join(tmpDir, "test_views.db")
+
+	store, err := Open(dbPath)
+	if err != nil {
+		t.Fatalf("failed to open forum db: %v", err)
+	}
+	defer store.Close()
+
+	topic, err := store.CreateTopic(Topic{
+		UserID:   1,
+		Title:    "Test Views Topic",
+		Category: "general",
+		Tags:     []string{"test"},
+		BodyMD:   "Testing view deduplication.",
+	})
+	if err != nil {
+		t.Fatalf("failed to create topic: %v", err)
+	}
+
+	// Initial views should be 0
+	fetched, _ := store.GetTopicBySlug(topic.Slug, 0)
+	if fetched.ViewsCount != 0 {
+		t.Fatalf("expected 0 initial views, got %d", fetched.ViewsCount)
+	}
+
+	// First view from user 100
+	rec, err := store.RecordTopicView(topic.ID, "u:100")
+	if err != nil || !rec {
+		t.Fatalf("expected recorded=true, got %v, err: %v", rec, err)
+	}
+	fetched, _ = store.GetTopicBySlug(topic.Slug, 0)
+	if fetched.ViewsCount != 1 {
+		t.Fatalf("expected 1 view, got %d", fetched.ViewsCount)
+	}
+
+	// Refresh 10 times by user 100 -> should NOT increment!
+	for i := 0; i < 10; i++ {
+		rec, err := store.RecordTopicView(topic.ID, "u:100")
+		if err != nil || rec {
+			t.Fatalf("expected recorded=false on refresh, got %v", rec)
+		}
+	}
+	fetched, _ = store.GetTopicBySlug(topic.Slug, 0)
+	if fetched.ViewsCount != 1 {
+		t.Fatalf("expected views count to stay 1 after refreshes, got %d", fetched.ViewsCount)
+	}
+
+	// Different viewer: visitor anon_xyz
+	rec, err = store.RecordTopicView(topic.ID, "v:anon_xyz")
+	if err != nil || !rec {
+		t.Fatalf("expected recorded=true for new visitor, got %v", rec)
+	}
+	fetched, _ = store.GetTopicBySlug(topic.Slug, 0)
+	if fetched.ViewsCount != 2 {
+		t.Fatalf("expected views count 2, got %d", fetched.ViewsCount)
+	}
+
+	// Refresh by visitor anon_xyz
+	rec, _ = store.RecordTopicView(topic.ID, "v:anon_xyz")
+	if rec {
+		t.Fatalf("expected recorded=false on visitor refresh")
+	}
+	fetched, _ = store.GetTopicBySlug(topic.Slug, 0)
+	if fetched.ViewsCount != 2 {
+		t.Fatalf("expected views count to stay 2, got %d", fetched.ViewsCount)
+	}
+}
+
+func TestRenderMarkdown_XSSPrevention(t *testing.T) {
+	cleanMD := `# Valid Title
+
+**Bold Text**`
+	htmlClean := string(RenderMarkdown(cleanMD))
+	if !strings.Contains(htmlClean, "Valid Title") {
+		t.Errorf("expected Valid Title to be present in %s", htmlClean)
+	}
+	if !strings.Contains(htmlClean, "<strong>Bold Text</strong>") {
+		t.Errorf("expected <strong>Bold Text</strong> in %s", htmlClean)
+	}
+
+	dangerousScript := `<script>alert('xss')</script>`
+	htmlScript := string(RenderMarkdown(dangerousScript))
+	if strings.Contains(htmlScript, "<script") || strings.Contains(htmlScript, "alert('xss')") {
+		t.Errorf("script tag or payload was not stripped: %s", htmlScript)
+	}
+
+	dangerousImg := `<img src="x" onerror="alert(1)"/>`
+	htmlImg := string(RenderMarkdown(dangerousImg))
+	if strings.Contains(htmlImg, "onerror") {
+		t.Errorf("onerror event handler was not stripped: %s", htmlImg)
+	}
+
+	dangerousLink := `[Click here](javascript:alert(1))`
+	htmlLink := string(RenderMarkdown(dangerousLink))
+	if strings.Contains(htmlLink, "javascript:") {
+		t.Errorf("javascript: URI was not stripped: %s", htmlLink)
 	}
 }

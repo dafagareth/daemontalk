@@ -237,6 +237,27 @@ func (s *Store) IncrementTopicViews(topicID int64) {
 	_, _ = s.db.Exec(`UPDATE forum_topics SET views_count = views_count + 1 WHERE id = ?`, topicID)
 }
 
+// RecordTopicView records a unique viewer for a topic and increments views_count only if new.
+func (s *Store) RecordTopicView(topicID int64, viewerKey string) (bool, error) {
+	if viewerKey == "" {
+		return false, nil
+	}
+	res, err := s.db.Exec(`
+		INSERT INTO forum_topic_views (topic_id, viewer_key, created_at)
+		VALUES (?, ?, ?)
+		ON CONFLICT(topic_id, viewer_key) DO NOTHING
+	`, topicID, viewerKey, time.Now().UTC())
+	if err != nil {
+		return false, err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil || rows == 0 {
+		return false, nil
+	}
+	_, _ = s.db.Exec(`UPDATE forum_topics SET views_count = views_count + 1 WHERE id = ?`, topicID)
+	return true, nil
+}
+
 // DeleteTopic deletes a topic and all its replies and votes (owner or admin).
 func (s *Store) DeleteTopic(topicID int64, currentUserID int64, isAdmin bool) error {
 	tx, err := s.db.Begin()

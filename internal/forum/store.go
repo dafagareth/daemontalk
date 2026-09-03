@@ -83,6 +83,15 @@ func Open(path string) (*Store, error) {
 			created_at  DATETIME NOT NULL,
 			PRIMARY KEY (user_id, target_type, target_id)
 		);
+
+		CREATE TABLE IF NOT EXISTS forum_topic_views (
+			topic_id   INTEGER NOT NULL REFERENCES forum_topics(id) ON DELETE CASCADE,
+			viewer_key TEXT NOT NULL,
+			created_at DATETIME NOT NULL,
+			PRIMARY KEY (topic_id, viewer_key)
+		);
+
+		CREATE INDEX IF NOT EXISTS idx_topic_views_topic ON forum_topic_views(topic_id);
 	`); err != nil {
 		return nil, fmt.Errorf("migrate forum db: %w", err)
 	}
