@@ -190,6 +190,7 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 	}
 	meta.JSONLD = articleJSONLD(p, meta.Image)
 
+	authUser := auth.GetUser(r.Context())
 	var comments []comment.Comment
 	views := 0
 	var reactions map[string]int
@@ -199,26 +200,30 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		} else {
 			comments = cs
 		}
-		if isAdmin {
+		if isAdmin || IsCLIRequest(r) || isBot(r) {
 			views, _ = h.Comments.ViewCount(slug)
 		} else {
 			cookieKey := CookieViewCooldownPrefix + slug
 			if _, err := r.Cookie(cookieKey); err == nil {
 				views, _ = h.Comments.ViewCount(slug)
 			} else {
-				if n, err := h.Comments.IncrementView(slug); err != nil {
-					slog.Error("increment view count failed", "slug", slug, "error", err)
+				viewerKey := GetViewerKey(w, r, authUser)
+				if n, recorded, err := h.Comments.RecordPostView(slug, viewerKey); err != nil {
+					slog.Error("record post view failed", "slug", slug, "error", err)
+					views, _ = h.Comments.ViewCount(slug)
 				} else {
 					views = n
+					if recorded {
+						http.SetCookie(w, &http.Cookie{
+							Name:     cookieKey,
+							Value:    "1",
+							Path:     "/",
+							MaxAge:   CookieViewCooldownMaxAge,
+							HttpOnly: true,
+							SameSite: http.SameSiteLaxMode,
+						})
+					}
 				}
-				http.SetCookie(w, &http.Cookie{
-					Name:     cookieKey,
-					Value:    "1",
-					Path:     "/",
-					MaxAge:   CookieViewCooldownMaxAge,
-					HttpOnly: true,
-					SameSite: http.SameSiteLaxMode,
-				})
 			}
 		}
 		if rx, err := h.Comments.GetReactions(slug); err != nil {
@@ -237,7 +242,6 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 	if isAdmin {
 		visitorName = "daemontalk"
 	}
-	authUser := auth.GetUser(r.Context())
 
 	h.Render(w, r, templates.Layout(ui, lang, p.Title+" · daemontalk", r.URL.Path, meta,
 		templates.BlogPostPage(ui, p, related, comments, views, isAdmin, lang, reactions, seriesParts, nav, userReaction, visitorName, authUser),
