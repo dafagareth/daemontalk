@@ -17,13 +17,16 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 					<span>{ ui.Post_Back }</span>
 				</a>
 				if len(p.TOC) > 0 {
-					<div class="space-y-3 pt-1">
-						<div class="text-[11px] font-mono font-bold uppercase tracking-widest text-muted pb-2 border-b border-border/60">
-							{ ui.Post_TOC }
-						</div>
-						<nav class="toc-sidebar max-h-[calc(100vh-16rem)] overflow-y-auto pr-2 scrollbar-none">
-							@tocList(p.TOC)
-						</nav>
+					<div class="pt-1">
+						<details class="group">
+							<summary class="text-[11px] font-mono font-bold uppercase tracking-widest text-muted pb-2 border-b border-border/60 cursor-pointer list-none flex items-center justify-between select-none transition-colors hover:text-text">
+								<span>{ ui.Post_TOC }</span>
+								@IconChevronDown("toc-chevron w-3.5 h-3.5 transition-transform group-open:rotate-180")
+							</summary>
+							<nav class="toc-sidebar mt-3 max-h-[calc(100vh-16rem)] overflow-y-auto pr-2 scrollbar-none">
+								@tocList(p.TOC)
+							</nav>
+						</details>
 					</div>
 				}
 			</aside>

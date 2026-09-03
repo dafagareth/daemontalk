@@ -76,20 +76,28 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 			return templ_7745c5c3_Err
 		}
 		if len(p.TOC) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"space-y-3 pt-1\"><div class=\"text-[11px] font-mono font-bold uppercase tracking-widest text-muted pb-2 border-b border-border/60\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"pt-1\"><details class=\"group\"><summary class=\"text-[11px] font-mono font-bold uppercase tracking-widest text-muted pb-2 border-b border-border/60 cursor-pointer list-none flex items-center justify-between select-none transition-colors hover:text-text\"><span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_TOC)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 22, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 23, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div><nav class=\"toc-sidebar max-h-[calc(100vh-16rem)] overflow-y-auto pr-2 scrollbar-none\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = IconChevronDown("toc-chevron w-3.5 h-3.5 transition-transform group-open:rotate-180").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</summary><nav class=\"toc-sidebar mt-3 max-h-[calc(100vh-16rem)] overflow-y-auto pr-2 scrollbar-none\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -97,12 +105,12 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</nav></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</nav></details></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</aside><main class=\"w-full max-w-[42rem] min-w-0 flex-1 relative\"><article class=\"relative z-10\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</aside><main class=\"w-full max-w-[42rem] min-w-0 flex-1 relative\"><article class=\"relative z-10\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -120,7 +128,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</article>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</article>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -128,7 +136,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</main><aside class=\"hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none\"><div class=\"flex items-center gap-1\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" title=\"Decrease font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" title=\"Increase font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A+</button></div><div><button id=\"serif-toggle-btn\" onclick=\"toggleSerif()\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle typography font (Sans / Serif)\" aria-label=\"Toggle typography font\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</main><aside class=\"hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none\"><div class=\"flex items-center gap-1\"><button onclick=\"adjustProseSize(-1)\" aria-label=\"Decrease font size\" title=\"Decrease font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A-</button> <button onclick=\"adjustProseSize(1)\" aria-label=\"Increase font size\" title=\"Increase font size\" class=\"px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none\">A+</button></div><div><button id=\"serif-toggle-btn\" onclick=\"toggleSerif()\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle typography font (Sans / Serif)\" aria-label=\"Toggle typography font\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -136,33 +144,33 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span id=\"serif-toggle-label\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span id=\"serif-toggle-label\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_Serif)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 54, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 57, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></button></div><div><button id=\"zen-toggle-btn\" onclick=\"document.body.classList.toggle('zen-mode')\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle Focus Mode (Press Z)\" aria-label=\"Toggle Focus Mode\"><span class=\"font-mono font-bold tracking-widest\">[Z]</span> <span>Focus</span></button></div><div><button onclick=\"copyBibtex(this)\" data-bibtex=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</span></button></div><div><button id=\"zen-toggle-btn\" onclick=\"document.body.classList.toggle('zen-mode')\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Toggle Focus Mode (Press Z)\" aria-label=\"Toggle Focus Mode\"><span class=\"font-mono font-bold tracking-widest\">[Z]</span> <span>Focus</span></button></div><div><button onclick=\"copyBibtex(this)\" data-bibtex=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(bibtex(p))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 72, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 75, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Copy BibTeX Citation\" aria-label=\"Copy BibTeX Citation\"><span class=\"font-mono font-bold tracking-widest\">[\"]</span> <span>Cite</span></button></div></aside></div><div class=\"flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14\"><div class=\"hidden xl:block w-52 shrink-0\"></div><div class=\"w-full max-w-[42rem] min-w-0 flex-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" class=\"inline-flex items-center gap-1.5 px-2 py-1 text-muted hover:text-text transition-colors cursor-pointer rounded-none font-bold text-xs\" title=\"Copy BibTeX Citation\" aria-label=\"Copy BibTeX Citation\"><span class=\"font-mono font-bold tracking-widest\">[\"]</span> <span>Cite</span></button></div></aside></div><div class=\"flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14\"><div class=\"hidden xl:block w-52 shrink-0\"></div><div class=\"w-full max-w-[42rem] min-w-0 flex-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -170,12 +178,12 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(related) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"w-full mt-16 pt-10 border-t border-border\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"w-full mt-16 pt-10 border-t border-border\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -183,7 +191,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -192,7 +200,7 @@ func BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comme
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -225,108 +233,108 @@ func mobileReadingModal(ui i18n.UI, p post.Post, lang string) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div id=\"mobile-reading-modal-overlay\" class=\"hidden fixed inset-0 z-50 bg-bg/80 backdrop-blur-sm p-4 flex items-center justify-center font-mono select-none\" onclick=\"if(event.target===this) toggleMobileReadingModal()\"><div class=\"w-full max-w-xs bg-surface border border-border shadow-2xl p-4 font-mono space-y-4\"><div class=\"flex items-center justify-between pb-2.5 border-b border-border text-xs\"><span class=\"text-text font-bold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div id=\"mobile-reading-modal-overlay\" class=\"hidden fixed inset-0 z-50 bg-bg/80 backdrop-blur-sm p-4 flex items-center justify-center font-mono select-none\" onclick=\"if(event.target===this) toggleMobileReadingModal()\"><div class=\"w-full max-w-xs bg-surface border border-border shadow-2xl p-4 font-mono space-y-4\"><div class=\"flex items-center justify-between pb-2.5 border-b border-border text-xs\"><span class=\"text-text font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "Opsi Baca")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "Opsi Baca")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "Reading Tools")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "Reading Tools")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</span> <button type=\"button\" onclick=\"toggleMobileReadingModal()\" class=\"text-muted hover:text-text px-1 cursor-pointer transition-colors\" aria-label=\"Close\">✕</button></div><div class=\"space-y-3 text-xs\"><div class=\"flex items-center justify-between\"><span class=\"text-muted\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span> <button type=\"button\" onclick=\"toggleMobileReadingModal()\" class=\"text-muted hover:text-text px-1 cursor-pointer transition-colors\" aria-label=\"Close\">✕</button></div><div class=\"space-y-3 text-xs\"><div class=\"flex items-center justify-between\"><span class=\"text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "Ukuran Teks")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "Ukuran Teks")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "Text Size")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Text Size")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</span><div class=\"flex items-center gap-1\"><button type=\"button\" onclick=\"adjustProseSize(-1)\" class=\"w-8 h-7 flex items-center justify-center border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors\">A-</button> <button type=\"button\" onclick=\"adjustProseSize(1)\" class=\"w-8 h-7 flex items-center justify-center border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors\">A+</button></div></div><div class=\"flex items-center justify-between\"><span class=\"text-muted\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</span><div class=\"flex items-center gap-1\"><button type=\"button\" onclick=\"adjustProseSize(-1)\" class=\"w-8 h-7 flex items-center justify-center border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors\">A-</button> <button type=\"button\" onclick=\"adjustProseSize(1)\" class=\"w-8 h-7 flex items-center justify-center border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors\">A+</button></div></div><div class=\"flex items-center justify-between\"><span class=\"text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Jenis Huruf")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Jenis Huruf")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Font")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "Font")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</span> <button type=\"button\" id=\"modal-serif-btn\" onclick=\"toggleSerif()\" class=\"px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs\"><span id=\"serif-toggle-label-modal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</span> <button type=\"button\" id=\"modal-serif-btn\" onclick=\"toggleSerif()\" class=\"px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs\"><span id=\"serif-toggle-label-modal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_Serif)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 163, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 166, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</span></button></div><div class=\"flex items-center justify-between\"><span class=\"text-muted\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</span></button></div><div class=\"flex items-center justify-between\"><span class=\"text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "Fokus")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "Fokus")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "Focus Mode")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "Focus Mode")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</span> <button type=\"button\" onclick=\"document.body.classList.toggle('zen-mode'); toggleMobileReadingModal();\" class=\"px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs\">Toggle</button></div><div class=\"flex items-center justify-between pt-2 border-t border-border\"><span class=\"text-muted\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</span> <button type=\"button\" onclick=\"document.body.classList.toggle('zen-mode'); toggleMobileReadingModal();\" class=\"px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs\">Toggle</button></div><div class=\"flex items-center justify-between pt-2 border-t border-border\"><span class=\"text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "Sitasi")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "Sitasi")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "Citation")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "Citation")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</span> <button type=\"button\" onclick=\"copyBibtex(this)\" data-bibtex=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</span> <button type=\"button\" onclick=\"copyBibtex(this)\" data-bibtex=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(bibtex(p))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 193, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 196, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\" class=\"px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs\">Copy BibTeX</button></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs\">Copy BibTeX</button></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -355,7 +363,7 @@ func tocList(entries []post.TOCEntry) templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<ul class=\"space-y-2 text-xs font-mono m-0 p-0 list-none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<ul class=\"space-y-2 text-xs font-mono m-0 p-0 list-none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -365,7 +373,7 @@ func tocList(entries []post.TOCEntry) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<li class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<li class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -378,38 +386,38 @@ func tocList(entries []post.TOCEntry) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 templ.SafeURL
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("#" + e.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 209, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 212, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "\" class=\"toc-link block py-0.5 text-muted hover:text-text font-mono transition-colors leading-relaxed truncate\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\" class=\"toc-link block py-0.5 text-muted hover:text-text font-mono transition-colors leading-relaxed truncate\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(e.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 212, Col: 14}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 215, Col: 14}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</a></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</a></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -455,7 +463,7 @@ func seriesNav(ui i18n.UI, parts []post.Post, current post.Post, lang string) te
 			templ_7745c5c3_Var15 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"mb-6 p-4 border border-border bg-surface not-prose\"><div class=\"flex items-center justify-between pb-2 mb-2 border-b border-border/60\"><div class=\"flex items-center gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<div class=\"mb-6 p-4 border border-border bg-surface not-prose\"><div class=\"flex items-center justify-between pb-2 mb-2 border-b border-border/60\"><div class=\"flex items-center gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -463,123 +471,123 @@ func seriesNav(ui i18n.UI, parts []post.Post, current post.Post, lang string) te
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<span class=\"font-mono text-xs font-bold uppercase tracking-wider text-text\">SERIES: ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<span class=\"font-mono text-xs font-bold uppercase tracking-wider text-text\">SERIES: ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(current.Series)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 241, Col: 105}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 244, Col: 105}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</span></div><span class=\"font-mono text-[10px] text-muted\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span></div><span class=\"font-mono text-[10px] text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Part %d of %d", getSeriesCurrentIndex(parts, current.Slug)+1, len(parts)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 244, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 247, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span></div><ol class=\"space-y-1 m-0 p-0 list-none font-sans text-xs\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</span></div><ol class=\"space-y-1 m-0 p-0 list-none font-sans text-xs\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for i, part := range parts {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<li class=\"flex items-start gap-2 py-0.5\"><span class=\"shrink-0 font-mono text-[11px] text-muted\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<li class=\"flex items-start gap-2 py-0.5\"><span class=\"shrink-0 font-mono text-[11px] text-muted\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("[%02d]", i+1))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 250, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 253, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</span> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</span> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if part.Slug == current.Slug {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<span class=\"font-bold text-text border-l-2 border-link pl-2\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<span class=\"font-bold text-text border-l-2 border-link pl-2\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(part.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 252, Col: 80}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 255, Col: 80}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, " <span class=\"text-[10px] text-link font-mono font-normal\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, " <span class=\"text-[10px] text-link font-mono font-normal\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var20 string
 				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Post_Current)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 252, Col: 158}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 255, Col: 158}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</span></span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</span></span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<a href=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<a href=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var21 templ.SafeURL
 				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + part.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 254, Col: 70}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 257, Col: 70}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "\" class=\"text-muted hover:text-link transition-colors pl-2\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\" class=\"text-muted hover:text-link transition-colors pl-2\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var22 string
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(part.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 254, Col: 143}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 257, Col: 143}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</a>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</a>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</ol></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</ol></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -611,38 +619,38 @@ func seriesBottomNav(ui i18n.UI, parts []post.Post, current post.Post, lang stri
 		ctx = templ.ClearChildren(ctx)
 		if currIdx := getSeriesCurrentIndex(parts, current.Slug); currIdx >= 0 {
 			if prevPart := getSeriesPart(parts, currIdx-1); prevPart != nil || getSeriesPart(parts, currIdx+1) != nil {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<div class=\"my-8 py-4 border-y border-border/60 not-prose\"><div class=\"text-[10px] font-mono text-muted uppercase tracking-wider mb-2\">Series · ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div class=\"my-8 py-4 border-y border-border/60 not-prose\"><div class=\"text-[10px] font-mono text-muted uppercase tracking-wider mb-2\">Series · ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var24 string
 				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(current.Series)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 268, Col: 31}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 271, Col: 31}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div><div class=\"grid grid-cols-1 sm:grid-cols-2 gap-3\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</div><div class=\"grid grid-cols-1 sm:grid-cols-2 gap-3\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if prevPart != nil {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<a href=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<a href=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var25 templ.SafeURL
 					templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + prevPart.Slug))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 272, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 275, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\" class=\"flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors group\"><span class=\"text-[10px] font-mono text-muted flex items-center gap-1\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" class=\"flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors group\"><span class=\"text-[10px] font-mono text-muted flex items-center gap-1\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -650,62 +658,62 @@ func seriesBottomNav(ui i18n.UI, parts []post.Post, current post.Post, lang stri
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Previous in Series</span> <span class=\"text-xs font-bold text-text group-hover:text-link line-clamp-1\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Previous in Series</span> <span class=\"text-xs font-bold text-text group-hover:text-link line-clamp-1\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var26 string
 					templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(prevPart.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 277, Col: 100}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 280, Col: 100}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</span></a> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</span></a> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<div></div>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<div></div>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
 				if nextPart := getSeriesPart(parts, currIdx+1); nextPart != nil {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<a href=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<a href=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var27 templ.SafeURL
 					templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/" + nextPart.Slug))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 283, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 286, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\" class=\"flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors text-right group\"><span class=\"text-[10px] font-mono text-muted flex items-center gap-1 justify-end\">Next in Series @IconArrowRight(\"w-3 h-3\")</span> <span class=\"text-xs font-bold text-text group-hover:text-link line-clamp-1\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\" class=\"flex flex-col gap-1 p-3 border border-border bg-surface hover:border-link transition-colors text-right group\"><span class=\"text-[10px] font-mono text-muted flex items-center gap-1 justify-end\">Next in Series @IconArrowRight(\"w-3 h-3\")</span> <span class=\"text-xs font-bold text-text group-hover:text-link line-clamp-1\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var28 string
 					templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(nextPart.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 285, Col: 100}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_post.templ`, Line: 288, Col: 100}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "</span></a>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</span></a>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
