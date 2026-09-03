@@ -1,3 +1,10 @@
+### v1.4.0 (3 September 2026) · Fast-Track Sync, Cloudflare CSP & Pemolesan UI
+
+- **Fast-Track Content Sync**: Mengimplementasikan *workflow* jalur cepat (`sync-content.yml`) yang mem-*bypass* *build* Docker selama 3 menit untuk perubahan yang hanya berupa Markdown, sehingga pembaruan artikel terpublikasi secara instan (~10 detik).
+- **Git Log Date & Zona Waktu Docker**: Memperbaiki pembacaan riwayat git dalam Docker (mengatasi galat *dubious ownership*) serta mengunci zona waktu *container* ke `Asia/Jakarta` demi akurasi tanggal rilis artikel.
+- **Integrasi Cloudflare Analytics**: Mengatur ulang tembok keamanan *Content-Security-Policy* (CSP) dengan memasukkan *beacon* Cloudflare Web Analytics ke dalam daftar putih (*whitelist*).
+- **Pemolesan UI**: Menambahkan efek redup otomatis (Mode Fokus) pada bilah samping desktop dan mengubah *Table of Contents* (Daftar Isi) menjadi elemen `<details>` yang bisa dilipat agar halaman lebih bersih.
+
 ### v1.3.2 (2 September 2026) · Perbaikan Izin Eksekusi Skrip Deployment CI/CD
 
 - **Izin Eksekusi Deployment VPS**: Menambahkan `chmod +x` otomatis dan pemanggilan `bash` eksplisit pada workflow GitHub Actions CD untuk mencegah galat *permission denied* saat eksekusi skrip di server VPS.
