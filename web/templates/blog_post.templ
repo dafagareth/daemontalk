@@ -11,7 +11,7 @@ import (
 templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comment.Comment, views int, isAdmin bool, lang string, reactions map[string]int, seriesParts []post.Post, nav PostNav, userReaction string, visitorName string) {
 	<div class="container-page max-w-7xl mx-auto py-8 sm:py-12 transition-all">
 		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14 relative">
-			<aside class="hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5">
+			<aside class="hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5 opacity-25 hover:opacity-100 transition-opacity duration-300">
 				<a href={ templ.SafeURL(homeURL(lang)) } class="inline-flex items-center gap-1.5 text-muted hover:text-text font-bold text-xs font-mono uppercase tracking-wider transition-colors group">
 					@IconArrowLeft("w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5")
 					<span>{ ui.Post_Back }</span>
@@ -40,7 +40,7 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 				</article>
 				@ReactionsBar(ui, reactions, p.Slug, lang, userReaction, len(comments), p.Title, p.Date.Format("2006-01-02"))
 			</main>
-			<aside class="hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none">
+			<aside class="hidden lg:block w-32 xl:w-36 shrink-0 sticky top-36 lg:top-40 space-y-3 text-xs font-mono select-none opacity-25 hover:opacity-100 transition-opacity duration-300">
 				<div class="flex items-center gap-1">
 					<button onclick="adjustProseSize(-1)" aria-label="Decrease font size" title="Decrease font size" class="px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none">A-</button>
 					<button onclick="adjustProseSize(1)" aria-label="Increase font size" title="Increase font size" class="px-2 py-1 text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer font-bold rounded-none">A+</button>
