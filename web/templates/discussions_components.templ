@@ -15,18 +15,33 @@ templ DiscussionsVoteButton(targetType string, targetID int64, count int, hasVot
 	>
 		<input type="hidden" name="type" value={ targetType }/>
 		<input type="hidden" name="id" value={ fmt.Sprintf("%d", targetID) }/>
-		<button
-			type="submit"
-			class={
-				"flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 py-1 px-1.5 text-xs font-mono font-bold transition-colors cursor-pointer select-none group",
-				templ.KV("text-link font-black", hasVoted),
-				templ.KV("text-muted hover:text-text", !hasVoted),
-			}
-			title="Upvote"
-		>
-			<span class="text-xs group-hover:-translate-y-0.5 transition-transform leading-none">▲</span>
-			<span class="leading-none">{ fmt.Sprintf("%d", count) }</span>
-		</button>
+		if targetType == "topic" {
+			<button
+				type="submit"
+				class={
+					"flex flex-col items-center justify-center min-w-[38px] px-1.5 py-1.5 rounded-none border text-xs font-mono font-bold transition-all cursor-pointer select-none group",
+					templ.KV("border-link/70 bg-link/15 text-link shadow-sm", hasVoted),
+					templ.KV("border-border bg-surface text-muted hover:text-text hover:border-text/40 hover:bg-hover", !hasVoted),
+				}
+				title="Upvote"
+			>
+				<svg class="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+				<span class="leading-none mt-1 font-mono text-[11px]">{ fmt.Sprintf("%d", count) }</span>
+			</button>
+		} else {
+			<button
+				type="submit"
+				class={
+					"flex items-center gap-1.5 py-1 px-2 border text-xs font-mono font-bold transition-colors cursor-pointer select-none group",
+					templ.KV("border-link/70 bg-link/15 text-link", hasVoted),
+					templ.KV("border-border bg-surface text-muted hover:text-text hover:border-text/40 hover:bg-hover", !hasVoted),
+				}
+				title="Upvote"
+			>
+				<svg class="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+				<span class="leading-none font-mono text-[11px]">{ fmt.Sprintf("%d", count) }</span>
+			</button>
+		}
 	</form>
 }
 
