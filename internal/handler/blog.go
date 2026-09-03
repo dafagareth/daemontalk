@@ -177,11 +177,15 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 
 	related := relatedPosts(h.VisiblePosts(isAdmin), p)
 
+	author := p.Author
+	if author == "" {
+		author = "daemontalk"
+	}
 	meta := templates.PageMeta{
 		Description:   p.Description,
 		Type:          "article",
 		PublishedTime: p.Date.Format("2006-01-02T15:04:05Z07:00"),
-		Author:        "Dafa Gareth",
+		Author:        author,
 	}
 	if p.Cover != "" {
 		meta.Image = templates.AbsoluteURL(p.Cover)

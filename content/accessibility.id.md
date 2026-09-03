@@ -1,8 +1,8 @@
 # Pernyataan Aksesibilitas
 
-**Terakhir diperbarui: 30 Agustus 2026** · **Standar: WCAG 2.1 Level AA**
+**Terakhir diperbarui: 4 September 2026** · **Standar: WCAG 2.1 Level AA**
 
-Daemontalk berkomitmen untuk menghadirkan pengalaman membaca dan eksplorasi rekayasa sistem yang inklusif, cepat, dan mudah diakses oleh semua orang, termasuk pengguna dengan disabilitas sensorik, motorik, kognitif, maupun pengguna di lingkungan konsol dan *screen reader*.
+Daemontalk berkomitmen untuk menghadirkan pengalaman membaca dan eksplorasi teknologi yang inklusif, cepat, dan mudah diakses oleh semua orang, termasuk pengguna dengan disabilitas sensorik, motorik, kognitif, maupun pengguna di lingkungan konsol dan *screen reader*.
 
 ---
 
@@ -60,4 +60,4 @@ $ ssh ssh.daemontalk.com -p 2222
 
 ## Umpan Balik & Saluran Bantuan
 
-Kami terus memantau dan menguji kepatuhan aksesibilitas situs ini secara berkala. Jika Anda menemukan kendala aksesibilitas, elemen yang sulit dibaca, atau navigasi keyboard yang terhambat, silakan hubungi kami langsung via email di: **realdaemontalk@gmail.com**. Setiap laporan aksesibilitas akan kami tangani sebagai prioritas rekayasa utama.
+Kami terus memantau dan menguji kepatuhan aksesibilitas situs ini secara berkala. Jika Anda menemukan kendala aksesibilitas, elemen yang sulit dibaca, atau navigasi keyboard yang terhambat, silakan hubungi kami langsung via email di: **realdaemontalk@gmail.com**. Setiap laporan aksesibilitas akan kami tangani sebagai prioritas utama.

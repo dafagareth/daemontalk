@@ -1,14 +1,14 @@
 # Terms of Use
 
-**Last updated: August 30, 2026** · **Version: 2.1**
+**Last updated: September 4, 2026** · **Version: 2.2**
 
-Welcome to Daemontalk. By accessing, reading, participating in discussions, or utilizing any terminal and API services on this website (the "Platform"), you agree to be bound by these Terms of Use and our Privacy Policy. If you do not agree with any part of these terms, please discontinue use of the platform.
+These Terms of Service ("Terms") constitute a legally binding agreement between you and Daemontalk ("we", "our", or "the platform"). By accessing our website, reading articles, subscribing to feeds, accessing the in-browser terminal or SSH gateway, or participating in the community forum, you agree to comply with and be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, please discontinue using the platform immediately.
 
 ---
 
 ## 1. Acceptance of Terms & Scope
 
-Daemontalk is an independent technical engineering publication, computer systems research notebook, and developer community platform maintained by Dafa Gareth. These Terms govern all interactions across the web interface, RSS feeds, JSON endpoints, in-browser shell, and public SSH gateway.
+Daemontalk is an independent technology publication, open tech notebook, and developer community platform. These Terms govern all interactions across the web interface, RSS feeds, JSON endpoints, in-browser shell, and public SSH gateway.
 
 ## 2. Intellectual Property & Content Licensing
 
@@ -20,7 +20,7 @@ Daemontalk is an independent technical engineering publication, computer systems
 
 ## 3. User-Generated Content & Forum Contributions
 
-**License Grant**: By publishing questions, architectural solutions, technical code samples, or threaded replies within the Discussions Forum (`/discussions`) or article comment sections, you grant Daemontalk a perpetual, worldwide, non-exclusive, royalty-free license to display, index, format, and distribute your contributions as part of the public engineering knowledge base.
+**License Grant**: By publishing questions, architectural solutions, technical code samples, or threaded replies within the Discussions Forum (`/discussions`) or article comment sections, you grant Daemontalk a perpetual, worldwide, non-exclusive, royalty-free license to display, index, format, and distribute your contributions as part of the public tech knowledge base.
 
 **Authorship & Ownership**: You retain full ownership and copyright of your original technical work. You are solely responsible for ensuring that your submissions do not infringe on any third-party intellectual property rights, non-disclosure agreements (NDAs), or proprietary enterprise code.
 
@@ -28,13 +28,6 @@ Daemontalk is an independent technical engineering publication, computer systems
 
 ## 4. User Accounts, GitHub OAuth & Responsibility
 
-**Authentication & Eligibility**: Member access is authenticated via GitHub OAuth. You must be at least 13 years of age (or 16 in applicable jurisdictions) to establish a member account on Daemontalk.
-
-**Account Security**: You are responsible for safeguarding your GitHub account credentials and for all activities conducted under your authenticated session.
-
-**No Account Transfer**: User accounts and membership reputations are non-transferable and may not be shared, sold, or leased to third parties.
-
-## 5. Community Conduct & Acceptable Use Policy
 
 When engaging in discussions, creating topics, or submitting comments:
 
@@ -54,7 +47,7 @@ When engaging in discussions, creating topics, or submitting comments:
 
 All technical blueprints, system benchmarks, Linux kernel tweaks, database configurations, and automation scripts are provided on an "as is" and "as available" basis without warranties of any kind, whether express, statutory, or implied.
 
-Engineering practices, kernel versions, and operating system behaviors evolve rapidly. You bear the sole responsibility for thoroughly auditing, benchmarking, and validating any script or configuration in an isolated development or staging environment prior to deploying it to production infrastructure.
+Software practices, kernel versions, and operating system behaviors evolve rapidly. You bear the sole responsibility for thoroughly auditing, benchmarking, and validating any script or configuration in an isolated development or staging environment prior to deploying it to production infrastructure.
 
 ## 8. Limitation of Liability
 

@@ -373,12 +373,12 @@ func Colophon(ui i18n.UI, lang string, projects []project.Project, ghStats githu
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Aktivitas Engineering")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Aktivitas Sistem & Kode")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "System Engineering Activity")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "System & Code Activity")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -602,12 +602,12 @@ func Colophon(ui i18n.UI, lang string, projects []project.Project, ghStats githu
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "Kolaborasi riset sistem, pelaporan celah keamanan, atau pesan privat.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "Kolaborasi tulisan atau proyek, pelaporan celah keamanan, atau pesan privat.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "Research collaboration, vulnerability reports, or direct inquiries.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "Writing or project collaboration, vulnerability reports, or direct inquiries.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -60,23 +60,35 @@ DaemonTalk follows a minimalist, zero-heavy-client-JS architecture:
 - **SSH Terminal Reader (TUI):** `charmbracelet/wish` and `bubbletea` in `internal/tui/` and `internal/tuisrv/`.
 - **Storage:** Embedded SQLite with WAL mode in `internal/comment/` and `internal/postdb/`.
 
-When modifying `.templ` templates or Tailwind CSS:
-```bash
-# Regenerate templ code and compile minified Tailwind bundle
-templ generate
-make build
-```
+## Development & Makefile Reference
+
+The project includes a comprehensive [Makefile](Makefile) covering all building, testing, code generation, and content workflows. Run or check the `Makefile` for all available targets:
+
+- `make dev` — Start live-reloading dev environment (Go `air` + `templ` watch + Tailwind watch).
+- `make build` — Full build pipeline (templ generate + minified CSS + JS bundle + binary).
+- `make run` — Compile and execute the binary locally on port 8080.
+- `make test` — Run all unit tests.
+- `make test-race` — Run unit tests with the Go race detector enabled.
+- `make test-cover` — Check test coverage percentages across all packages.
+- `make fmt` & `make lint` — Format Go source files, templ components, and run `go vet`.
+- `make new-post` / `make new-uid` — Scaffold new post files with metadata.
+- `make validate-posts` — Validate Markdown frontmatter and tags across all posts.
+- `make docker-build` / `make docker-up` — Build and run local Docker containers.
+- `make clean` — Clean up compiled binaries and temporary test artifacts.
 
 ## Quality Checks & Testing
 
-Run all unit tests and content validation before opening a pull request:
+Always ensure tests pass and post frontmatter is valid before opening a pull request:
 
 ```bash
-# Run Go unit test suite
-go test -v ./...
+# Run unit tests via Makefile
+make test
 
-# Validate Markdown frontmatter and post structure
-./scripts/post.sh validate
+# Format code and templates
+make fmt
+
+# Validate Markdown posts
+make validate-posts
 ```
 
 ## Pull Request Workflow

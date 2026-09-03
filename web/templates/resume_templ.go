@@ -36,7 +36,7 @@ func ResumePage(ui i18n.UI, lang string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = resumeRole("daemontalk", "Creator & Developer", "2026", "Open Source", []string{
-			"Built a personal engineering notebook and reading platform in Go using chi, templ, and Tailwind CSS.",
+			"Built an independent tech publication and reading platform in Go using chi, templ, and Tailwind CSS.",
 			"Implemented Ahead-of-Time (AOT) compiled HTML rendering and custom Markdown pre-processors for interactive carousels and FAQs.",
 			"Designed an in-browser retro UNIX terminal emulator with command history and client-side virtual filesystem.",
 		}).Render(ctx, templ_7745c5c3_Buffer)

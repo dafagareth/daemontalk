@@ -2,7 +2,7 @@
 
 **Copyright © 2026 Dafa Gareth (daemontalk.com).**
 
-Daemontalk is an independent systems engineering publication, low-level computing research notebook, and standalone software project. Licensing terms across the platform are organized as follows:
+Daemontalk is an independent technology publication, open tech notebook, and standalone software project. Licensing terms across the platform are organized as follows:
 
 ---
 
@@ -10,15 +10,15 @@ Daemontalk is an independent systems engineering publication, low-level computin
 
 The source code of the Daemontalk platform (Go backend, Templ views, Tailwind stylesheets, Wish SSH server, and TUI engine) is licensed under the **[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0)**.
 
-- **Permitted Non-Commercial Use**: You are free to inspect, study, fork, modify, and develop other software using this codebase for personal, educational, academic, and noncommercial purposes.
+- **Permitted Non-Commercial Use**: You are free to inspect, study, fork, modify, and develop other software using this codebase for personal, educational, learning, and noncommercial purposes.
 - **Prohibition on Commercial Exploitation**: You may **not** sell, resell, lease, sublicense, monetize, or deploy this software as a commercial product, paid website template, or hosted Software-as-a-Service (SaaS) without prior explicit written authorization from Dafa Gareth.
 - **Reciprocal Notice**: Any distribution of the code (with or without modifications) must include the PolyForm Noncommercial License notice.
 
 ---
 
-## 2. Written Articles & Research Content (*CC BY-NC-SA 4.0*)
+## 2. Written Articles & Publications (*CC BY-NC-SA 4.0*)
 
-All written technical articles, research dispatches, architecture breakdowns, and editorial essays published under `content/posts/` are licensed under the **[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)** license.
+All written technical articles, practical guides, architecture breakdowns, and editorial essays published under `content/posts/` are licensed under the **[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)** license.
 
 - **Share & Adapt**: You are free to copy, cite, and adapt these writings for non-commercial educational purposes.
 - **Attribution**: You must give clear credit to Dafa Gareth and include a direct link back to the original source article on Daemontalk.

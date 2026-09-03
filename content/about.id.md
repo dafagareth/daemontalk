@@ -1,26 +1,26 @@
 # Tentang Daemontalk
 
-Daemontalk adalah publikasi rekayasa sistem komputer independen, buku catatan riset terbuka, dan ruang eksplorasi komputasi tingkat rendah tanpa pelacak pihak ketiga.
+Daemontalk adalah publikasi dan ruang belajar teknologi independen yang terbuka bagi siapa saja, bebas pelacak pihak ketiga, dan berfokus pada ekosistem software modern.
 
 ---
 
 ## Misi & Pendekatan Eksplorasi
 
-Alih-alih sekadar merangkum teori abstrak akademis, Daemontalk dibangun sebagai arsip catatan kerja sistem dan portofolio rekayasa sistem informasi. Fokus utama di sini adalah membedah dan memverifikasi langsung cara kerja sistem nyata: menganalisis perilaku runtime bahasa, menyelami mekanisme internal kernel Linux, model konkurensi Go, hingga arsitektur penyimpanan performa tinggi dengan tolok ukur yang dapat diuji dan direproduksi mandiri.
+Daemontalk dibangun sebagai arsip pengetahuan dan catatan teknologi yang aplikatif. Fokus utama kami adalah menyajikan wawasan yang nyata dan mudah dipahami: membedah cara kerja software, memahami sistem Linux, mengeksplorasi bahasa pemrograman modern, hingga membahas isu dan dinamika industri teknologi yang relevan.
 
-Setiap tulisan di sini mengutamakan reproduksibilitas: mulai dari perintah shell, skrip pengujian beban performa, diagram arsitektur, hingga kode sumber terbuka yang dapat dijalankan langsung di lingkungan lab Anda.
+Setiap tulisan dirancang agar bermanfaat langsung: mulai dari tutorial praktis, tips terminal, studi kasus arsitektur, hingga opini seputar dunia kerja tech yang dekat dengan realita kita sehari-hari.
 
 ## Kurator & Komunitas
 
-Situs ini diprakarsai dan dikurasi oleh **Dafa Gareth** sebagai catatan studi dan riset sistem informasi. Meskipun dikelola secara mandiri, Daemontalk terbuka bagi tulisan rekan-rekan engineer, arsitek sistem, dan peneliti yang ingin membagikan catatan teknisnya melalui kontribusi Pull Request di GitHub maupun forum diskusi komunitas.
+Dikelola sebagai ruang publikasi dan catatan teknologi terbuka. Daemontalk menyambut hangat siapa pun—mahasiswa yang baru belajar, junior developer, arsitek sistem, maupun tech enthusiast—yang ingin belajar bersama, berdiskusi, atau membagikan tulisannya melalui GitHub Pull Request dan forum komunitas.
 
 ## Prinsip & Standar Editorial
 
-Untuk menjaga integritas teknis dan kenyamanan membaca, seluruh publikasi di Daemontalk berpegang teguh pada prinsip-prinsip berikut:
+Untuk memastikan pengalaman membaca dan belajar yang menyenangkan, seluruh publikasi di Daemontalk berpegang teguh pada prinsip-prinsip berikut:
 
-**Lugas & To The Point**: Tulisan langsung masuk ke inti persoalan teknis, arsitektur, dan kode. Menghindari basa-basi pembuka dan klise yang tidak memiliki nilai teknis nyata.
+**Jelas, Bernas & Bebas Basa-Basi**: Menjelaskan konsep teknologi secara gamblang dan mudah dicerna, langsung ke inti pembahasan tanpa bahasa yang bertele-tele.
 
-**Fakta & Rujukan Terverifikasi**: Setiap artikel mendalam (*deep-dive*) dilengkapi dengan blok referensi resmi, seperti RFC standar internet, repositori kode sumber kernel Linux, dokumen manual arsitektur prosesor, atau *paper* riset ilmiah.
+**Akurat & Terpercaya**: Setiap panduan atau ulasan didasarkan pada pengujian nyata, dokumentasi resmi, atau referensi komunitas terpercaya agar informasinya dapat diandalkan.
 
 **Zero Tracking & Kedaulatan Data**: Dihosting secara mandiri dalam satu binari Go tanpa Google Analytics, pixel pelacak iklan, *paywall*, maupun skrip pengawasan pihak ketiga.
 

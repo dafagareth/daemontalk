@@ -330,7 +330,7 @@ func adminDashboardTab(stats AdminStats) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</div><p class=\"text-xs text-muted mt-1\">Interactive canvas network graph connecting engineering domains and topics.</p></div><form method=\"post\" action=\"/admin/settings/toggle-radar\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</div><p class=\"text-xs text-muted mt-1\">Interactive canvas network graph connecting tech domains and topics.</p></div><form method=\"post\" action=\"/admin/settings/toggle-radar\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

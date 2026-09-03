@@ -1,21 +1,21 @@
 ## Philosophy & Editorial Standards
 
-Daemontalk is an independent systems engineering publication dedicated to practical, verifiable, and reproducible technical dispatches. We welcome contributions from software engineers, systems researchers, infrastructure architects, and open-source developers passionate about low-level computing and platform engineering.
+Daemontalk is an independent tech publication and open learning space. We warmly welcome contributions from developers, students, architects, and tech enthusiasts eager to share practical insights or improve the Daemontalk ecosystem.
 
-**Straight to the Point**: Dive directly into the technical core, architectural blueprints, or code examples in the opening section. Avoid conversational fluff or generic introductory filler that adds no engineering value.
+**Clear and Direct**: Dive straight into the core concepts, walkthroughs, or code examples. Avoid unnecessary corporate fluff so readers can easily absorb actionable takeaways.
 
-**Verification & Reproducibility**: Every technical claim or performance benchmark must be supported by actionable test code, diagnostic logs, shell commands, or architecture diagrams that enable readers to independently reproduce and verify your findings.
+**Practical & Actionable**: Tutorials, benchmarks, and architectural notes should be practical and reproducible so readers can test or apply them in their own environments.
 
-**Cited & Authoritative References**: Conclude every in-depth dispatch with verified citations to authoritative specifications, RFC standards, Linux kernel source code repositories, processor manuals, or academic research papers.
+**Reliable References**: Link to official documentation, source code repositories, or trusted community sources whenever referencing external standards or tools.
 
 ---
 
 ## Accepted Contribution Pillars
 
-Daemontalk is an open-source platform open to multiple forms of technical contribution:
+Daemontalk is open to multiple forms of contribution:
 
-**1. Writing Technical Dispatches (`content/posts/`)**:
-Authoring in-depth analyses, kernel investigations, network protocol benchmarks, database internals, and systems post-mortems.
+**1. Writing Tech Articles & Guides (`content/posts/`)**:
+Authoring practical tutorials, new technology reviews, system architectures, developer career insights, industry opinions, and real-world post-mortems.
 
 **2. Codebase Improvements & Bug Fixes (*Core Engine*)**:
 - Go Backend (HTTP handlers, SQLite storage, CLI tools, Goldmark markdown extensions).
@@ -101,10 +101,11 @@ cd daemontalk
 - **Content Correction**: `git checkout -b docs/fix-slug`
 
 **Step 3: Test & Verify Locally**
-Ensure templates compile and the full test suite passes:
+Use the `Makefile` to run tests and verification (inspect `Makefile` for the complete list of available targets):
 ```bash
-make build
-go test ./...
+make test             # Run all unit test suites
+make build            # Compile templates, minify CSS, and build the binary
+make validate-posts   # Validate Markdown frontmatter and post structure
 ```
 
 **Step 4: Open a Pull Request**

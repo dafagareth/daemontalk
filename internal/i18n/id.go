@@ -4,7 +4,7 @@ var id = UI{
 	Nav_Home:     "Beranda",
 	Nav_Colophon: "kolofon",
 	Nav_Terminal: "terminal",
-	Footer_Copy:  "© 2026 Dafa",
+	Footer_Copy:  "© 2026 daemontalk",
 
 	Colophon_Title:    "Kolofon & Arsitektur",
 	Colophon_Nav:      "Kolofon",
@@ -12,7 +12,7 @@ var id = UI{
 	Colophon_Uses:     "Stack & uses",
 	Colophon_Learning: "Now / sedang belajar",
 
-	Footer_Bio:       "Publikasi teknologi independen dan buku catatan riset yang mengeksplorasi komputasi modern, arsitektur perangkat lunak, dan rekayasa sistem.",
+	Footer_Bio:       "Publikasi dan ruang belajar teknologi independen yang membahas software modern, arsitektur sistem, dan dunia digital untuk semua orang.",
 	Footer_Read:      "Navigasi",
 	Footer_Site:      "Situs",
 	Footer_Topics:    "Topik",

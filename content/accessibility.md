@@ -1,14 +1,14 @@
 # Accessibility Statement
 
-**Last updated: August 30, 2026** · **Standard: WCAG 2.1 Level AA**
+**Last updated: September 4, 2026** · **Standard: WCAG 2.1 Level AA**
 
-Daemontalk is committed to providing an inclusive, fast, and legible systems engineering reading and research experience for all individuals, including users with visual, motor, auditory, or cognitive disabilities, as well as those operating in headless or screen reader environments.
+Daemontalk is committed to providing an inclusive, fast, and legible reading and browsing experience for all individuals, including users with visual, motor, auditory, or cognitive disabilities, as well as those operating in headless or screen reader environments.
 
 ---
 
 ## Universal Design Principles
 
-This platform is engineered under universal design principles aligned with the international Web Content Accessibility Guidelines (**WCAG 2.1 Level AA**). We ensure that navigational ease, typographic clarity, and visual contrast remain paramount without sacrificing performance.
+This platform is designed under universal accessibility principles aligned with the international Web Content Accessibility Guidelines (**WCAG 2.1 Level AA**). We ensure that navigational ease, typographic clarity, and visual contrast remain paramount without sacrificing performance.
 
 ## Comprehensive Keyboard Navigation
 
@@ -60,4 +60,4 @@ $ ssh ssh.daemontalk.com -p 2222
 
 ## Feedback & Accessibility Assistance
 
-We continuously audit and improve the accessibility of this platform. If you encounter any barriers, difficult-to-read text, or keyboard traps, please reach out directly via email at: **realdaemontalk@gmail.com**. All accessibility inquiries are treated with high engineering priority.
+We continuously audit and improve the accessibility of this platform. If you encounter any barriers, difficult-to-read text, or keyboard traps, please reach out directly via email at: **realdaemontalk@gmail.com**. All accessibility inquiries are treated with high priority.

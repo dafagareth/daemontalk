@@ -15,7 +15,7 @@ type Category struct {
 }
 
 var Categories = []Category{
-	{Slug: "all", NameID: "Semua Topik", NameEN: "All Topics", Description: "Semua diskusi rekayasa sistem"},
+	{Slug: "all", NameID: "Semua Topik", NameEN: "All Topics", Description: "Semua diskusi teknologi & sistem"},
 	{Slug: "qna", NameID: "Tanya Jawab (Q&A)", NameEN: "Q&A / Debugging", Description: "Pertanyaan teknis & pemecahan masalah"},
 	{Slug: "architecture", NameID: "Arsitektur Sistem", NameEN: "Systems Architecture", Description: "Desain sistem terdistribusi & backend"},
 	{Slug: "kernel", NameID: "Linux & Kernel", NameEN: "Linux & Kernel", Description: "Eksplorasi low-level, eBPF & OS internals"},

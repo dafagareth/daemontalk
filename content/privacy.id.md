@@ -1,8 +1,8 @@
 # Kebijakan Privasi
 
-**Terakhir diperbarui: 30 Agustus 2026** · **Versi: 2.1**
+**Terakhir diperbarui: 4 September 2026** · **Versi: 2.2**
 
-Daemontalk beroperasi dengan prinsip fundamental bebas pelacak (*zero-tracker*). Kami meyakini bahwa publikasi teknis dan komunitas rekayasa perangkat lunak harus mengedepankan kedaulatan pembaca, transparansi sistem, dan minimalisme komputasi. Kami tidak melacak, memprofilkan, memonetisasi, atau mengumpulkan data pribadi Anda secara terselubung.
+Daemontalk beroperasi dengan prinsip fundamental bebas pelacak (*zero-tracker*). Kami meyakini bahwa publikasi teknis dan komunitas teknologi perangkat lunak harus mengedepankan kedaulatan pembaca, transparansi sistem, dan minimalisme komputasi. Kami tidak melacak, memprofilkan, memonetisasi, atau mengumpulkan data pribadi Anda secara terselubung.
 
 ---
 
@@ -76,7 +76,7 @@ Saat Anda memanfaatkan fitur interaktif komunitas:
 
 ## 8. Standar Keamanan Data & Kriptografi
 
-Kami menerapkan rekayasa pertahanan berlapis (*defense-in-depth*) untuk mengamankan data yang disimpan maupun yang ditransmisikan:
+Kami menerapkan arsitektur pertahanan berlapis (*defense-in-depth*) untuk mengamankan data yang disimpan maupun yang ditransmisikan:
 
 **Enkripsi Jalur Komunikasi**: Seluruh lalu lintas web diamankan menggunakan TLS 1.3 dengan *Perfect Forward Secrecy* (PFS) dan *HTTP Strict Transport Security* (HSTS).
 
@@ -96,7 +96,7 @@ Anda memegang kendali penuh atas kedaulatan data pribadi Anda (sesuai UU PDP No.
 
 ## 10. Batasan Usia & Privasi Anak
 
-Daemontalk adalah platform riset rekayasa komputer. Kami tidak secara sengaja mengumpulkan atau meminta data pribadi dari anak di bawah usia 13 tahun (atau di bawah 16 tahun di yurisdiksi tertentu). Jika kami mengetahui bahwa data anak di bawah umur telah tersimpan tanpa persetujuan wali yang terverifikasi, kami akan segera menghapus data tersebut.
+Daemontalk adalah platform publikasi dan komunitas teknologi independen. Kami tidak secara sengaja mengumpulkan atau meminta data pribadi dari anak di bawah usia 13 tahun (atau di bawah 16 tahun di yurisdiksi tertentu). Jika kami mengetahui bahwa data anak di bawah umur telah tersimpan tanpa persetujuan wali yang terverifikasi, kami akan segera menghapus data tersebut.
 
 ## 11. Lokasi Peladen & Transfer Data Internasional
 

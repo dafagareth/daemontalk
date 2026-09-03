@@ -98,7 +98,7 @@
 		var descEl = document.getElementById('inspector-desc');
 		if (tagEl) tagEl.innerText = 'Domain: ' + node.tag.toUpperCase();
 		if (titleEl) titleEl.innerText = node.label;
-		if (descEl) descEl.innerText = 'Filtered engineering dispatches under #' + node.tag;
+		if (descEl) descEl.innerText = 'Filtered tech dispatches under #' + node.tag;
 	}
 
 	function draw() {

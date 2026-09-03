@@ -1,6 +1,6 @@
-## Daftar Topik Riset yang Dicari (*Call for Dispatches*)
+## Daftar Topik & Ide Tulisan yang Dinantikan (*Call for Articles*)
 
-Jika Anda ingin menulis untuk Daemontalk namun belum menentukan tema, berikut adalah topik-topik arsitektur dan rekayasa sistem berprioritas tinggi yang sangat dinantikan oleh komunitas:
+Jika Anda ingin menulis untuk Daemontalk namun belum menentukan tema, berikut adalah topik-topik arsitektur dan teknologi sistem berprioritas tinggi yang sangat dinantikan oleh komunitas:
 
 ---
 

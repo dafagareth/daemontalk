@@ -8,12 +8,15 @@ import (
 )
 
 const (
-	authorName = "Dafa"
-	siteName   = "daemontalk"
+	siteName = "daemontalk"
 )
 
 // articleJSONLD builds a schema.org Article block for a blog post.
 func articleJSONLD(p post.Post, imageURL string) string {
+	author := p.Author
+	if author == "" {
+		author = siteName
+	}
 	data := map[string]any{
 		"@context":      "https://schema.org",
 		"@type":         "BlogPosting",
@@ -22,11 +25,12 @@ func articleJSONLD(p post.Post, imageURL string) string {
 		"datePublished": p.Date.Format("2006-01-02"),
 		"author": map[string]any{
 			"@type": "Person",
-			"name":  authorName,
+			"name":  author,
 		},
 		"publisher": map[string]any{
-			"@type": "Person",
-			"name":  authorName,
+			"@type": "Organization",
+			"name":  siteName,
+			"url":   templates.AbsoluteURL("/"),
 		},
 	}
 	if p.Description != "" {
@@ -41,17 +45,17 @@ func articleJSONLD(p post.Post, imageURL string) string {
 	return marshalJSONLD(data)
 }
 
-// siteJSONLD builds a WebSite + Person block for the home page.
+// siteJSONLD builds a WebSite block for the home page.
 func siteJSONLD() string {
 	data := map[string]any{
 		"@context": "https://schema.org",
 		"@type":    "WebSite",
 		"name":     siteName,
 		"url":      templates.AbsoluteURL("/"),
-		"author": map[string]any{
-			"@type": "Person",
-			"name":  authorName,
-			"url":   "https://github.com/dafagareth",
+		"publisher": map[string]any{
+			"@type": "Organization",
+			"name":  siteName,
+			"url":   templates.AbsoluteURL("/"),
 		},
 	}
 	return marshalJSONLD(data)

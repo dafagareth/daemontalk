@@ -8,6 +8,6 @@ import (
 
 func (h *Handler) About(w http.ResponseWriter, r *http.Request) {
 	h.renderMarkdownPage(w, r, "about", "about", templates.PageMeta{
-		Description: "About Daemontalk philosophy, editorial standards, and systems research notebook.",
+		Description: "About Daemontalk philosophy, editorial values, and open tech publishing.",
 	}, templates.AboutPage)
 }

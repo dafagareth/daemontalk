@@ -40,12 +40,12 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<h1 class=\"text-3xl sm:text-4xl font-sans font-black text-[var(--c-text)] tracking-tight\">Peta Konsep & Tech Stack</h1><p class=\"mt-2 text-sm sm:text-base text-[var(--c-muted)] max-w-3xl leading-relaxed\">Visualisasi interaktif jejaring konsep rekayasa sistem, kernel Linux, runtime bahasa pemrograman, dan storage engine yang dibahas dalam DaemonTalk.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<h1 class=\"text-3xl sm:text-4xl font-sans font-black text-[var(--c-text)] tracking-tight\">Peta Konsep & Tech Stack</h1><p class=\"mt-2 text-sm sm:text-base text-[var(--c-muted)] max-w-3xl leading-relaxed\">Visualisasi interaktif jejaring konsep teknologi, kernel Linux, runtime bahasa pemrograman, dan storage engine yang dibahas dalam DaemonTalk.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<h1 class=\"text-3xl sm:text-4xl font-sans font-black text-[var(--c-text)] tracking-tight\">Knowledge Graph & Tech Stack</h1><p class=\"mt-2 text-sm sm:text-base text-[var(--c-muted)] max-w-3xl leading-relaxed\">Interactive visualization of systems engineering, kernel architectures, language runtimes, and storage engines covered in DaemonTalk dispatches.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<h1 class=\"text-3xl sm:text-4xl font-sans font-black text-[var(--c-text)] tracking-tight\">Knowledge Graph & Tech Stack</h1><p class=\"mt-2 text-sm sm:text-base text-[var(--c-muted)] max-w-3xl leading-relaxed\">Interactive visualization of core technologies, kernel architectures, language runtimes, and storage engines covered in DaemonTalk dispatches.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -90,7 +90,7 @@ func GraphPage(ui i18n.UI, lang string, posts []post.Post) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Click any node in the graph to filter related engineering dispatches.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Click any node in the graph to filter related tech dispatches.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

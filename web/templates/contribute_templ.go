@@ -250,12 +250,12 @@ func ContributePage(ui i18n.UI, sections ContributeSections, lang string) templ.
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "Kirimkan draf riset teknis Anda atau ajukan perbaikan artikel di GitHub.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "Bagikan tulisan teknologi Anda atau ajukan perbaikan artikel di GitHub.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "Submit your research drafts or contribute technical corrections on GitHub.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "Share your tech articles or contribute improvements on GitHub.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

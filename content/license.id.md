@@ -2,7 +2,7 @@
 
 **Hak Cipta © 2026 Dafa Gareth (daemontalk.com).**
 
-Daemontalk adalah publikasi rekayasa sistem independen, buku catatan riset komputasi tingkat rendah, dan proyek perangkat lunak mandiri. Ketentuan lisensi dan hak cipta di seluruh platform diatur sebagai berikut:
+Daemontalk adalah publikasi teknologi independen, platform catatan terbuka, dan proyek perangkat lunak mandiri. Ketentuan lisensi dan hak cipta di seluruh platform diatur sebagai berikut:
 
 ---
 
@@ -10,15 +10,15 @@ Daemontalk adalah publikasi rekayasa sistem independen, buku catatan riset kompu
 
 Seluruh kode sumber perangkat lunak platform Daemontalk (backend Go, view Templ, stylesheet Tailwind, SSH server Wish, dan engine TUI) dilisensikan di bawah **[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0)**.
 
-- **Izin Penggunaan Non-Komersial**: Anda bebas membaca, mempelajari, mengaudit, mem-fork, memodifikasi, dan mengembangkan perangkat lunak lain berbasis kode ini untuk kebutuhan riset, studi akademik, lab pribadi, atau proyek non-komersial.
+- **Izin Penggunaan Non-Komersial**: Anda bebas membaca, mempelajari, mengaudit, mem-fork, memodifikasi, dan mengembangkan perangkat lunak lain berbasis kode ini untuk kebutuhan belajar, eksplorasi pribadi, studi akademik, atau proyek non-komersial.
 - **Larangan Komersialisasi & Monetisasi**: Anda **dilarang keras** menjual, menyewakan, melisensikan ulang, memonetisasi, atau memanfaatkan perangkat lunak ini sebagai produk komersial, templat web berbayar, atau layanan SaaS tanpa izin tertulis resmi dari Dafa Gareth.
 - **Klausul Wajib Sertakan Lisensi**: Setiap pendistribusian kode (dengan atau tanpa modifikasi) wajib menyertakan pemberitahuan lisensi PolyForm Noncommercial ini.
 
 ---
 
-## 2. Artikel Teknis & Materi Riset (*CC BY-NC-SA 4.0*)
+## 2. Artikel Teknis & Publikasi (*CC BY-NC-SA 4.0*)
 
-Seluruh artikel penelitian, catatan laboratorium, analisis arsitektur, dan esai editorial yang dipublikasikan di bawah direktori `content/posts/` dilisensikan di bawah **[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)**.
+Seluruh artikel teknologi, panduan praktis, analisis arsitektur, dan esai editorial yang dipublikasikan di bawah direktori `content/posts/` dilisensikan di bawah **[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)**.
 
 - **Berbagi & Adaptasi**: Anda bebas membagikan, menyalin, dan mengadaptasi tulisan ini untuk keperluan edukasi dan non-komersial.
 - **Wajib Atribusi**: Anda wajib mencantumkan kredit yang jelas kepada Dafa Gareth serta menyertakan tautan langsung ke artikel sumber asli di Daemontalk.

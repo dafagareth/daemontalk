@@ -1,26 +1,26 @@
 # About Daemontalk
 
-Daemontalk is an independent systems engineering publication, open research notebook, and low-level computing research space with zero tracking.
+Daemontalk is an independent tech publication, digital notebook, and open computing space with zero tracking.
 
 ---
 
 ## Mission & Exploration Approach
 
-Rather than abstract academic theory, Daemontalk serves as an active systems engineering archive and working portfolio. The core focus is direct verification of real-world computing systems: analyzing runtime behaviors, dissecting Linux kernel internals, profiling Go concurrency models, and exploring high-throughput storage engines with reproducible benchmarks.
+Daemontalk serves as an open technology archive and practical notebook. The core focus is sharing real-world knowledge: analyzing software behaviors, understanding Linux and system internals, exploring modern programming languages, and breaking down tech topics in ways that are practical, clear, and enjoyable to read.
 
-Every dispatch prioritizes reproducibility: from shell commands and performance stress-test scripts to architectural diagrams and open-source code snippets designed to be audited and executed directly in your laboratory environment.
+Whether it's hands-on tutorials, terminal tips, architectural walkthroughs, or industry perspectives, every article aims to provide genuine value you can explore and apply in your own projects.
 
 ## Curator & Community
 
-Initiated and curated by **Dafa Gareth** as an information systems research notebook. While maintained independently, Daemontalk is open to engineering peers, infrastructure architects, and researchers wishing to share technical dispatches through GitHub Pull Requests or community discussion threads.
+Curated as an open tech notebook. While maintained independently, Daemontalk warmly welcomes developers, students, architects, and tech enthusiasts who want to share knowledge, exchange ideas, or collaborate through GitHub Pull Requests and community discussions.
 
 ## Editorial Principles & Standards
 
-To preserve technical rigor and reading focus, all content across Daemontalk adheres strictly to these standards:
+To ensure great reading and learning experiences, all content across Daemontalk adheres to these principles:
 
-**Straight to the Point**: Direct entry into technical problems, system architecture, and code. No conversational fluff or generic introductory filler that lacks concrete engineering value.
+**Clear and Practical**: Direct, well-explained writing focused on real understanding. We avoid unnecessary corporate filler and overly dry theory so readers can jump straight to actionable takeaways.
 
-**Verifiable & Cited**: Every in-depth dispatch concludes with verified citations to RFC standards, Linux kernel source code repositories, processor manuals, or academic research papers.
+**Grounded and Accurate**: Articles are grounded in real testing, official documentation, and trusted community sources to ensure clarity and reliability.
 
 **Zero Tracking & Data Sovereignty**: Self-hosted as a single Go binary with zero Google Analytics, ad tracking beacons, paywalls, or third-party surveillance scripts.
 

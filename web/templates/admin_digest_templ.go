@@ -44,7 +44,7 @@ func adminDigestTab(stats AdminStats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</textarea></div><!-- Live Visual Preview --><div class=\"space-y-2\"><label class=\"block text-xs font-mono text-muted uppercase tracking-wider\">Digest Live Breakdown</label><div class=\"h-[460px] p-4 bg-[var(--c-surface)] border border-[var(--c-border)] overflow-y-auto space-y-4 text-xs\"><div class=\"border-b border-[var(--c-border)] pb-3\"><span class=\"text-[11px] font-mono text-[var(--c-muted)]\">daemontalk Weekly Issue</span><h3 class=\"text-base font-sans font-bold text-[var(--c-text)] mt-1\">Systems Engineering & Linux Dispatch</h3></div><div class=\"space-y-3\"><span class=\"font-mono text-muted uppercase tracking-wider text-[11px] block\">Dispatches Included:</span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</textarea></div><!-- Live Visual Preview --><div class=\"space-y-2\"><label class=\"block text-xs font-mono text-muted uppercase tracking-wider\">Digest Live Breakdown</label><div class=\"h-[460px] p-4 bg-[var(--c-surface)] border border-[var(--c-border)] overflow-y-auto space-y-4 text-xs\"><div class=\"border-b border-[var(--c-border)] pb-3\"><span class=\"text-[11px] font-mono text-[var(--c-muted)]\">daemontalk Weekly Issue</span><h3 class=\"text-base font-sans font-bold text-[var(--c-text)] mt-1\">Systems & Tech Dispatch</h3></div><div class=\"space-y-3\"><span class=\"font-mono text-muted uppercase tracking-wider text-[11px] block\">Dispatches Included:</span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

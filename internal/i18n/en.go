@@ -4,7 +4,7 @@ var en = UI{
 	Nav_Home:     "Home",
 	Nav_Colophon: "colophon",
 	Nav_Terminal: "terminal",
-	Footer_Copy:  "© 2026 Dafa",
+	Footer_Copy:  "© 2026 daemontalk",
 
 	Colophon_Title:    "Colophon & Architecture",
 	Colophon_Nav:      "Colophon",
@@ -12,7 +12,7 @@ var en = UI{
 	Colophon_Uses:     "Stack & uses",
 	Colophon_Learning: "Now / learning",
 
-	Footer_Bio:       "An independent technology publication and research notebook exploring modern computing, software architecture, and systems engineering.",
+	Footer_Bio:       "An independent tech publication and learning space exploring modern software, systems, and the digital world for everyone.",
 	Footer_Read:      "Navigation",
 	Footer_Site:      "Site",
 	Footer_Topics:    "Topics",

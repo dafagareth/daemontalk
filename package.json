@@ -2,7 +2,7 @@
   "name": "daemontalk",
   "version": "1.0.0",
   "private": true,
-  "description": "Systems engineering publication, interactive knowledge graph, and UNIX terminal playground",
+  "description": "Technology publication, interactive knowledge graph, and UNIX terminal playground",
   "author": "Dafa Gareth <dafagareth@gmail.com>",
   "homepage": "https://daemontalk.com",
   "repository": {

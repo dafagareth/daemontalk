@@ -1,6 +1,6 @@
 ## Ikhtisar
 
-Situs ini (**daemontalk.com**) adalah publikasi rekayasa perangkat lunak independen dan basis pengetahuan sistem yang dibangun sepenuhnya menggunakan Go. Proyek ini secara sadar menghindari *framework* JavaScript yang kompleks dan proses *build* yang berat, lebih memilih HTML yang dirender di sisi server, interaksi presisi melalui HTMX, dan basis data SQLite yang sangat ringan.
+Situs ini (**daemontalk.com**) adalah publikasi teknologi dan perangkat lunak independen serta basis pengetahuan sistem yang dibangun sepenuhnya menggunakan Go. Proyek ini secara sadar menghindari *framework* JavaScript yang kompleks dan proses *build* yang berat, lebih memilih HTML yang dirender di sisi server, interaksi presisi melalui HTMX, dan basis data SQLite yang sangat ringan.
 
 ## Arsitektur
 

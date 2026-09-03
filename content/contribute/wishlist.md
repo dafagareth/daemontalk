@@ -1,6 +1,6 @@
-## Topic Wishlist (*Call for Dispatches*)
+## Topic Wishlist (*Call for Articles*)
 
-If you are looking to contribute an in-depth technical dispatch to Daemontalk, here is a curated list of high-priority systems engineering and architectural topics sought by the community:
+If you are looking to write or contribute to Daemontalk, here is a curated list of high-priority topics sought by the community:
 
 ---
 

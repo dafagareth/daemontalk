@@ -1,6 +1,6 @@
 ## Filosofi & Standar Editorial
 
-Daemontalk adalah publikasi rekayasa sistem independen yang mengutamakan artikel teknis mendalam, berorientasi eksperimen nyata, dan dapat direproduksi (*reproducible*).
+Daemontalk adalah publikasi teknologi dan sistem independen yang mengutamakan artikel teknis mendalam, berorientasi eksperimen nyata, dan dapat direproduksi (*reproducible*).
 
 - **Lugas dan Bebas Basa-Basi**: Awali tulisan langsung ke inti persoalan teknis, diagram arsitektur, atau cuplikan kode. Hindari pengantar yang bertele-tele.
 - **Verifikasi & Reproduksibilitas**: Setiap klaim performa atau analisis wajib didukung cuplikan kode uji, perintah shell, log diagnostik, atau diagram arsitektur.

@@ -49,15 +49,17 @@ Manages GitHub OAuth 2.0 authentication, session lifecycle, and privacy operatio
 
 ### `internal/forum`
 Implements the community discussions engine (`/discussions`).
-* `Store`: Manages `topics`, `replies`, and `topic_votes` tables.
-* `CreateTopic` & `CreateReply`: Handles Markdown parsing, Goldmark HTML sanitization, tag normalization, and parent-child reply relationships.
+* `Store`: Manages `topics`, `replies`, `topic_votes`, and `forum_topic_views` tables.
+* `CreateTopic` & `CreateReply`: Handles Markdown parsing, `bluemonday.UGCPolicy()` HTML sanitization, tag normalization, and parent-child reply relationships.
 * `VoteTopic` & `VoteReply`: Atomically manages user upvotes and prevents duplicate voting via composite primary keys `(target_id, user_id)`.
 * `SetSolved`: Marks a specific reply as the accepted solution by the topic owner or admin.
+* `RecordTopicView`: Deduplicates topic views in `forum_topic_views` based on unique visitor keys.
 * `AnonymizeUser`: Converts all contributions of a deleted user to author `[Deleted User]` and username `ghost`, preserving discussion continuity.
 
 ### `internal/comment`
-Provides the hierarchical commenting engine for technical blog posts.
-* `Store`: Embedded SQLite repository storing article comments and threaded replies.
+Provides the hierarchical commenting engine and unique view tracking for blog posts.
+* `Store`: Embedded SQLite repository storing article comments, threaded replies, and `post_views`.
+* `RecordPostView`: Deduplicates post views using `(post_slug, viewer_key)` composite index in `post_views`.
 * `AddAdvanced`: Supports verified user attribution from GitHub sessions as well as deterministic guest handles (`anonym_<hex>`).
 * `AnonymizeUserComments`: Replaces personal metadata with `Deleted User` and default avatar upon account purge.
 
@@ -68,11 +70,12 @@ Handles Markdown article ingestion, frontmatter extraction, and in-memory indexi
 * `Database`: In-memory thread-safe repository enabling full-text search, tag aggregation, and multi-language routing (`en`, `id`, `es`).
 
 ### `internal/handler`
-Contains HTTP presentation controllers and view rendering functions.
+Contains HTTP presentation controllers, view rendering functions, and visitor identification.
 * `Handler`: Central struct coordinating routers, stores, post databases, and layout rendering.
-* `Discussions*`: Forum listing, topic view, reply submission, and upvoting endpoints.
+* `GetViewerKey`: Resolves unique visitor identity (`u:<id>` for members, `v:<uuid>` for anonymous readers via 10-year `dt_vid` cookie) and suppresses bot/crawler traffic.
+* `Discussions*`: Forum listing with dynamic tag filters, topic view with view deduplication, reply submission, and upvoting endpoints.
 * `Auth*`: OAuth initiation, callback verification, JSON data export (`/auth/export`), and account deletion (`/auth/delete-account`).
-* `Blog*`: Post rendering, tag filtering, RSS 2.0, JSON Feed, and sitemap generation.
+* `Blog*`: Post rendering, dynamic JSON-LD metadata attribution (`p.Author`), tag filtering, RSS 2.0, JSON Feed, and sitemap generation.
 * `renderMarkdownPage`: Generic renderer for static markdown pages (`about`, `privacy`, `terms`, `accessibility`, `contribute`).
 
 ### `internal/router`
@@ -157,6 +160,22 @@ CREATE TABLE topic_votes (
     user_id    INTEGER NOT NULL,
     created_at DATETIME NOT NULL,
     PRIMARY KEY (topic_id, user_id)
+);
+
+-- Deduplicated unique topic views
+CREATE TABLE forum_topic_views (
+    topic_id   INTEGER NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
+    viewer_key TEXT NOT NULL,
+    viewed_at  DATETIME NOT NULL,
+    PRIMARY KEY (topic_id, viewer_key)
+);
+
+-- Deduplicated unique blog post views
+CREATE TABLE post_views (
+    post_slug  TEXT NOT NULL,
+    viewer_key TEXT NOT NULL,
+    viewed_at  DATETIME NOT NULL,
+    PRIMARY KEY (post_slug, viewer_key)
 );
 ```
 

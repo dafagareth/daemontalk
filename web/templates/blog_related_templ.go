@@ -387,12 +387,12 @@ func blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang str
 					return templ_7745c5c3_Err
 				}
 				if lang == "id" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Baca Riset")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Baca Artikel")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "Read Dispatch")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "Read Article")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}

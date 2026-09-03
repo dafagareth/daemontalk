@@ -1,21 +1,21 @@
 ## Filosofi & Standar Kualitas
 
-Daemontalk adalah publikasi rekayasa sistem komputer independen yang mengutamakan artikel teknis mendalam, berorientasi eksperimen nyata, dan dapat direproduksi (*reproducible*). Kami menyambut kontribusi dari siapa pun—mahasiswa, rekayasawan perangkat lunak (*software engineers*), arsitek sistem, maupun peneliti yang ingin membagikan catatan teknisnya atau mengembangkan ekosistem Daemontalk.
+Daemontalk adalah publikasi dan ruang belajar teknologi independen. Kami menyambut hangat kontribusi dari siapa pun—mahasiswa yang baru memulai, programmer, arsitek sistem, maupun tech enthusiast yang ingin membagikan pandangannya atau mengembangkan ekosistem Daemontalk.
 
-**Lugas dan Bebas Basa-Basi**: Awali tulisan langsung ke inti persoalan teknis, diagram arsitektur, atau cuplikan kode. Hindari pengantar yang bertele-tele dan klise pembuka yang tidak bernilai teknis.
+**Jelas dan Bernas**: Awali tulisan langsung ke inti persoalan, alur solusi, atau cuplikan kode. Hindari pengantar yang bertele-tele agar pembaca dapat langsung memetik manfaatnya.
 
-**Verifikasi & Reproduksibilitas**: Setiap hipotesis atau klaim performa wajib dilengkapi dengan cuplikan kode uji, perintah terminal, log diagnostik, atau diagram arsitektur yang memungkinkan pembaca menguji dan memverifikasi sendiri temuannya.
+**Akurat dan Dapat Diterapkan**: Panduan, cuplikan kode, atau studi kasus hendaknya dapat diuji atau diaplikasikan langsung oleh pembaca di proyek mereka masing-masing.
 
-**Referensi Terverifikasi**: Lengkapi setiap artikel dengan blok referensi ke dokumen resmi otoritatif, seperti RFC standar internet, repositori kode sumber kernel Linux, manual arsitektur prosesor, atau *paper* riset ilmiah.
+**Rujukan Terpercaya**: Cantumkan tautan ke dokumentasi resmi, repositori kode sumber, atau sumber terpercaya jika tulisan Anda mengacu pada standar atau materi eksternal.
 
 ---
 
 ## Pilar Kontribusi yang Diterima
 
-Daemontalk terbuka untuk berbagai bentuk kontribusi teknis:
+Daemontalk terbuka untuk berbagai bentuk kontribusi:
 
-**1. Penulisan Artikel & Riset Sistem (`content/posts/`)**:
-Menulis artikel analisis mendalam, eksplorasi kernel, protokol jaringan, basis data, atau studi kasus sistem terdistribusi.
+**1. Penulisan Artikel & Cerita Teknologi (`content/posts/`)**:
+Menulis tutorial praktis, ulasan teknologi baru, arsitektur sistem, tips karir programmer, opini industri teknologi, hingga studi kasus nyata.
 
 **2. Pengembangan Kode Sumber & Perbaikan Bug (*Core Engine*)**:
 - Backend Go (HTTP Handlers, SQLite storage, CLI tools, parser Goldmark).
@@ -101,10 +101,11 @@ cd daemontalk
 - **Koreksi Artikel / Typo**: `git checkout -b docs/perbaikan-slug`
 
 **Langkah 3: Uji Coba & Verifikasi Lokal**
-Pastikan generator template dan seluruh unit test berjalan sukses:
+Gunakan `Makefile` untuk pengujian dan kompilasi lokal (buka berkas `Makefile` untuk melihat seluruh opsi target yang tersedia):
 ```bash
-make build
-go test ./...
+make test             # Menjalankan seluruh rangkaian pengujian unit test
+make build            # Kompilasi generator templ, minifikasi CSS, dan build binary
+make validate-posts   # Memvalidasi struktur berkas Markdown dan metadata
 ```
 
 **Langkah 4: Buka Pull Request**

@@ -196,12 +196,12 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			return templ_7745c5c3_Err
 		}
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Tanya jawab teknis, studi kasus arsitektur, dan kolaborasi rekayasa sistem.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Tanya jawab teknis, studi kasus arsitektur, dan diskusi teknologi.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Technical Q&A, system architecture case studies, and engineering exchange.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Technical Q&A, system architecture case studies, and tech discussions.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

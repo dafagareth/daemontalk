@@ -33,7 +33,7 @@ func (m PageMeta) ogDesc() string {
 	if m.Description != "" {
 		return m.Description
 	}
-	return "An independent technology publication and research notebook exploring modern computing, software architecture, and systems engineering."
+	return "An independent tech publication and learning space exploring modern software, systems, and the digital world for everyone."
 }
 
 func (m PageMeta) ogImage() string {

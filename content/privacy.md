@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Last updated: August 30, 2026** · **Version: 2.1**
+**Last updated: September 4, 2026** · **Version: 2.2**
 
 Daemontalk operates under a strict zero-tracker philosophy. We believe technical publications and developer platforms must prioritize reader sovereignty, architectural transparency, and computational minimalism. We do not track, profile, monetize, or harvest personal data.
 
@@ -76,7 +76,7 @@ When engaging with interactive community features:
 
 ## 8. Data Security & Cryptography Standards
 
-We employ defense-in-depth engineering practices to secure all stored and transmitted data:
+We employ defense-in-depth security practices to secure all stored and transmitted data:
 
 **Transport Layer Security**: All web traffic is strictly encrypted using TLS 1.3 with Perfect Forward Secrecy (PFS) and HTTP Strict Transport Security (HSTS).
 
@@ -96,7 +96,7 @@ You maintain complete sovereignty over your personal data:
 
 ## 10. Age Limitations & Children's Privacy
 
-Daemontalk is an engineering and computer science research platform. We do not knowingly collect or solicit personal information from individuals under the age of 13 (or under 16 in certain EU jurisdictions). If we become aware that personal information has been collected from a child without verified parental consent, we will promptly delete that data.
+Daemontalk is an independent technology publication and community platform. We do not knowingly collect or solicit personal information from individuals under the age of 13 (or under 16 in certain EU jurisdictions). If we become aware that personal information has been collected from a child without verified parental consent, we will promptly delete that data.
 
 ## 11. Server Hosting & International Data Transfers
 

@@ -1,3 +1,10 @@
+### v1.4.1 (September 4, 2026) · Language Refinement & Universal Tech Tone
+
+- **Tone and Language Refinement**: Softened overly academic and rigid terminology across all platform documents and UI, creating an open, welcoming, and accessible space for all tech enthusiasts, students, and developers.
+- **Dynamic Author Metadata**: Configured article JSON-LD and OpenGraph metadata to resolve the real author dynamically from the post frontmatter (`p.Author`), replacing static hardcoded names.
+- **Documentation & Workflow Alignment**: Pruned legacy private VPS setup documentation, updated `ARCHITECTURE.md` to reflect v1.4.0 database schemas, and highlighted `Makefile` as the unified command interface.
+- **Legal Policies Update**: Updated the effective date of Privacy Policy, Terms of Use, and Accessibility Statement to September 4, 2026 (Version 2.2).
+
 ### v1.4.0 (September 4, 2026) · Unique Views Deduplication, Socket Tags Migration, Anti-XSS & UI Overhaul
 
 - **Unique Human Views Deduplication**: Eradicated artificial view inflation from page refreshes (F5) by introducing persistent database deduplication (`forum_topic_views` and `post_views` in SQLite). Views are strictly counted per unique visitor identity (`u:<userID>` for authenticated users, `v:<visitorID>` for guests), completely excluding topic authors viewing their own dispatches, administrators, automated web crawlers, and CLI requests.

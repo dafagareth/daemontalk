@@ -1,6 +1,6 @@
 # Syarat & Ketentuan Penggunaan
 
-**Terakhir diperbarui: 30 Agustus 2026** · **Versi: 2.1**
+**Terakhir diperbarui: 4 September 2026** · **Versi: 2.2**
 
 Selamat datang di Daemontalk. Dengan mengakses, membaca tulisan, berpartisipasi dalam diskusi, atau memanfaatkan antarmuka terminal dan API pada situs web ini ("Platform"), Anda menyetujui untuk terikat dengan Syarat & Ketentuan Penggunaan ini serta Kebijakan Privasi kami. Jika Anda tidak menyetujui bagian mana pun dari ketentuan ini, silakan hentikan penggunaan platform.
 
@@ -8,7 +8,7 @@ Selamat datang di Daemontalk. Dengan mengakses, membaca tulisan, berpartisipasi 
 
 ## 1. Penerimaan Syarat & Ruang Lingkup Layanan
 
-Daemontalk adalah publikasi rekayasa teknis independen, buku catatan riset sistem komputer, dan platform komunitas pengembang yang dikelola oleh Dafa Gareth. Ketentuan ini mengatur seluruh interaksi pengunjung dan anggota di seluruh antarmuka web, umpan RSS, *endpoint* JSON, shell peramban virtual, serta gateway SSH publik.
+Daemontalk adalah publikasi teknologi dan sistem komputer independen, catatan teknologi terbuka, dan platform komunitas pengembang. Ketentuan ini mengatur seluruh interaksi pengunjung dan anggota di seluruh antarmuka web, umpan RSS, *endpoint* JSON, shell peramban virtual, serta gateway SSH publik.
 
 ## 2. Hak Kekayaan Intelektual & Lisensi Konten
 
@@ -20,7 +20,7 @@ Daemontalk adalah publikasi rekayasa teknis independen, buku catatan riset siste
 
 ## 3. Konten Buatan Pengguna & Kontribusi Forum
 
-**Pemberian Hak Lisensi**: Saat Anda mengirimkan pertanyaan teknis, solusi jawaban, tinjauan arsitektur, atau cuplikan kode pada Forum Diskusi (`/discussions`) maupun kolom komentar artikel, Anda memberikan lisensi non-eksklusif, berlaku permanen di seluruh dunia, dan bebas royalti kepada Daemontalk untuk menampilkan, menyusun indeks, serta mendistribusikan kontribusi tersebut sebagai bagian dari basis pengetahuan rekayasa publik.
+**Pemberian Hak Lisensi**: Saat Anda mengirimkan pertanyaan teknis, solusi jawaban, tinjauan arsitektur, atau cuplikan kode pada Forum Diskusi (`/discussions`) maupun kolom komentar artikel, Anda memberikan lisensi non-eksklusif, berlaku permanen di seluruh dunia, dan bebas royalti kepada Daemontalk untuk menampilkan, menyusun indeks, serta mendistribusikan kontribusi tersebut sebagai bagian dari basis pengetahuan teknologi publik.
 
 **Hak Milik Orisinal**: Anda tetap memegang hak cipta penuh atas karya teknis orisinal Anda. Anda bertanggung jawab penuh untuk memastikan bahwa tulisan atau kode yang Anda kirimkan tidak melanggar hak cipta pihak ketiga, perjanjian kerahasiaan (*Non-Disclosure Agreement* / NDA), atau kode rahasia perusahaan tempat Anda bekerja.
 
@@ -38,7 +38,7 @@ Daemontalk adalah publikasi rekayasa teknis independen, buku catatan riset siste
 
 Saat berpartisipasi dalam diskusi, membuat topik, atau mengirimkan komentar:
 
-**Diskusi Teknis yang Konstruktif**: Pengunjung diharapkan menjaga diskusi yang sopan, berbasis bukti teknis yang dapat diuji (*reproducible*), dan solutif. Fokuslah pada pertukaran wawasan rekayasa sistem, komparasi arsitektur, dan pembelajaran bersama.
+**Diskusi Teknis yang Konstruktif**: Pengunjung diharapkan menjaga diskusi yang sopan, berbasis bukti teknis yang dapat diuji (*reproducible*), dan solutif. Fokuslah pada pertukaran wawasan teknologi, komparasi arsitektur, dan pembelajaran bersama.
 
 **Larangan Konten & Kiriman Berbahaya**: Dilarang keras mengirimkan iklan komersial tanpa izin, spam pemasaran afiliasi, bot promosi otomatis, *payload* kode berbahaya/eksploitasi, tautan *phishing*, fitnah, pelecehan, ujaran kebencian, atau materi yang melanggar ketentuan hukum yang berlaku.
 
@@ -54,7 +54,7 @@ Saat berpartisipasi dalam diskusi, membuat topik, atau mengirimkan komentar:
 
 Seluruh analisis teknis, hasil pengujian performa (*benchmarks*), konfigurasi kernel Linux, penyesuaian basis data, dan skrip otomatisasi disediakan sebagaimana adanya (*as-is*) dan berdasarkan ketersediaan (*as-available*) tanpa jaminan apa pun, baik tersurat maupun tersirat.
 
-Dunia rekayasa perangkat lunak dan sistem operasi berkembang sangat cepat. Anda bertanggung jawab penuh untuk mengaudit, menguji, dan memvalidasi konfigurasi pada lingkungan lab atau *staging* terisolasi sebelum menerapkannya pada infrastruktur server produksi yang sesungguhnya.
+Dunia teknologi perangkat lunak dan sistem operasi berkembang sangat cepat. Anda bertanggung jawab penuh untuk mengaudit, menguji, dan memvalidasi konfigurasi pada lingkungan lab atau *staging* terisolasi sebelum menerapkannya pada infrastruktur server produksi yang sesungguhnya.
 
 ## 8. Batasan Tanggung Jawab Hukum
 

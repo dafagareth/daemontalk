@@ -64,7 +64,7 @@ func (h *Handler) CLIMain(w http.ResponseWriter, r *http.Request) {
 |____/ \__,_|\___|_| |_| |_|\___/|_| |_|\__\__,_|_|_|\_\`
 
 	b.WriteString(fmt.Sprintf("%s%s%s\n\n", ansiGreen+ansiBold, banner, ansiReset))
-	b.WriteString(fmt.Sprintf("%sdaemontalk · Independent Systems & Engineering Publication%s\n", ansiDim, ansiReset))
+	b.WriteString(fmt.Sprintf("%sdaemontalk · Independent Technology & Systems Publication%s\n", ansiDim, ansiReset))
 	b.WriteString(fmt.Sprintf("%sHost: %s | Time: %s%s\n", ansiDim, r.Host, time.Now().UTC().Format("2006-01-02 15:04:05 UTC"), ansiReset))
 	b.WriteString(fmt.Sprintf("%s----------------------------------------------------------------------%s\n\n", ansiDim, ansiReset))
 

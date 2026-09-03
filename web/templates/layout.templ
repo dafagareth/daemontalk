@@ -74,6 +74,10 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 			<meta name="twitter:title" content={ pageTitle(page) }/>
 			<meta name="twitter:description" content={ meta.ogDesc() }/>
 			<meta name="twitter:image" content={ meta.ogImage() }/>
+			if meta.Author != "" {
+				<meta name="author" content={ meta.Author }/>
+				<meta property="article:author" content={ meta.Author }/>
+			}
 			if meta.JSONLD != "" {
 				@templ.Raw(`<script type="application/ld+json">` + meta.JSONLD + `</script>`)
 			}

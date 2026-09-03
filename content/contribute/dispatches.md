@@ -1,6 +1,6 @@
 ## Philosophy & Editorial Standards
 
-Daemontalk is an independent systems engineering publication dedicated to practical, verifiable, and reproducible technical dispatches.
+Daemontalk is an independent technology publication dedicated to practical, verifiable, and reproducible technical dispatches.
 
 - **Straight to the Point**: Dive directly into the technical core, architectural blueprints, or code examples in the opening section. Avoid conversational fluff.
 - **Verification & Reproducibility**: Every technical claim or benchmark must be supported by actionable test code, diagnostic logs, shell commands, or architecture diagrams.

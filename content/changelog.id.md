@@ -1,3 +1,10 @@
+### v1.4.1 (4 September 2026) · Penyesuaian Bahasa & Nada Bicara Lebih Universal
+
+- **Penyelarasan Bahasa & Nada Bicara**: Menyederhanakan istilah kaku dan frasa akademik ("riset", "research notebook", "rekayasa sistem") di seluruh halaman platform agar lebih ramah, santai, dan terbuka bagi semua kalangan pencinta teknologi (dari pemula hingga praktisi).
+- **Metadata Penulis Dinamis**: Memperbaiki skema JSON-LD dan OpenGraph agar nama penulis artikel diambil secara dinamis sesuai berkas (`p.Author`), menggantikan nama bawaan statis.
+- **Pembersihan Dokumentasi**: Menghapus panduan setup VPS privat, memperbarui `ARCHITECTURE.md` dengan skema v1.4.0 terbaru, serta memusatkan panduan perintah alur kerja ke `Makefile`.
+- **Pembaruan Dokumen Kebijakan**: Memperbarui tanggal kebijakan privasi, syarat penggunaan, dan aksesibilitas per 4 September 2026 (Versi 2.2).
+
 ### v1.4.0 (4 September 2026) · Deduplikasi Tayangan Unik, Migrasi Tag Socket, Keamanan Anti-XSS & Pemolesan UI
 
 - **Deduplikasi Tayangan Unik (Human Views)**: Menghapus kenaikan angka views akibat refresh halaman (F5) dengan mengimplementasikan tabel pelacak penonton unik (`forum_topic_views` dan `post_views` di SQLite). Tayangan dihitung murni per pengunjung unik (`u:<userID>` untuk pengguna login, `v:<visitorID>` untuk tamu), serta secara otomatis mengecualikan pemilik postingan yang membuka artikelnya sendiri, admin, bot perayap web, dan request CLI.

@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-Non--Commercial-blue.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.26+-00ADD8.svg)](go.mod)
 
-`daemontalk` is an independent systems engineering publication, research notebook, and source-available computing platform. Built as a single standalone Go binary, it provides deep-dive software engineering articles, community discussions, an in-browser web terminal, and an interactive terminal reader accessible over SSH.
+`daemontalk` is an independent tech publication, digital notebook, and open computing platform for developers and enthusiasts. Built as a single standalone Go binary, it provides deep-dive software articles, community discussions, an in-browser web terminal, and an interactive terminal reader accessible over SSH.
 
 <p align="center">
   <img src="docs/architecture.svg" alt="Daemontalk Architecture" width="100%">
@@ -27,7 +27,7 @@ Launch the interactive TUI over SSH:
 $ ssh ssh.daemontalk.com -p 2222
 ```
 
-Stream daily engineering dispatches via curl:
+Stream daily tech dispatches via curl:
 ```bash
 $ curl -sL daemontalk.com/daily
 ```
@@ -37,13 +37,21 @@ Install the standalone CLI binary locally:
 $ curl -sL https://daemontalk.com/install.sh | bash
 ```
 
+## Development & Makefile Workflows
+
+All development workflows, testing, code generation, container orchestration, and content utilities are driven via the [Makefile](Makefile). Check the `Makefile` for the complete set of targets:
+
+- `make dev` — Start live-reloading dev environment (Go `air` + `templ` watch + Tailwind watch).
+- `make build` — Full build pipeline: compile templates, minify Tailwind CSS, and build binary.
+- `make test` / `make test-race` — Run unit tests and race detection suite.
+- `make new-post` / `make validate-posts` — CLI utilities for managing and validating markdown articles.
+- `make docker-up` / `make docker-down` — Production Docker Compose lifecycle.
+
 ## Documentation and Specifications
 
-Refer to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for internal codebase architecture, package breakdowns, and database schemas.
-
-Refer to [docs/VPS_SETUP.md](docs/VPS_SETUP.md) for production deployment instructions using Docker, Caddy, and UFW.
-
-Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for development setup (Docker vs local) and contribution standards.
+- Refer to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for internal codebase architecture, package breakdowns, and database schemas.
+- Refer to [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for local development conventions.
+- Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for article writing guidelines and Pull Request workflows.
 
 ## License
 

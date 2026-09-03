@@ -1,6 +1,6 @@
 ## Overview
 
-This site (**daemontalk.com**) is an independent engineering publication and systems knowledge graph built entirely in Go. It explicitly avoids complex JavaScript frameworks and heavy build pipelines in favor of server-rendered HTML, precise HTMX interactions, and a lightweight SQLite database.
+This site (**daemontalk.com**) is an independent technology publication and systems knowledge graph built entirely in Go. It explicitly avoids complex JavaScript frameworks and heavy build pipelines in favor of server-rendered HTML, precise HTMX interactions, and a lightweight SQLite database.
 
 ## Architecture
 

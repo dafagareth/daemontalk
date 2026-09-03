@@ -62,7 +62,7 @@ func (h *Handler) Discussions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	meta := templates.PageMeta{
-		Description: "Daemontalk open systems engineering discussions, debugging Q&A, and incident post-mortems.",
+		Description: "Daemontalk open tech and systems discussions, debugging Q&A, and incident post-mortems.",
 	}
 
 	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, meta,
@@ -82,7 +82,7 @@ func (h *Handler) DiscussionsNew(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, templates.PageMeta{
-		Description: "Start a new systems engineering discussion or ask a question on Daemontalk.",
+		Description: "Start a new tech discussion or ask a question on Daemontalk.",
 	}, templates.DiscussionsNewPage(ui, lang, user)))
 }
 
