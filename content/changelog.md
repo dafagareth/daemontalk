@@ -1,3 +1,10 @@
+### v1.4.0 (September 3, 2026) · Fast-Track Sync, Cloudflare CSP & UI Polish
+
+- **Fast-Track Content Sync**: Implemented a bypass workflow (`sync-content.yml`) that triggers via webhook for markdown-only changes, skipping the 3-minute Docker build and deploying instantly (~10s).
+- **Git Log Date Fallback & UTC Fix**: Fixed git history resolution in Docker (`safe.directory` bypass) and synchronized container timezone to `Asia/Jakarta` to ensure accurate article publication dates.
+- **Cloudflare Analytics Integration**: Hardened the Content-Security-Policy (CSP) by explicitly whitelisting Cloudflare's Web Analytics beacon in the router middleware.
+- **UI Enhancements**: Implemented an auto-dimming Focus Mode (`opacity-25`) for desktop sidebars and replaced the static Table of Contents with a collapsible `<details>` element for cleaner reading.
+
 ### v1.3.2 (September 2, 2026) · CI/CD Deploy Script Execution Fix
 
 - **VPS Deployment Permissions**: Added automatic `chmod +x` and explicit `bash` invocation in GitHub Actions CD deployment workflow to prevent execution permission errors on remote hosts.
