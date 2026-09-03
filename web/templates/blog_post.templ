@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"daemontalk/internal/auth"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
@@ -8,7 +9,7 @@ import (
 	"strings"
 )
 
-templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comment.Comment, views int, isAdmin bool, lang string, reactions map[string]int, seriesParts []post.Post, nav PostNav, userReaction string, visitorName string) {
+templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comment.Comment, views int, isAdmin bool, lang string, reactions map[string]int, seriesParts []post.Post, nav PostNav, userReaction string, visitorName string, authUser *auth.User) {
 	<div class="container-page max-w-7xl mx-auto py-8 sm:py-12 transition-all">
 		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14 relative">
 			<aside class="hidden xl:block w-52 shrink-0 sticky top-36 lg:top-40 space-y-5 opacity-25 hover:opacity-100 transition-opacity duration-300">
@@ -86,7 +87,7 @@ templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comm
 		<div class="flex flex-col lg:flex-row justify-start items-start gap-8 lg:gap-12 xl:gap-14">
 			<div class="hidden xl:block w-52 shrink-0"></div>
 			<div class="w-full max-w-[42rem] min-w-0 flex-1">
-				@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName)
+				@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName, authUser)
 			</div>
 		</div>
 		if len(related) > 0 {
