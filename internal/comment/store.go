@@ -65,6 +65,7 @@ func Open(path string) (*Store, error) {
 	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN avatar_url TEXT DEFAULT '';`)
 	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN is_verified BOOLEAN DEFAULT 0;`)
 	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN github_url TEXT DEFAULT '';`)
+	_, _ = db.Exec(`ALTER TABLE comments ADD COLUMN is_reported BOOLEAN DEFAULT 0;`)
 
 	// Create indexes safely after ensuring all columns exist
 	if _, err := db.Exec(`
