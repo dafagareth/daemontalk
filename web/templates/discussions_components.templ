@@ -67,7 +67,7 @@ templ DiscussionsReplyItem(ui i18n.UI, lang string, currentUser *auth.User, r *f
 					<span class="font-bold text-text">{ r.AuthorName }</span>
 				}
 				<span>·</span>
-				<time datetime={ r.CreatedAt.Format("2006-01-02 15:04") }>
+				<time datetime={ r.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time">
 					{ timeAgoOrDate(r.CreatedAt, lang) }
 				</time>
 			</div>
