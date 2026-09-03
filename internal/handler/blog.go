@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"daemontalk/internal/auth"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
 	"daemontalk/internal/post"
@@ -236,9 +237,10 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 	if isAdmin {
 		visitorName = "daemontalk"
 	}
+	authUser := auth.GetUser(r.Context())
 
 	h.Render(w, r, templates.Layout(ui, lang, p.Title+" · daemontalk", r.URL.Path, meta,
-		templates.BlogPostPage(ui, p, related, comments, views, isAdmin, lang, reactions, seriesParts, nav, userReaction, visitorName),
+		templates.BlogPostPage(ui, p, related, comments, views, isAdmin, lang, reactions, seriesParts, nav, userReaction, visitorName, authUser),
 	))
 }
 
