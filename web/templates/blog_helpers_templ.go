@@ -145,9 +145,9 @@ func fmtDate(p post.Post, lang string) string {
 	d := p.Date
 	if lang == "id" {
 		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
-		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+		return fmt.Sprintf("%02d %s %d WIB", d.Day(), bulan[d.Month()-1], d.Year())
 	}
-	return d.Format("02 January 2006")
+	return fmt.Sprintf("%s WIB", d.Format("02 January 2006"))
 }
 
 func timeAgoOrDate(d time.Time, lang string) string {
@@ -164,17 +164,17 @@ func timeAgoOrDate(d time.Time, lang string) string {
 	}
 	if mins < 60 {
 		if lang == "id" {
-			return fmt.Sprintf("%d menit lalu", mins)
+			return fmt.Sprintf("%d menit yang lalu", mins)
 		}
 		if mins == 1 {
-			return "1 min ago"
+			return "1 minute ago"
 		}
-		return fmt.Sprintf("%d mins ago", mins)
+		return fmt.Sprintf("%d minutes ago", mins)
 	}
 	hrs := int(dur.Hours())
 	if hrs < 24 {
 		if lang == "id" {
-			return fmt.Sprintf("%d jam lalu", hrs)
+			return fmt.Sprintf("%d jam yang lalu", hrs)
 		}
 		if hrs == 1 {
 			return "1 hour ago"
@@ -184,14 +184,35 @@ func timeAgoOrDate(d time.Time, lang string) string {
 	days := int(dur.Hours() / 24)
 	if days <= 7 {
 		if lang == "id" {
-			return fmt.Sprintf("%d hari lalu", days)
+			return fmt.Sprintf("%d hari yang lalu", days)
 		}
 		if days == 1 {
 			return "1 day ago"
 		}
 		return fmt.Sprintf("%d days ago", days)
 	}
-	return fmtShortDate(d, lang)
+
+	now := time.Now()
+	if d.Year() == now.Year() {
+		return fmtDayMonthFull(d, lang)
+	}
+	return fmtFullMonthDate(d, lang)
+}
+
+func fmtDayMonthFull(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		return fmt.Sprintf("%d %s", d.Day(), bulan[d.Month()-1])
+	}
+	return d.Format("2 January")
+}
+
+func fmtFullMonthDate(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+	}
+	return d.Format("2 January 2006")
 }
 
 func fmtShortDate(d time.Time, lang string) string {
@@ -213,18 +234,18 @@ func fmtDayMonth(d time.Time, lang string) string {
 func fmtDateTime(d time.Time, lang string) string {
 	if lang == "id" {
 		bulan := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
-		return fmt.Sprintf("%02d %s %d, %02d:%02d", d.Day(), bulan[d.Month()-1], d.Year(), d.Hour(), d.Minute())
+		return fmt.Sprintf("%02d %s %d, %02d:%02d WIB", d.Day(), bulan[d.Month()-1], d.Year(), d.Hour(), d.Minute())
 	}
-	return d.Format("02 Jan 2006, 15:04")
+	return fmt.Sprintf("%s WIB", d.Format("02 Jan 2006, 15:04"))
 }
 
 func fmtFullDate(d time.Time, lang string) string {
 	if lang == "id" {
 		hari := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
 		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
-		return fmt.Sprintf("%s, %d %s %d", hari[d.Weekday()], d.Day(), bulan[d.Month()-1], d.Year())
+		return fmt.Sprintf("%s, %02d %s %d WIB", hari[d.Weekday()], d.Day(), bulan[d.Month()-1], d.Year())
 	}
-	return d.Format("Monday, 02 January 2006")
+	return fmt.Sprintf("%s WIB", d.Format("Monday, 02 January 2006"))
 }
 
 // searchIndex builds the haystack used by the client-side blog search.
@@ -277,7 +298,7 @@ func postThumbnail(p post.Post, linkURL string) templ.Component {
 			var templ_7745c5c3_Var5 templ.SafeURL
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(linkURL))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 184, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 205, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -335,7 +356,7 @@ func postThumbnailImg(p post.Post) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Cover)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 196, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 217, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -348,7 +369,7 @@ func postThumbnailImg(p post.Post) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 197, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 218, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -479,7 +500,7 @@ func categoryMultiLinks(tagKey string, lang string, linkClass string, separatorC
 			var templ_7745c5c3_Var14 templ.SafeURL
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + l.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 226, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 247, Col: 67}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -505,7 +526,7 @@ func categoryMultiLinks(tagKey string, lang string, linkClass string, separatorC
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(l.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 227, Col: 11}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 248, Col: 11}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {

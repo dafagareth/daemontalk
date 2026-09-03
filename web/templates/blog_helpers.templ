@@ -95,17 +95,17 @@ func timeAgoOrDate(d time.Time, lang string) string {
 	}
 	if mins < 60 {
 		if lang == "id" {
-			return fmt.Sprintf("%d menit lalu", mins)
+			return fmt.Sprintf("%d menit yang lalu", mins)
 		}
 		if mins == 1 {
-			return "1 min ago"
+			return "1 minute ago"
 		}
-		return fmt.Sprintf("%d mins ago", mins)
+		return fmt.Sprintf("%d minutes ago", mins)
 	}
 	hrs := int(dur.Hours())
 	if hrs < 24 {
 		if lang == "id" {
-			return fmt.Sprintf("%d jam lalu", hrs)
+			return fmt.Sprintf("%d jam yang lalu", hrs)
 		}
 		if hrs == 1 {
 			return "1 hour ago"
@@ -115,14 +115,35 @@ func timeAgoOrDate(d time.Time, lang string) string {
 	days := int(dur.Hours() / 24)
 	if days <= 7 {
 		if lang == "id" {
-			return fmt.Sprintf("%d hari lalu", days)
+			return fmt.Sprintf("%d hari yang lalu", days)
 		}
 		if days == 1 {
 			return "1 day ago"
 		}
 		return fmt.Sprintf("%d days ago", days)
 	}
-	return fmtShortDate(d, lang)
+	
+	now := time.Now()
+	if d.Year() == now.Year() {
+		return fmtDayMonthFull(d, lang)
+	}
+	return fmtFullMonthDate(d, lang)
+}
+
+func fmtDayMonthFull(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		return fmt.Sprintf("%d %s", d.Day(), bulan[d.Month()-1])
+	}
+	return d.Format("2 January")
+}
+
+func fmtFullMonthDate(d time.Time, lang string) string {
+	if lang == "id" {
+		bulan := []string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+		return fmt.Sprintf("%d %s %d", d.Day(), bulan[d.Month()-1], d.Year())
+	}
+	return d.Format("2 January 2006")
 }
 
 func fmtShortDate(d time.Time, lang string) string {
