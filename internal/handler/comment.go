@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"html"
 	"log/slog"
 	"net/http"
 	"net/smtp"
@@ -110,11 +111,17 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 	var isVerified bool
 	var userID *int64
 
-	if authUser != nil {
+	isAnon := r.PostFormValue("is_anonymous") == "true"
+
+	if authUser != nil && !isAnon {
 		name = authUser.Username
 		avatarURL = authUser.AvatarURL
 		ghURL = authUser.GitHubURL
 		isVerified = true
+		userID = &authUser.ID
+	} else if authUser != nil && isAnon {
+		// Logged in but posting anonymously. We keep 'name' as visitorName (anonym_xyz),
+		// but attach the userID so they still own the comment and can delete it.
 		userID = &authUser.ID
 	} else if isAdmin {
 		name = "daemontalk"
@@ -165,11 +172,13 @@ func (h *Handler) renderCommentList(w http.ResponseWriter, r *http.Request, ui i
 	if isAdmin {
 		visitorName = "daemontalk"
 	}
+	authUser := auth.GetUser(r.Context())
+	
 	comments, err := h.Comments.ListBySlug(slug)
 	if err != nil {
 		slog.Error("load comments for slug failed", "slug", slug, "error", err)
 	}
-	h.Render(w, r, templates.CommentList(ui, comments, isAdmin, slug, langFromRequest(r), visitorName))
+	h.Render(w, r, templates.CommentList(ui, comments, isAdmin, slug, langFromRequest(r), visitorName, authUser))
 }
 func (h *Handler) sendCommentNotification(slug, name, body string) {
 	port := h.SMTPPort
@@ -259,4 +268,112 @@ func (h *Handler) StreamComments(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CommentsPartial(w http.ResponseWriter, r *http.Request) {
 	h.renderCommentList(w, r, i18n.Get(langFromRequest(r)), chi.URLParam(r, "slug"), h.isAdmin(r))
+}
+
+func blogPrefix(lang string) string {
+	if lang == "id" {
+		return "/id"
+	}
+	return ""
+}
+
+func (h *Handler) EditCommentForm(w http.ResponseWriter, r *http.Request) {
+	lang := langFromRequest(r)
+	prefix := blogPrefix(lang)
+	slug := chi.URLParam(r, "slug")
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+	
+	c, err := h.Comments.GetByID(id)
+	if err != nil || c == nil {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+
+	visitorName := GetVisitorIdentity(w, r)
+	user := auth.GetUser(r.Context())
+	isOwner := (user != nil && c.UserID != nil && *c.UserID == user.ID) || (c.Name == visitorName)
+	isAdmin := h.isAdmin(r)
+
+	if !isAdmin && !isOwner {
+		http.Error(w, "forbidden", http.StatusForbidden)
+		return
+	}
+	
+	if !isAdmin && time.Since(c.CreatedAt) > 10*time.Minute {
+		http.Error(w, "edit window expired", http.StatusForbidden)
+		return
+	}
+
+	cancelLabel := "Cancel"
+	saveLabel := "Save"
+	if lang == "id" {
+		cancelLabel = "Batal"
+		saveLabel = "Simpan"
+	}
+
+	formHTML := fmt.Sprintf(`
+		<form class="mt-2 space-y-2" hx-post="%s/blog/%s/comments/%d/update" hx-target="#comment-list" hx-swap="outerHTML">
+			<textarea name="body" required maxlength="2000" rows="3" class="w-full px-3 py-2 text-sm rounded-none border border-[var(--c-link)] bg-surface text-text focus:outline-none focus:ring-1 focus:ring-[var(--c-link)] resize-y">%s</textarea>
+			<div class="flex items-center justify-end gap-2">
+				<button type="button" class="text-xs font-mono text-muted hover:text-text cursor-pointer px-3 py-1.5 border border-border bg-surface transition-colors" hx-get="%s/blog/%s/comments" hx-target="#comment-list" hx-swap="outerHTML">%s</button>
+				<button type="submit" class="px-4 py-1.5 text-xs font-mono bg-[var(--c-link)] text-white hover:brightness-110 transition-colors cursor-pointer rounded-none font-medium">%s</button>
+			</div>
+		</form>
+	`, prefix, slug, id, html.EscapeString(c.Body), prefix, slug, cancelLabel, saveLabel)
+	
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(formHTML))
+}
+
+func (h *Handler) UpdateComment(w http.ResponseWriter, r *http.Request) {
+	slug := chi.URLParam(r, "slug")
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+
+	c, err := h.Comments.GetByID(id)
+	if err != nil || c == nil {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+
+	visitorName := GetVisitorIdentity(w, r)
+	user := auth.GetUser(r.Context())
+	isOwner := (user != nil && c.UserID != nil && *c.UserID == user.ID) || (c.Name == visitorName)
+	isAdmin := h.isAdmin(r)
+
+	if !isAdmin && !isOwner {
+		http.Error(w, "forbidden", http.StatusForbidden)
+		return
+	}
+	
+	if !isAdmin && time.Since(c.CreatedAt) > 10*time.Minute {
+		http.Error(w, "edit window expired", http.StatusForbidden)
+		return
+	}
+
+	body := strings.TrimSpace(r.FormValue("body"))
+	if body != "" && len(body) <= comment.MaxBodyLen {
+		_ = h.Comments.UpdateBody(id, body)
+	}
+
+	lang := langFromRequest(r)
+	ui := i18n.Get(lang)
+	h.renderCommentList(w, r, ui, slug, isAdmin)
+}
+
+func (h *Handler) ReportComment(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+	if err == nil {
+		_ = h.Comments.Report(id)
+	}
+	
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(`<span class="text-[var(--c-link)] font-bold px-2 py-1 bg-surface border border-border mt-1">Reported!</span>`))
 }
