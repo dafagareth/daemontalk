@@ -110,7 +110,7 @@ func loadDotEnv() {
 			k := strings.TrimSpace(parts[0])
 			v := strings.TrimSpace(parts[1])
 			v = strings.Trim(v, `"'`)
-			if _, exists := os.LookupEnv(k); !exists {
+			if val, exists := os.LookupEnv(k); !exists || val == "" || val == "change-me-in-dotenv" {
 				_ = os.Setenv(k, v)
 			}
 		}
