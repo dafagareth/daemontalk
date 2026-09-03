@@ -2,7 +2,6 @@ package templates
 
 import (
 	"daemontalk/internal/auth"
-	"daemontalk/internal/forum"
 	"daemontalk/internal/i18n"
 )
 
@@ -10,8 +9,6 @@ templ DiscussionsNewPage(
 	ui i18n.UI,
 	lang string,
 	currentUser *auth.User,
-	categories []forum.Category,
-	selectedCategory string,
 ) {
 	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
 		<div class="mb-6">
@@ -99,49 +96,25 @@ templ DiscussionsNewPage(
 							class="w-full text-lg sm:text-xl md:text-2xl font-bold bg-transparent border-0 border-b border-border/40 focus:border-[var(--c-link)] focus:ring-0 focus:outline-none text-text placeholder:text-muted/60 pb-3 transition-colors"
 						/>
 					</div>
-					<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 pb-2">
-						<div class="shrink-0 flex items-center gap-2">
-							<span class="text-xs font-mono text-muted select-none">
-								if lang == "id" {
-									Kategori:
-								} else {
-									Category:
-								}
-							</span>
-							<select
-								name="category"
-								required
-								class="h-8 px-2.5 text-xs font-mono bg-bg border border-border text-text focus:border-[var(--c-link)] focus:outline-none"
-							>
-								for _, c := range categories {
-									if c.Slug != "all" {
-										if c.Slug == selectedCategory || (selectedCategory == "" && c.Slug == "qna") {
-											<option value={ c.Slug } selected>
-												if lang == "id" {
-													{ c.NameID }
-												} else {
-													{ c.NameEN }
-												}
-											</option>
-										} else {
-											<option value={ c.Slug }>
-												if lang == "id" {
-													{ c.NameID }
-												} else {
-													{ c.NameEN }
-												}
-											</option>
-										}
-									}
-								}
-							</select>
-						</div>
+					<input type="hidden" name="category" value="general"/>
+					<div class="flex items-center gap-2 pt-1 pb-2">
+						<span class="text-xs font-mono text-muted select-none">
+							if lang == "id" {
+								Tag:
+							} else {
+								Tags:
+							}
+						</span>
 						<div class="flex-1 flex items-center gap-1.5">
 							<span class="text-xs font-mono text-muted select-none">#</span>
 							<input
 								type="text"
 								name="tags"
-								placeholder="Tags: linux, kernel, performance, go"
+								if lang == "id" {
+									placeholder="architecture, kernel, go, memory, performance (pisahkan dengan koma)"
+								} else {
+									placeholder="architecture, kernel, go, memory, performance (comma separated)"
+								}
 								class="w-full h-8 px-2.5 text-xs font-mono bg-bg border border-border text-text placeholder:text-muted/60 focus:border-[var(--c-link)] focus:outline-none"
 							/>
 						</div>
