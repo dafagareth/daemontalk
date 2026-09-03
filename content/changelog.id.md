@@ -1,9 +1,10 @@
-### v1.4.0 (3 September 2026) · Fast-Track Sync, Cloudflare CSP & Pemolesan UI
+### v1.4.0 (4 September 2026) · Deduplikasi Tayangan Unik, Migrasi Tag Socket, Keamanan Anti-XSS & Pemolesan UI
 
-- **Fast-Track Content Sync**: Mengimplementasikan *workflow* jalur cepat (`sync-content.yml`) yang mem-*bypass* *build* Docker selama 3 menit untuk perubahan yang hanya berupa Markdown, sehingga pembaruan artikel terpublikasi secara instan (~10 detik).
-- **Git Log Date & Zona Waktu Docker**: Memperbaiki pembacaan riwayat git dalam Docker (mengatasi galat *dubious ownership*) serta mengunci zona waktu *container* ke `Asia/Jakarta` demi akurasi tanggal rilis artikel.
-- **Integrasi Cloudflare Analytics**: Mengatur ulang tembok keamanan *Content-Security-Policy* (CSP) dengan memasukkan *beacon* Cloudflare Web Analytics ke dalam daftar putih (*whitelist*).
-- **Pemolesan UI**: Menambahkan efek redup otomatis (Mode Fokus) pada bilah samping desktop dan mengubah *Table of Contents* (Daftar Isi) menjadi elemen `<details>` yang bisa dilipat agar halaman lebih bersih.
+- **Deduplikasi Tayangan Unik (Human Views)**: Menghapus kenaikan angka views akibat refresh halaman (F5) dengan mengimplementasikan tabel pelacak penonton unik (`forum_topic_views` dan `post_views` di SQLite). Tayangan dihitung murni per pengunjung unik (`u:<userID>` untuk pengguna login, `v:<visitorID>` untuk tamu), serta secara otomatis mengecualikan pemilik postingan yang membuka artikelnya sendiri, admin, bot perayap web, dan request CLI.
+- **Arsitektur Murni Tag pada Socket**: Menghapus dropdown kategori statis (`qna`, `architecture`, `kernel`) pada form pembuatan topik dan beralih sepenuhnya ke ekosistem dinamis berbasis `#tag`, lengkap dengan bilah filter tag aktif dan tampilan tag riil pada setiap baris diskusi.
+- **Keamanan Markdown & Pencegahan Stored XSS**: Memperkuat pemrosesan konten pengguna di forum Socket dengan mencabut opsi `html.WithUnsafe()` dan menerapkan sanitasi ketat menggunakan `bluemonday.UGCPolicy()`, menangkal injeksi `<script>`, *event handler* berbahaya, dan manipulasi tautan `javascript:`.
+- **Desain Ulang Antarmuka Socket & Diskusi**: Menyesuaikan tata letak kotak balasan dan form penulisan agar tampil *full-bleed* hingga ke tepi layar perangkat ponsel, memindahkan tombol kirim komentar ke sudut kanan bawah, memperbarui lencana `SOLVED` dan `SOLUSI` dengan gaya tombol kontras tinggi, memperbesar avatar profil, serta menyederhanakan tombol balas dengan fokus otomatis ke kolom komentar.
+- **Penyempurnaan Header Artikel & Bilah Samping**: Menata ulang susunan metadata tajuk artikel dengan menempatkan foto profil di sisi kiri nama penulis, baris kontributor, serta tanggal dan durasi baca di bawahnya. Menyesuaikan tingkat transparansi bilah samping (Daftar Isi dan Kontrol Baca) menjadi 40% (`opacity-40`) saat posisi diam untuk kenyamanan membaca.
 
 ### v1.3.2 (2 September 2026) · Perbaikan Izin Eksekusi Skrip Deployment CI/CD
 

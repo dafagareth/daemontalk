@@ -1,9 +1,10 @@
-### v1.4.0 (September 3, 2026) · Fast-Track Sync, Cloudflare CSP & UI Polish
+### v1.4.0 (September 4, 2026) · Unique Views Deduplication, Socket Tags Migration, Anti-XSS & UI Overhaul
 
-- **Fast-Track Content Sync**: Implemented a bypass workflow (`sync-content.yml`) that triggers via webhook for markdown-only changes, skipping the 3-minute Docker build and deploying instantly (~10s).
-- **Git Log Date Fallback & UTC Fix**: Fixed git history resolution in Docker (`safe.directory` bypass) and synchronized container timezone to `Asia/Jakarta` to ensure accurate article publication dates.
-- **Cloudflare Analytics Integration**: Hardened the Content-Security-Policy (CSP) by explicitly whitelisting Cloudflare's Web Analytics beacon in the router middleware.
-- **UI Enhancements**: Implemented an auto-dimming Focus Mode (`opacity-25`) for desktop sidebars and replaced the static Table of Contents with a collapsible `<details>` element for cleaner reading.
+- **Unique Human Views Deduplication**: Eradicated artificial view inflation from page refreshes (F5) by introducing persistent database deduplication (`forum_topic_views` and `post_views` in SQLite). Views are strictly counted per unique visitor identity (`u:<userID>` for authenticated users, `v:<visitorID>` for guests), completely excluding topic authors viewing their own dispatches, administrators, automated web crawlers, and CLI requests.
+- **Socket Pure Tags Architecture**: Fully removed the rigid category dropdown (`qna`, `architecture`, `kernel`) from discussion creation, transitioning the entire community forum to a dynamic, user-driven `#tags` ecosystem with an active tag filter bar and real tag badges on each topic ledger.
+- **Markdown Security & Stored XSS Prevention**: Hardened user-generated content rendering in Socket by removing `html.WithUnsafe()` and enforcing `bluemonday.UGCPolicy()` with strict code syntax token whitelisting, preventing script injection, malicious event handlers, and javascript URIs.
+- **Socket & Discussion UI Overhaul**: Redesigned topic and reply cards with full-bleed edge-to-edge layouts on mobile viewports, repositioned comment submit buttons to the bottom-right, restyled `SOLVED` and `SOLUTION` badges to high-contrast button styles, enlarged author avatars, simplified reply actions with smooth auto-focus, and marked solved threads cleanly with a dedicated green indicator border.
+- **Blog Header & Reading Sidebar Refinements**: Restructured post headers with side-by-side author avatars, dedicated contributor handles, and clean chronological metadata. Calibrated ToC and reading sidebars to 40% idle opacity (`opacity-40`) for an unobtrusive, distraction-free reading experience.
 
 ### v1.3.2 (September 2, 2026) · CI/CD Deploy Script Execution Fix
 
