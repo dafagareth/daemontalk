@@ -17,6 +17,9 @@ templ adminCommentsTab(stats AdminStats) {
 						<div class="flex items-baseline justify-between gap-2 mb-1">
 							<div class="flex items-baseline gap-2 min-w-0">
 								<span class="text-sm font-medium text-text">{ c.Name }</span>
+								if c.IsReported {
+									<span class="px-1.5 py-0.5 text-[10px] font-bold uppercase bg-[var(--c-warn)] text-white rounded-none">Reported</span>
+								}
 								<span class="text-xs font-mono text-muted">{ fmtCommentTime(c.CreatedAt, "en") }</span>
 							</div>
 							<button
