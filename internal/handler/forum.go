@@ -66,7 +66,7 @@ func (h *Handler) Discussions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, meta,
-		templates.DiscussionsIndexPage(ui, lang, user, topics, forum.Categories, category, sortOrder, search, author, total, page, totalPages),
+		templates.DiscussionsIndexPage(ui, lang, user, topics, tag, sortOrder, search, author, total, page, totalPages),
 	))
 }
 
@@ -83,7 +83,7 @@ func (h *Handler) DiscussionsNew(w http.ResponseWriter, r *http.Request) {
 
 	h.Render(w, r, templates.Layout(ui, lang, title, r.URL.Path, templates.PageMeta{
 		Description: "Start a new systems engineering discussion or ask a question on Daemontalk.",
-	}, templates.DiscussionsNewPage(ui, lang, user, forum.Categories, "")))
+	}, templates.DiscussionsNewPage(ui, lang, user)))
 }
 
 // DiscussionsCreate handles the submission of a new topic.
@@ -110,7 +110,7 @@ func (h *Handler) DiscussionsCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if category == "" {
-		category = "qna"
+		category = "general"
 	}
 
 	var tags []string
@@ -164,8 +164,13 @@ func (h *Handler) DiscussionsDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Increment view count asynchronously
-	go h.Forum.IncrementTopicViews(topic.ID)
+	// Record view only for unique human viewers (exclude bots, CLI, author, and admins)
+	if !IsCLIRequest(r) && !isBot(r) && !topic.IsOwner && !h.isAdmin(r) {
+		viewerKey := GetViewerKey(w, r, user)
+		if recorded, _ := h.Forum.RecordTopicView(topic.ID, viewerKey); recorded {
+			topic.ViewsCount++
+		}
+	}
 
 	replies, err := h.Forum.GetTopicReplies(topic.ID, currentUserID)
 	if err != nil {
