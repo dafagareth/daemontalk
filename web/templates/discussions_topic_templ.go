@@ -136,22 +136,22 @@ func DiscussionsDetailPage(
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(t.CreatedAt.Format("2006-01-02 15:04"))
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(t.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/discussions_topic.templ`, Line: 52, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/discussions_topic.templ`, Line: 52, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" class=\"comment-time\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(timeAgoOrDate(t.CreatedAt, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/discussions_topic.templ`, Line: 52, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/discussions_topic.templ`, Line: 52, Col: 133}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
