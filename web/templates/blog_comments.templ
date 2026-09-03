@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"daemontalk/internal/auth"
 	"daemontalk/internal/comment"
 	"daemontalk/internal/i18n"
 )
@@ -13,9 +14,9 @@ func fmtCommentTime(t time.Time, lang string) string {
 }
 
 // commentsSection is the whole block: the live tree list plus the single bottom submit form.
-templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.Comment, isAdmin bool, visitorName string) {
+templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.Comment, isAdmin bool, visitorName string, authUser *auth.User) {
 	<section id="comments-section" class="mt-12 pt-8 border-t border-border/60">
-		@commentList(ui, comments, isAdmin, slug, lang, visitorName)
+		@commentList(ui, comments, isAdmin, slug, lang, visitorName, authUser)
 		<div id="comment-form-container" class="mt-8 pt-6 border-t border-border/40 scroll-mt-24">
 			<div class="flex items-center justify-between mb-3">
 				<h3 class="text-sm font-semibold font-mono text-text">{ ui.Comments_Submit }</h3>
@@ -44,9 +45,21 @@ templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.C
 			>
 				<input id="comment-parent-id" type="hidden" name="parent_id" value=""/>
 				<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"/>
-				<p class="text-xs text-muted font-mono px-1">
-					Posting as <span class="font-bold text-text">{ visitorName }</span>
-				</p>
+				<div class="flex items-center justify-between px-1">
+					<p class="text-xs text-muted font-mono">
+						if authUser != nil {
+							Posting as <span class="font-bold text-text">{ authUser.Username }</span>
+						} else {
+							Posting as <span class="font-bold text-text">anonym</span>
+						}
+					</p>
+					if authUser != nil {
+						<label class="flex items-center gap-2 cursor-pointer touch-manipulation">
+							<span class="text-[10px] font-mono text-muted uppercase tracking-widest">Anonym</span>
+							<input type="checkbox" name="is_anonymous" value="true" class="w-3.5 h-3.5 border-border bg-bg text-[var(--c-link)] focus:ring-[var(--c-link)] focus:ring-offset-0 transition-all rounded-none accent-[var(--c-link)]" />
+						</label>
+					}
+				</div>
 				<textarea
 					id="comment-textarea"
 					name="body"
@@ -90,12 +103,12 @@ templ commentsSection(ui i18n.UI, slug string, lang string, comments []comment.C
 
 // CommentList is the exported entrypoint the POST handler renders to swap the
 // list in-place via HTMX.
-templ CommentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string) {
-	@commentList(ui, comments, isAdmin, slug, lang, visitorName)
+templ CommentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string, authUser *auth.User) {
+	@commentList(ui, comments, isAdmin, slug, lang, visitorName, authUser)
 }
 
 // commentList renders the heading + all hierarchical comments. It is swapped on POST.
-templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string) {
+templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug string, lang string, visitorName string, authUser *auth.User) {
 	<div id="comment-list" data-slug={ slug }>
 		<h2 class="text-base font-medium text-text mb-5">
 			{ ui.Comments_Heading }
@@ -108,36 +121,93 @@ templ commentList(ui i18n.UI, comments []comment.Comment, isAdmin bool, slug str
 		} else {
 			<div class="flex flex-col gap-5">
 				for _, root := range comment.BuildTree(comments) {
-					@commentTreeItem(ui, root, isAdmin, slug, lang, visitorName, 0)
+					@commentTreeItem(ui, root, isAdmin, slug, lang, visitorName, authUser, 0)
 				}
 			</div>
 		}
 	</div>
 }
 
-templ commentTreeItem(ui i18n.UI, c comment.Comment, isAdmin bool, slug string, lang string, visitorName string, depth int) {
+templ commentTreeItem(ui i18n.UI, c comment.Comment, isAdmin bool, slug string, lang string, visitorName string, authUser *auth.User, depth int) {
 	<div id={ fmt.Sprintf("comment-%d", c.ID) } class="py-2">
-		<div class="flex items-center gap-2 flex-wrap mb-1.5 font-mono text-xs">
-			if c.AvatarURL != "" {
-				<img src={ c.AvatarURL } alt={ c.Name } class="w-5 h-5 rounded-none border border-border object-cover"/>
-			} else if c.Name == "Deleted User" {
-				<img src="/static/images/deleted-user.png" alt="Deleted User" class="w-5 h-5 rounded-none border border-border object-cover"/>
-			}
-			if c.GitHubURL != "" {
-				<a href={ templ.SafeURL(c.GitHubURL) } target="_blank" rel="noopener" class="text-sm font-semibold text-text hover:text-link hover:underline">
-					{ "@" + c.Name }
-				</a>
+		<div class="flex justify-between items-center w-full mb-1.5 font-mono text-xs">
+			<div class="flex items-center gap-2">
+				if c.AvatarURL != "" {
+					<img src={ c.AvatarURL } alt={ c.Name } class="w-5 h-5 rounded-none border border-border object-cover"/>
+				} else {
+					<div class="w-5 h-5 rounded-none border border-border bg-muted/20 flex items-center justify-center text-[10px] font-bold text-muted">?</div>
+				}
+				if c.GitHubURL != "" {
+					<a href={ templ.SafeURL(c.GitHubURL) } target="_blank" rel="noopener" class="text-sm font-semibold text-text hover:text-link hover:underline">
+						{ c.Name }
+					</a>
+				} else {
+					<span class="text-sm font-semibold text-text">
+						{ c.Name }
+					</span>
+				}
+				<time datetime={ c.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time text-[11px] text-muted font-mono">{ fmtCommentTime(c.CreatedAt, lang) }</time>
+			</div>
+			
+			{{ isOwner := (authUser != nil && c.UserID != nil && *c.UserID == authUser.ID) || (visitorName != "" && c.Name == visitorName) }}
+			if isOwner || isAdmin {
+				<details class="relative comment-menu">
+					<summary class="p-2.5 -m-2 text-muted hover:text-text focus:outline-none cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center justify-center transition-colors">
+						<svg xmlns="http://www.w3.org/2005/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+					</summary>
+					<div class="absolute right-0 mt-2 w-36 bg-surface border border-border shadow-2xl z-20 font-mono text-xs overflow-hidden py-1">
+						if isOwner && time.Since(c.CreatedAt) < 10*time.Minute {
+							<button 
+								class="w-full text-left px-4 py-2 hover:bg-hover hover:text-[var(--c-link)] transition-colors cursor-pointer text-text border-b border-border/40"
+								hx-get={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/edit" }
+								hx-target={ fmt.Sprintf("#comment-body-%d", c.ID) }
+								hx-swap="innerHTML"
+								onclick="this.closest('details').removeAttribute('open')"
+							>
+								Edit
+							</button>
+						}
+						<button
+							class="w-full text-left px-4 py-2 hover:bg-hover hover:text-[var(--c-warn)] transition-colors cursor-pointer text-text"
+							hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
+							hx-target="#comment-list"
+							hx-swap="outerHTML"
+							hx-confirm="Hapus komentar ini beserta balasannya?"
+							onclick="this.closest('details').removeAttribute('open')"
+						>
+							Delete
+						</button>
+						if !isOwner && isAdmin {
+							<button
+								class="w-full text-left px-4 py-2 hover:bg-hover hover:text-[var(--c-warn)] transition-colors cursor-pointer text-text border-t border-border/40"
+								hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/report" }
+								hx-swap="outerHTML"
+								onclick="this.closest('details').removeAttribute('open')"
+							>
+								Report
+							</button>
+						}
+					</div>
+				</details>
 			} else {
-				<span class="text-sm font-semibold text-text">{ c.Name }</span>
+				<details class="relative comment-menu">
+					<summary class="p-2.5 -m-2 text-muted hover:text-text focus:outline-none cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center justify-center transition-colors">
+						<svg xmlns="http://www.w3.org/2005/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+					</summary>
+					<div class="absolute right-0 mt-2 w-36 bg-surface border border-border shadow-2xl z-20 font-mono text-xs overflow-hidden py-1">
+						<button
+							class="w-full text-left px-4 py-2 hover:bg-hover hover:text-[var(--c-warn)] transition-colors cursor-pointer text-text"
+							hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/report" }
+							hx-swap="outerHTML"
+							onclick="this.closest('details').removeAttribute('open')"
+						>
+							Report
+						</button>
+					</div>
+				</details>
 			}
-			if c.IsVerified {
-				<span class="px-1.5 py-0.2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 text-[9px] font-bold uppercase">
-					VERIFIED
-				</span>
-			}
-			<time datetime={ c.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time text-xs text-muted font-mono">{ fmtCommentTime(c.CreatedAt, lang) }</time>
 		</div>
-		<div class="text-sm text-text break-words leading-relaxed mb-2">
+		<div id={ fmt.Sprintf("comment-body-%d", c.ID) } class="text-sm text-text break-words leading-relaxed mb-2">
 			@templ.Raw(string(renderCommentBody(c.Body)))
 		</div>
 		<div class="flex items-center gap-4 text-xs font-mono">
@@ -151,22 +221,11 @@ templ commentTreeItem(ui i18n.UI, c comment.Comment, isAdmin bool, slug string, 
 				@IconReply("w-3.5 h-3.5 shrink-0")
 				<span>{ ui.Comments_Reply }</span>
 			</button>
-			if isAdmin || (visitorName != "" && visitorName == c.Name) {
-				<button
-					class="text-[var(--c-warn)] hover:underline cursor-pointer opacity-60 hover:opacity-100 transition-opacity py-1.5 px-2 touch-manipulation select-none"
-					hx-post={ blogPrefix(lang) + "/blog/" + slug + "/comments/" + fmt.Sprintf("%d", c.ID) + "/delete" }
-					hx-target="#comment-list"
-					hx-swap="outerHTML"
-					hx-confirm="Hapus komentar ini beserta balasannya?"
-				>
-					{ ui.Comments_Delete }
-				</button>
-			}
 		</div>
 		if len(c.Replies) > 0 {
 			<div class="border-l-2 border-border/80 dark:border-border/90 hover:border-[var(--c-link)]/60 transition-colors pl-3.5 sm:pl-5 mt-2.5 space-y-3.5">
 				for _, reply := range c.Replies {
-					@commentTreeItem(ui, reply, isAdmin, slug, lang, visitorName, depth+1)
+					@commentTreeItem(ui, reply, isAdmin, slug, lang, visitorName, authUser, depth+1)
 				}
 			</div>
 		}
