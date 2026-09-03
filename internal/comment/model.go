@@ -13,6 +13,7 @@ type Comment struct {
 	AvatarURL  string    `json:"avatar_url,omitempty"`
 	IsVerified bool      `json:"is_verified"`
 	GitHubURL  string    `json:"github_url,omitempty"`
+	IsReported bool      `json:"is_reported"`
 	CreatedAt  time.Time `json:"created_at"`
 	Replies    []Comment `json:"replies,omitempty"`
 }
