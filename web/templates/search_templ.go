@@ -326,7 +326,7 @@ func searchResultItem(ui i18n.UI, p post.Post, query string, lang string, viewCo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" class=\"px-0 sm:px-7 py-4 sm:py-6 flex items-baseline justify-between gap-4\"><h2 class=\"text-sm sm:text-base font-bold text-text group-hover:text-link leading-snug transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" class=\"px-0 sm:px-7 py-4 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4\"><h2 class=\"text-sm sm:text-base font-bold text-text group-hover:text-link leading-snug transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -442,7 +442,7 @@ func SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, lan
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\"><div class=\"flex items-start justify-between gap-3 mb-1\"><h4 class=\"text-sm font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors font-sans\">")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\"><div class=\"flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-3 mb-1\"><h4 class=\"text-sm font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors font-sans\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
