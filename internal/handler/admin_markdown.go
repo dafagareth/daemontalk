@@ -19,7 +19,6 @@ import (
 
 var safeSlugRegex = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 
-// cleanSlug ensures a slug string is strictly safe for file naming.
 func cleanSlug(s string) string {
 	s = strings.ToLower(strings.TrimSpace(s))
 	s = strings.ReplaceAll(s, " ", "-")
@@ -32,14 +31,12 @@ func cleanSlug(s string) string {
 	return string(out)
 }
 
-// AdminPostUploadMD handles bulk / single .md file uploads directly to content/posts.
 func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
 		return
 	}
 
-	// Max upload size
 	if err := r.ParseMultipartForm(MaxMarkdownUploadSize); err != nil {
 		http.Error(w, "File upload size exceeded", http.StatusBadRequest)
 		return
@@ -95,7 +92,6 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 			slug = generateShortID()
 		}
 
-		// Ensure content/posts directory exists
 		postsDir := h.getContentPath("posts")
 		if err := os.MkdirAll(postsDir, 0755); err != nil {
 			slog.Error("mkdir content/posts failed", "error", err)
@@ -110,7 +106,6 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Create associated post images directory if missing
 		imgDir := filepath.Join("web/static/images/posts", slug)
 		_ = os.MkdirAll(imgDir, 0755)
 
@@ -123,7 +118,6 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Reload all markdown posts and refresh the DB snapshot
 	h.ReloadFilePosts()
 	h.RefreshPosts()
 
@@ -135,14 +129,12 @@ func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin#content", http.StatusSeeOther)
 }
 
-// AdminUploadImage handles image uploads directly from the Markdown Editor UI.
 func (h *Handler) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
 		return
 	}
 
-	// Max image size
 	if err := r.ParseMultipartForm(MaxImageUploadSize); err != nil {
 		http.Error(w, "Image size exceeds limit", http.StatusBadRequest)
 		return
@@ -173,7 +165,6 @@ func (h *Handler) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Clean image filename
 	baseName := strings.TrimSuffix(filepath.Base(header.Filename), ext)
 	cleanName := cleanSlug(baseName)
 	if cleanName == "" {
@@ -208,7 +199,6 @@ func (h *Handler) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// AdminPostFileEdit displays the raw Markdown file editor for an existing repository post.
 func (h *Handler) AdminPostFileEdit(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -240,7 +230,6 @@ func (h *Handler) AdminPostFileEdit(w http.ResponseWriter, r *http.Request) {
 		templates.AdminMarkdownEditor(slug, string(data), p, isArchived, "")))
 }
 
-// AdminPostFileSave saves edited Markdown content directly back to the disk file.
 func (h *Handler) AdminPostFileSave(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -285,11 +274,3 @@ func (h *Handler) AdminPostFileSave(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/admin#content", http.StatusSeeOther)
 }
-
-// AdminPostExportMD downloads the raw .md file directly from the browser.
-
-// AdminPostFileArchive renames a markdown file to .md.archive to hide it from public feed.
-
-// AdminPostFileRestore renames a .md.archive file back to .md.
-
-// AdminPostFileDelete permanently deletes a markdown file and its associated images directory.

@@ -36,7 +36,6 @@ func TestAllPostsFrontmatterIntegrity(t *testing.T) {
 			t.Errorf("file %s missing slug", fi.Name())
 		}
 
-		// Slug uniqueness check per language
 		key := p.Slug + ":" + p.Lang
 		if existingFile, exists := slugs[key]; exists {
 			t.Errorf("duplicate slug %q for lang %q in %s and %s", p.Slug, p.Lang, fi.Name(), existingFile)

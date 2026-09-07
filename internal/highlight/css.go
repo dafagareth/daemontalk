@@ -7,11 +7,9 @@ import (
 	"github.com/alecthomas/chroma/v2/styles"
 )
 
-// GenerateCSS returns Chroma CSS
 func GenerateCSS() string {
 	var buf strings.Builder
 
-	// Base defaults: ensure identifiers, variables, punctuation inherit readable text color
 	buf.WriteString(`/* Base Chroma reset & variable inheritance */
 .chroma {
   color: var(--c-text);
@@ -26,13 +24,11 @@ func GenerateCSS() string {
 
 `)
 
-	// 1. Light theme
 	writeCSSWithPrefixes(&buf, "github", []string{
 		`[data-theme="light"]`,
 		`html:not([data-theme="dark"])`,
 	})
 
-	// 2. Dark theme
 	buf.WriteString("\n/* Dark Theme (GitHub Dark) */\n")
 	writeCSSWithPrefixes(&buf, "github-dark", []string{
 		`[data-theme="dark"]`,
@@ -40,7 +36,6 @@ func GenerateCSS() string {
 	buf.WriteString("[data-theme=\"dark\"] .chroma { color: #e6edf3; }\n")
 	buf.WriteString("[data-theme=\"dark\"] .chroma .nx, [data-theme=\"dark\"] .chroma .p, [data-theme=\"dark\"] .chroma .nn, [data-theme=\"dark\"] .chroma .n { color: #e6edf3; }\n")
 
-	// 3. System preference dark (when theme is not explicitly set to light)
 	buf.WriteString("\n@media (prefers-color-scheme: dark) {\n")
 	writeCSSWithPrefixes(&buf, "github-dark", []string{
 		`html:not([data-theme="light"])`,

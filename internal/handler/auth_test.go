@@ -37,7 +37,6 @@ func TestAuthEndpoints(t *testing.T) {
 		Role:        "member",
 	})
 
-	// Add forum topic & reply
 	_, _ = forumDB.CreateTopic(forum.Topic{
 		UserID:   u.ID,
 		Title:    "Understanding Linux Schedulers",
@@ -45,7 +44,6 @@ func TestAuthEndpoints(t *testing.T) {
 		BodyMD:   "Deep dive into EEVDF.",
 	})
 
-	// Add comment
 	_, _ = commDB.AddAdvanced(comment.Comment{
 		PostSlug: "os-oom-killer",
 		Name:     u.DisplayName,
@@ -69,7 +67,6 @@ func TestAuthEndpoints(t *testing.T) {
 	r.Get("/auth/export", h.AuthExport)
 	r.Post("/auth/delete-account", h.AuthDeleteAccount)
 
-	// 1. Test /auth/me unauthenticated
 	reqUnauth := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
 	recUnauth := httptest.NewRecorder()
 	r.ServeHTTP(recUnauth, reqUnauth)
@@ -78,7 +75,6 @@ func TestAuthEndpoints(t *testing.T) {
 		t.Errorf("expected 401 for unauthenticated /auth/me, got %d", recUnauth.Code)
 	}
 
-	// 2. Test /auth/me authenticated with session cookie
 	reqAuth := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
 	reqAuth.AddCookie(&http.Cookie{
 		Name:  auth.SessionCookieName,
@@ -99,7 +95,6 @@ func TestAuthEndpoints(t *testing.T) {
 		t.Errorf("expected authenticated true")
 	}
 
-	// 3. Test /auth/export
 	reqExport := httptest.NewRequest(http.MethodGet, "/auth/export", nil)
 	reqExport.AddCookie(&http.Cookie{
 		Name:  auth.SessionCookieName,
@@ -122,7 +117,6 @@ func TestAuthEndpoints(t *testing.T) {
 		t.Errorf("expected platform daemontalk in export")
 	}
 
-	// 4. Test /auth/delete-account
 	reqDelete := httptest.NewRequest(http.MethodPost, "/auth/delete-account", nil)
 	reqDelete.AddCookie(&http.Cookie{
 		Name:  auth.SessionCookieName,
@@ -135,7 +129,6 @@ func TestAuthEndpoints(t *testing.T) {
 		t.Fatalf("expected 303 for /auth/delete-account, got %d", recDelete.Code)
 	}
 
-	// Verify session and user deleted in DB
 	deletedSession, _ := authDB.GetSessionUser(tokenHash)
 	if deletedSession != nil {
 		t.Errorf("expected session to be deleted from auth db")
@@ -144,7 +137,6 @@ func TestAuthEndpoints(t *testing.T) {
 		t.Errorf("expected 0 users after deletion, got %d", count)
 	}
 
-	// Verify forum topics still exist but author is anonymized
 	topics, _, err := forumDB.ListTopics("", "", "", "", "", 10, 0, 0)
 	if err != nil || len(topics) == 0 {
 		t.Fatalf("expected forum topic to remain preserved")
@@ -153,7 +145,6 @@ func TestAuthEndpoints(t *testing.T) {
 		t.Errorf("expected topic user_id to be anonymized to 0, got %d", topics[0].UserID)
 	}
 
-	// 5. Test /auth/logout
 	reqLogout := httptest.NewRequest(http.MethodGet, "/auth/logout", nil)
 	recLogout := httptest.NewRecorder()
 	r.ServeHTTP(recLogout, reqLogout)

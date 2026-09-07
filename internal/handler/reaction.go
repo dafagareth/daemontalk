@@ -47,13 +47,12 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 		date = p.Date.Format("2006-01-02")
 	}
 
-	// Prevent multiple reactions from the same user for this post.
 	cookieName := CookieReactedPrefix + slug
 	if cookie, err := r.Cookie(cookieName); err == nil && cookie.Value != "" {
 		oldEmoji, _ := url.QueryUnescape(cookie.Value)
 
 		if oldEmoji == emoji {
-			// Undo reaction
+
 			reactions, err := h.Comments.DecrementReaction(slug, emoji)
 			if err != nil {
 				slog.Error("decrement reaction failed", "slug", slug, "emoji", emoji, "error", err)
@@ -71,7 +70,6 @@ func (h *Handler) PostReaction(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Switch reaction
 		if validEmojis[oldEmoji] {
 			_, _ = h.Comments.DecrementReaction(slug, oldEmoji)
 		}

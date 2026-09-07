@@ -2,7 +2,6 @@ package post
 
 import "strings"
 
-// ContributorStats holds contribution metrics for a user.
 type ContributorStats struct {
 	Username    string   `json:"username"`
 	AvatarURL   string   `json:"avatar_url"`
@@ -11,7 +10,6 @@ type ContributorStats struct {
 	TotalCounts int      `json:"total_counts"`
 }
 
-// GetAllContributors extracts all unique contributors and authors across all parsed posts.
 func GetAllContributors(posts []Post) []ContributorStats {
 	statsMap := make(map[string]*ContributorStats)
 
@@ -20,7 +18,6 @@ func GetAllContributors(posts []Post) []ContributorStats {
 			continue
 		}
 
-		// 1. Author GitHub
 		if p.AuthorGitHub != "" {
 			u := strings.ToLower(strings.TrimSpace(p.AuthorGitHub))
 			if _, ok := statsMap[u]; !ok {
@@ -39,7 +36,6 @@ func GetAllContributors(posts []Post) []ContributorStats {
 			statsMap[u].TotalCounts++
 		}
 
-		// 2. Contributors List
 		for _, contrib := range p.Contributors {
 			u := strings.ToLower(strings.TrimSpace(contrib))
 			if u == "" {
@@ -65,7 +61,6 @@ func GetAllContributors(posts []Post) []ContributorStats {
 	return result
 }
 
-// IsContributor returns true if the username matches any author or contributor.
 func IsContributor(posts []Post, username string) bool {
 	u := strings.ToLower(strings.TrimSpace(username))
 	if u == "" {

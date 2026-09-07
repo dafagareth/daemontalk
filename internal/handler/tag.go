@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -79,4 +80,24 @@ func (h *Handler) TagPostsPartial(w http.ResponseWriter, r *http.Request) {
 	nextOffset := end
 	remaining := total - end
 	h.Render(w, r, templates.TagRiverItems(ui, pagePosts, lang, offset, nextOffset, remaining, tag))
+}
+
+func (h *Handler) RedirectTag(w http.ResponseWriter, r *http.Request) {
+	tag := strings.TrimSpace(r.URL.Query().Get("tag"))
+	lang := langFromRequest(r)
+	prefix := ""
+	if lang == "id" {
+		prefix = "/id"
+	}
+
+	if tag != "" {
+		http.Redirect(w, r, prefix+"/blog/tag/"+url.PathEscape(strings.ToLower(tag)), http.StatusMovedPermanently)
+		return
+	}
+
+	if prefix == "" {
+		http.Redirect(w, r, "/blog", http.StatusMovedPermanently)
+	} else {
+		http.Redirect(w, r, prefix, http.StatusMovedPermanently)
+	}
 }

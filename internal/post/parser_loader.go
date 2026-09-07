@@ -23,7 +23,6 @@ func LoadAllWithDrafts(dir string) ([]Post, error) {
 	return loadDir(dir, true)
 }
 
-// LoadArchived loads all .md.archive files from the directory.
 func LoadArchived(dir string) ([]Post, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
@@ -117,12 +116,12 @@ func ParseFile(path string) (Post, error) {
 		base := filepath.Base(path)
 		p.Slug = strings.TrimSuffix(base, ".md")
 	}
-	// Fallback if frontmatter does not define date
+
 	if p.Date.IsZero() {
 		if gitDate, err := getGitCreationDate(path); err == nil && !gitDate.IsZero() {
 			p.Date = gitDate
 		} else {
-			// Untracked files fallback to file modification time
+
 			p.Date = fi.ModTime()
 		}
 	}
@@ -162,12 +161,4 @@ func LoadBody(path string) (template.HTML, error) {
 	}
 	rawHTML := strings.ReplaceAll(buf.String(), "<img ", `<img loading="lazy" `)
 	return template.HTML(rawHTML), nil
-}
-
-func LoadBodyWithTOC(path string) (template.HTML, []TOCEntry, error) {
-	body, err := LoadBody(path)
-	if err != nil {
-		return "", nil, err
-	}
-	return body, extractTOC(string(body)), nil
 }

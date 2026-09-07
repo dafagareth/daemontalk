@@ -78,11 +78,6 @@ var md = goldmark.New(
 	),
 )
 
-// LoadAllWithDrafts loads all posts including drafts, sorted by date descending.
-
-// Parse renders a markdown document (frontmatter + body) into a Post.
-// It is the shared pipeline for file-based posts and web-authored posts
-// stored in the database, so both render identically.
 func Parse(src []byte) (Post, error) {
 	processedSrc := preprocessMarkdown(src)
 	ctx := parser.NewContext()
@@ -93,10 +88,8 @@ func Parse(src []byte) (Post, error) {
 
 	fm := meta.Get(ctx)
 
-	// Inject lazy loading for all images in the rendered HTML.
 	rawHTML := strings.ReplaceAll(buf.String(), "<img ", `<img loading="lazy" `)
 
-	// Restore protected math characters
 	rawHTML = strings.ReplaceAll(rawHTML, "xDTESCAPEDUSCOREx", `\_`)
 	rawHTML = strings.ReplaceAll(rawHTML, "xDTUSCOREx", "_")
 	rawHTML = strings.ReplaceAll(rawHTML, "xDTASTx", "*")

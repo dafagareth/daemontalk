@@ -11,8 +11,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// BlogIndex is used as "/" handler after pivot; must render the list of
-// posts with page title "daemontalk" (not "Blog · daemontalk").
 func TestBlogIndexAsHome(t *testing.T) {
 	h := &Handler{
 		FilePosts: []post.Post{{Title: "Tulisan Pertama", Slug: "tulisan-pertama"}},

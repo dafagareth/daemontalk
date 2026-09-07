@@ -12,29 +12,19 @@ func renderCalloutHTML(kind, rawBody string) string {
 		kind = "NOTE"
 	}
 
-	var textClass, iconSVG string
-
+	calloutClass := "post-callout-note"
 	switch kind {
 	case "TIP":
-		textClass = "text-[var(--c-ok,#10b981)]"
-		iconSVG = GetIcon(IconCalloutTip, "w-4 h-4 "+textClass)
-
+		calloutClass = "post-callout-tip"
 	case "WARNING":
-		textClass = "text-amber-500"
-		iconSVG = GetIcon(IconCalloutWarning, "w-4 h-4 "+textClass)
-
+		calloutClass = "post-callout-warning"
 	case "IMPORTANT":
-		textClass = "text-cyan-500"
-		iconSVG = GetIcon(IconCalloutImportant, "w-4 h-4 "+textClass)
-
+		calloutClass = "post-callout-important"
 	case "CAUTION":
-		textClass = "text-red-500"
-		iconSVG = GetIcon(IconCalloutCaution, "w-4 h-4 "+textClass)
-
-	default: // NOTE
+		calloutClass = "post-callout-caution"
+	default:
 		kind = "NOTE"
-		textClass = "text-[var(--c-link,#3b82f6)]"
-		iconSVG = GetIcon(IconCalloutNote, "w-4 h-4 "+textClass)
+		calloutClass = "post-callout-note"
 	}
 
 	bodyEsc := formatSimpleInline(html.EscapeString(strings.TrimSpace(rawBody)))
@@ -43,19 +33,18 @@ func renderCalloutHTML(kind, rawBody string) string {
 	for _, l := range bodyLines {
 		t := strings.TrimSpace(l)
 		if t != "" {
-			formattedBody = append(formattedBody, fmt.Sprintf("<p class=\"m-0 leading-relaxed\">%s</p>", t))
+			formattedBody = append(formattedBody, fmt.Sprintf("<p>%s</p>", t))
 		}
 	}
 
 	return fmt.Sprintf(`
-<div class="post-callout my-6 p-4 border border-border bg-surface not-prose rounded-none">
-  <div class="flex items-center gap-2 mb-2">
-    %s
-    <span class="callout-title font-mono text-[0.8em] font-bold uppercase tracking-wider %s">%s</span>
+<div class="post-callout %s not-prose">
+  <div class="callout-header">
+    <span class="callout-label callout-title">%s</span>
   </div>
-  <div class="callout-body text-[0.92em] text-text/90 space-y-2">
+  <div class="callout-body">
     %s
   </div>
 </div>
-`, iconSVG, textClass, kind, strings.Join(formattedBody, "\n"))
+`, calloutClass, kind, strings.Join(formattedBody, "\n"))
 }

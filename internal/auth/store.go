@@ -12,7 +12,6 @@ type Store struct {
 	db *sql.DB
 }
 
-// Open opens or creates the SQLite database for authentication.
 func Open(path string) (*Store, error) {
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
@@ -56,7 +55,6 @@ func Open(path string) (*Store, error) {
 	return &Store{db: db}, nil
 }
 
-// Close closes the database connection.
 func (s *Store) Close() error {
 	if s.db != nil {
 		return s.db.Close()
@@ -64,7 +62,6 @@ func (s *Store) Close() error {
 	return nil
 }
 
-// UpsertUser inserts or updates a user from an OAuth provider.
 func (s *Store) UpsertUser(u User) (*User, error) {
 	now := time.Now().UTC()
 	query := `
@@ -96,7 +93,6 @@ func (s *Store) UpsertUser(u User) (*User, error) {
 	return &user, nil
 }
 
-// CreateSession creates a persistent session token for a user.
 func (s *Store) CreateSession(userID int64, tokenHash string, duration time.Duration) (*Session, error) {
 	now := time.Now().UTC()
 	expires := now.Add(duration)
@@ -113,7 +109,6 @@ func (s *Store) CreateSession(userID int64, tokenHash string, duration time.Dura
 	}, nil
 }
 
-// GetSessionUser returns the user associated with an active, unexpired session token.
 func (s *Store) GetSessionUser(tokenHash string) (*User, error) {
 	query := `
 		SELECT u.id, u.provider, u.provider_id, u.username, u.display_name, u.email, u.avatar_url, u.github_url, u.role, u.created_at, u.updated_at
@@ -139,26 +134,22 @@ func (s *Store) GetSessionUser(tokenHash string) (*User, error) {
 	return &user, nil
 }
 
-// DeleteSession invalidates a session token.
 func (s *Store) DeleteSession(tokenHash string) error {
 	_, err := s.db.Exec(`DELETE FROM sessions WHERE token_hash = ?`, tokenHash)
 	return err
 }
 
-// CountUsers returns the total count of registered community members.
 func (s *Store) CountUsers() int {
 	var count int
 	_ = s.db.QueryRow(`SELECT COUNT(1) FROM users`).Scan(&count)
 	return count
 }
 
-// DeleteUser permanently purges a user record and their active sessions.
 func (s *Store) DeleteUser(userID int64) error {
 	_, err := s.db.Exec(`DELETE FROM users WHERE id = ?`, userID)
 	return err
 }
 
-// GetUserByUsername retrieves a user by their username.
 func (s *Store) GetUserByUsername(username string) (*User, error) {
 	var user User
 	err := s.db.QueryRow(

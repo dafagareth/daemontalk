@@ -11,7 +11,6 @@ type Store struct {
 	db *sql.DB
 }
 
-// Open opens or creates the SQLite database for Discussions / Forum.
 func Open(path string) (*Store, error) {
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
@@ -99,7 +98,6 @@ func Open(path string) (*Store, error) {
 	return &Store{db: db}, nil
 }
 
-// Close closes the database connection.
 func (s *Store) Close() error {
 	if s.db != nil {
 		return s.db.Close()
@@ -107,7 +105,6 @@ func (s *Store) Close() error {
 	return nil
 }
 
-// AnonymizeUser anonymizes user references in forum topics, replies, and deletes their votes.
 func (s *Store) AnonymizeUser(userID int64) error {
 	tx, err := s.db.Begin()
 	if err != nil {
@@ -115,14 +112,13 @@ func (s *Store) AnonymizeUser(userID int64) error {
 	}
 	defer tx.Rollback()
 
-	// Set user_id = 0 for topics and replies to preserve discussion integrity without author PII
 	if _, err := tx.Exec(`UPDATE forum_topics SET user_id = 0 WHERE user_id = ?`, userID); err != nil {
 		return err
 	}
 	if _, err := tx.Exec(`UPDATE forum_replies SET user_id = 0 WHERE user_id = ?`, userID); err != nil {
 		return err
 	}
-	// Delete user votes
+
 	if _, err := tx.Exec(`DELETE FROM forum_votes WHERE user_id = ?`, userID); err != nil {
 		return err
 	}

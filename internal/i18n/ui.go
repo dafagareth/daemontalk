@@ -42,16 +42,19 @@ type UI struct {
 	Post_Related string
 	Post_TOC     string
 
-	Comments_Heading    string
-	Comments_Empty      string
-	Comments_NameLabel  string
-	Comments_BodyLabel  string
-	Comments_Submit     string
-	Comments_Error      string
-	Comments_Delete     string
-	Comments_Reply      string
-	Comments_Cancel     string
-	Comments_ReplyingTo string
+	Comments_Heading     string
+	Comments_Empty       string
+	Comments_NameLabel   string
+	Comments_BodyLabel   string
+	Comments_Submit      string
+	Comments_Error       string
+	Comments_Delete      string
+	Comments_Reply       string
+	Comments_Cancel      string
+	Comments_ReplyingTo  string
+	Comments_LoadMore    string
+	Comments_ShowReplies string
+	Comments_HideReplies string
 
 	Post_Views string
 
@@ -182,8 +185,12 @@ type UI struct {
 	Sidebar_JSON       string
 	Sidebar_AuthorBio  string
 
-	Post_Current string
-	Post_Serif   string
+	Post_Current         string
+	Post_TextSize        string
+	Post_TextSize_Small  string
+	Post_TextSize_Medium string
+	Post_TextSize_Large  string
+	Post_TextSize_Extra  string
 
 	Auth_ExportData    string
 	Auth_DeleteAccount string

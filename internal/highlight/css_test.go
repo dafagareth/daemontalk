@@ -25,7 +25,6 @@ func TestGenerateCSS(t *testing.T) {
 		t.Error("missing prefers-color-scheme dark query")
 	}
 
-	// Verify that dark mode explicit color rules for .nx, .p, .nn are present
 	if !strings.Contains(css, `[data-theme="dark"] .chroma .nx`) {
 		t.Error("missing dark theme .nx rule")
 	}

@@ -84,7 +84,6 @@ echo " Run 'daemontalk' in your terminal to start exploring!"
 echo "-------------------------------------------------------"
 `
 
-// InstallScript serves the automated shell installer script
 func (h *Handler) InstallScript(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")

@@ -12,7 +12,6 @@ import (
 	"daemontalk/internal/post"
 )
 
-// Item wraps post.Post for bubbles/list.Item interface
 type Item struct {
 	Post post.Post
 }
@@ -21,7 +20,6 @@ func (i Item) Title() string       { return i.Post.Title }
 func (i Item) Description() string { return i.Post.Date.Format("02 Jan 2006") }
 func (i Item) FilterValue() string { return i.Post.Title + " " + strings.Join(i.Post.Tags, " ") }
 
-// LazyDelegate implements a compact, clean Lazygit-like row delegate
 type LazyDelegate struct {
 	Theme Theme
 }
@@ -49,7 +47,6 @@ func (d LazyDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		maxTitleWidth = 5
 	}
 
-	// Title truncation (visual column width safe)
 	title := p.Title
 	if lipgloss.Width(title) > maxTitleWidth {
 		for len(title) > 0 && lipgloss.Width(title+"…") > maxTitleWidth {
@@ -59,7 +56,6 @@ func (d LazyDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		title += "…"
 	}
 
-	// Subtitle (Date + Tags, visual column width safe)
 	dateStr := p.Date.Format("02 Jan 2006")
 	tagStr := ""
 	if len(p.Tags) > 0 {
@@ -74,7 +70,6 @@ func (d LazyDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		sub += "…"
 	}
 
-	// Pad with spaces to fill exact visual column width
 	titlePad := ""
 	if rem := maxTitleWidth - lipgloss.Width(title); rem > 0 {
 		titlePad = strings.Repeat(" ", rem)

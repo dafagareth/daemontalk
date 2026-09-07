@@ -10,10 +10,9 @@ import (
 
 const (
 	SessionCookieName = "daemontalk_session"
-	SessionDuration   = 30 * 24 * time.Hour // 30 days
+	SessionDuration   = 30 * 24 * time.Hour
 )
 
-// GenerateRandomToken generates a cryptographically secure random string.
 func GenerateRandomToken() (string, error) {
 	bytes := make([]byte, 32)
 	if _, err := rand.Read(bytes); err != nil {
@@ -22,13 +21,11 @@ func GenerateRandomToken() (string, error) {
 	return hex.EncodeToString(bytes), nil
 }
 
-// HashToken hashes a raw token with SHA-256 for secure database storage.
 func HashToken(token string) string {
 	hash := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(hash[:])
 }
 
-// SetSessionCookie sets a secure, HttpOnly session cookie on the response.
 func SetSessionCookie(w http.ResponseWriter, token string, isProduction bool) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     SessionCookieName,
@@ -42,7 +39,6 @@ func SetSessionCookie(w http.ResponseWriter, token string, isProduction bool) {
 	})
 }
 
-// ClearSessionCookie removes the session cookie from the client.
 func ClearSessionCookie(w http.ResponseWriter, isProduction bool) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     SessionCookieName,
@@ -56,7 +52,6 @@ func ClearSessionCookie(w http.ResponseWriter, isProduction bool) {
 	})
 }
 
-// GetSessionTokenFromRequest extracts the session cookie value from an incoming HTTP request.
 func GetSessionTokenFromRequest(r *http.Request) string {
 	cookie, err := r.Cookie(SessionCookieName)
 	if err != nil || cookie.Value == "" {

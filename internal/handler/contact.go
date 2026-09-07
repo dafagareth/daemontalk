@@ -21,7 +21,6 @@ func (h *Handler) Contact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Honeypot: bots fill this field
 	if r.PostFormValue("website") != "" {
 		fmt.Fprintf(w, `<p class="text-[var(--c-ok)]">%s</p>`, ui.Contact_Success)
 		return
@@ -49,14 +48,12 @@ func (h *Handler) Contact(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, `<p class="text-[var(--c-ok)]">%s</p>`, ui.Contact_Success)
 }
 
-// validEmail reports whether s parses as a single RFC 5322 address.
 func validEmail(s string) bool {
 	addr, err := mail.ParseAddress(s)
 	if err != nil {
 		return false
 	}
-	// Reject inputs that smuggle a display name (e.g. "x <a@b.c>") so the
-	// stored/sent value is exactly the address the user typed.
+
 	return addr.Address == s
 }
 
@@ -73,9 +70,6 @@ func (h *Handler) sendContactEmail(fromName, fromEmail, body string) error {
 		to = h.SMTPUser
 	}
 
-	// Strip CR/LF from any value placed in a header to prevent header
-	// injection. The message body is the only place untrusted multi-line
-	// text is allowed.
 	subject := stripCRLF(fmt.Sprintf("Portfolio contact: %s <%s>", fromName, fromEmail))
 	msgBody := fmt.Sprintf("From: %s <%s>\r\n\r\n%s", stripCRLF(fromName), stripCRLF(fromEmail), body)
 
@@ -91,8 +85,6 @@ func (h *Handler) sendContactEmail(fromName, fromEmail, body string) error {
 	return smtp.SendMail(addr, auth, h.SMTPUser, []string{to}, msg)
 }
 
-// stripCRLF removes carriage returns and newlines so untrusted input can't
-// inject extra SMTP headers.
 func stripCRLF(s string) string {
 	return strings.NewReplacer("\r", "", "\n", "").Replace(s)
 }

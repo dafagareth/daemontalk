@@ -41,7 +41,6 @@ bundle-js:
 		web/static/js/post/footnotes.js \
 		web/static/js/post/code-tabs.js \
 		web/static/js/post/read-status.js \
-		web/static/js/post/lightbox.js \
 		web/static/js/post/wikipedia-preview.js \
 		web/static/js/post/comments.js > web/static/js/post.bundle.js
 

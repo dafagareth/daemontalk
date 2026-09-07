@@ -12,7 +12,6 @@ import (
 
 var nonAlphanumericRegex = regexp.MustCompile(`[^a-z0-9]+`)
 
-// Slugify generates a clean URL slug from a title.
 func Slugify(title string) string {
 	s := strings.ToLower(strings.TrimSpace(title))
 	s = nonAlphanumericRegex.ReplaceAllString(s, "-")
@@ -26,13 +25,11 @@ func Slugify(title string) string {
 	return s
 }
 
-// CreateTopic adds a new discussion thread or question.
 func (s *Store) CreateTopic(t Topic) (*Topic, error) {
 	now := time.Now().UTC()
 	baseSlug := Slugify(t.Title)
 	slug := baseSlug
 
-	// Ensure unique slug
 	for i := 1; ; i++ {
 		var exists int
 		_ = s.db.QueryRow(`SELECT COUNT(1) FROM forum_topics WHERE slug = ?`, slug).Scan(&exists)
@@ -69,7 +66,6 @@ func (s *Store) CreateTopic(t Topic) (*Topic, error) {
 	return &t, nil
 }
 
-// GetTopicBySlug retrieves a topic with author details and vote status.
 func (s *Store) GetTopicBySlug(slug string, currentUserID int64) (*Topic, error) {
 	query := `
 		SELECT t.id, t.user_id, u.display_name, u.username, u.avatar_url, u.github_url,
@@ -124,7 +120,6 @@ func (s *Store) GetTopicBySlug(slug string, currentUserID int64) (*Topic, error)
 	return &t, nil
 }
 
-// ListTopics retrieves topics with filtering, pagination, and sorting.
 func (s *Store) ListTopics(category, tag, search, author, sortOrder string, limit, offset int, currentUserID int64) ([]*Topic, int, error) {
 	whereClauses := []string{"1=1"}
 	var whereArgs []any
@@ -148,7 +143,6 @@ func (s *Store) ListTopics(category, tag, search, author, sortOrder string, limi
 
 	whereSQL := strings.Join(whereClauses, " AND ")
 
-	// Total count
 	var total int
 	countQuery := fmt.Sprintf("SELECT COUNT(1) FROM forum_topics t LEFT JOIN users u ON u.id = t.user_id WHERE %s", whereSQL)
 	if err := s.db.QueryRow(countQuery, whereArgs...).Scan(&total); err != nil {
@@ -232,12 +226,6 @@ func (s *Store) ListTopics(category, tag, search, author, sortOrder string, limi
 	return topics, total, nil
 }
 
-// IncrementTopicViews increments view counter for a topic.
-func (s *Store) IncrementTopicViews(topicID int64) {
-	_, _ = s.db.Exec(`UPDATE forum_topics SET views_count = views_count + 1 WHERE id = ?`, topicID)
-}
-
-// RecordTopicView records a unique viewer for a topic and increments views_count only if new.
 func (s *Store) RecordTopicView(topicID int64, viewerKey string) (bool, error) {
 	if viewerKey == "" {
 		return false, nil
@@ -258,7 +246,6 @@ func (s *Store) RecordTopicView(topicID int64, viewerKey string) (bool, error) {
 	return true, nil
 }
 
-// DeleteTopic deletes a topic and all its replies and votes (owner or admin).
 func (s *Store) DeleteTopic(topicID int64, currentUserID int64, isAdmin bool) error {
 	tx, err := s.db.Begin()
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// Category defines available technical discussion categories.
 type Category struct {
 	Slug        string
 	NameID      string
@@ -23,7 +22,6 @@ var Categories = []Category{
 	{Slug: "incident", NameID: "Kasus Insiden (RCA)", NameEN: "Incident & RCA", Description: "Post-mortem & investigasi kegagalan sistem"},
 }
 
-// Topic represents a discussion thread or Q&A question in Daemontalk.
 type Topic struct {
 	ID             int64         `json:"id"`
 	UserID         int64         `json:"user_id"`
@@ -49,7 +47,6 @@ type Topic struct {
 	IsOwner        bool          `json:"is_owner,omitempty"`
 }
 
-// Reply represents a reply or potential solution to a discussion topic.
 type Reply struct {
 	ID             int64         `json:"id"`
 	TopicID        int64         `json:"topic_id"`
@@ -70,7 +67,6 @@ type Reply struct {
 	Children       []*Reply      `json:"children,omitempty"`
 }
 
-// UserStats represents aggregated discussion metrics for a user profile.
 type UserStats struct {
 	TopicsCount    int `json:"topics_count"`
 	RepliesCount   int `json:"replies_count"`

@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strings"
 	"time"
@@ -12,15 +13,12 @@ import (
 	"daemontalk/internal/handler"
 )
 
-// redirect301 returns a handler that forwards the old route to a new location
-// permanently (SEO: old links stay alive).
 func redirect301(target string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, target, http.StatusMovedPermanently)
 	}
 }
 
-// New creates and configures the main HTTP router
 func New(h *handler.Handler) *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Compress(5))
@@ -47,21 +45,28 @@ func New(h *handler.Handler) *chi.Mux {
 		http.NotFound(w, r)
 	})
 	r.Get("/og.png", h.SiteOGImage)
+	r.Head("/og.png", h.SiteOGImage)
 
-	// Per-IP rate limits
 	commentLimit := handler.NewRateLimiter(5, time.Minute)
 	contactLimit := handler.NewRateLimiter(3, time.Hour)
 	reactionLimit := handler.NewRateLimiter(10, time.Minute)
-	adminLimit := handler.NewRateLimiter(30, time.Minute) // Protect against brute-forcing the ADMIN_TOKEN
+	adminLimit := handler.NewRateLimiter(30, time.Minute)
 
 	r.With(handler.StaticCacheControl).Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 	r.With(handler.StaticCacheControl).Handle("/id/static/*", http.StripPrefix("/id/static/", http.FileServer(http.Dir("web/static"))))
 
 	r.Get("/", h.BlogIndex)
 	r.Get("/projects", redirect301("/colophon#projects"))
-	r.Get("/blog", redirect301("/"))
+	r.Get("/blog", func(w http.ResponseWriter, r *http.Request) {
+		if tag := strings.TrimSpace(r.URL.Query().Get("tag")); tag != "" {
+			http.Redirect(w, r, "/blog/tag/"+url.PathEscape(strings.ToLower(tag)), http.StatusMovedPermanently)
+			return
+		}
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	})
 	r.Get("/blog/{slug}", h.BlogPost)
 	r.Get("/blog/{slug}/og.png", h.OGImage)
+	r.Head("/blog/{slug}/og.png", h.OGImage)
 	r.Get("/blog/{slug}/comments/stream", h.StreamComments)
 	r.Get("/blog/{slug}/comments", h.CommentsPartial)
 	r.With(commentLimit).Post("/blog/{slug}/comments", h.PostComment)
@@ -70,9 +75,11 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Post("/blog/{slug}/comments/{id}/update", h.UpdateComment)
 	r.Post("/blog/{slug}/comments/{id}/report", h.ReportComment)
 	r.Get("/graph", h.Graph)
+	r.Get("/api/graph", h.GraphDataAPI)
 	r.Get("/install.sh", h.InstallScript)
 	r.Get("/about", h.About)
 	r.Get("/colophon", h.Colophon)
+	r.Get("/blog/tag", h.RedirectTag)
 	r.Get("/blog/tag/{tag}", h.TagIndex)
 	r.Get("/blog/posts", h.BlogPostsPartial)
 	r.Get("/blog/tag-posts", h.TagPostsPartial)
@@ -100,7 +107,6 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Get("/stats", h.Stats)
 	r.Get("/search", h.Search)
 
-	// Auth & OAuth Routes
 	r.Get("/auth/github", h.AuthGitHub)
 	r.Get("/auth/github/callback", h.AuthGitHubCallback)
 	r.Post("/auth/logout", h.AuthLogout)
@@ -110,8 +116,9 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Get("/auth/me", h.AuthMe)
 	r.Get("/auth/badge", h.AuthBadge)
 	r.Get("/settings", h.AuthSettings)
+	r.Get("/profile", h.AuthMyProfile)
 	r.Get("/u/{username}", h.AuthUserProfile)
-	// Socket (Discussions) Routes
+
 	r.Get("/socket", h.Discussions)
 	r.Get("/socket/new", h.DiscussionsNew)
 	r.With(commentLimit).Post("/socket/new", h.DiscussionsCreate)
@@ -122,7 +129,6 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Post("/socket/reply/{id}/delete", h.DiscussionsDeleteReply)
 	r.With(reactionLimit).Post("/socket/vote", h.DiscussionsVote)
 
-	// Legacy Discussions & Guestbook 301 Redirects
 	r.Get("/discussions", redirect301("/socket"))
 	r.Get("/discussions/new", redirect301("/socket/new"))
 	r.Get("/discussions/{slug}", func(w http.ResponseWriter, r *http.Request) {
@@ -139,7 +145,7 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Post("/guestbook", redirect301("/socket"))
 
 	r.Get("/resume", h.Resume)
-	r.Get("/changelog", h.Changelog)
+	r.Get("/changelog", redirect301("/colophon"))
 	r.Get("/contribute", h.Contribute)
 	r.Get("/download/daemontalk-template.md", h.DownloadTemplate)
 	r.Get("/daemontalk-template.md", h.DownloadTemplate)
@@ -153,7 +159,6 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Get("/api/webhook/github", h.GitHubWebhook)
 	r.Post("/api/webhook/github", h.GitHubWebhook)
 
-	// Admin routes (Protected by AdminToken and Rate Limited)
 	r.Route("/admin", func(r chi.Router) {
 		r.Use(adminLimit)
 		r.Get("/", h.Admin)
@@ -189,10 +194,19 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Route("/id", func(r chi.Router) {
 		r.Get("/", h.BlogIndex)
 		r.Get("/settings", h.AuthSettings)
+		r.Get("/profile", h.AuthMyProfile)
 		r.Get("/u/{username}", h.AuthUserProfile)
 		r.Get("/projects", redirect301("/id/colophon#projects"))
-		r.Get("/blog", redirect301("/id"))
+		r.Get("/blog", func(w http.ResponseWriter, r *http.Request) {
+			if tag := strings.TrimSpace(r.URL.Query().Get("tag")); tag != "" {
+				http.Redirect(w, r, "/id/blog/tag/"+url.PathEscape(strings.ToLower(tag)), http.StatusMovedPermanently)
+				return
+			}
+			http.Redirect(w, r, "/id", http.StatusMovedPermanently)
+		})
 		r.Get("/graph", h.Graph)
+		r.Get("/api/graph", h.GraphDataAPI)
+		r.Get("/blog/tag", h.RedirectTag)
 		r.Get("/blog/tag/{tag}", h.TagIndex)
 		r.Get("/blog/tag-posts", h.TagPostsPartial)
 		r.Get("/blog/{slug}", h.BlogPost)
@@ -227,7 +241,7 @@ func New(h *handler.Handler) *chi.Mux {
 		r.Get("/guestbook", redirect301("/id/socket"))
 		r.Post("/guestbook", redirect301("/id/socket"))
 		r.Get("/resume", h.Resume)
-		r.Get("/changelog", h.Changelog)
+		r.Get("/changelog", redirect301("/id/colophon"))
 		r.Get("/contribute", h.Contribute)
 		r.Get("/download/daemontalk-template.md", h.DownloadTemplate)
 		r.Get("/daemontalk-template.md", h.DownloadTemplate)

@@ -32,9 +32,17 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 	ui := i18n.Get(lang)
 	isAdmin := h.isAdmin(r)
 
+	if tagFilter := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("tag"))); tagFilter != "" {
+		prefix := ""
+		if lang == "id" {
+			prefix = "/id"
+		}
+		http.Redirect(w, r, prefix+"/blog/tag/"+url.PathEscape(tagFilter), http.StatusMovedPermanently)
+		return
+	}
+
 	visible := h.VisiblePosts(isAdmin)
 
-	// Collect tag counts across all visible posts
 	tagCounts := make(map[string]int)
 	for _, p := range visible {
 		for _, t := range p.Tags {
@@ -42,20 +50,7 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Filter by tag if requested
-	tagFilter := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("tag")))
 	filtered := visible
-	if tagFilter != "" {
-		filtered = make([]post.Post, 0, len(visible))
-		for _, p := range visible {
-			for _, t := range p.Tags {
-				if strings.ToLower(t) == tagFilter {
-					filtered = append(filtered, p)
-					break
-				}
-			}
-		}
-	}
 
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	if page < 1 {
@@ -92,19 +87,14 @@ func (h *Handler) BlogIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// After blog-first pivot, BlogIndex also serves "/" and "/id" as
-	// main page: tab title "daemontalk" + site JSON-LD.
 	pageName := "blog"
 	meta := templates.PageMeta{}
 	if r.URL.Path == "/" || r.URL.Path == "/id" || r.URL.Path == "/id/" {
 		pageName = "home"
 		meta.JSONLD = siteJSONLD()
 	}
-	h.Render(w, r, templates.Layout(ui, lang, pageName, r.URL.Path, meta, templates.BlogIndex(ui, filtered, pagePosts, lang, page, totalPages, viewCounts, tagCounts, tagFilter)))
+	h.Render(w, r, templates.Layout(ui, lang, pageName, r.URL.Path, meta, templates.BlogIndex(ui, filtered, pagePosts, lang, page, totalPages, viewCounts, tagCounts, "")))
 }
-
-// BlogPostsPartial returns a partial HTML response (list items + updated Load More button)
-// for HTMX infinite-style loading. It does not render the full layout.
 
 func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 	if IsCLIRequest(r) {
@@ -123,7 +113,6 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// If accessed via alias (old slug), redirect 301 to canonical URL.
 	if p.Slug != slug {
 		prefix := ""
 		if lang == "id" {
@@ -152,17 +141,16 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		if vp.Slug == slug {
 			if i+1 < len(visible) {
 				nav.HasPrev = true
-				nav.Prev = visible[i+1] // older post
+				nav.Prev = visible[i+1]
 			}
 			if i > 0 {
 				nav.HasNext = true
-				nav.Next = visible[i-1] // newer post
+				nav.Next = visible[i-1]
 			}
 			break
 		}
 	}
 
-	// Series: collect all non-draft posts in the same series, sorted by part.
 	var seriesParts []post.Post
 	if p.Series != "" {
 		for _, sp := range h.AllPosts() {
@@ -186,11 +174,8 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		Type:          "article",
 		PublishedTime: p.Date.Format("2006-01-02T15:04:05Z07:00"),
 		Author:        author,
-	}
-	if p.Cover != "" {
-		meta.Image = templates.AbsoluteURL(p.Cover)
-	} else {
-		meta.Image = templates.AbsoluteURL("/blog/" + slug + "/og.png")
+		Image:         h.AbsoluteURL(r, "/blog/"+slug+"/og.png"),
+		URL:           h.AbsoluteURL(r, r.URL.Path),
 	}
 	meta.JSONLD = articleJSONLD(p, meta.Image)
 
@@ -251,8 +236,3 @@ func (h *Handler) BlogPost(w http.ResponseWriter, r *http.Request) {
 		templates.BlogPostPage(ui, p, related, comments, views, isAdmin, lang, reactions, seriesParts, nav, userReaction, visitorName, authUser),
 	))
 }
-
-// DeleteComment removes a comment (admin only) and returns the refreshed list.
-
-// PostComment accepts a new comment (HTMX form POST) and returns the refreshed
-// comment list to swap in place.

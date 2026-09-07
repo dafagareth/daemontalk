@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// Config holds all runtime application configuration loaded from the environment.
 type Config struct {
 	Port               string
 	SSHPort            string
@@ -23,7 +22,6 @@ type Config struct {
 	SessionSecret      string
 }
 
-// ServerConfig holds HTTP server network timeout and memory limits for resilience.
 type ServerConfig struct {
 	ReadHeaderTimeout time.Duration
 	ReadTimeout       time.Duration
@@ -31,7 +29,6 @@ type ServerConfig struct {
 	MaxHeaderBytes    int
 }
 
-// SMTPConfig encapsulates email transmission settings.
 type SMTPConfig struct {
 	Host string
 	Port string
@@ -40,27 +37,22 @@ type SMTPConfig struct {
 	To   string
 }
 
-// IsProduction returns true if running under production environment mode.
 func (c *Config) IsProduction() bool {
 	return strings.ToLower(c.Env) == "production"
 }
 
-// HasSMTP returns true if SMTP host is configured.
 func (c *Config) HasSMTP() bool {
 	return c.SMTP.Host != ""
 }
 
-// HasAdmin returns true if an admin token is set.
 func (c *Config) HasAdmin() bool {
 	return c.AdminToken != ""
 }
 
-// HasGitHubOAuth returns true if GitHub OAuth credentials are fully configured.
 func (c *Config) HasGitHubOAuth() bool {
 	return c.GitHubClientID != "" && c.GitHubClientSecret != ""
 }
 
-// Load reads and validates configuration from environment variables with sensible defaults.
 func Load() *Config {
 	loadDotEnv()
 	return &Config{
@@ -78,7 +70,7 @@ func Load() *Config {
 			ReadHeaderTimeout: 10 * time.Second,
 			ReadTimeout:       30 * time.Second,
 			IdleTimeout:       120 * time.Second,
-			MaxHeaderBytes:    1 << 20, // 1 MB
+			MaxHeaderBytes:    1 << 20,
 		},
 		SMTP: SMTPConfig{
 			Host: getEnv("SMTP_HOST", ""),

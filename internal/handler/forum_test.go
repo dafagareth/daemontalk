@@ -61,7 +61,6 @@ func TestDiscussionsHandler(t *testing.T) {
 		http.Redirect(w, r, "/socket", http.StatusMovedPermanently)
 	})
 
-	// 1. Test /socket
 	req := httptest.NewRequest(http.MethodGet, "/socket", nil)
 	rec := httptest.NewRecorder()
 	r.ServeHTTP(rec, req)
@@ -77,7 +76,6 @@ func TestDiscussionsHandler(t *testing.T) {
 		t.Errorf("expected seeded topic title to appear in socket list")
 	}
 
-	// 2. Test /discussions 301 Redirect to /socket
 	discReq := httptest.NewRequest(http.MethodGet, "/discussions", nil)
 	discRec := httptest.NewRecorder()
 	r.ServeHTTP(discRec, discReq)
@@ -85,7 +83,6 @@ func TestDiscussionsHandler(t *testing.T) {
 		t.Errorf("expected 301 to /socket, got %d, loc: %s", discRec.Code, discRec.Header().Get("Location"))
 	}
 
-	// 3. Test /guestbook 301 Redirect to /socket
 	gbReq := httptest.NewRequest(http.MethodGet, "/guestbook", nil)
 	gbRec := httptest.NewRecorder()
 	r.ServeHTTP(gbRec, gbReq)
@@ -97,7 +94,6 @@ func TestDiscussionsHandler(t *testing.T) {
 		t.Errorf("expected Location /socket, got %s", loc)
 	}
 
-	// 4. Test /socket/new
 	newReq := httptest.NewRequest(http.MethodGet, "/socket/new", nil)
 	newRec := httptest.NewRecorder()
 	r.ServeHTTP(newRec, newReq)
@@ -106,7 +102,6 @@ func TestDiscussionsHandler(t *testing.T) {
 		t.Errorf("expected status 200 for /socket/new, got %d", newRec.Code)
 	}
 
-	// 5. Test /socket/{slug} detail
 	detailReq := httptest.NewRequest(http.MethodGet, "/socket/membongkar-concurrency-memory-model-di-go", nil)
 	detailRec := httptest.NewRecorder()
 	r.ServeHTTP(detailRec, detailReq)

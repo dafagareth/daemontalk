@@ -11,7 +11,6 @@ const (
 	siteName = "daemontalk"
 )
 
-// articleJSONLD builds a schema.org Article block for a blog post.
 func articleJSONLD(p post.Post, imageURL string) string {
 	author := p.Author
 	if author == "" {
@@ -45,7 +44,6 @@ func articleJSONLD(p post.Post, imageURL string) string {
 	return marshalJSONLD(data)
 }
 
-// siteJSONLD builds a WebSite block for the home page.
 func siteJSONLD() string {
 	data := map[string]any{
 		"@context": "https://schema.org",

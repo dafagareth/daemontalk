@@ -44,10 +44,10 @@ func (h *Handler) CLIDaily(w http.ResponseWriter, r *http.Request) {
 	posts := h.AllPosts()
 
 	var b strings.Builder
-	banner := ` ____                                _        _ _    
+	banner := ` ____                                _        _ _
 |  _ \  __ _  ___ _ __ ___   ___  _ __ | |_ __ _| | | __
 | | | |/ _` + "`" + ` |/ _ \ '_ ` + "`" + ` _ \ / _ \| '_ \| __/ _` + "`" + ` | | |/ /
-| |_| | (_| |  __/ | | | | | (_) | | | | || (_| | |   < 
+| |_| | (_| |  __/ | | | | | (_) | | | | || (_| | |   <
 |____/ \__,_|\___|_| |_| |_|\___/|_| |_|\__\__,_|_|_|\_\`
 
 	dateStr := time.Now().Format("Monday, 02 January 2006")
@@ -160,7 +160,6 @@ func (h *Handler) CLIPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Enforce the same visibility rules as BlogPost (HDL-001 fix).
 	if p.Draft {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusNotFound)
@@ -183,7 +182,6 @@ func (h *Handler) CLIPost(w http.ResponseWriter, r *http.Request) {
 		b.WriteString(fmt.Sprintf("%s> %s%s\n\n", ansiYellow, p.Description, ansiReset))
 	}
 
-	// Render raw markdown/html body
 	b.WriteString(string(p.Body))
 	b.WriteString(fmt.Sprintf("\n\n%s----------------------------------------------------------------------%s\n", ansiDim, ansiReset))
 	b.WriteString(fmt.Sprintf("%sRead on web: https://%s/blog/%s%s\n\n", ansiDim, r.Host, p.Slug, ansiReset))
@@ -231,15 +229,13 @@ func (h *Handler) CLIRecipes(w http.ResponseWriter, r *http.Request) {
 
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf("%s%s%s%s\n", ansiGreen, ansiBold, recipes, ansiReset))
-	b.WriteString(fmt.Sprintf(" %sMore recipes and interactive challenges at: https://%s/terminal%s\n\n", ansiCyan, r.Host, ansiReset))
+	b.WriteString(fmt.Sprintf(" %sMore recipes and technical dispatches at: https://%s/recipes%s\n\n", ansiCyan, r.Host, ansiReset))
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(applyColors(b.String(), color)))
 }
 
-// sanitizeCLIText filters a string to strictly safe alphanumeric/punctuation characters,
-// preventing terminal ANSI escape injection attacks.
 func sanitizeCLIText(s string) string {
 	var b strings.Builder
 	for _, r := range s {

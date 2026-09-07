@@ -13,7 +13,7 @@ import (
 )
 
 func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
-	// Allow login via ?admin=TOKEN (same mechanism as blog posts)
+
 	if h.AdminToken != "" {
 		if tok := r.URL.Query().Get("admin"); tok != "" {
 			if tok == h.AdminToken {
@@ -93,7 +93,6 @@ func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
 	h.Render(w, r, templates.AdminLayout("admin", r.URL.Path, templates.AdminPage(stats)))
 }
 
-// AdminToggleRadar toggles the systems radar feature flag.
 func (h *Handler) AdminToggleRadar(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -106,8 +105,6 @@ func (h *Handler) AdminToggleRadar(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin#dashboard", http.StatusSeeOther)
 }
 
-// AdminDeleteComment deletes a comment and returns an empty response so HTMX
-// removes the card from the admin dashboard via outerHTML swap.
 func (h *Handler) AdminDeleteComment(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)

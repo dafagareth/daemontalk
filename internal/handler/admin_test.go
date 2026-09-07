@@ -16,20 +16,17 @@ import (
 func TestIsAdmin(t *testing.T) {
 	h := &Handler{AdminToken: "secret"}
 
-	// No cookie → not admin
 	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
 	if h.isAdmin(req) {
 		t.Error("no cookie should not be admin")
 	}
 
-	// Wrong token → not admin
 	req = httptest.NewRequest(http.MethodGet, "/admin", nil)
 	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "wrong"})
 	if h.isAdmin(req) {
 		t.Error("wrong token should not be admin")
 	}
 
-	// Correct token → admin
 	req = httptest.NewRequest(http.MethodGet, "/admin", nil)
 	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
 	if !h.isAdmin(req) {
@@ -38,7 +35,7 @@ func TestIsAdmin(t *testing.T) {
 }
 
 func TestIsAdminDisabledWhenNoToken(t *testing.T) {
-	h := &Handler{AdminToken: ""} // moderation disabled
+	h := &Handler{AdminToken: ""}
 
 	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
 	req.AddCookie(&http.Cookie{Name: "admin_token", Value: "anything"})
@@ -95,8 +92,6 @@ func TestAdminDeleteForbiddenWithoutAuth(t *testing.T) {
 func TestConfirmModalMarkupPresent(t *testing.T) {
 	h := &Handler{AdminToken: "secret"}
 
-	// 403 Page is also wrapped in the same Layout() — just to make sure
-	// modal konfirmasi global (dipakai admin & blog) benar-benar terpasang.
 	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
 	rec := httptest.NewRecorder()
 	h.Admin(rec, req)
@@ -227,10 +222,8 @@ func TestAdminUnauthorizedReturnsNotFoundPage(t *testing.T) {
 func TestAdminToggleRadar(t *testing.T) {
 	h := &Handler{AdminToken: "secret"}
 
-	// Initially disabled
 	templates.SetRadarEnabled(false)
 
-	// 1. Check Graph returns 404 when disabled
 	reqGraph := httptest.NewRequest(http.MethodGet, "/graph", nil)
 	recGraph := httptest.NewRecorder()
 	h.Graph(recGraph, reqGraph)
@@ -238,7 +231,6 @@ func TestAdminToggleRadar(t *testing.T) {
 		t.Fatalf("expected 404 when radar is disabled, got %d", recGraph.Code)
 	}
 
-	// 2. Toggle to enabled
 	reqToggle := httptest.NewRequest(http.MethodPost, "/admin/settings/toggle-radar", nil)
 	reqToggle.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
 	recToggle := httptest.NewRecorder()
@@ -251,7 +243,6 @@ func TestAdminToggleRadar(t *testing.T) {
 		t.Fatal("expected radar to be enabled after toggle")
 	}
 
-	// 3. Check Graph returns 200 when enabled
 	reqGraph2 := httptest.NewRequest(http.MethodGet, "/graph", nil)
 	recGraph2 := httptest.NewRecorder()
 	h.Graph(recGraph2, reqGraph2)
@@ -259,7 +250,16 @@ func TestAdminToggleRadar(t *testing.T) {
 		t.Fatalf("expected 200 when radar is enabled, got %d", recGraph2.Code)
 	}
 
-	// 4. Toggle back to disabled
+	reqAPI := httptest.NewRequest(http.MethodGet, "/api/graph", nil)
+	recAPI := httptest.NewRecorder()
+	h.GraphDataAPI(recAPI, reqAPI)
+	if recAPI.Code != http.StatusOK {
+		t.Fatalf("expected 200 on /api/graph, got %d", recAPI.Code)
+	}
+	if !strings.Contains(recAPI.Body.String(), `"nodes"`) {
+		t.Errorf("expected nodes in /api/graph response")
+	}
+
 	recToggle2 := httptest.NewRecorder()
 	h.AdminToggleRadar(recToggle2, reqToggle)
 	if templates.IsRadarEnabled() {

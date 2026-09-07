@@ -3,21 +3,54 @@ package og
 import (
 	"bytes"
 	"image/png"
+	"os"
 	"testing"
 )
 
-func TestRender(t *testing.T) {
+func TestRenderWithCover(t *testing.T) {
 	var buf bytes.Buffer
 	card := Card{
-		Title:    "Building stash: an encrypted secret vault in Go",
-		Subtitle: "5 min read · go, cli, security",
+		Title:    "Ironi Pengumpulan Kode Sumber via Flashdisk dan Google Drive",
+		Tags:     []string{"tools", "college", "git"},
+		ReadTime: 5,
+		Date:     "04 SEP 2026",
+		Site:     "daemontalk.com",
+		Cover:    "/static/images/posts/ironi-pengumpulan-kode-sumber-via-flashdisk-dan-google-drive-di-jurusan-teknologi/cover.png",
+	}
+	if err := Render(&buf, card); err != nil {
+		t.Fatalf("Render with cover: %v", err)
+	}
+
+	rawBytes := buf.Bytes()
+	_ = os.WriteFile("/home/dd/.gemini/antigravity-cli/brain/85d15c82-6877-4f62-9dec-5dc3ab6f9eb0/production_og_post.png", rawBytes, 0644)
+
+	img, err := png.Decode(bytes.NewReader(rawBytes))
+	if err != nil {
+		t.Fatalf("decode PNG: %v", err)
+	}
+	b := img.Bounds()
+	if b.Dx() != width || b.Dy() != height {
+		t.Errorf("size: got %dx%d, want %dx%d", b.Dx(), b.Dy(), width, height)
+	}
+}
+
+func TestRenderFallback(t *testing.T) {
+	var buf bytes.Buffer
+	card := Card{
+		Title:    "DaemonTalk — Engineering & Systems Exploration",
+		Tags:     []string{"SYSTEMS", "SOFTWARE", "LINUX"},
+		ReadTime: 5,
+		Date:     "04 SEP 2026",
 		Site:     "daemontalk.com",
 	}
 	if err := Render(&buf, card); err != nil {
-		t.Fatalf("Render: %v", err)
+		t.Fatalf("Render fallback: %v", err)
 	}
 
-	img, err := png.Decode(&buf)
+	rawBytes := buf.Bytes()
+	_ = os.WriteFile("/home/dd/.gemini/antigravity-cli/brain/85d15c82-6877-4f62-9dec-5dc3ab6f9eb0/production_og_default.png", rawBytes, 0644)
+
+	img, err := png.Decode(bytes.NewReader(rawBytes))
 	if err != nil {
 		t.Fatalf("decode PNG: %v", err)
 	}
@@ -40,7 +73,7 @@ func TestRenderLongTitle(t *testing.T) {
 }
 
 func TestWrap(t *testing.T) {
-	face := newFace(boldFont, 64)
+	face := newFace(pjsBoldFont, 48)
 	defer face.Close()
 
 	lines := wrap(face, "short", 1000)
@@ -48,10 +81,9 @@ func TestWrap(t *testing.T) {
 		t.Errorf("short text should be 1 line, got %d", len(lines))
 	}
 
-	// Very narrow width forces many lines, capped at 5.
-	lines = wrap(face, "one two three four five six seven eight nine ten", 50)
-	if len(lines) > 5 {
-		t.Errorf("should cap at 5 lines, got %d", len(lines))
+	lines = wrap(face, "one two three four five six seven eight nine ten eleven twelve", 50)
+	if len(lines) > 4 {
+		t.Errorf("should cap at 4 lines, got %d", len(lines))
 	}
 }
 

@@ -56,8 +56,6 @@ func main() {
 		slog.Warn("chroma.css generation failed", "error", err)
 	}
 
-	// Cache-bust static CSS: use main.css modtime so a rebuild invalidates the
-	// browser cache automatically.
 	if fi, err := os.Stat("web/static/css/main.css"); err == nil {
 		templates.AssetVersion = fmt.Sprintf("%d", fi.ModTime().Unix())
 	}
@@ -84,7 +82,6 @@ func main() {
 	}
 	defer comments.Close()
 
-	// Unified Application Database (Auth, Users, Discussions Forum)
 	appDBPath := filepath.Join(cfg.DataDir, "daemontalk.db")
 
 	authStore, err := auth.Open(appDBPath)
@@ -111,7 +108,6 @@ func main() {
 		slog.Info("github oauth enabled", "client_id", cfg.GitHubClientID)
 	}
 
-	// Post buatan editor web — persisten di volume data/ bersama comments.db.
 	pdb, err := postdb.Open(filepath.Join(cfg.DataDir, "posts.db"))
 	if err != nil {
 		slog.Error("open posts db failed", "error", err)
@@ -147,8 +143,6 @@ func main() {
 
 	r := router.New(h)
 
-	// Listen for OS termination signals so the server can drain in-flight
-	// requests before exiting (important under Docker / orchestrators).
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
@@ -164,7 +158,6 @@ func main() {
 		},
 	}
 
-	// Start Wish SSH Server for direct TUI access (ssh daemontalk.com -p 2222)
 	sshHostKey := filepath.Join(cfg.DataDir, ".ssh_host_key")
 	sshSrv, err := tuisrv.Start(":"+cfg.SSHPort, sshHostKey)
 	if err != nil {
@@ -203,11 +196,10 @@ func main() {
 	slog.Info("server stopped")
 }
 
-// generateIcon creates a minimal solid-color square PNG icon for the PWA manifest.
 func generateIcon(size int) []byte {
 	img := image.NewRGBA(image.Rect(0, 0, size, size))
-	blue := color.RGBA{0x1a, 0x73, 0xe8, 0xff}
-	draw.Draw(img, img.Bounds(), &image.Uniform{blue}, image.Point{}, draw.Src)
+	dark := color.RGBA{0x18, 0x18, 0x1b, 0xff}
+	draw.Draw(img, img.Bounds(), &image.Uniform{dark}, image.Point{}, draw.Src)
 	var buf bytes.Buffer
 	_ = png.Encode(&buf, img)
 	return buf.Bytes()

@@ -1,94 +1,321 @@
-// Package og renders Open Graph share images (1200×630 PNG) for blog posts
-// that don't ship their own cover image. Cards are drawn entirely in Go using
-// the embedded Go fonts, so no external assets or headless browser are needed.
 package og
 
 import (
+	"bytes"
+	_ "embed"
+	"fmt"
 	"image"
 	"image/color"
+	_ "image/jpeg"
 	"image/png"
 	"io"
+	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
+	xdraw "golang.org/x/image/draw"
 	"golang.org/x/image/font"
-	"golang.org/x/image/font/gofont/gobold"
-	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
 
+//go:embed assets/PlusJakartaSans-Bold.ttf
+var pjsBoldData []byte
+
+//go:embed assets/Lora-Bold.ttf
+var loraBoldData []byte
+
+//go:embed assets/icon-light.png
+var mascotIconData []byte
+
 const (
 	width  = 1200
 	height = 630
-	padX   = 90
 )
 
 var (
-	bgTop   = color.RGBA{0x0f, 0x17, 0x2a, 0xff} // slate-900
-	bgBot   = color.RGBA{0x1a, 0x1f, 0x35, 0xff}
-	accent  = color.RGBA{0x3b, 0x82, 0xf6, 0xff} // blue-500
-	fgTitle = color.RGBA{0xf1, 0xf5, 0xf9, 0xff} // slate-100
-	fgMuted = color.RGBA{0x64, 0x74, 0x8b, 0xff} // slate-500
-	fgLink  = color.RGBA{0x60, 0xa5, 0xfa, 0xff} // blue-400
+	cWhite      = color.RGBA{0xff, 0xff, 0xff, 0xff}
+	cBorder     = color.RGBA{0x18, 0x18, 0x1b, 0xff}
+	cBorderThin = color.RGBA{0xe4, 0xe4, 0xe7, 0xff}
+	cText       = color.RGBA{0x09, 0x09, 0x0b, 0xff}
+	cSubtle     = color.RGBA{0xa1, 0xa1, 0xaa, 0xff}
 
-	boldFont    = mustParse(gobold.TTF)
-	regularFont = mustParse(goregular.TTF)
+	pjsBoldFont  *opentype.Font
+	loraBoldFont *opentype.Font
+	mascotIcon   image.Image
 )
 
-func mustParse(ttf []byte) *opentype.Font {
-	f, err := opentype.Parse(ttf)
+func init() {
+	var err error
+	pjsBoldFont, err = opentype.Parse(pjsBoldData)
 	if err != nil {
-		panic("og: parse font: " + err.Error())
+		panic("og: parse Plus Jakarta Sans font: " + err.Error())
 	}
-	return f
+	loraBoldFont, err = opentype.Parse(loraBoldData)
+	if err != nil {
+		panic("og: parse Lora font: " + err.Error())
+	}
+	mascotIcon, _, err = image.Decode(bytes.NewReader(mascotIconData))
+	if err != nil {
+		panic("og: decode mascot icon: " + err.Error())
+	}
 }
 
-// Card holds the text rendered onto the share image.
 type Card struct {
 	Title    string
-	Subtitle string // e.g. "5 min read · Go, CLI"
-	Site     string // e.g. "dafagareth.dev"
+	Subtitle string
+	Tags     []string
+	ReadTime int
+	Date     string
+	Site     string
+	Cover    string
 }
 
-// Render writes the card as a PNG to w.
 func Render(w io.Writer, c Card) error {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
-	drawVerticalGradient(img, bgTop, bgBot)
 
-	// Left accent bar
-	drawRect(img, padX-30, 110, 5, height-220, accent)
+	drawRect(img, 0, 0, width, height, cWhite)
 
-	titleFace := newFace(boldFont, 64)
-	defer titleFace.Close()
-	maxW := width - padX - 100
-
-	// Wrap the title and vertically center the block.
-	lines := wrap(titleFace, c.Title, maxW)
-	lineH := 84
-	blockH := len(lines) * lineH
-	startY := (height-blockH)/2 + 56
-	if startY < 160 {
-		startY = 160
+	bx, by, bw, bh := 36, 36, 1128, 558
+	for x := bx; x < bx+bw; x++ {
+		img.Set(x, by, cBorder)
+		img.Set(x, by+bh-1, cBorder)
 	}
-	for i, ln := range lines {
-		drawText(img, titleFace, ln, padX, startY+i*lineH, fgTitle)
+	for y := by; y < by+bh; y++ {
+		img.Set(bx, y, cBorder)
+		img.Set(bx+bw-1, y, cBorder)
 	}
 
-	// Subtitle under the title block
-	if c.Subtitle != "" {
-		subFace := newFace(regularFont, 30)
-		defer subFace.Close()
-		drawText(img, subFace, c.Subtitle, padX, startY+len(lines)*lineH+30, fgMuted)
+	headY := by + 56
+	for x := bx; x < bx+bw; x++ {
+		img.Set(x, headY, cBorderThin)
 	}
 
-	// Site label bottom-left
-	if c.Site != "" {
-		siteFace := newFace(boldFont, 32)
-		defer siteFace.Close()
-		drawText(img, siteFace, c.Site, padX, height-60, fgLink)
+	logoW, logoH := 42, 31
+	logoDst := image.Rect(bx+24, by+13, bx+24+logoW, by+13+logoH)
+	xdraw.BiLinear.Scale(img, logoDst, mascotIcon, mascotIcon.Bounds(), xdraw.Over, nil)
+
+	loraLogoFace := newFace(loraBoldFont, 24)
+	textStartX := bx + 76
+	drawText(img, loraLogoFace, "daemontalk", textStartX, by+36, cText)
+	loraLogoFace.Close()
+
+	cellH := 84
+	cellY := by + bh - cellH
+	for x := bx; x < bx+bw; x++ {
+		img.Set(x, cellY, cBorder)
+	}
+
+	colW := bw / 4
+	for col := 1; col < 4; col++ {
+		colX := bx + col*colW
+		for y := cellY; y < cellY+cellH; y++ {
+			img.Set(colX, y, cBorderThin)
+		}
+	}
+
+	labelFace := newFace(pjsBoldFont, 13)
+	valFace := newFace(pjsBoldFont, 19)
+
+	tagsVal := formatTags(c.Tags, c.Subtitle)
+	readTimeVal := "5 MINUTES"
+	if c.ReadTime > 0 {
+		readTimeVal = fmt.Sprintf("%d MINUTES", c.ReadTime)
+	}
+	dateVal := strings.ToUpper(c.Date)
+	if dateVal == "" {
+		dateVal = strings.ToUpper(time.Now().Format("02 JAN 2006"))
+	}
+	siteVal := c.Site
+	if siteVal == "" {
+		siteVal = "daemontalk.com"
+	}
+
+	drawText(img, labelFace, "DOMAIN", bx+24, cellY+30, cSubtle)
+	drawText(img, valFace, tagsVal, bx+24, cellY+60, cText)
+
+	drawText(img, labelFace, "READ TIME", bx+colW+24, cellY+30, cSubtle)
+	drawText(img, valFace, readTimeVal, bx+colW+24, cellY+60, cText)
+
+	drawText(img, labelFace, "DATE", bx+colW*2+24, cellY+30, cSubtle)
+	drawText(img, valFace, dateVal, bx+colW*2+24, cellY+60, cText)
+
+	drawText(img, labelFace, "SOURCE", bx+colW*3+24, cellY+30, cSubtle)
+	drawText(img, valFace, siteVal, bx+colW*3+24, cellY+60, cText)
+
+	labelFace.Close()
+	valFace.Close()
+
+	coverImg := loadCover(c.Cover)
+	if coverImg != nil {
+
+		coverDst := image.Rect(bx+1, headY+1, bx+bw-1, cellY)
+		drawCoverFit(img, coverDst, coverImg)
+
+		gradStartY := headY + 140
+		drawBottomGradient(img, bx+1, gradStartY, bx+bw-1, cellY, 210)
+
+		titleFace := newFace(pjsBoldFont, 48)
+		maxW := bw - 120
+		lines := wrap(titleFace, c.Title, maxW)
+		lineH := 62
+		totalTextH := (len(lines)-1)*lineH + 46
+		textStartY := cellY - 36 - totalTextH + 38
+
+		for i, ln := range lines {
+
+			drawText(img, titleFace, ln, bx+44+1, textStartY+i*lineH+2, color.RGBA{0, 0, 0, 160})
+			drawText(img, titleFace, ln, bx+44, textStartY+i*lineH, cWhite)
+		}
+		titleFace.Close()
+	} else {
+
+		titleFace := newFace(pjsBoldFont, 52)
+		maxW := bw - 88
+		lines := wrap(titleFace, c.Title, maxW)
+		lineH := 70
+		availableH := cellY - headY
+		blockH := len(lines) * lineH
+		startY := headY + (availableH-blockH)/2 + 50
+		if startY < headY+60 {
+			startY = headY + 60
+		}
+
+		for i, ln := range lines {
+			drawText(img, titleFace, ln, bx+44, startY+i*lineH, cText)
+		}
+		titleFace.Close()
 	}
 
 	return png.Encode(w, img)
+}
+
+func formatTags(tags []string, fallback string) string {
+	if len(tags) > 0 {
+		var parts []string
+		for i, t := range tags {
+			if i >= 2 {
+				break
+			}
+			parts = append(parts, "#"+strings.ToUpper(strings.TrimSpace(t)))
+		}
+		return strings.Join(parts, ", ")
+	}
+	if fallback != "" {
+		parts := strings.Split(fallback, "·")
+		if len(parts) > 1 {
+			raw := strings.TrimSpace(parts[1])
+			items := strings.Split(raw, ",")
+			var formatted []string
+			for i, it := range items {
+				if i >= 2 {
+					break
+				}
+				formatted = append(formatted, "#"+strings.ToUpper(strings.TrimSpace(it)))
+			}
+			if len(formatted) > 0 {
+				return strings.Join(formatted, ", ")
+			}
+		}
+	}
+	return "#SYSTEMS, #TECH"
+}
+
+func loadCover(cover string) image.Image {
+	if cover == "" {
+		return nil
+	}
+
+	if strings.HasPrefix(cover, "http://") || strings.HasPrefix(cover, "https://") {
+		client := &http.Client{Timeout: 4 * time.Second}
+		resp, err := client.Get(cover)
+		if err == nil && resp.StatusCode == http.StatusOK {
+			defer resp.Body.Close()
+			img, _, err := image.Decode(resp.Body)
+			if err == nil {
+				return img
+			}
+		}
+		return nil
+	}
+
+	clean := filepath.Clean(cover)
+	trimmed := strings.TrimPrefix(clean, "/")
+	trimmedStatic := strings.TrimPrefix(trimmed, "static/")
+
+	candidates := []string{
+		clean,
+		trimmed,
+		filepath.Join("web", trimmed),
+		filepath.Join("web", "static", trimmedStatic),
+		filepath.Join("..", "web", trimmed),
+		filepath.Join("..", "..", "web", trimmed),
+		filepath.Join("..", "..", "web", "static", trimmedStatic),
+	}
+	for _, path := range candidates {
+		f, err := os.Open(path)
+		if err == nil {
+			img, _, err := image.Decode(f)
+			_ = f.Close()
+			if err == nil {
+				return img
+			}
+		}
+	}
+
+	return nil
+}
+
+func drawCoverFit(dst xdraw.Image, dstRect image.Rectangle, src image.Image) {
+	srcBounds := src.Bounds()
+	srcW := srcBounds.Dx()
+	srcH := srcBounds.Dy()
+	dstW := dstRect.Dx()
+	dstH := dstRect.Dy()
+
+	srcAspect := float64(srcW) / float64(srcH)
+	dstAspect := float64(dstW) / float64(dstH)
+
+	var cropRect image.Rectangle
+	if srcAspect > dstAspect {
+		cropW := int(float64(srcH) * dstAspect)
+		cropH := srcH
+		cropX := srcBounds.Min.X + (srcW-cropW)/2
+		cropY := srcBounds.Min.Y
+		cropRect = image.Rect(cropX, cropY, cropX+cropW, cropY+cropH)
+	} else {
+		cropW := srcW
+		cropH := int(float64(srcW) / dstAspect)
+		cropX := srcBounds.Min.X
+		cropY := srcBounds.Min.Y + (srcH-cropH)/2
+		cropRect = image.Rect(cropX, cropY, cropX+cropW, cropY+cropH)
+	}
+
+	xdraw.BiLinear.Scale(dst, dstRect, src, cropRect, xdraw.Over, nil)
+}
+
+func drawBottomGradient(img *image.RGBA, x0, y0, x1, y1 int, maxAlpha uint8) {
+	h := float64(y1 - y0)
+	for y := y0; y < y1; y++ {
+		if y < 0 || y >= img.Bounds().Dy() {
+			continue
+		}
+		t := float64(y-y0) / h
+		alpha := int(float64(maxAlpha) * (t*t*0.9 + t*0.1))
+		invA := 255 - alpha
+		for x := x0; x < x1; x++ {
+			if x < 0 || x >= img.Bounds().Dx() {
+				continue
+			}
+			c := img.RGBAAt(x, y)
+			nr := uint8(int(c.R) * invA / 255)
+			ng := uint8(int(c.G) * invA / 255)
+			nb := uint8(int(c.B) * invA / 255)
+			img.SetRGBA(x, y, color.RGBA{nr, ng, nb, 255})
+		}
+	}
 }
 
 func newFace(f *opentype.Font, size float64) font.Face {
@@ -103,7 +330,6 @@ func newFace(f *opentype.Font, size float64) font.Face {
 	return face
 }
 
-// wrap greedily splits text into lines that fit within maxW pixels.
 func wrap(face font.Face, text string, maxW int) []string {
 	words := splitWords(text)
 	if len(words) == 0 {
@@ -121,16 +347,13 @@ func wrap(face font.Face, text string, maxW int) []string {
 		}
 	}
 	lines = append(lines, line)
-	// Cap at 5 lines; truncate the last with an ellipsis if needed.
-	if len(lines) > 5 {
-		lines = lines[:5]
-		lines[4] = truncate(face, lines[4]+"…", maxW)
+	if len(lines) > 4 {
+		lines = lines[:4]
+		lines[3] = truncate(face, lines[3]+"…", maxW)
 	}
 	return lines
 }
 
-// truncate drops trailing runes until the string (with a trailing ellipsis)
-// fits within maxW. Operates on runes so multi-byte characters aren't split.
 func truncate(face font.Face, s string, maxW int) string {
 	runes := []rune(strings.TrimSuffix(s, "…"))
 	for len(runes) > 0 {
@@ -180,19 +403,6 @@ func drawRect(img *image.RGBA, x, y, w, h int, col color.Color) {
 	for yy := y; yy < y+h; yy++ {
 		for xx := x; xx < x+w; xx++ {
 			img.Set(xx, yy, col)
-		}
-	}
-}
-
-func drawVerticalGradient(img *image.RGBA, top, bot color.RGBA) {
-	for y := 0; y < height; y++ {
-		t := float64(y) / float64(height-1)
-		r := uint8(float64(top.R)*(1-t) + float64(bot.R)*t)
-		g := uint8(float64(top.G)*(1-t) + float64(bot.G)*t)
-		b := uint8(float64(top.B)*(1-t) + float64(bot.B)*t)
-		row := color.RGBA{r, g, b, 0xff}
-		for x := 0; x < width; x++ {
-			img.Set(x, y, row)
 		}
 	}
 }

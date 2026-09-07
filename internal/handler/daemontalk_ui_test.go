@@ -72,7 +72,6 @@ func TestDaemontalkUILayoutRendering(t *testing.T) {
 
 	body := rec.Body.String()
 
-	// Check Editorial Lead & Stories
 	if !strings.Contains(body, "First Major Lead Story") {
 		t.Error("expected lead story title")
 	}
@@ -98,16 +97,28 @@ func TestTagFiltering(t *testing.T) {
 	}
 	h := &Handler{FilePosts: posts}
 
-	// Filter by tag=go
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/?tag=go", nil)
 	h.BlogIndex(rec, req)
 
-	if rec.Code != http.StatusOK {
-		t.Fatalf("expected status 200, got %d", rec.Code)
+	if rec.Code != http.StatusMovedPermanently {
+		t.Fatalf("expected status 301 redirect, got %d", rec.Code)
+	}
+	if loc := rec.Header().Get("Location"); loc != "/blog/tag/go" {
+		t.Fatalf("expected redirect to /blog/tag/go, got %s", loc)
 	}
 
-	body := rec.Body.String()
+	recTag := httptest.NewRecorder()
+	reqTag := httptest.NewRequest(http.MethodGet, "/blog/tag/go", nil)
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("tag", "go")
+	reqTag = reqTag.WithContext(context.WithValue(reqTag.Context(), chi.RouteCtxKey, rctx))
+	h.TagIndex(recTag, reqTag)
+
+	if recTag.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", recTag.Code)
+	}
+	body := recTag.Body.String()
 	if !strings.Contains(body, "Go Post One") || !strings.Contains(body, "Go Post Two") {
 		t.Error("expected go posts to be rendered")
 	}
@@ -168,23 +179,17 @@ func TestTagStream(t *testing.T) {
 
 	h := &Handler{FilePosts: posts}
 
-	// 1. Test ?tag=tools route on BlogIndex
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/?tag=tools", nil)
 	h.BlogIndex(rec, req)
 
-	if rec.Code != http.StatusOK {
-		t.Fatalf("expected 200, got %d", rec.Code)
+	if rec.Code != http.StatusMovedPermanently {
+		t.Fatalf("expected 301, got %d", rec.Code)
 	}
-	body := rec.Body.String()
-	if !strings.Contains(body, "Tools Post 1") {
-		t.Errorf("expected initial tools posts in continuous stream")
-	}
-	if !strings.Contains(body, "tag-river-load-more") {
-		t.Errorf("expected infinite scroll load-more trigger for remaining posts")
+	if loc := rec.Header().Get("Location"); loc != "/blog/tag/tools" {
+		t.Fatalf("expected redirect to /blog/tag/tools, got %s", loc)
 	}
 
-	// 2. Test /blog/tag/tools route on TagIndex
 	rec2 := httptest.NewRecorder()
 	req2 := httptest.NewRequest(http.MethodGet, "/blog/tag/tools", nil)
 	rctx := chi.NewRouteContext()
@@ -199,8 +204,10 @@ func TestTagStream(t *testing.T) {
 	if !strings.Contains(body2, "Tools Post 1") {
 		t.Errorf("expected initial tools posts in /blog/tag/tools continuous stream")
 	}
+	if !strings.Contains(body2, "tag-river-load-more") {
+		t.Errorf("expected infinite scroll load-more trigger for remaining posts")
+	}
 
-	// 3. Test /blog/tag-posts partial response for lazy-loading on scroll
 	rec3 := httptest.NewRecorder()
 	req3 := httptest.NewRequest(http.MethodGet, "/blog/tag-posts?tag=tools&offset=18", nil)
 	h.TagPostsPartial(rec3, req3)
@@ -211,5 +218,30 @@ func TestTagStream(t *testing.T) {
 	body3 := rec3.Body.String()
 	if !strings.Contains(body3, "Tools Post 25") {
 		t.Errorf("expected remaining posts in tag-posts partial response")
+	}
+}
+
+func TestRedirectTag(t *testing.T) {
+	h := &Handler{}
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/blog/tag?tag=linux", nil)
+	h.RedirectTag(rec, req)
+	if rec.Code != http.StatusMovedPermanently || rec.Header().Get("Location") != "/blog/tag/linux" {
+		t.Errorf("expected 301 to /blog/tag/linux, got %d -> %s", rec.Code, rec.Header().Get("Location"))
+	}
+
+	rec2 := httptest.NewRecorder()
+	req2 := httptest.NewRequest(http.MethodGet, "/blog/tag", nil)
+	h.RedirectTag(rec2, req2)
+	if rec2.Code != http.StatusMovedPermanently || rec2.Header().Get("Location") != "/blog" {
+		t.Errorf("expected 301 to /blog, got %d -> %s", rec2.Code, rec2.Header().Get("Location"))
+	}
+
+	rec3 := httptest.NewRecorder()
+	req3 := httptest.NewRequest(http.MethodGet, "/id/blog/tag?tag=linux", nil)
+	h.RedirectTag(rec3, req3)
+	if rec3.Code != http.StatusMovedPermanently || rec3.Header().Get("Location") != "/id/blog/tag/linux" {
+		t.Errorf("expected 301 to /id/blog/tag/linux, got %d -> %s", rec3.Code, rec3.Header().Get("Location"))
 	}
 }

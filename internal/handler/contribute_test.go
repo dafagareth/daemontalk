@@ -21,8 +21,8 @@ func TestContributePage(t *testing.T) {
 	}
 
 	body := rec.Body.String()
-	if !strings.Contains(body, "Download daemontalk-template.md") {
-		t.Error("body missing 'Download daemontalk-template.md' button")
+	if !strings.Contains(body, "contribute-tabs") {
+		t.Error("body missing contribute-tabs container")
 	}
 }
 

@@ -8,7 +8,7 @@ import (
 type TOCEntry struct {
 	ID    string
 	Title string
-	Level int // 2 = h2, 3 = h3
+	Level int
 }
 
 type Post struct {
@@ -19,9 +19,9 @@ type Post struct {
 	Tags           []string
 	Lang           string
 	Draft          bool
-	Status         string    // e.g., "published", "draft", "archived"
-	PublishAt      time.Time // future date = scheduled post
-	Type           string    // Post type (e.g., standard)
+	Status         string
+	PublishAt      time.Time
+	Type           string
 	ReadTime       int
 	Cover          string
 	CoverCaption   string

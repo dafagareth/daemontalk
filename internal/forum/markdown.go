@@ -36,7 +36,6 @@ var forumMD = goldmark.New(
 	),
 )
 
-// RenderMarkdown converts a raw markdown string into template.HTML.
 func RenderMarkdown(input string) template.HTML {
 	var buf bytes.Buffer
 	if err := forumMD.Convert([]byte(input), &buf); err != nil {

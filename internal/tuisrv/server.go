@@ -36,7 +36,6 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 	}
 }
 
-// Start launches the Wish SSH server on the given address
 func Start(addr string, hostKeyPath string) (*ssh.Server, error) {
 	s, err := wish.NewServer(
 		wish.WithAddress(addr),

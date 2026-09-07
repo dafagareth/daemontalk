@@ -101,7 +101,6 @@ Initial body content.
 	_ = os.WriteFile(filePath, []byte(initContent), 0644)
 	defer os.Remove(filePath)
 
-	// 1. Test Edit GET
 	reqEdit := httptest.NewRequest("GET", "/admin/posts/file-edit?slug="+slug, nil)
 	reqEdit.AddCookie(&http.Cookie{Name: "admin_token", Value: "test-admin-token"})
 	wEdit := httptest.NewRecorder()
@@ -114,7 +113,6 @@ Initial body content.
 		t.Fatalf("editor view missing filename: %s", wEdit.Body.String())
 	}
 
-	// 2. Test Save POST
 	updatedContent := `---
 title: "Updated Title"
 slug: "test-edit-save-cycle"
@@ -182,7 +180,6 @@ func TestAdminPostFileArchiveRestoreDelete(t *testing.T) {
 	defer os.Remove(filePath)
 	defer os.Remove(archPath)
 
-	// 1. Archive
 	reqArch := httptest.NewRequest("POST", "/admin/posts/file-archive", strings.NewReader("slug="+slug))
 	reqArch.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	reqArch.AddCookie(&http.Cookie{Name: "admin_token", Value: "test-admin-token"})
@@ -196,7 +193,6 @@ func TestAdminPostFileArchiveRestoreDelete(t *testing.T) {
 		t.Fatalf("expected .md.archive to exist after archive")
 	}
 
-	// 2. Restore
 	reqRestore := httptest.NewRequest("POST", "/admin/posts/file-restore", strings.NewReader("slug="+slug))
 	reqRestore.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	reqRestore.AddCookie(&http.Cookie{Name: "admin_token", Value: "test-admin-token"})
@@ -210,7 +206,6 @@ func TestAdminPostFileArchiveRestoreDelete(t *testing.T) {
 		t.Fatalf("expected .md to exist after restore")
 	}
 
-	// 3. Delete
 	reqDelete := httptest.NewRequest("POST", "/admin/posts/file-delete", strings.NewReader("slug="+slug))
 	reqDelete.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	reqDelete.AddCookie(&http.Cookie{Name: "admin_token", Value: "test-admin-token"})

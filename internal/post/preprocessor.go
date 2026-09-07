@@ -14,17 +14,14 @@ var (
 	reGitHubAlert      = regexp.MustCompile(`(?m)^>\s*\[\!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][^\n]*\n((?:>[^\n]*(?:\n|$))+)`)
 	reTabsFenced       = regexp.MustCompile("(?s)```(?:tabs|files|code-tabs)\\s*\\n(.*?)\\n```")
 	reLinkFenced       = regexp.MustCompile("(?s)```(?:link|bookmark|card)\\s*\\n(.*?)\\n```")
-	reStatFenced       = regexp.MustCompile("(?s)```(?:stat|stats|metrics)\\s*\\n(.*?)\\n```")
 	reMarkdownImage    = regexp.MustCompile(`!\[([^\]]*)\]\(([^)"\s]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)`)
 	reBlockMath        = regexp.MustCompile(`(?s)\$\$(.*?)\$\$`)
 	reInlineMath       = regexp.MustCompile(`\$([^\$\n]+?)\$`)
 )
 
-// preprocessMarkdown handles custom media blocks such as ```carousel, ```gallery, ```faq, ```author, ```references, ```callout, ```tabs, ```link, and ```stat.
 func preprocessMarkdown(src []byte) []byte {
 	srcStr := string(src)
 
-	// Protect block math ($$...$$) from markdown emphasis / underscore mangling
 	srcStr = reBlockMath.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reBlockMath.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -37,7 +34,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return "$$" + inner + "$$"
 	})
 
-	// Protect inline math ($...$) from markdown emphasis / underscore mangling
 	srcStr = reInlineMath.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reInlineMath.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -50,7 +46,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return "$" + inner + "$"
 	})
 
-	// Replace alert blockquotes: > [!NOTE] ...
 	srcStr = reGitHubAlert.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reGitHubAlert.FindStringSubmatch(m)
 		if len(sub) < 3 {
@@ -67,7 +62,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderCalloutHTML(alertType, strings.Join(cleanLines, "\n"))
 	})
 
-	// Replace ```callout ... ```
 	srcStr = reCalloutFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reCalloutFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -91,7 +85,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderCalloutHTML(alertType, strings.Join(bodyLines, "\n"))
 	})
 
-	// Replace ```references ... ```
 	srcStr = reReferencesFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reReferencesFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -100,7 +93,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderReferencesHTML(sub[1])
 	})
 
-	// Replace ```tabs ... ```
 	srcStr = reTabsFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reTabsFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -109,7 +101,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderTabsHTML(sub[1])
 	})
 
-	// Replace ```link ... ```
 	srcStr = reLinkFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reLinkFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -118,16 +109,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderLinkHTML(sub[1])
 	})
 
-	// Replace ```stat ... ```
-	srcStr = reStatFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
-		sub := reStatFenced.FindStringSubmatch(m)
-		if len(sub) < 2 {
-			return m
-		}
-		return renderStatHTML(sub[1])
-	})
-
-	// Replace ```carousel ... ```
 	srcStr = reCarouselFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reCarouselFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -140,7 +121,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderCarouselHTML(items)
 	})
 
-	// Replace ```gallery ... ```
 	srcStr = reGalleryFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reGalleryFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {
@@ -153,7 +133,6 @@ func preprocessMarkdown(src []byte) []byte {
 		return renderGalleryHTML(items)
 	})
 
-	// Replace ```faq ... ```
 	srcStr = reFAQFenced.ReplaceAllStringFunc(srcStr, func(m string) string {
 		sub := reFAQFenced.FindStringSubmatch(m)
 		if len(sub) < 2 {

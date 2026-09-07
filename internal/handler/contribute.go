@@ -31,7 +31,6 @@ func (h *Handler) loadContributeSection(section, lang string) template.HTML {
 	return body
 }
 
-// Contribute handles GET /contribute for both Web and CLI clients.
 func (h *Handler) Contribute(w http.ResponseWriter, r *http.Request) {
 	if IsCLIRequest(r) {
 		h.cliContribute(w, r)
@@ -59,7 +58,6 @@ func (h *Handler) Contribute(w http.ResponseWriter, r *http.Request) {
 	}, templates.ContributePage(ui, sections, lang)))
 }
 
-// DownloadTemplate handles GET /download/daemontalk-template.md, /daemontalk-template.md, and legacy /template.md.
 func (h *Handler) DownloadTemplate(w http.ResponseWriter, r *http.Request) {
 	filename := h.getContentPath("daemontalk-template.md")
 	data, err := os.ReadFile(filename)
@@ -78,7 +76,6 @@ func (h *Handler) DownloadTemplate(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(data)
 }
 
-// cliContribute outputs the contributor guide in ANSI plain-text.
 func (h *Handler) cliContribute(w http.ResponseWriter, r *http.Request) {
 	lang := langFromRequest(r)
 	filename := h.getContentPath(filepath.Join("contribute", "dispatches.md"))

@@ -52,7 +52,6 @@ func TestCLIMainAndDaily(t *testing.T) {
 	}
 	h.RefreshPosts()
 
-	// Test CLIMain
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Host = "localhost:8080"
 	rec := httptest.NewRecorder()
@@ -66,7 +65,6 @@ func TestCLIMainAndDaily(t *testing.T) {
 		t.Errorf("unexpected CLIMain response: %s", body)
 	}
 
-	// Test CLIDaily (CLI mode)
 	reqDailyCLI, _ := http.NewRequest("GET", "/daily", nil)
 	reqDailyCLI.Host = "localhost:8080"
 	reqDailyCLI.Header.Set("User-Agent", "curl/8.5.0")
@@ -80,7 +78,6 @@ func TestCLIMainAndDaily(t *testing.T) {
 		t.Errorf("unexpected CLIDaily CLI response: %s", recDailyCLI.Body.String())
 	}
 
-	// Test CLIDaily (Browser mode)
 	reqDailyBrowser, _ := http.NewRequest("GET", "/daily", nil)
 	reqDailyBrowser.Host = "localhost:8080"
 	reqDailyBrowser.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64)")
@@ -95,7 +92,6 @@ func TestCLIMainAndDaily(t *testing.T) {
 		t.Errorf("unexpected CLIDaily Browser response: %s", recDailyBrowser.Body.String())
 	}
 
-	// Test CLIRecipes
 	reqRecipes, _ := http.NewRequest("GET", "/recipes", nil)
 	recRecipes := httptest.NewRecorder()
 	h.CLIRecipes(recRecipes, reqRecipes)
@@ -107,7 +103,6 @@ func TestCLIMainAndDaily(t *testing.T) {
 		t.Errorf("unexpected CLIRecipes response: %s", recRecipes.Body.String())
 	}
 
-	// Test CLIPost
 	r := chi.NewRouter()
 	r.Get("/p/{slug}", h.CLIPost)
 

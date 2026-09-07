@@ -289,29 +289,26 @@ slug: advanced-systems
 	}
 	body := string(p.Body)
 
-	// Verify GitHub-style Alert Warning
 	if !strings.Contains(body, "post-callout") || !strings.Contains(body, "WARNING") || !strings.Contains(body, "Pastikan mutex terkunci") {
-		t.Error("GitHub alert warning not parsed properly")
+		t.Error("Alert warning not parsed properly")
 	}
 
-	// Verify Code-fence Callout Tip
 	if !strings.Contains(body, "TIP") || !strings.Contains(body, "sync.Pool") {
 		t.Error("Callout TIP not parsed properly")
 	}
 
-	// Verify References & Citations block
 	if !strings.Contains(body, "post-references") || !strings.Contains(body, "The Linux Programming Interface") || !strings.Contains(body, "Michael Kerrisk") || !strings.Contains(body, "man7.org/tlpi/") {
 		t.Error("References block not parsed properly")
 	}
 }
 
-func TestTabsLinkAndStatParsing(t *testing.T) {
+func TestTabsAndLinkParsing(t *testing.T) {
 	content := `---
 title: "Advanced Systems Components"
 slug: advanced-systems-components
 ---
 
-` + "```tabs\n=== main.go\npackage main\nfunc main() {}\n\n=== Dockerfile\nFROM alpine\n```\n\n" + "```link\nurl: https://kernel.org\ntitle: The Linux Kernel Archives\ndescription: Primary site for the Linux kernel source code.\nsite: kernel.org\n```\n\n" + "```stat\n- value: \"14.8x\"\n  label: \"Throughput Boost\"\n  description: \"vs baseline sync.Mutex\"\n- value: \"0.8 µs\"\n  label: \"P99 Latency\"\n```\n"
+` + "```tabs\n=== main.go\npackage main\nfunc main() {}\n\n=== Dockerfile\nFROM alpine\n```\n\n" + "```link\nurl: https://kernel.org\ntitle: The Linux Kernel Archives\ndescription: Primary site for the Linux kernel source code.\nsite: kernel.org\n```\n"
 
 	p, err := Parse([]byte(content))
 	if err != nil {
@@ -319,19 +316,12 @@ slug: advanced-systems-components
 	}
 	body := string(p.Body)
 
-	// Verify Code Tabs
 	if !strings.Contains(body, "data-code-tabs") || !strings.Contains(body, "main.go") || !strings.Contains(body, "Dockerfile") {
 		t.Error("Tabs block not parsed properly")
 	}
 
-	// Verify Link Card
 	if !strings.Contains(body, "https://kernel.org") || !strings.Contains(body, "The Linux Kernel Archives") || !strings.Contains(body, "kernel.org") {
 		t.Error("Link card block not parsed properly")
-	}
-
-	// Verify Stat Grid
-	if !strings.Contains(body, "post-stat-grid") || !strings.Contains(body, "14.8x") || !strings.Contains(body, "Throughput Boost") || !strings.Contains(body, "0.8 µs") {
-		t.Error("Stat block not parsed properly")
 	}
 }
 

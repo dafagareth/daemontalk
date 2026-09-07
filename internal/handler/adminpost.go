@@ -18,23 +18,7 @@ import (
 )
 
 var slugCleanRe = regexp.MustCompile(`[^a-z0-9-]+`)
-
-// generateShortID generates a random 8-character hex string (e.g. "8f2a1b4c").
-
-// uniqueShortID generates a collision-free short ID.
-
-// slugify generates kebab-case slug from title (server-side fallback for
-// generator JS di form editor).
-
-// editorMD renders markdown into plain HTML to load into Quill —
-// intentionally without chroma/heading-id/lazy-img to allow round-trip HTML↔markdown
-// di editor tetap bersih.
 var editorMD = goldmark.New(goldmark.WithExtensions(extension.Strikethrough))
-
-// slugTaken reports whether slug is already used by a post file or another DB post.
-
-// uniqueSlug finds a free slug with suffix -2, -3, … — used by autosave
-// so draft creation never fails due to slug collision.
 
 func (h *Handler) renderEditor(w http.ResponseWriter, r *http.Request, p postdb.WebPost, errMsg string, status int) {
 	w.WriteHeader(status)
@@ -42,7 +26,6 @@ func (h *Handler) renderEditor(w http.ResponseWriter, r *http.Request, p postdb.
 		templates.AdminPostEditor(p, mdToEditorHTML(p.BodyMD), errMsg)))
 }
 
-// AdminPostEdit displays the editor prefilled with an existing post.
 func (h *Handler) AdminPostEdit(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -65,8 +48,6 @@ func (h *Handler) AdminPostEdit(w http.ResponseWriter, r *http.Request) {
 	h.renderEditor(w, r, p, "", http.StatusOK)
 }
 
-// AdminPostAutosave accepts JSON payload from the editor, silently creates a draft
-// if ID == 0 or updates an existing draft, and returns the assigned ID.
 func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -142,12 +123,6 @@ func (h *Handler) AdminPostAutosave(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// validateWebPost returns an error message (empty = valid). excludeID
-// ignores the post itself when updating.
-
-// AdminPostPublish handles publish modal form: metadata + action
-// (publish/draft). Title and body are retrieved from the last autosave.
-// Slug can only be changed while draft; once published, slug is locked to keep URL stable.
 func (h *Handler) AdminPostPublish(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)
@@ -218,7 +193,6 @@ func (h *Handler) AdminPostPublish(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/blog/"+p.Slug, http.StatusSeeOther)
 }
 
-// AdminPostDelete menghapus post DB.
 func (h *Handler) AdminPostDelete(w http.ResponseWriter, r *http.Request) {
 	if !h.isAdmin(r) {
 		h.NotFound(w, r)

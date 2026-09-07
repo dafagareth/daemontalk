@@ -67,7 +67,7 @@ func renderReferencesHTML(rawContent string) string {
 		if len(parts) == 2 {
 			k := strings.ToLower(strings.TrimSpace(parts[0]))
 			v := strings.TrimSpace(parts[1])
-			v = strings.Trim(v, `"'`) // Remove surrounding quotes
+			v = strings.Trim(v, `"'`)
 
 			switch k {
 			case "title":
@@ -131,7 +131,7 @@ func renderReferencesHTML(rawContent string) string {
 			} else if strings.HasPrefix(displayURL, "http://") {
 				displayURL = strings.TrimPrefix(displayURL, "http://")
 			}
-			buf.WriteString(fmt.Sprintf("<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-link underline hover:text-text font-mono text-[0.9em] break-all\">%s</a>\n", html.EscapeString(safeURL(it.URL)), html.EscapeString(displayURL)))
+			buf.WriteString(fmt.Sprintf("<a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-text underline decoration-muted/50 hover:decoration-text font-mono text-[0.9em] break-all transition-colors\">%s</a>\n", html.EscapeString(safeURL(it.URL)), html.EscapeString(displayURL)))
 		}
 
 		buf.WriteString("    </li>\n")

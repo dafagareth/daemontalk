@@ -46,8 +46,6 @@ var cache struct {
 
 const cacheTTL = time.Hour
 
-// Fetch returns GitHub stats for the given user, cached for 1 hour.
-// If the API is unavailable, returns the last cached value (or empty Stats).
 func Fetch(user, token string) Stats {
 	cache.RLock()
 	if time.Since(cache.at) < cacheTTL && cache.val.Login != "" {
@@ -110,7 +108,6 @@ func fetch(user, token string) (Stats, error) {
 		return Stats{}, err
 	}
 
-	// Filter forks
 	var topRepos []Repo
 	for _, r := range repos {
 		if !r.Fork {

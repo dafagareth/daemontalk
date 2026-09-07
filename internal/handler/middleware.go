@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-// contentSecurityPolicy whitelists exactly the external origins the site uses:
-// htmx + fonts from their CDNs, inline styles/scripts (theme + page scripts),
-// and self for everything else. Adjust if a new CDN is introduced.
 const contentSecurityPolicy = "default-src 'self'; " +
 	"script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; " +
 	"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; " +
@@ -21,7 +18,6 @@ const contentSecurityPolicy = "default-src 'self'; " +
 	"base-uri 'self'; " +
 	"form-action 'self'"
 
-// SecurityHeaders sets a baseline of hardening headers on every response.
 func SecurityHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h := w.Header()
@@ -35,17 +31,17 @@ func SecurityHeaders(next http.Handler) http.Handler {
 	})
 }
 
-// StaticCacheControl sets long-term caching headers for static assets.
 func StaticCacheControl(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		if v := r.URL.Query().Get("v"); v != "" && v != "dev" {
+			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		} else {
+			w.Header().Set("Cache-Control", "no-cache, must-revalidate")
+		}
 		next.ServeHTTP(w, r)
 	})
 }
 
-// Analytics records a page hit for GET requests to HTML pages. Static assets,
-// generated images, feeds and the admin area are skipped. Recording happens in
-// a goroutine so it never adds latency to the response.
 func (h *Handler) Analytics(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if h.Comments != nil && r.Method == http.MethodGet && countablePath(r.URL.Path) {
@@ -56,8 +52,6 @@ func (h *Handler) Analytics(next http.Handler) http.Handler {
 	})
 }
 
-// countablePath reports whether a path represents a real human page view worth
-// tracking (filtering out assets, bot scans, feeds, and background streams).
 func countablePath(p string) bool {
 	skipPrefixes := []string{
 		"/static/", "/id/static/", "/admin", "/api/",
@@ -90,7 +84,6 @@ func countablePath(p string) bool {
 	return true
 }
 
-// rateLimiter is a simple per-IP sliding-window limiter kept in memory.
 type rateLimiter struct {
 	mu     sync.Mutex
 	hits   map[string][]time.Time
@@ -99,7 +92,6 @@ type rateLimiter struct {
 	lastGC time.Time
 }
 
-// NewRateLimiter allows `limit` requests per `window` per client IP.
 func NewRateLimiter(limit int, window time.Duration) func(http.Handler) http.Handler {
 	rl := &rateLimiter{
 		hits:   make(map[string][]time.Time),
@@ -128,7 +120,6 @@ func (rl *rateLimiter) allow(ip string) bool {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
-	// Occasional garbage collection of stale IP buckets.
 	if now.Sub(rl.lastGC) > rl.window {
 		for k, ts := range rl.hits {
 			if len(ts) == 0 || ts[len(ts)-1].Before(cutoff) {
@@ -153,11 +144,11 @@ func (rl *rateLimiter) allow(ip string) bool {
 }
 
 func clientIP(r *http.Request) string {
-	// 1. Cloudflare native header
+
 	if cfip := r.Header.Get("CF-Connecting-IP"); cfip != "" {
 		return strings.TrimSpace(cfip)
 	}
-	// 2. Standard proxies (NGINX, HAProxy, etc)
+
 	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
 		if i := strings.IndexByte(xff, ','); i >= 0 {
 			return strings.TrimSpace(xff[:i])

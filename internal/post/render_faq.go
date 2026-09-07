@@ -57,7 +57,6 @@ func renderFAQHTML(rawContent string) string {
 		qEsc := html.EscapeString(item.Question)
 		aEsc := html.EscapeString(item.Answer)
 
-		// Basic inline formatting support (`code` and **bold**)
 		aEsc = formatSimpleInline(aEsc)
 
 		buf.WriteString(fmt.Sprintf(`  <details class="border border-border bg-surface rounded-none overflow-hidden group">

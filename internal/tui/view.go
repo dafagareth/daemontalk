@@ -15,7 +15,6 @@ func (m Model) View() string {
 
 	theme := m.GetTheme()
 
-	// 2 lines reserved for bottom status bar
 	panelHeight := m.Height - 2
 	if panelHeight < 6 {
 		panelHeight = 6
@@ -32,7 +31,7 @@ func (m Model) View() string {
 	var panels string
 
 	if m.IsFullReader || (m.IsCompact && m.ActivePanel == 1) {
-		// Full Reader / Compact Reader Mode
+
 		scrollPercent := fmt.Sprintf("%.0f%%", m.Viewport.ScrollPercent()*100)
 		if m.Viewport.AtTop() {
 			scrollPercent = "TOP"
@@ -60,7 +59,7 @@ func (m Model) View() string {
 			Height(panelHeight - 2).
 			Render(fullTitleStyled + "\n" + m.Viewport.View())
 	} else if m.IsCompact && m.ActivePanel == 0 {
-		// Compact Single-Column List Mode
+
 		leftCount := fmt.Sprintf("%d/%d", m.List.Index()+1, len(m.Posts))
 		if m.List.FilterValue() != "" {
 			leftCount = fmt.Sprintf("filter: %q", m.List.FilterValue())
@@ -73,7 +72,7 @@ func (m Model) View() string {
 			Height(panelHeight - 2).
 			Render(leftTitleStyled + "\n" + m.List.View())
 	} else {
-		// Split Desktop Mode
+
 		listWidth := m.Width * 35 / 100
 		if listWidth < 30 {
 			listWidth = 30
@@ -94,7 +93,6 @@ func (m Model) View() string {
 			cStyle = actBox
 		}
 
-		// 1. Left Panel (Dispatches list)
 		leftCount := fmt.Sprintf("%d/%d", m.List.Index()+1, len(m.Posts))
 		if m.List.FilterValue() != "" {
 			leftCount = fmt.Sprintf("filter: %q", m.List.FilterValue())
@@ -111,7 +109,6 @@ func (m Model) View() string {
 			Height(panelHeight - 2).
 			Render(leftTitle + "\n" + m.List.View())
 
-		// 2. Right Panel (Article preview)
 		scrollPercent := fmt.Sprintf("%.0f%%", m.Viewport.ScrollPercent()*100)
 		if m.Viewport.AtTop() {
 			scrollPercent = "TOP"
@@ -133,7 +130,6 @@ func (m Model) View() string {
 		panels = lipgloss.JoinHorizontal(lipgloss.Top, listStr, contentStr)
 	}
 
-	// Dynamic status bar styling
 	sBarStyle := lipgloss.NewStyle().
 		Background(theme.StatusBg).
 		Foreground(theme.TextNormal).

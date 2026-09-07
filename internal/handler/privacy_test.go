@@ -28,7 +28,6 @@ func TestPrivacyPage(t *testing.T) {
 		t.Error("expected zero-tracker declaration")
 	}
 
-	// Test Indonesian locale
 	recID := httptest.NewRecorder()
 	reqID := httptest.NewRequest(http.MethodGet, "/id/privacy", nil)
 	h.Privacy(recID, reqID)

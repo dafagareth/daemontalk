@@ -36,7 +36,7 @@ func TestAddAndList(t *testing.T) {
 	if len(got) != 2 {
 		t.Fatalf("expected 2 comments for post-a, got %d", len(got))
 	}
-	// Oldest first
+
 	if got[0].Name != "Alice" || got[1].Name != "Bob" {
 		t.Errorf("wrong order: %q, %q", got[0].Name, got[1].Name)
 	}
@@ -122,7 +122,7 @@ func TestListAll(t *testing.T) {
 	if len(all) != 3 {
 		t.Fatalf("expected 3 comments, got %d", len(all))
 	}
-	// Newest first — Carol was added last.
+
 	if all[0].Name != "Carol" {
 		t.Errorf("expected newest first (Carol), got %q", all[0].Name)
 	}
@@ -150,25 +150,21 @@ func TestAllViewCounts(t *testing.T) {
 func TestThreadedRepliesAndBuildTree(t *testing.T) {
 	s := newTestStore(t)
 
-	// Root comment 1
 	c1, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Alice", Body: "Root comment 1"})
 	if err != nil {
 		t.Fatalf("Add root 1: %v", err)
 	}
 
-	// Reply to Root 1
 	c1Reply1, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Bob", Body: "Reply 1 to Alice", ParentID: &c1.ID})
 	if err != nil {
 		t.Fatalf("Add reply 1: %v", err)
 	}
 
-	// Nested reply to Reply 1 (grandchild)
 	c1Grandchild, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Carol", Body: "Reply to Bob", ParentID: &c1Reply1.ID})
 	if err != nil {
 		t.Fatalf("Add grandchild: %v", err)
 	}
 
-	// Root comment 2
 	c2, err := s.AddAdvanced(Comment{PostSlug: "post-tree", Name: "Dave", Body: "Root comment 2"})
 	if err != nil {
 		t.Fatalf("Add root 2: %v", err)
@@ -187,7 +183,6 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 		t.Fatalf("expected 2 root comments in tree, got %d", len(tree))
 	}
 
-	// Check root 1 (Alice)
 	if tree[0].ID != c1.ID || tree[0].Name != "Alice" {
 		t.Errorf("expected root 1 to be Alice, got %q", tree[0].Name)
 	}
@@ -195,7 +190,6 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 		t.Fatalf("expected 1 reply under Alice, got %d", len(tree[0].Replies))
 	}
 
-	// Check reply 1 (Bob)
 	bobReply := tree[0].Replies[0]
 	if bobReply.ID != c1Reply1.ID || bobReply.Name != "Bob" {
 		t.Errorf("expected reply to be Bob, got %q", bobReply.Name)
@@ -204,13 +198,11 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 		t.Fatalf("expected 1 grandchild reply under Bob, got %d", len(bobReply.Replies))
 	}
 
-	// Check grandchild (Carol)
 	carolReply := bobReply.Replies[0]
 	if carolReply.ID != c1Grandchild.ID || carolReply.Name != "Carol" {
 		t.Errorf("expected grandchild to be Carol, got %q", carolReply.Name)
 	}
 
-	// Check root 2 (Dave)
 	if tree[1].ID != c2.ID || tree[1].Name != "Dave" {
 		t.Errorf("expected root 2 to be Dave, got %q", tree[1].Name)
 	}
@@ -222,7 +214,6 @@ func TestThreadedRepliesAndBuildTree(t *testing.T) {
 func TestReactions(t *testing.T) {
 	s := newTestStore(t)
 
-	// Increment 🚀
 	rx, err := s.IncrementReaction("post-rx", "🚀")
 	if err != nil {
 		t.Fatalf("IncrementReaction: %v", err)
@@ -231,19 +222,16 @@ func TestReactions(t *testing.T) {
 		t.Errorf("expected 🚀=1, got %d", rx["🚀"])
 	}
 
-	// Increment 🚀 again
 	rx, _ = s.IncrementReaction("post-rx", "🚀")
 	if rx["🚀"] != 2 {
 		t.Errorf("expected 🚀=2, got %d", rx["🚀"])
 	}
 
-	// Increment ❤️
 	rx, _ = s.IncrementReaction("post-rx", "❤️")
 	if rx["❤️"] != 1 {
 		t.Errorf("expected ❤️=1, got %d", rx["❤️"])
 	}
 
-	// Decrement 🚀
 	rx, err = s.DecrementReaction("post-rx", "🚀")
 	if err != nil {
 		t.Fatalf("DecrementReaction: %v", err)
@@ -252,7 +240,6 @@ func TestReactions(t *testing.T) {
 		t.Errorf("expected 🚀=1 after decrement, got %d", rx["🚀"])
 	}
 
-	// Decrement non-existent (cap at 0)
 	rx, _ = s.DecrementReaction("post-rx", "🎉")
 	if rx["🎉"] != 0 {
 		t.Errorf("expected 🎉=0, got %d", rx["🎉"])
@@ -268,7 +255,7 @@ func TestPageViewsAnalytics(t *testing.T) {
 	_ = s.IncrementPageView("/")
 	_ = s.IncrementPageView("/colophon")
 	_ = s.IncrementPageView("/blog/post-1")
-	_ = s.IncrementPageView("/wp-admin.php") // Should be filtered out of top views
+	_ = s.IncrementPageView("/wp-admin.php")
 
 	total, err := s.TotalPageViews()
 	if err != nil {
@@ -282,7 +269,7 @@ func TestPageViewsAnalytics(t *testing.T) {
 	if err != nil {
 		t.Fatalf("TopPageViews: %v", err)
 	}
-	if len(top) != 3 { // / (count=2), /colophon (count=1), /blog/post-1 (count=1)
+	if len(top) != 3 {
 		t.Fatalf("expected 3 clean top page views, got %d: %+v", len(top), top)
 	}
 	if top[0].Path != "/" || top[0].Count != 2 {
@@ -293,13 +280,11 @@ func TestPageViewsAnalytics(t *testing.T) {
 func TestRecordPostViewDeduplication(t *testing.T) {
 	s := newTestStore(t)
 
-	// First view from user 10
 	n, rec, err := s.RecordPostView("my-article", "u:10")
 	if err != nil || !rec || n != 1 {
 		t.Fatalf("expected recorded=true, count=1, got rec=%v, n=%d, err=%v", rec, n, err)
 	}
 
-	// Refresh 10 times by same user 10 -> count remains 1!
 	for i := 0; i < 10; i++ {
 		n, rec, err := s.RecordPostView("my-article", "u:10")
 		if err != nil || rec || n != 1 {
@@ -307,13 +292,11 @@ func TestRecordPostViewDeduplication(t *testing.T) {
 		}
 	}
 
-	// New visitor views
 	n, rec, err = s.RecordPostView("my-article", "v:visitor_b")
 	if err != nil || !rec || n != 2 {
 		t.Fatalf("expected recorded=true, count=2, got rec=%v, n=%d, err=%v", rec, n, err)
 	}
 
-	// Refresh by visitor_b
 	n, rec, err = s.RecordPostView("my-article", "v:visitor_b")
 	if err != nil || rec || n != 2 {
 		t.Fatalf("expected recorded=false, count=2, got rec=%v, n=%d, err=%v", rec, n, err)

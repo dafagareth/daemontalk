@@ -16,7 +16,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 	}
 	defer store.Close()
 
-	// 1. Create Topic
 	t1, err := store.CreateTopic(Topic{
 		UserID:   42,
 		Title:    "Mengapa Linux io_uring Lebih Cepat dari Epoll?",
@@ -34,7 +33,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Fatalf("expected non-empty slug")
 	}
 
-	// 2. Fetch Topic
 	fetched, err := store.GetTopicBySlug(t1.Slug, 42)
 	if err != nil || fetched == nil {
 		t.Fatalf("failed to get topic by slug: %v", err)
@@ -49,7 +47,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Errorf("expected is_owner to be true for user 42")
 	}
 
-	// 3. Add Replies
 	r1, err := store.CreateReply(Reply{
 		TopicID: t1.ID,
 		UserID:  99,
@@ -59,7 +56,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Fatalf("failed to create reply 1: %v", err)
 	}
 
-	// Nested reply to r1
 	r2, err := store.CreateReply(Reply{
 		TopicID:  t1.ID,
 		ParentID: r1.ID,
@@ -81,7 +77,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Fatalf("expected 1 child reply under r1")
 	}
 
-	// 4. Mark Accepted Solution
 	if err := store.MarkSolution(t1.ID, r1.ID, 42); err != nil {
 		t.Fatalf("failed to mark solution: %v", err)
 	}
@@ -90,7 +85,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Errorf("expected topic to be solved with reply id %d", r1.ID)
 	}
 
-	// 5. Upvote Voting
 	votes, hasVoted, err := store.Vote(42, "topic", t1.ID)
 	if err != nil {
 		t.Fatalf("failed to vote topic: %v", err)
@@ -99,7 +93,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Errorf("expected 1 vote and hasVoted=true, got votes=%d, hasVoted=%v", votes, hasVoted)
 	}
 
-	// Toggle vote off
 	votes, hasVoted, err = store.Vote(42, "topic", t1.ID)
 	if err != nil {
 		t.Fatalf("failed to toggle vote: %v", err)
@@ -108,7 +101,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Errorf("expected 0 votes and hasVoted=false, got votes=%d, hasVoted=%v", votes, hasVoted)
 	}
 
-	// 6. List Topics Filter
 	list, total, err := store.ListTopics("kernel", "", "", "", "latest", 10, 0, 42)
 	if err != nil {
 		t.Fatalf("failed to list topics: %v", err)
@@ -117,7 +109,6 @@ func TestForumStore_CRUDAndInteractions(t *testing.T) {
 		t.Errorf("expected 1 topic in list, got %d (total: %d)", len(list), total)
 	}
 
-	// 7. Delete Reply & Delete Topic
 	if err := store.DeleteReply(r2.ID, 42, false); err != nil {
 		t.Fatalf("failed to delete reply 2: %v", err)
 	}
@@ -153,13 +144,11 @@ func TestRecordTopicViewDeduplication(t *testing.T) {
 		t.Fatalf("failed to create topic: %v", err)
 	}
 
-	// Initial views should be 0
 	fetched, _ := store.GetTopicBySlug(topic.Slug, 0)
 	if fetched.ViewsCount != 0 {
 		t.Fatalf("expected 0 initial views, got %d", fetched.ViewsCount)
 	}
 
-	// First view from user 100
 	rec, err := store.RecordTopicView(topic.ID, "u:100")
 	if err != nil || !rec {
 		t.Fatalf("expected recorded=true, got %v, err: %v", rec, err)
@@ -169,7 +158,6 @@ func TestRecordTopicViewDeduplication(t *testing.T) {
 		t.Fatalf("expected 1 view, got %d", fetched.ViewsCount)
 	}
 
-	// Refresh 10 times by user 100 -> should NOT increment!
 	for i := 0; i < 10; i++ {
 		rec, err := store.RecordTopicView(topic.ID, "u:100")
 		if err != nil || rec {
@@ -181,7 +169,6 @@ func TestRecordTopicViewDeduplication(t *testing.T) {
 		t.Fatalf("expected views count to stay 1 after refreshes, got %d", fetched.ViewsCount)
 	}
 
-	// Different viewer: visitor anon_xyz
 	rec, err = store.RecordTopicView(topic.ID, "v:anon_xyz")
 	if err != nil || !rec {
 		t.Fatalf("expected recorded=true for new visitor, got %v", rec)
@@ -191,7 +178,6 @@ func TestRecordTopicViewDeduplication(t *testing.T) {
 		t.Fatalf("expected views count 2, got %d", fetched.ViewsCount)
 	}
 
-	// Refresh by visitor anon_xyz
 	rec, _ = store.RecordTopicView(topic.ID, "v:anon_xyz")
 	if rec {
 		t.Fatalf("expected recorded=false on visitor refresh")

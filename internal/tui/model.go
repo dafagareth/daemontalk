@@ -14,9 +14,9 @@ type Model struct {
 	List         list.Model
 	Viewport     viewport.Model
 	Posts        []post.Post
-	ActivePanel  int // 0 = list, 1 = viewport
+	ActivePanel  int
 	IsFullReader bool
-	IsCompact    bool // true when terminal width < 72
+	IsCompact    bool
 	ThemeIdx     int
 	FlashMsg     string
 	Ready        bool
@@ -57,7 +57,7 @@ func NewModel() Model {
 		Posts:        posts,
 		ActivePanel:  0,
 		IsFullReader: false,
-		ThemeIdx:     0, // 0 = Nord default
+		ThemeIdx:     0,
 	}
 }
 
@@ -101,7 +101,6 @@ func (m *Model) RecalcSizes() {
 
 	m.IsCompact = m.Width < 72
 
-	// Reserve 2 lines for the 2-row bottom status bar
 	panelHeight := m.Height - 2
 	if panelHeight < 6 {
 		panelHeight = 6

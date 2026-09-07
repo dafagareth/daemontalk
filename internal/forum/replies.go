@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-// CreateReply inserts a new reply to a topic and increments replies_count.
 func (s *Store) CreateReply(r Reply) (*Reply, error) {
 	now := time.Now().UTC()
 	bodyHTML := string(RenderMarkdown(r.BodyMD))
@@ -50,7 +49,6 @@ func (s *Store) CreateReply(r Reply) (*Reply, error) {
 	return &r, nil
 }
 
-// GetTopicReplies returns all replies for a topic organized into a tree.
 func (s *Store) GetTopicReplies(topicID int64, currentUserID int64) ([]*Reply, error) {
 	query := `
 		SELECT r.id, r.topic_id, r.parent_id, r.user_id, u.display_name, u.username, u.avatar_url, u.github_url,
@@ -106,7 +104,6 @@ func (s *Store) GetTopicReplies(topicID int64, currentUserID int64) ([]*Reply, e
 		allReplies = append(allReplies, &r)
 	}
 
-	// Organize into top-level and children
 	var rootReplies []*Reply
 	for _, r := range allReplies {
 		if r.ParentID > 0 {
@@ -121,7 +118,6 @@ func (s *Store) GetTopicReplies(topicID int64, currentUserID int64) ([]*Reply, e
 	return rootReplies, nil
 }
 
-// MarkSolution marks a reply as the accepted solution for a topic.
 func (s *Store) MarkSolution(topicID int64, replyID int64, currentUserID int64) error {
 	tx, err := s.db.Begin()
 	if err != nil {
@@ -129,7 +125,6 @@ func (s *Store) MarkSolution(topicID int64, replyID int64, currentUserID int64) 
 	}
 	defer tx.Rollback()
 
-	// Verify topic owner or admin
 	var topicOwnerID int64
 	if err := tx.QueryRow(`SELECT user_id FROM forum_topics WHERE id = ?`, topicID).Scan(&topicOwnerID); err != nil {
 		return fmt.Errorf("topic not found: %w", err)
@@ -138,12 +133,10 @@ func (s *Store) MarkSolution(topicID int64, replyID int64, currentUserID int64) 
 		return fmt.Errorf("only topic creator can accept solution")
 	}
 
-	// Reset all solutions for this topic
 	if _, err := tx.Exec(`UPDATE forum_replies SET is_solution = 0 WHERE topic_id = ?`, topicID); err != nil {
 		return err
 	}
 
-	// Set this reply as solution
 	if replyID > 0 {
 		if _, err := tx.Exec(`UPDATE forum_replies SET is_solution = 1 WHERE id = ? AND topic_id = ?`, replyID, topicID); err != nil {
 			return err
@@ -152,7 +145,7 @@ func (s *Store) MarkSolution(topicID int64, replyID int64, currentUserID int64) 
 			return err
 		}
 	} else {
-		// Unmark solution
+
 		if _, err := tx.Exec(`UPDATE forum_topics SET solved_reply_id = NULL WHERE id = ?`, topicID); err != nil {
 			return err
 		}
@@ -161,7 +154,6 @@ func (s *Store) MarkSolution(topicID int64, replyID int64, currentUserID int64) 
 	return tx.Commit()
 }
 
-// DeleteReply removes or redacts a reply (author or admin).
 func (s *Store) DeleteReply(replyID int64, currentUserID int64, isAdmin bool) error {
 	tx, err := s.db.Begin()
 	if err != nil {
@@ -179,19 +171,18 @@ func (s *Store) DeleteReply(replyID int64, currentUserID int64, isAdmin bool) er
 		return fmt.Errorf("unauthorized to delete reply")
 	}
 
-	// Check if this reply has child replies
 	var childCount int
 	if err := tx.QueryRow(`SELECT COUNT(1) FROM forum_replies WHERE parent_id = ?`, replyID).Scan(&childCount); err != nil {
 		return err
 	}
 
 	if childCount > 0 {
-		// Redact content if children exist to maintain conversation tree
+
 		if _, err := tx.Exec(`UPDATE forum_replies SET body_md = '[Komentar dihapus oleh penulis]', body_html = '<p class="text-muted italic">[Komentar dihapus oleh penulis]</p>' WHERE id = ?`, replyID); err != nil {
 			return err
 		}
 	} else {
-		// Hard delete if no child replies
+
 		if _, err := tx.Exec(`DELETE FROM forum_votes WHERE target_type = 'reply' AND target_id = ?`, replyID); err != nil {
 			return err
 		}

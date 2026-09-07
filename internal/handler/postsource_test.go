@@ -31,7 +31,7 @@ func TestAllPostsMergesDB(t *testing.T) {
 	if len(all) != 2 {
 		t.Fatalf("AllPosts: dapat %d, mau 2 (%+v)", len(all), all)
 	}
-	// Post DB bertanggal lebih baru → harus di urutan pertama.
+
 	if all[0].Slug != "dari-web" || all[1].Slug != "dari-file" {
 		t.Errorf("urutan salah: %s, %s", all[0].Slug, all[1].Slug)
 	}

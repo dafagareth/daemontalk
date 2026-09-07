@@ -7,27 +7,91 @@ import (
 	"time"
 )
 
-// Manifest serves the PWA web app manifest.
 func (h *Handler) Manifest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/manifest+json")
+	w.Header().Set("Cache-Control", "public, max-age=86400")
 	fmt.Fprint(w, `{
-  "name": "daemontalk",
-  "short_name": "daemontalk",
-  "description": "Notes on Linux, Go, and things I learn along the way.",
+  "id": "/",
+  "name": "DaemonTalk",
+  "short_name": "DaemonTalk",
+  "description": "An independent tech publication and learning space exploring modern software, systems, and the digital world.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f7f7f5",
-  "theme_color": "#1a73e8",
+  "orientation": "any",
+  "background_color": "#18181b",
+  "theme_color": "#18181b",
+  "categories": [
+    "education",
+    "technology",
+    "news"
+  ],
+  "lang": "en",
   "icons": [
-    {"src": "/static/images/icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "/static/images/icon-512.png", "sizes": "512x512", "type": "image/png"}
+    {
+      "src": "/static/logo/icon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/logo/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/logo/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dispatches",
+      "short_name": "Dispatches",
+      "description": "Browse technical dispatches and deep dives",
+      "url": "/blog",
+      "icons": [{ "src": "/static/logo/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Socket Forum",
+      "short_name": "Socket",
+      "description": "Architectural discussions and open systems Q&A",
+      "url": "/socket",
+      "icons": [{ "src": "/static/logo/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Knowledge Graph",
+      "short_name": "Graph",
+      "description": "Interactive topic constellation and topology",
+      "url": "/graph",
+      "icons": [{ "src": "/static/logo/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "System Stats",
+      "short_name": "Stats",
+      "description": "Real-time publication and engine metrics",
+      "url": "/stats",
+      "icons": [{ "src": "/static/logo/icon-96x96.png", "sizes": "96x96" }]
+    }
   ]
 }`)
 }
 
 const seoBaseURL = "https://daemontalk.com"
 
-// Robots serves robots.txt pointing crawlers at the sitemap and blocking AI scrapers.
 func (h *Handler) Robots(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
@@ -58,8 +122,6 @@ Sitemap: %s/sitemap-index.xml
 	fmt.Fprintf(w, robotsTxt, seoBaseURL, seoBaseURL)
 }
 
-// Sitemap serves an XML sitemap covering static pages and every blog post,
-// in both the default and Indonesian (/id) variants.
 func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 	var b strings.Builder
 	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
@@ -74,13 +136,11 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 		b.WriteString("  </url>\n")
 	}
 
-	// Static pages (en + id).
 	for _, p := range []string{"/", "/colophon", "/stats", "/guestbook", "/resume"} {
 		writeURL(p, "")
 		writeURL("/id"+strings.TrimSuffix(p, "/"), "")
 	}
 
-	// Blog posts (en + id).
 	for _, post := range h.AllPosts() {
 		if post.Draft {
 			continue
@@ -93,7 +153,6 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 		writeURL("/id/blog/"+post.Slug, lastmod)
 	}
 
-	// Tag pages: collect unique tags across all posts.
 	tagSeen := make(map[string]bool)
 	for _, post := range h.AllPosts() {
 		for _, t := range post.Tags {
@@ -110,7 +169,6 @@ func (h *Handler) Sitemap(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(b.String()))
 }
 
-// SitemapIndex serves a sitemap index referencing per-language sitemaps.
 func (h *Handler) SitemapIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	fmt.Fprintf(w, `<?xml version="1.0" encoding="UTF-8"?>
@@ -120,12 +178,10 @@ func (h *Handler) SitemapIndex(w http.ResponseWriter, r *http.Request) {
 </sitemapindex>`, seoBaseURL, seoBaseURL)
 }
 
-// SitemapEN serves an English-only sitemap.
 func (h *Handler) SitemapEN(w http.ResponseWriter, r *http.Request) {
 	h.langSitemap(w, "en")
 }
 
-// SitemapID serves an Indonesian-only sitemap.
 func (h *Handler) SitemapID(w http.ResponseWriter, r *http.Request) {
 	h.langSitemap(w, "id")
 	h.langSitemap(w, "es")
@@ -150,8 +206,7 @@ func (h *Handler) langSitemap(w http.ResponseWriter, lang string) {
 		pfx = "/id"
 	}
 
-	// Static pages
-	for _, p := range []string{"/", "/colophon", "/stats", "/guestbook", "/resume", "/changelog"} {
+	for _, p := range []string{"/", "/colophon", "/stats", "/resume"} {
 		path := pfx + p
 		if lang != "id" && p == "/" {
 			path = "/"
@@ -162,7 +217,6 @@ func (h *Handler) langSitemap(w http.ResponseWriter, lang string) {
 		writeURL(path, "")
 	}
 
-	// Blog posts
 	for _, post := range h.AllPosts() {
 		if post.Draft {
 			continue

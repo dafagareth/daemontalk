@@ -54,7 +54,6 @@ func TestThemeCycling(t *testing.T) {
 	m := NewModel()
 	initialTheme := m.GetTheme().Name
 
-	// Cycle theme with 't'
 	newM, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'t'}})
 	model := newM.(Model)
 
@@ -62,7 +61,6 @@ func TestThemeCycling(t *testing.T) {
 		t.Errorf("expected theme to cycle from %s", initialTheme)
 	}
 
-	// Cycle 6 more times to complete loop of 7 themes
 	for i := 0; i < len(Themes)-1; i++ {
 		newM, _ = model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'t'}})
 		model = newM.(Model)
@@ -102,21 +100,18 @@ func TestNavigationUpdates(t *testing.T) {
 	m.Ready = true
 	m.RecalcSizes()
 
-	// Tab should switch panel to 1
 	newM, _ := m.Update(tea.KeyMsg{Type: tea.KeyTab})
 	model := newM.(Model)
 	if model.ActivePanel != 1 {
 		t.Errorf("expected ActivePanel 1, got %d", model.ActivePanel)
 	}
 
-	// Enter should toggle full reader mode
 	newM, _ = model.Update(tea.KeyMsg{Type: tea.KeyEnter})
 	model = newM.(Model)
 	if !model.IsFullReader {
 		t.Errorf("expected IsFullReader true")
 	}
 
-	// Esc should exit full reader mode
 	newM, _ = model.Update(tea.KeyMsg{Type: tea.KeyEsc})
 	model = newM.(Model)
 	if model.IsFullReader {
@@ -138,7 +133,6 @@ func TestRenderPostMarkdown(t *testing.T) {
 		t.Fatalf("expected non-empty output from RenderPostMarkdown")
 	}
 
-	// Ensure cached result is returned quickly on second call
 	outCached := RenderPostMarkdown(p, 60, Themes[0])
 	if outCached != out {
 		t.Errorf("expected cached output to match original output")
@@ -146,20 +140,18 @@ func TestRenderPostMarkdown(t *testing.T) {
 }
 
 func TestResolvePostURL(t *testing.T) {
-	// External URL
+
 	external := "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=1200&q=80"
 	if got := ResolvePostURL(external, "slug"); got != external {
 		t.Errorf("expected %s, got %s", external, got)
 	}
 
-	// Relative static image path
 	rel := "/static/images/posts/arch.png"
 	gotRel := ResolvePostURL(rel, "slug")
 	if gotRel != "https://www.daemontalk.com/static/images/posts/arch.png" {
 		t.Errorf("expected full static URL, got %s", gotRel)
 	}
 
-	// Fallback to slug
 	gotSlug := ResolvePostURL("", "my-post")
 	if gotSlug != "https://www.daemontalk.com/blog/my-post" {
 		t.Errorf("expected blog slug URL, got %s", gotSlug)

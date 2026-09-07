@@ -16,7 +16,6 @@ type githubPushPayload struct {
 	Ref string `json:"ref"`
 }
 
-// GitHubWebhook handles POST /api/webhook/github for instant automatic article publishing on merge.
 func (h *Handler) GitHubWebhook(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "application/json")
@@ -37,7 +36,6 @@ func (h *Handler) GitHubWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 1. Verify GitHub signature if secret is configured
 	secret := os.Getenv("GITHUB_WEBHOOK_SECRET")
 	if secret != "" {
 		sig := r.Header.Get("X-Hub-Signature-256")
@@ -56,7 +54,6 @@ func (h *Handler) GitHubWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// 2. Check event type
 	event := r.Header.Get("X-GitHub-Event")
 	if event == "ping" {
 		w.Header().Set("Content-Type", "application/json")
@@ -78,7 +75,6 @@ func (h *Handler) GitHubWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// 3. Reload posts from disk and refresh in-memory snapshot
 	h.ReloadFilePosts()
 	h.RefreshPosts()
 

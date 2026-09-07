@@ -12,9 +12,9 @@ func TestGet(t *testing.T) {
 	}{
 		{"en", "en"},
 		{"id", "id"},
-		{"es", "en"}, // Fallback to en
-		{"", "en"},   // Fallback to en
-		{"de", "en"}, // Fallback to en
+		{"es", "en"},
+		{"", "en"},
+		{"de", "en"},
 	}
 
 	for _, tc := range tests {

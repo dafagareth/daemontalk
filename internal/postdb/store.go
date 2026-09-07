@@ -1,6 +1,3 @@
-// Package postdb menyimpan post yang ditulis lewat editor web di SQLite.
-// Post file markdown di content/posts tetap menjadi sumber terpisah; keduanya
-// digabung di layer handler.
 package postdb
 
 import (
@@ -18,11 +15,11 @@ type WebPost struct {
 	Title       string
 	Description string
 	BodyMD      string
-	Tags        string // dipisah koma: "go, web"
+	Tags        string
 	Lang        string
 	Cover       string
 	Draft       bool
-	Date        string // YYYY-MM-DD (tanggal publish)
+	Date        string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -31,7 +28,6 @@ type Store struct {
 	db *sql.DB
 }
 
-// Open opens (or creates) the SQLite database at path and ensures the schema.
 func Open(path string) (*Store, error) {
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
@@ -44,7 +40,7 @@ func Open(path string) (*Store, error) {
 		PRAGMA temp_store=MEMORY;
 		PRAGMA mmap_size=268435456;
 		PRAGMA cache_size=-2000;
-		
+
 		CREATE TABLE IF NOT EXISTS posts (
 			id          INTEGER PRIMARY KEY AUTOINCREMENT,
 			slug        TEXT NOT NULL UNIQUE,
@@ -74,7 +70,6 @@ func scan(row interface{ Scan(...any) error }) (WebPost, error) {
 	return p, err
 }
 
-// List returns all web posts, newest publish date first.
 func (s *Store) List() ([]WebPost, error) {
 	rows, err := s.db.Query("SELECT " + cols + " FROM posts ORDER BY date DESC, id DESC")
 	if err != nil {
@@ -128,8 +123,6 @@ func (s *Store) Delete(id int64) error {
 	return err
 }
 
-// ToMarkdown menyintesis dokumen frontmatter+body sehingga post DB bisa
-// dirender lewat post.Parse — pipeline yang sama dengan post file.
 func (p WebPost) ToMarkdown() []byte {
 	var b strings.Builder
 	b.WriteString("---\n")
@@ -162,7 +155,6 @@ func (p WebPost) ToMarkdown() []byte {
 	return []byte(b.String())
 }
 
-// TagList memecah field Tags ("a, b") menjadi slice bersih.
 func (p WebPost) TagList() []string {
 	var out []string
 	for _, t := range strings.Split(p.Tags, ",") {
@@ -174,7 +166,6 @@ func (p WebPost) TagList() []string {
 	return out
 }
 
-// Close closes the underlying SQLite database connection.
 func (s *Store) Close() error {
 	if s.db != nil {
 		return s.db.Close()

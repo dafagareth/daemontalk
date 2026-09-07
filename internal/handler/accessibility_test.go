@@ -28,7 +28,6 @@ func TestAccessibilityPage(t *testing.T) {
 		t.Error("expected WCAG standard mention")
 	}
 
-	// Test Indonesian locale
 	recID := httptest.NewRecorder()
 	reqID := httptest.NewRequest(http.MethodGet, "/id/accessibility", nil)
 	h.Accessibility(recID, reqID)

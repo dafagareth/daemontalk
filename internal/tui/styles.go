@@ -2,7 +2,6 @@ package tui
 
 import "github.com/charmbracelet/lipgloss"
 
-// Theme defines the complete color palette and style for the TUI
 type Theme struct {
 	Name           string
 	BorderInactive lipgloss.Color
@@ -15,7 +14,6 @@ type Theme struct {
 	GlamourStyle   string
 }
 
-// 7 Developer Color Themes
 var Themes = []Theme{
 	{
 		Name:           "Nord",

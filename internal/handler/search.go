@@ -50,8 +50,6 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// If it's a boosted form submission or link, it will have a different target (or no explicit target).
-		// We let it fall through to render the full page Layout, which hx-boost handles seamlessly.
 	}
 
 	desc := "Search posts on daemontalk.com"

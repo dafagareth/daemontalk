@@ -16,7 +16,6 @@ func TestGetVisitorIdentitySetsCookieAndGeneratesAnonymName(t *testing.T) {
 		t.Errorf("expected anonym_ prefix, got %q", name1)
 	}
 
-	// Verify cookie was set
 	cookies := rec.Result().Cookies()
 	var visitorCookie *http.Cookie
 	for _, c := range cookies {
@@ -29,7 +28,6 @@ func TestGetVisitorIdentitySetsCookieAndGeneratesAnonymName(t *testing.T) {
 		t.Fatal("visitor_id cookie was not set")
 	}
 
-	// Subsequent request with the same cookie must produce the EXACT same anonymous name
 	req2 := httptest.NewRequest(http.MethodGet, "/guestbook", nil)
 	req2.AddCookie(visitorCookie)
 	rec2 := httptest.NewRecorder()

@@ -2,7 +2,6 @@ package comment
 
 import "time"
 
-// Comment represents a visitor comment or reply.
 type Comment struct {
 	ID         int64     `json:"id"`
 	PostSlug   string    `json:"post_slug"`

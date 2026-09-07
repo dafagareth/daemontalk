@@ -39,17 +39,14 @@ func getContentPostsDir() string {
 	return filepath.Join("content", "posts")
 }
 
-// FindPostFile locates the exact markdown file corresponding to a given post
 func FindPostFile(p post.Post) string {
 	postsDir := getContentPostsDir()
 
-	// 1. Fast path: direct slug match
 	directPath := filepath.Join(postsDir, p.Slug+".md")
 	if _, err := os.Stat(directPath); err == nil {
 		return directPath
 	}
 
-	// 2. Alias match
 	for _, a := range p.Aliases {
 		aliasPath := filepath.Join(postsDir, a+".md")
 		if _, err := os.Stat(aliasPath); err == nil {
@@ -57,7 +54,6 @@ func FindPostFile(p post.Post) string {
 		}
 	}
 
-	// 3. Fallback: scan files only if direct paths were not found
 	files, err := os.ReadDir(postsDir)
 	if err != nil {
 		return ""
@@ -77,7 +73,6 @@ func FindPostFile(p post.Post) string {
 	return ""
 }
 
-// RenderPostMarkdown formats and renders the full markdown body using Glamour and theme styling
 func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 	if wrapWidth < 20 {
 		wrapWidth = 20
@@ -100,7 +95,7 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 	var content string
 	if exactFile != "" && len(rawMD) > 0 {
 		content = string(rawMD)
-		// Remove frontmatter
+
 		if strings.HasPrefix(content, "---") {
 			parts := strings.SplitN(content, "---", 3)
 			if len(parts) == 3 {
@@ -113,11 +108,9 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		content = "No content available for this dispatch."
 	}
 
-	// Format custom callouts into clean markdown quotes
 	content = reCalloutOpen.ReplaceAllString(content, "\n> **[$1]** ")
 	content = strings.ReplaceAll(content, "</callout>", "\n")
 
-	// Format inline markdown images cleanly
 	content = reMarkdownImage.ReplaceAllStringFunc(content, func(match string) string {
 		sub := reMarkdownImage.FindStringSubmatch(match)
 		if len(sub) == 3 {
@@ -131,14 +124,11 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		return match
 	})
 
-	// Graceful degradation for LaTeX Math blocks in Terminal
 	content = reBlockMath.ReplaceAllString(content, "```math\n$1\n```")
 	content = reInlineMath.ReplaceAllString(content, "`$1`")
 
-	// Strip remaining raw HTML containers (e.g. <figure>, <details>, <summary>)
 	content = reHTMLTags.ReplaceAllString(content, "")
 
-	// 1. Glamour rendering for body
 	glamourStyle := theme.GlamourStyle
 	if glamourStyle == "" {
 		glamourStyle = "dark"
@@ -162,7 +152,6 @@ func RenderPostMarkdown(p post.Post, wrapWidth int, theme Theme) string {
 		}
 	}
 
-	// 2. Theme-Aware Header
 	titleStyle := lipgloss.NewStyle().
 		Bold(true).
 		Foreground(theme.TextNormal).

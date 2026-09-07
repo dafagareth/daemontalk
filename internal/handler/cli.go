@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-// ANSI terminal color codes
 const (
 	ansiReset   = "\033[0m"
 	ansiBold    = "\033[1m"
@@ -21,7 +20,6 @@ const (
 	ansiBgGray  = "\033[48;5;236m"
 )
 
-// IsCLIRequest checks whether the HTTP client is curl, wget, or requesting plain text.
 func IsCLIRequest(r *http.Request) bool {
 	if r.URL.Query().Get("format") == "text" || r.URL.Query().Get("plain") == "1" {
 		return true
@@ -36,7 +34,6 @@ func IsCLIRequest(r *http.Request) bool {
 	return false
 }
 
-// stripANSI removes color codes if user requests nocolor
 func applyColors(s string, enable bool) string {
 	if enable {
 		return s
@@ -50,17 +47,16 @@ func applyColors(s string, enable bool) string {
 	return r.Replace(s)
 }
 
-// CLIMain handles "curl daemontalk.com" requests.
 func (h *Handler) CLIMain(w http.ResponseWriter, r *http.Request) {
 	color := r.URL.Query().Get("nocolor") != "1"
 	posts := h.AllPosts()
 
 	var b strings.Builder
 
-	banner := ` ____                                _        _ _    
+	banner := ` ____                                _        _ _
 |  _ \  __ _  ___ _ __ ___   ___  _ __ | |_ __ _| | | __
 | | | |/ _` + "`" + ` |/ _ \ '_ ` + "`" + ` _ \ / _ \| '_ \| __/ _` + "`" + ` | | |/ /
-| |_| | (_| |  __/ | | | | | (_) | | | | || (_| | |   < 
+| |_| | (_| |  __/ | | | | | (_) | | | | || (_| | |   <
 |____/ \__,_|\___|_| |_| |_|\___/|_| |_|\__\__,_|_|_|\_\`
 
 	b.WriteString(fmt.Sprintf("%s%s%s\n\n", ansiGreen+ansiBold, banner, ansiReset))
@@ -68,7 +64,6 @@ func (h *Handler) CLIMain(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(fmt.Sprintf("%sHost: %s | Time: %s%s\n", ansiDim, r.Host, time.Now().UTC().Format("2006-01-02 15:04:05 UTC"), ansiReset))
 	b.WriteString(fmt.Sprintf("%s----------------------------------------------------------------------%s\n\n", ansiDim, ansiReset))
 
-	// Section 1: Latest Stories
 	b.WriteString(fmt.Sprintf("%s[ TOP DISPATCHES ]%s\n\n", ansiCyan+ansiBold, ansiReset))
 
 	count := 0

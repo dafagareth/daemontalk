@@ -12,7 +12,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.MouseMsg:
-		// Mouse wheel and click handling
+
 		if msg.Button == tea.MouseButtonWheelUp || msg.Button == tea.MouseButtonWheelDown {
 			if m.IsFullReader || m.ActivePanel == 1 || (m.IsCompact && m.ActivePanel == 1) {
 				var cmd tea.Cmd
@@ -31,15 +31,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case tea.KeyMsg:
-		// Reset flash message on next keypress
+
 		m.FlashMsg = ""
 
-		// Global quit
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
 		}
 
-		// When searching in list, synchronize preview in real time
 		if !m.IsFullReader && m.List.FilterState() == list.Filtering {
 			prevFilter := m.List.FilterValue()
 			prevIdx := m.List.Index()
@@ -56,7 +54,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch msg.String() {
 		case "t", "T":
-			// Cycle through the 7 developer themes
+
 			m.ThemeIdx = (m.ThemeIdx + 1) % len(Themes)
 			theme := m.GetTheme()
 			m.List.SetDelegate(LazyDelegate{Theme: theme})
@@ -65,7 +63,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "o":
-			// Open cover image / link
+
 			if it, ok := m.List.SelectedItem().(Item); ok {
 				p := it.Post
 				targetURL := ResolvePostURL(p.Cover, p.Slug)
@@ -77,7 +75,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "w":
-			// Open article on web
+
 			if it, ok := m.List.SelectedItem().(Item); ok {
 				p := it.Post
 				targetURL := ResolvePostURL("", p.Slug)
@@ -214,14 +212,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 
-		// Route navigation input to the active panel
 		if !m.IsFullReader && m.ActivePanel == 0 {
 			prevIdx := m.List.Index()
 			var cmd tea.Cmd
 			m.List, cmd = m.List.Update(msg)
 			cmds = append(cmds, cmd)
 
-			// If selection changed, update right panel
 			if m.List.Index() != prevIdx && m.Ready {
 				m.Viewport.SetContent(m.RenderCurrentPost())
 				m.Viewport.GotoTop()

@@ -45,7 +45,6 @@ func newTestCommentHandler(t *testing.T) (*Handler, *comment.Store) {
 func TestPostCommentAndReply(t *testing.T) {
 	h, cs := newTestCommentHandler(t)
 
-	// 1. Post root comment
 	form := url.Values{
 		"body": {"Root discussion topic"},
 	}
@@ -73,7 +72,6 @@ func TestPostCommentAndReply(t *testing.T) {
 	}
 	rootID := comments[0].ID
 
-	// 2. Post reply to root comment
 	replyForm := url.Values{
 		"body":      {"This is a thoughtful reply"},
 		"parent_id": {fmt.Sprintf("%d", rootID)},
@@ -114,7 +112,6 @@ func TestDeleteCommentWithReplies(t *testing.T) {
 	c1, _ := cs.AddAdvanced(comment.Comment{PostSlug: "test-post", Name: "Alice", Body: "Root comment"})
 	_, _ = cs.AddAdvanced(comment.Comment{PostSlug: "test-post", Name: "Bob", Body: "Reply to Alice", ParentID: &c1.ID})
 
-	// Delete as Admin
 	req := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/blog/test-post/comments/%d/delete", c1.ID), nil)
 	req.AddCookie(&http.Cookie{Name: CookieAdminToken, Value: "admin-secret"})
 	rctx := chi.NewRouteContext()

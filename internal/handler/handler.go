@@ -23,34 +23,29 @@ import (
 )
 
 type Handler struct {
-	ContentDir   string // path to content directory (defaults to "content")
+	ContentDir   string
 	AllProjects  []project.Project
-	FilePosts    []post.Post   // markdown posts from content/posts, loaded once at startup
-	filePostsMu  sync.RWMutex  // protects concurrent access/mutations to FilePosts
-	PostDB       *postdb.Store // posts created by web editor (optional)
+	FilePosts    []post.Post
+	filePostsMu  sync.RWMutex
+	PostDB       *postdb.Store
 	Comments     *comment.Store
 	Auth         *auth.Store
 	GitHubOAuth  *auth.GitHubOAuth
 	Forum        *forum.Store
 	IsProduction bool
-	AdminToken   string // when set, enables comment moderation
+	AdminToken   string
 
-	// merged = FilePosts + render PostDB, urut tanggal desc. Di-swap utuh oleh
-	// RefreshPosts sehingga pembaca tidak perlu lock.
 	merged atomic.Pointer[[]post.Post]
 
-	// SMTP config for contact form (all optional; form still accepts without them)
 	SMTPHost string
 	SMTPPort string
 	SMTPUser string
 	SMTPPass string
 	SMTPTo   string
 
-	// token for higher API rate limits (optional)
 	GitHubToken string
 }
 
-// AllPosts mengembalikan snapshot gabungan post file + post DB.
 func (h *Handler) AllPosts() []post.Post {
 	if p := h.merged.Load(); p != nil {
 		return *p
@@ -62,7 +57,6 @@ func (h *Handler) AllPosts() []post.Post {
 	return nil
 }
 
-// ReloadFilePosts re-reads markdown posts from the content/posts directory.
 func (h *Handler) ReloadFilePosts() {
 	postsDir := h.getContentPath("posts")
 	if fps, err := post.LoadAllWithDrafts(postsDir); err == nil {
@@ -72,7 +66,6 @@ func (h *Handler) ReloadFilePosts() {
 	}
 }
 
-// getFilePosts returns a safe copy of FilePosts.
 func (h *Handler) getFilePosts() []post.Post {
 	h.filePostsMu.RLock()
 	defer h.filePostsMu.RUnlock()
@@ -81,9 +74,6 @@ func (h *Handler) getFilePosts() []post.Post {
 	return out
 }
 
-// RefreshPosts re-renders posts from DB, merges them with file posts,
-// and replaces snapshot. Called at startup and every time the editor
-// saving/deleting post — new post directly appears without restart.
 func (h *Handler) RefreshPosts() {
 	h.filePostsMu.RLock()
 	merged := make([]post.Post, 0, len(h.FilePosts)+8)
@@ -121,12 +111,10 @@ func langFromRequest(r *http.Request) string {
 	return "en"
 }
 
-// IsRadarEnabled reports whether the systems knowledge graph/radar feature is enabled.
 func (h *Handler) IsRadarEnabled() bool {
 	return templates.IsRadarEnabled()
 }
 
-// isAdmin reports whether the request carries a valid admin token cookie.
 func (h *Handler) isAdmin(r *http.Request) bool {
 	if h.AdminToken == "" {
 		return false
@@ -138,7 +126,6 @@ func (h *Handler) isAdmin(r *http.Request) bool {
 	return c.Value == h.AdminToken
 }
 
-// VisiblePosts returns all posts that should be visible to the current user.
 func (h *Handler) VisiblePosts(isAdmin bool) []post.Post {
 	var out []post.Post
 	for _, p := range h.AllPosts() {
@@ -153,7 +140,6 @@ func (h *Handler) VisiblePosts(isAdmin bool) []post.Post {
 	return out
 }
 
-// getContentPath resolves a subpath relative to h.ContentDir (defaulting to "content").
 func (h *Handler) getContentPath(subpath string) string {
 	dir := h.ContentDir
 	if dir == "" {
@@ -162,14 +148,12 @@ func (h *Handler) getContentPath(subpath string) string {
 	return filepath.Join(dir, subpath)
 }
 
-// Render executes a templ component and logs any rendering errors with structured metadata.
 func (h *Handler) Render(w http.ResponseWriter, r *http.Request, c templ.Component) {
 	if err := c.Render(r.Context(), w); err != nil {
 		slog.Error("render component failed", "error", err, "path", r.URL.Path, "method", r.Method)
 	}
 }
 
-// renderMarkdownPage renders a static markdown page with the given contentKey.
 func (h *Handler) renderMarkdownPage(w http.ResponseWriter, r *http.Request,
 	contentKey, title string, meta templates.PageMeta,
 	render func(i18n.UI, template.HTML, string) templ.Component,
@@ -195,4 +179,32 @@ func urlPrefix(lang string) string {
 		return "/id"
 	}
 	return ""
+}
+
+func (h *Handler) AbsoluteURL(r *http.Request, path string) string {
+	if path == "" {
+		return ""
+	}
+	if len(path) >= 4 && path[:4] == "http" {
+		return path
+	}
+	if path[0] != '/' {
+		path = "/" + path
+	}
+
+	base := templates.SiteBaseURL
+	if r != nil {
+		proto := "http"
+		if r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https" {
+			proto = "https"
+		}
+		host := r.Header.Get("X-Forwarded-Host")
+		if host == "" {
+			host = r.Host
+		}
+		if host != "" {
+			base = proto + "://" + host
+		}
+	}
+	return strings.TrimSuffix(base, "/") + path
 }

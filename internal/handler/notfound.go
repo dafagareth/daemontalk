@@ -7,7 +7,6 @@ import (
 	"daemontalk/web/templates"
 )
 
-// NotFound renders the custom 404 Not Found error page.
 func (h *Handler) NotFound(w http.ResponseWriter, r *http.Request) {
 	lang := langFromRequest(r)
 	ui := i18n.Get(lang)

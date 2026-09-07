@@ -11,10 +11,9 @@ const (
 	MaxBodyLen = 2000
 )
 
-// ListBySlug returns all comments for a post, oldest first.
 func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported
 		 FROM comments WHERE post_slug = ? ORDER BY created_at ASC`,
 		slug,
 	)
@@ -50,7 +49,6 @@ func (s *Store) ListBySlug(slug string) ([]Comment, error) {
 	return out, rows.Err()
 }
 
-// AddAdvanced inserts a comment with optional user authentication info.
 func (s *Store) AddAdvanced(c Comment) (Comment, error) {
 	name := strings.TrimSpace(c.Name)
 	body := strings.TrimSpace(c.Body)
@@ -65,7 +63,6 @@ func (s *Store) AddAdvanced(c Comment) (Comment, error) {
 		body = string([]rune(body)[:MaxBodyLen])
 	}
 
-	// If replying to a parent comment, verify the parent exists and belongs to the same post
 	if c.ParentID != nil && *c.ParentID > 0 {
 		var parentSlug string
 		err := s.db.QueryRow(`SELECT post_slug FROM comments WHERE id = ?`, *c.ParentID).Scan(&parentSlug)
@@ -101,15 +98,14 @@ func (s *Store) AddAdvanced(c Comment) (Comment, error) {
 	return c, nil
 }
 
-// GetByID retrieves a single comment by ID.
 func (s *Store) GetByID(id int64) (*Comment, error) {
 	var c Comment
 	var parentID, userID sql.NullInt64
 	var avatarURL, ghURL sql.NullString
 	var isVerified sql.NullBool
-		var isReported sql.NullBool
+	var isReported sql.NullBool
 	err := s.db.QueryRow(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported
 		 FROM comments WHERE id = ?`,
 		id,
 	).Scan(&c.ID, &c.PostSlug, &c.Name, &c.Body, &parentID, &c.CreatedAt, &userID, &avatarURL, &isVerified, &ghURL, &isReported)
@@ -130,20 +126,18 @@ func (s *Store) GetByID(id int64) (*Comment, error) {
 	c.AvatarURL = avatarURL.String
 	c.IsVerified = isVerified.Bool
 	c.GitHubURL = ghURL.String
-		c.IsReported = isReported.Bool
+	c.IsReported = isReported.Bool
 	return &c, nil
 }
 
-// Delete removes a comment by ID and its recursive descendants via CASCADE.
 func (s *Store) Delete(id int64) error {
 	_, err := s.db.Exec(`DELETE FROM comments WHERE id = ?`, id)
 	return err
 }
 
-// ListAll returns all comments across every post, newest first.
 func (s *Store) ListAll() ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported
 		 FROM comments ORDER BY created_at DESC`,
 	)
 	if err != nil {
@@ -178,7 +172,6 @@ func (s *Store) ListAll() ([]Comment, error) {
 	return out, rows.Err()
 }
 
-// BuildTree converts a flat list of comments into a hierarchical tree structure.
 func BuildTree(comments []Comment) []Comment {
 	if len(comments) == 0 {
 		return nil
@@ -226,20 +219,18 @@ func BuildTree(comments []Comment) []Comment {
 	return result
 }
 
-// AnonymizeUserComments anonymizes comments authored by a user.
 func (s *Store) AnonymizeUserComments(userID int64) error {
 	_, err := s.db.Exec(`
-		UPDATE comments 
+		UPDATE comments
 		SET user_id = NULL, name = 'Deleted User', avatar_url = '/static/images/deleted-user.png', is_verified = 0, github_url = ''
 		WHERE user_id = ?
 	`, userID)
 	return err
 }
 
-// ListByUserID returns all comments authored by a user.
 func (s *Store) ListByUserID(userID int64) ([]Comment, error) {
 	rows, err := s.db.Query(
-		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported 
+		`SELECT id, post_slug, name, body, parent_id, created_at, user_id, avatar_url, is_verified, github_url, is_reported
 		 FROM comments WHERE user_id = ? ORDER BY created_at DESC`,
 		userID,
 	)
@@ -275,13 +266,11 @@ func (s *Store) ListByUserID(userID int64) ([]Comment, error) {
 	return out, rows.Err()
 }
 
-// UpdateBody updates the body of a comment by ID.
 func (s *Store) UpdateBody(id int64, body string) error {
 	_, err := s.db.Exec(`UPDATE comments SET body = ? WHERE id = ?`, body, id)
 	return err
 }
 
-// Report marks a comment as reported
 func (s *Store) Report(id int64) error {
 	_, err := s.db.Exec(`UPDATE comments SET is_reported = 1 WHERE id = ?`, id)
 	return err

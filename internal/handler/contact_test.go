@@ -25,8 +25,8 @@ func TestValidEmail(t *testing.T) {
 		"notanemail",
 		"@nolocal.com",
 		"two@@at.com",
-		"name <a@b.co>",        // display name smuggled in
-		"a@b.co\r\nBcc: x@y.z", // header injection attempt
+		"name <a@b.co>",
+		"a@b.co\r\nBcc: x@y.z",
 	}
 	for _, e := range invalid {
 		if validEmail(e) {
@@ -46,7 +46,7 @@ func TestStripCRLF(t *testing.T) {
 }
 
 func TestContactRejectsInvalid(t *testing.T) {
-	h := &Handler{} // no SMTP configured → logs only
+	h := &Handler{}
 
 	form := url.Values{
 		"name":    {"Tester"},
@@ -72,7 +72,7 @@ func TestContactHoneypot(t *testing.T) {
 		"name":    {"Bot"},
 		"email":   {"bot@spam.com"},
 		"message": {"spam"},
-		"website": {"filled-by-bot"}, // honeypot
+		"website": {"filled-by-bot"},
 	}
 	req := httptest.NewRequest(http.MethodPost, "/contact", strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -80,14 +80,13 @@ func TestContactHoneypot(t *testing.T) {
 
 	h.Contact(rec, req)
 
-	// Honeypot returns success styling but silently drops the message.
 	if !strings.Contains(rec.Body.String(), "c-ok") {
 		t.Errorf("honeypot should return success-looking response")
 	}
 }
 
 func TestContactAcceptsValid(t *testing.T) {
-	h := &Handler{} // no SMTP → logged, treated as success
+	h := &Handler{}
 
 	form := url.Values{
 		"name":    {"Tester"},

@@ -11,7 +11,6 @@ import (
 	"golang.org/x/oauth2/github"
 )
 
-// GitHubOAuth manages GitHub OAuth authentication.
 type GitHubOAuth struct {
 	config *oauth2.Config
 }
@@ -32,7 +31,6 @@ type githubEmailResponse struct {
 	Verified bool   `json:"verified"`
 }
 
-// NewGitHubOAuth creates a new GitHub OAuth service.
 func NewGitHubOAuth(clientID, clientSecret, redirectURL string) *GitHubOAuth {
 	return &GitHubOAuth{
 		config: &oauth2.Config{
@@ -45,12 +43,10 @@ func NewGitHubOAuth(clientID, clientSecret, redirectURL string) *GitHubOAuth {
 	}
 }
 
-// AuthCodeURL returns the authorization URL to redirect the user to.
 func (g *GitHubOAuth) AuthCodeURL(state string) string {
 	return g.config.AuthCodeURL(state, oauth2.AccessTypeOnline)
 }
 
-// ExchangeToken exchanges an authorization code for an OAuth2 access token and retrieves user info.
 func (g *GitHubOAuth) ExchangeToken(ctx context.Context, code string) (*User, error) {
 	token, err := g.config.Exchange(ctx, code)
 	if err != nil {
@@ -60,7 +56,6 @@ func (g *GitHubOAuth) ExchangeToken(ctx context.Context, code string) (*User, er
 	client := g.config.Client(ctx, token)
 	client.Timeout = 10 * time.Second
 
-	// 1. Fetch GitHub user profile
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.github.com/user", nil)
 	if err != nil {
 		return nil, err
@@ -84,7 +79,6 @@ func (g *GitHubOAuth) ExchangeToken(ctx context.Context, code string) (*User, er
 
 	email := ghUser.Email
 
-	// 2. If email is not in public profile, fetch from emails endpoint
 	if email == "" {
 		emailReq, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.github.com/user/emails", nil)
 		if err == nil {

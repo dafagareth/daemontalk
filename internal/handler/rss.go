@@ -8,11 +8,7 @@ import (
 )
 
 func (h *Handler) RSS(w http.ResponseWriter, r *http.Request) {
-	scheme := "https"
-	if r.TLS == nil && r.Header.Get("X-Forwarded-Proto") != "https" && r.Host == "localhost:8080" {
-		scheme = "http"
-	}
-	base := fmt.Sprintf("%s://%s", scheme, r.Host)
+	base := strings.TrimSuffix(h.AbsoluteURL(r, "/"), "/")
 
 	var items strings.Builder
 	for _, p := range h.AllPosts() {

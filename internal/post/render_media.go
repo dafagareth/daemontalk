@@ -64,7 +64,7 @@ func renderCarouselHTML(items []mediaItem) string {
 
 		if captionText != "" {
 			buf.WriteString(fmt.Sprintf(`
-      <figcaption class="mt-2 text-xs font-mono text-muted text-center leading-relaxed">
+      <figcaption class="mt-2 text-xs font-sans text-muted text-center leading-relaxed">
         %s
       </figcaption>`, captionText))
 		}
@@ -133,7 +133,7 @@ func renderGalleryHTML(items []mediaItem) string {
 
 		if captionText != "" {
 			buf.WriteString(fmt.Sprintf(`
-    <figcaption class="mt-2 text-xs font-mono text-muted text-center leading-relaxed">
+    <figcaption class="mt-2 text-xs font-sans text-muted text-center leading-relaxed">
       %s
     </figcaption>`, captionText))
 		}

@@ -18,7 +18,6 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 	}
 	defer store.Close()
 
-	// 1. Upsert User
 	u1 := User{
 		Provider:    "github",
 		ProviderID:  "123456",
@@ -41,12 +40,10 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 		t.Fatalf("expected username octocat, got %s", savedUser.Username)
 	}
 
-	// 2. Count Users
 	if count := store.CountUsers(); count != 1 {
 		t.Errorf("expected 1 user, got %d", count)
 	}
 
-	// 3. Get User By Username
 	byName, err := store.GetUserByUsername("octocat")
 	if err != nil || byName == nil {
 		t.Fatalf("expected to find user by username octocat, got %v (err: %v)", byName, err)
@@ -55,13 +52,11 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 		t.Errorf("expected ID %d, got %d", savedUser.ID, byName.ID)
 	}
 
-	// Non-existent username
 	_, err = store.GetUserByUsername("nonexistent")
 	if err == nil {
 		t.Errorf("expected error for nonexistent user")
 	}
 
-	// 4. Create Session
 	token := "raw-secure-token-12345"
 	tokenHash := HashToken(token)
 	session, err := store.CreateSession(savedUser.ID, tokenHash, 24*time.Hour)
@@ -72,7 +67,6 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 		t.Errorf("expected session user id %d, got %d", savedUser.ID, session.UserID)
 	}
 
-	// 5. Get Session User
 	sessionUser, err := store.GetSessionUser(tokenHash)
 	if err != nil || sessionUser == nil {
 		t.Fatalf("failed to get session user: %v", err)
@@ -81,7 +75,6 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 		t.Errorf("expected session user octocat, got %s", sessionUser.Username)
 	}
 
-	// Expired session test
 	expiredTokenHash := HashToken("expired-token")
 	_, err = store.CreateSession(savedUser.ID, expiredTokenHash, -1*time.Hour)
 	if err != nil {
@@ -92,7 +85,6 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 		t.Errorf("expected nil for expired session user, got %v (err: %v)", expiredUser, err)
 	}
 
-	// 6. Delete Session
 	if err := store.DeleteSession(tokenHash); err != nil {
 		t.Fatalf("failed to delete session: %v", err)
 	}
@@ -101,7 +93,6 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 		t.Fatalf("expected nil user after session deletion, got %v (err: %v)", sessionUser, err)
 	}
 
-	// 7. Delete User
 	if err := store.DeleteUser(savedUser.ID); err != nil {
 		t.Fatalf("failed to delete user: %v", err)
 	}
@@ -111,18 +102,16 @@ func TestAuthStore_UserAndSession(t *testing.T) {
 }
 
 func TestAuthContext(t *testing.T) {
-	// Nil context
+
 	if u := GetUser(nil); u != nil {
 		t.Errorf("expected nil user from nil context")
 	}
 
-	// Empty context
 	ctx := context.Background()
 	if u := GetUser(ctx); u != nil {
 		t.Errorf("expected nil user from empty context")
 	}
 
-	// With user
 	user := &User{ID: 42, Username: "gopher", Role: "admin"}
 	ctx = WithUser(ctx, user)
 	retrieved := GetUser(ctx)
@@ -147,7 +136,6 @@ func TestSessionHelpers(t *testing.T) {
 		t.Errorf("hash must be deterministic")
 	}
 
-	// Cookie test
 	rec := httptest.NewRecorder()
 	SetSessionCookie(rec, tok1, false)
 
@@ -157,7 +145,6 @@ func TestSessionHelpers(t *testing.T) {
 		t.Errorf("expected session cookie with token, got cookies: %v", cookies)
 	}
 
-	// Extract from request
 	req := httptest.NewRequest("GET", "/", nil)
 	req.AddCookie(cookies[0])
 	extracted := GetSessionTokenFromRequest(req)
@@ -165,7 +152,6 @@ func TestSessionHelpers(t *testing.T) {
 		t.Errorf("expected extracted token %s, got %s", tok1, extracted)
 	}
 
-	// Clear cookie test
 	rec2 := httptest.NewRecorder()
 	ClearSessionCookie(rec2, false)
 	clearCookies := rec2.Result().Cookies()
