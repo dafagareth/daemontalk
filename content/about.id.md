@@ -28,11 +28,11 @@ Untuk memastikan pengalaman membaca dan belajar yang menyenangkan, seluruh publi
 
 Selain publikasi artikel teknis mendalam, Daemontalk dilengkapi dengan berbagai antarmuka komputasi interaktif:
 
-**Forum Diskusi & Tanya Jawab (`/discussions`)**: Ruang kolaborasi teknis terbuka bagi anggota untuk mendiskusikan arsitektur sistem, memecahkan masalah error produksi, dan berbagi solusi kode dengan integrasi masuk resmi GitHub OAuth.
+**Forum Komunitas Socket (`/socket`)**: Ruang kolaborasi teknis terbuka bagi anggota untuk mendiskusikan arsitektur sistem, memecahkan masalah error produksi, dan berbagi solusi kode dengan integrasi masuk resmi GitHub OAuth.
 
-**Terminal UNIX di Peramban (`/terminal`)**: Antarmuka shell virtual berbasis web yang berjalan sepenuhnya di sisi klien untuk eksplorasi perintah sistem dan utilitas diagnostik secara interaktif.
+**Akses Streaming CLI Ramah Terminal (`curl`)**: Akses teks murni untuk ringkasan harian, resep sysadmin, dan membaca artikel langsung dari konsol via perintah seperti `curl -sL daemontalk.com/daily` atau `curl -sL daemontalk.com/p/<slug>`.
 
-**Akses Server SSH Publik (`ssh daemontalk.com -p 2222`)**: Akses antarmuka baris perintah (CLI/TUI) langsung melalui protokol SSH tanpa perlu mengunduh aplikasi tambahan.
+**Gateway Pembaca SSH TUI Publik (`ssh daemontalk.com -p 2222`)**: Akses antarmuka pembaca terminal interaktif berbasis Bubble Tea & Wish langsung melalui koneksi SSH tanpa peramban grafis.
 
 ## Teknologi di Balik Layar
 

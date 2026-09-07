@@ -107,25 +107,7 @@ Daemontalk supports GitHub-style alert callouts:
 > [!CAUTION]
 > High-risk actions that can cause kernel panics or data destruction.
 
-## 7. Key Metrics & Statistics (`stat`)
-
-Highlight benchmark gains and hardware metrics visually:
-
-```stat
-- value: "10x"
-  label: "Throughput"
-  description: "Transfer rate increase via zero-copy sendfile"
-
-- value: "99.99%"
-  label: "Uptime"
-  description: "Measured over 12 months in production"
-
-- value: "-45%"
-  label: "Context Switches"
-  description: "Reduction in user-to-kernel boundary transitions"
-```
-
-## 8. Multi-File Code Tabs (`tabs`)
+## 7. Multi-File Code Tabs (`tabs`)
 
 Group multi-file implementations or configurations into a tabbed widget:
 
@@ -158,7 +140,7 @@ test:
 	go test -count=1 -race ./...
 ```
 
-## 9. Code Annotations & Diffs
+## 8. Code Annotations & Diffs
 
 Annotate code blocks with line highlights, additions, and removals:
 
@@ -173,7 +155,7 @@ func allocateBuffer(size int) []byte {
 }
 ```
 
-## 10. ASCII Architecture & Flow Diagrams
+## 9. ASCII Architecture & Flow Diagrams
 
 Construct clean ASCII flow diagrams inside `text` code blocks:
 
@@ -189,7 +171,7 @@ Construct clean ASCII flow diagrams inside `text` code blocks:
                            +------------------+
 ```
 
-## 11. Structured Comparison Tables
+## 10. Structured Comparison Tables
 
 | Feature | HTTP/1.1 | HTTP/2 | HTTP/3 |
 | :--- | :--- | :--- | :--- |
@@ -197,7 +179,7 @@ Construct clean ASCII flow diagrams inside `text` code blocks:
 | **Handshake** | 1-RTT + TLS | 1-RTT + TLS | 0-RTT / 1-RTT |
 | **HoL Blocking** | Application Level | Transport Level | None (Independent Streams) |
 
-## 12. Mathematics (LaTeX & KaTeX)
+## 11. Mathematics (LaTeX & KaTeX)
 
 Render mathematical formulas natively:
 
@@ -208,7 +190,7 @@ $$
 \text{oom\_score} = \frac{\text{points} \times 1000}{\text{total\_pages}} + \text{oom\_score\_adj}
 $$
 
-## 13. Rich Link Preview Cards (`link`)
+## 12. Rich Link Preview Cards (`link`)
 
 ```link
 url: https://github.com/torvalds/linux/blob/master/mm/oom_kill.c
@@ -217,7 +199,7 @@ description: Official implementation of the Out-Of-Memory killer process scoring
 site: github.com
 ```
 
-## 14. Frequently Asked Questions (`faq`)
+## 13. Frequently Asked Questions (`faq`)
 
 ```faq
 Q: Can oom_score_adj be set to negative values?
@@ -227,7 +209,7 @@ Q: How can memory pressure be tested safely?
 A: Configure cgroups v2 memory.max or run stress-ng in an isolated test container.
 ```
 
-## 15. Structured References (`references`)
+## 14. Structured References (`references`)
 
 Conclude every dispatch with authoritative citations (RFCs, kernel source, books, papers):
 

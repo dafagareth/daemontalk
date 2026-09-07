@@ -68,11 +68,11 @@ When engaging with interactive community features:
 
 **Bot Defense Without Surveillance**: We use lightweight, invisible honeypot fields and in-memory rate limiting to filter automated spam bots without employing invasive commercial CAPTCHA widgets.
 
-## 7. Terminal & Shell Interfaces
+## 7. SSH Terminal & CLI Interfaces
 
-**In-Browser Terminal (`/terminal`)**: The virtual UNIX web shell runs entirely client-side; command execution history remains in your local browser memory and is discarded upon tab closure.
+**Public SSH TUI Reader Gateway (`ssh daemontalk.com -p 2222`)**: SSH connections execute in ephemeral, isolated processes per session with zero keystroke logging and no persistent storage of session activities.
 
-**Public SSH Access (`ssh daemontalk.com -p 2222`)**: SSH connections run in ephemeral, isolated processes with zero keystroke logging.
+**Command-Line Requests (`curl`)**: Content requests made via CLI utilities such as `curl` or `wget` are processed statelessly without user profiling, tracking cookies, or persistent request logging.
 
 ## 8. Data Security & Cryptography Standards
 
@@ -108,6 +108,6 @@ In the unlikely event of a security incident affecting personal data integrity o
 
 ## 13. Policy Amendments & Contact Channels
 
-We may update this Privacy Policy periodically to reflect architectural evolutions, new technical features, or legal requirements. Material updates will be documented on our `/changelog` and indicated by the revision date at the top of this page.
+We may update this Privacy Policy periodically to reflect architectural evolutions, new technical features, or legal requirements. Material updates will be indicated by the revision date at the top of this page.
 
 If you have questions, auditing suggestions, or security disclosures regarding our privacy architecture, reach out directly to: **realdaemontalk@gmail.com**.

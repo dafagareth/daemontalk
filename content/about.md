@@ -28,11 +28,11 @@ To ensure great reading and learning experiences, all content across Daemontalk 
 
 In addition to in-depth technical dispatches, Daemontalk offers modern computational interfaces:
 
-**Discussions & Technical Q&A (`/discussions`)**: An open collaborative space for members to discuss systems architecture, resolve production bugs, and exchange verified code solutions with GitHub OAuth authentication.
+**Socket Developer Community Forum (`/socket`)**: An open collaborative space for members to discuss systems architecture, resolve production bugs, and exchange verified code solutions with GitHub OAuth authentication.
 
-**In-Browser UNIX Terminal (`/terminal`)**: A virtual client-side web shell for interactive exploration of diagnostic utilities and system commands directly in your browser.
+**Terminal-Friendly CLI Streaming (`curl`)**: Pure plain-text streaming for daily tech briefings, sysadmin recipes, and full articles directly inside your terminal using commands like `curl -sL daemontalk.com/daily` or `curl -sL daemontalk.com/p/<slug>`.
 
-**Public SSH Terminal Access (`ssh daemontalk.com -p 2222`)**: Direct command-line interface (CLI/TUI) access over standard SSH protocols without requiring external client software installations.
+**Public SSH TUI Reader Gateway (`ssh daemontalk.com -p 2222`)**: An interactive terminal reader interface built with Bubble Tea & Wish, accessible over standard SSH without a graphical browser.
 
 ## Technology Stack
 

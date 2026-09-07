@@ -13,10 +13,10 @@
 
 ## Primary Capabilities
 
-- Interactive Bubble Tea terminal client accessible directly via SSH (`ssh ssh.daemontalk.com -p 2222`).
-- In-browser virtual UNIX shell (`/terminal`) with a simulated POSIX file system and 40+ commands.
+- Interactive Bubble Tea terminal reader client accessible directly via SSH (`ssh daemontalk.com -p 2222`).
+- Terminal-friendly plain text streaming via standard `curl` endpoints (`/daily`, `/recipes`, `/p/:slug`).
 - High-performance SSR blogging engine with in-memory full-text search and zero client JS frameworks.
-- Community discussions forum (`/discussions`) with GitHub OAuth 2.0, voting, and self-service data privacy.
+- Community discussions forum **Socket** (`/socket`) with GitHub OAuth 2.0, voting, and self-service data privacy.
 - Anonymous and verified SQLite-backed comment engine with persistent visitor handles.
 - Automated OpenGraph image generator, RSS 2.0 feed, JSON Feed, and XML Sitemaps.
 

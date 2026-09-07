@@ -83,8 +83,6 @@ readTime: 6
   url: "https://datatracker.ietf.org/doc/html/rfc9000"
 ```
 
-**Quick Metrics Block**: Use ` ```stat ` blocks to highlight key benchmarks or numbers visually.
-
 ---
 
 ## Git Workflow & Submission

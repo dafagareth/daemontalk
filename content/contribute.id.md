@@ -83,8 +83,6 @@ readTime: 6
   url: "https://datatracker.ietf.org/doc/html/rfc9000"
 ```
 
-**Blok Statistik Cepat**: Gunakan blok ` ```stat ` untuk menyajikan angka metrik kunci atau data performa secara visual.
-
 ---
 
 ## Alur Kerja Git (*Git Workflow*) & Pengiriman

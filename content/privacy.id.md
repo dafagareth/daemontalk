@@ -68,11 +68,11 @@ Saat Anda memanfaatkan fitur interaktif komunitas:
 
 **Pencegahan Bot Tanpa Pengawasan**: Kami menggunakan kolom *honeypot* tak kasat mata dan pembatasan frekuensi (*in-memory rate limiting*) untuk menyaring bot spam tanpa membebani pembaca dengan widget CAPTCHA komersial yang melacak aktivitas Anda.
 
-## 7. Antarmuka Terminal & Shell
+## 7. Antarmuka Terminal SSH & CLI
 
-**Terminal Web (`/terminal`)**: Shell UNIX virtual di peramban berjalan sepenuhnya di sisi klien; riwayat pengetikan perintah hanya berada di memori lokal dan akan terhapus otomatis saat *tab* ditutup.
+**Akses Gateway SSH TUI Publik (`ssh daemontalk.com -p 2222`)**: Sesi koneksi SSH dialokasikan pada proses terisolasi per sesi tanpa perekaman ketukan tombol (*zero keystroke logging*) dan tanpa penyimpanan rekaman sesi permanen di server.
 
-**Akses SSH Publik (`ssh daemontalk.com -p 2222`)**: Sesi koneksi SSH berjalan pada proses terisolasi tanpa perekaman penekanan tombol (*zero keystroke logging*).
+**Permintaan Baris Perintah (`curl`)**: Akses artikel dan umpan teks via utilitas CLI seperti `curl` atau `wget` diproses secara *stateless* tanpa pelacakan identitas, *cookies*, maupun profil pengguna.
 
 ## 8. Standar Keamanan Data & Kriptografi
 
@@ -108,6 +108,6 @@ Apabila terjadi insiden keamanan yang berpotensi memengaruhi integritas atau ker
 
 ## 13. Perubahan Kebijakan & Saluran Kontak
 
-Kami dapat memperbarui Kebijakan Privasi ini secara berkala seiring evolusi arsitektur sistem, fitur baru, atau penyesuaian regulasi hukum. Perubahan material akan dicatat pada halaman `/changelog` dan ditandai dengan tanggal pembaruan di bagian atas halaman ini.
+Kami dapat memperbarui Kebijakan Privasi ini secara berkala seiring evolusi arsitektur sistem, fitur baru, atau penyesuaian regulasi hukum. Perubahan material akan ditandai dengan tanggal pembaruan di bagian atas halaman ini.
 
 Apabila Anda memiliki pertanyaan, saran audit keamanan, atau permohonan terkait arsitektur privasi situs ini, silakan hubungi kami langsung di: **realdaemontalk@gmail.com**.
