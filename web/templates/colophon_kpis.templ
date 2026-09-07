@@ -1,0 +1,240 @@
+package templates
+
+templ colophonKpis(lang string) {
+	<div class="hidden sm:block border-b border-border bg-surface/20">
+		<div class="grid grid-cols-3 divide-x divide-border border-b border-border">
+			<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+				<span class="text-xs uppercase tracking-wider text-muted font-semibold font-sans">
+					if lang == "id" {
+						{ "WAKTU RESPONS" }
+					} else {
+						{ "LATENCY" }
+					}
+				</span>
+				<div class="my-2 sm:my-3">
+					<div class="text-3xl lg:text-4xl font-bold tracking-tight text-text tabular-nums font-sans">
+						&lt; 2ms
+					</div>
+					<div class="text-xs text-muted mt-1 font-sans">
+						TTFB
+					</div>
+				</div>
+			</div>
+			<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+				<span class="text-xs uppercase tracking-wider text-muted font-semibold font-sans">
+					if lang == "id" {
+						{ "UKURAN BINER" }
+					} else {
+						{ "BINARY SIZE" }
+					}
+				</span>
+				<div class="my-2 sm:my-3">
+					<div class="text-3xl lg:text-4xl font-bold tracking-tight text-text tabular-nums font-sans">
+						~14MB
+					</div>
+					<div class="text-xs text-muted mt-1 font-sans">
+						if lang == "id" {
+							Biner Mandiri
+						} else {
+							Static Binary
+						}
+					</div>
+				</div>
+			</div>
+			<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+				<span class="text-xs uppercase tracking-wider text-muted font-semibold font-sans">
+					if lang == "id" {
+						{ "PENGGUNAAN MEMORI" }
+					} else {
+						{ "MEMORY FOOTPRINT" }
+					}
+				</span>
+				<div class="my-2 sm:my-3">
+					<div class="text-3xl lg:text-4xl font-bold tracking-tight text-text tabular-nums font-sans">
+						~18MB
+					</div>
+					<div class="text-xs text-muted mt-1 font-sans">
+						if lang == "id" {
+							Beban Saat Idle
+						} else {
+							Idle RAM Load
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="grid grid-cols-3 divide-x divide-border">
+			<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+				<span class="text-xs uppercase tracking-wider text-muted font-semibold font-sans">
+					if lang == "id" {
+						{ "MESIN UTAMA" }
+					} else {
+						{ "CORE ENGINE" }
+					}
+				</span>
+				<div class="my-2 sm:my-3">
+					<div class="text-3xl lg:text-4xl font-bold tracking-tight text-text tabular-nums font-sans">
+						Go 1.24
+					</div>
+					<div class="text-xs text-muted mt-1 font-sans">
+						Chi, Templ, Tailwind
+					</div>
+				</div>
+			</div>
+			<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+				<span class="text-xs uppercase tracking-wider text-muted font-semibold font-sans">
+					if lang == "id" {
+						{ "PENYIMPANAN DATA" }
+					} else {
+						{ "DATA STORE" }
+					}
+				</span>
+				<div class="my-2 sm:my-3">
+					<div class="text-3xl lg:text-4xl font-bold tracking-tight text-text tabular-nums font-sans">
+						SQLite
+					</div>
+					<div class="text-xs text-muted mt-1 font-sans">
+						Pure-Go WAL
+					</div>
+				</div>
+			</div>
+			<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+				<span class="text-xs uppercase tracking-wider text-muted font-semibold font-sans">
+					if lang == "id" {
+						{ "PRIVASI" }
+					} else {
+						{ "PRIVACY" }
+					}
+				</span>
+				<div class="my-2 sm:my-3">
+					<div class="text-3xl lg:text-4xl font-bold tracking-tight text-text tabular-nums font-sans">
+						0
+					</div>
+					<div class="text-xs text-muted mt-1 font-sans">
+						if lang == "id" {
+							Cookie & Pelacak
+						} else {
+							Cookies & Trackers
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="sm:hidden grid grid-cols-2 gap-x-6 gap-y-7 pt-2 pb-10 border-b border-border/40 font-sans">
+		<div class="flex flex-col justify-between">
+			<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+				if lang == "id" {
+					{ "WAKTU RESPONS" }
+				} else {
+					{ "LATENCY" }
+				}
+			</span>
+			<div class="mt-1.5">
+				<div class="text-2xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+					&lt; 2ms
+				</div>
+				<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+					TTFB
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+				if lang == "id" {
+					{ "UKURAN BINER" }
+				} else {
+					{ "BINARY SIZE" }
+				}
+			</span>
+			<div class="mt-1.5">
+				<div class="text-2xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+					~14MB
+				</div>
+				<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+					if lang == "id" {
+						Biner Mandiri
+					} else {
+						Static Binary
+					}
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+				if lang == "id" {
+					{ "PENGGUNAAN MEMORI" }
+				} else {
+					{ "MEMORY FOOTPRINT" }
+				}
+			</span>
+			<div class="mt-1.5">
+				<div class="text-2xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+					~18MB
+				</div>
+				<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+					if lang == "id" {
+						Beban Saat Idle
+					} else {
+						Idle RAM Load
+					}
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+				if lang == "id" {
+					{ "MESIN UTAMA" }
+				} else {
+					{ "CORE ENGINE" }
+				}
+			</span>
+			<div class="mt-1.5">
+				<div class="text-2xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+					Go 1.24
+				</div>
+				<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+					Chi, Templ, Tailwind
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+				if lang == "id" {
+					{ "PENYIMPANAN DATA" }
+				} else {
+					{ "DATA STORE" }
+				}
+			</span>
+			<div class="mt-1.5">
+				<div class="text-2xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+					SQLite
+				</div>
+				<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+					Pure-Go WAL
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+				if lang == "id" {
+					{ "PRIVASI" }
+				} else {
+					{ "PRIVACY" }
+				}
+			</span>
+			<div class="mt-1.5">
+				<div class="text-2xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+					0
+				</div>
+				<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+					if lang == "id" {
+						Cookie & Pelacak
+					} else {
+						Cookies & Trackers
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+}

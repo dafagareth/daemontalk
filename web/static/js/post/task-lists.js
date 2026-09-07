@@ -1,5 +1,5 @@
 (function() {
-    // Interactive task lists / checklists with local persistence
+
     var path = window.location.pathname;
     var match = path.match(/\/blog\/([^\/]+)$/);
     var postSlug = match ? match[1] : (window.location.pathname.split("/").filter(Boolean).pop() || "default");
@@ -24,7 +24,6 @@
             if (parentUl) parentUl.style.listStyle = "none";
         }
 
-        // Restore saved state
         if (state[idx]) {
             cb.checked = true;
             if (parentLi) parentLi.classList.add("task-checked");

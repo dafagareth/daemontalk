@@ -1,4 +1,3 @@
-// Admin Panel Management: Tab routing, Theme toggle, Digest copy
 function toggleTheme() {
 	var html = document.documentElement;
 	var current = html.getAttribute("data-theme");

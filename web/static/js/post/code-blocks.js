@@ -1,5 +1,5 @@
 (function() {
-    // Enhanced Code block wrapper: adds language badges and copy button.
+
     document.querySelectorAll("#prose-body pre").forEach(function(pre) {
         if (pre.closest(".code-tabs-wrap") || pre.closest(".code-output-wrap")) return;
         var wrap = document.createElement("div");
@@ -10,7 +10,6 @@
         var codeEl = pre.querySelector("code");
         var codeText = codeEl ? codeEl.innerText : pre.innerText;
 
-        // Detect language from class or content
         var lang = "";
         var classNames = (pre.className + " " + (codeEl ? codeEl.className : "")).toLowerCase();
         var langMatch = classNames.match(/language-([a-z0-9_-]+)/) || classNames.match(/lang-([a-z0-9_-]+)/);
@@ -28,17 +27,14 @@
             lang = "bash";
         }
 
-        // Detect diagram / architecture schematics
         var isDiagram = codeText.indexOf("┌") >= 0 || codeText.indexOf("┼") >= 0 || codeText.indexOf("-->") >= 0 || codeText.indexOf("──►") >= 0 || codeText.indexOf("flowchart") >= 0 || codeText.indexOf("graph TD") >= 0 || lang === "mermaid" || lang === "diagram";
         if (isDiagram && !lang) {
             lang = "diagram";
         }
 
-        // Create action toolbar
         var toolbar = document.createElement("div");
         toolbar.className = "code-toolbar";
 
-        // Language or Diagram badge
         if (lang) {
             var badge = document.createElement("span");
             badge.className = "code-lang-badge" + (isDiagram ? " text-link font-bold" : "");
@@ -46,7 +42,6 @@
             toolbar.appendChild(badge);
         }
 
-        // Interactive Diagram Zoom/Focus Toggle
         if (isDiagram) {
             var zoomBtn = document.createElement("button");
             zoomBtn.textContent = "expand";
@@ -67,7 +62,6 @@
             toolbar.appendChild(zoomBtn);
         }
 
-        // Copy button
         var copyBtn = document.createElement("button");
         copyBtn.textContent = "copy";
         copyBtn.className = "copy-btn";
@@ -91,7 +85,6 @@
         wrap.appendChild(toolbar);
     });
 
-    // Code Line & Diff Highlighting Post-processor
     document.querySelectorAll("#prose-body pre code").forEach(function(block) {
         if (block.dataset.hlProcessed) return;
         block.dataset.hlProcessed = "true";

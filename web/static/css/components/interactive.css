@@ -1,11 +1,58 @@
 @layer components {
-  /* ToC active link (Muted elegant text color, no bright blue) */
+
+  #article-toc {
+    background-color: transparent !important;
+    border: 1px solid var(--c-border) !important;
+    border-radius: 0 !important;
+  }
+
+  #article-toc summary {
+    outline: none;
+    user-select: none;
+  }
+
+  #article-toc summary::-webkit-details-marker {
+    display: none !important;
+  }
+
+  #article-toc .toc-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #article-toc .toc-item {
+    margin: 0;
+    padding: 0;
+  }
+
+  #article-toc .toc-link {
+    font-family: var(--font-serif) !important;
+    font-size: 1.0625rem !important;
+    line-height: 1.65;
+    color: var(--c-muted);
+    text-decoration: none !important;
+    border-bottom: none !important;
+    display: block;
+    transition: color 0.15s ease;
+  }
+
+  #article-toc .toc-link:hover {
+    color: var(--c-text);
+  }
+
+  #article-toc .toc-link.toc-active,
   .toc-active {
     color: var(--c-text) !important;
     font-weight: 700 !important;
   }
 
-  /* Interactive Task Lists / Checklists */
+  @media (max-width: 640px) {
+    #article-toc .toc-link {
+      font-size: 1rem !important;
+    }
+  }
+
   .prose ul.task-list,
   .prose ul:has(input[type="checkbox"]) {
     list-style-type: none !important;
@@ -25,7 +72,7 @@
     touch-action: manipulation;
     position: absolute;
     left: 0;
-    top: 0.35rem; /* align vertically with first line text */
+    top: 0.35rem;
     width: 1.125rem;
     height: 1.125rem;
     border: 1.5px solid var(--c-link);
@@ -50,7 +97,6 @@
     color: var(--c-muted);
   }
 
-  /* Footnotes & Popover Citations */
   .prose .footnote-ref,
   .prose .footnote-ref a {
     text-decoration: none;
@@ -105,7 +151,6 @@
     font-weight: bold;
   }
 
-  /* Footnote Interactive Floating Popover */
   .footnote-popover {
     position: absolute;
     z-index: 50;
@@ -128,7 +173,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Proportional Dynamic Font Scaling for Parsed Custom Blocks */
   #prose-body .post-callout,
   #prose-body .post-references,
   #prose-body .post-faq,
@@ -147,7 +191,6 @@
     border-bottom: none !important;
   }
 
-  /* Visited post title indicator (JS-based, applied via localStorage) */
   .post-visited {
     color: var(--c-visited) !important;
     transition: none !important;
@@ -162,7 +205,7 @@
     color: var(--c-link) !important;
     transition: color 150ms ease !important;
   }
-  /* Wikipedia Hover Cards */
+
   .wiki-tooltip {
     position: absolute;
     z-index: 50;
@@ -173,7 +216,7 @@
     font-size: 0.8125rem;
     line-height: 1.55;
     color: var(--c-text);
-    pointer-events: none; /* Initially ignore pointer to prevent flickering */
+    pointer-events: none;
     opacity: 0;
     visibility: hidden;
     transform: translateY(4px);
@@ -184,7 +227,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-    pointer-events: auto; /* Let user hover the tooltip itself */
+    pointer-events: auto;
   }
   .wiki-thumb {
     width: 100%;
@@ -221,21 +264,303 @@
     text-align: center;
   }
 
-  /* ── Zen Mode (Focus) ── */
-  body.zen-mode #site-header-wrapper,
-  body.zen-mode footer,
-  body.zen-mode aside:first-of-type {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: opacity 0.4s ease;
+  body.wiki-sheet-lock {
+    overflow: hidden !important;
   }
-  /* Sembunyikan semua div di sidebar kanan, KECUALI div yang mengandung tombol Zen */
-  body.zen-mode aside:last-of-type > div:not(:has(#zen-toggle-btn)) {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: opacity 0.4s ease;
+
+  .wiki-sheet-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
   }
-  body.zen-mode #zen-toggle-btn {
+
+  .wiki-sheet-modal.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .wiki-sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .wiki-sheet-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    background: var(--c-surface);
+    border-top: 1px solid var(--c-border);
+    border-left: 1px solid var(--c-border);
+    border-right: 1px solid var(--c-border);
+    border-top-left-radius: 1.25rem;
+    border-top-right-radius: 1.25rem;
+    box-shadow: 0 -12px 36px -4px rgba(0, 0, 0, 0.3);
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .wiki-sheet-modal.open .wiki-sheet-container {
+    transform: translateY(0);
+  }
+
+  .wiki-sheet-drag-area {
+    padding-top: 0.75rem;
+    padding-bottom: 0.25rem;
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    touch-action: pan-y;
+  }
+
+  .wiki-sheet-handle {
+    width: 40px;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--c-border);
+  }
+
+  .wiki-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 1.25rem 0.5rem 1.25rem;
+  }
+
+  .wiki-sheet-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-muted);
+  }
+
+  .wiki-sheet-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    color: var(--c-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .wiki-sheet-close:hover,
+  .wiki-sheet-close:active {
+    background: var(--c-hover);
+    color: var(--c-text);
+  }
+
+  .wiki-sheet-body {
+    padding: 0.5rem 1.25rem 1rem 1.25rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wiki-sheet-thumb-wrap {
+    width: 100%;
+    max-height: 180px;
+    overflow: hidden;
+    border-radius: 0.625rem;
+    border: 1px solid var(--c-border);
+    margin-bottom: 0.875rem;
+    background: var(--c-hover);
+  }
+
+  .wiki-sheet-thumb {
+    width: 100%;
+    height: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .wiki-sheet-title {
+    font-family: var(--font-sans);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    color: var(--c-text);
+    line-height: 1.35;
+    margin: 0 0 0.375rem 0;
+  }
+
+  .wiki-sheet-meta {
+    font-size: 0.8125rem;
+    color: var(--c-muted);
+    margin-bottom: 0.625rem;
+    font-style: italic;
+  }
+
+  .wiki-sheet-extract {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--c-text);
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .wiki-sheet-footer {
+    padding: 0.75rem 1.25rem 0.25rem 1.25rem;
+    border-top: 1px solid var(--c-border);
+    background: var(--c-surface);
+  }
+
+  .wiki-sheet-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.6875rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--c-text);
+    color: var(--c-surface) !important;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .wiki-sheet-btn:hover {
+    opacity: 0.92;
+  }
+
+  .wiki-sheet-btn:active {
+    transform: scale(0.99);
+  }
+
+  .wiki-sheet-loading,
+  .wiki-sheet-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2.5rem 1rem;
+    color: var(--c-muted);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .wiki-sheet-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2.5px solid var(--c-border);
+    border-top-color: var(--c-link);
+    border-radius: 50%;
+    animation: wiki-spin 0.7s linear infinite;
+  }
+
+  @keyframes wiki-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  #article-action-bar .bookmark-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0;
+    border: 1px solid var(--c-border);
+    background-color: var(--c-surface);
+    color: var(--c-text);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  #article-action-bar .bookmark-btn:hover {
+    background-color: var(--c-hover);
+    border-color: var(--c-border);
+  }
+
+  #article-action-bar .bookmark-btn.is-saved {
+    border-color: var(--c-border);
+    color: var(--c-text);
+    background-color: var(--c-hover);
+    font-weight: 700;
+  }
+
+  #article-action-bar .bookmark-btn.is-saved:hover {
+    background-color: var(--c-hover);
+    border-color: var(--c-border);
+  }
+
+  .text-size-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--c-border);
+    outline: none;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .text-size-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--c-text);
+    border: 2px solid var(--c-surface);
+    box-shadow: 0 0 0 1px var(--c-border);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  .text-size-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  .text-size-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--c-text);
+    border: 2px solid var(--c-surface);
+    box-shadow: 0 0 0 1px var(--c-border);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  .text-size-slider::-moz-range-track {
+    height: 3px;
+    background: var(--c-border);
+    border: none;
+  }
+
+  #subnav-tags .subnav-tag.active {
     color: var(--c-text) !important;
+    font-weight: 700 !important;
+    text-decoration: none;
   }
 }

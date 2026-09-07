@@ -1,4 +1,3 @@
-// Custom confirmation modal (replaces window.confirm)
 (function() {
 	var overlay = document.getElementById('confirm-overlay');
 	var msgEl = document.getElementById('confirm-message');
@@ -35,7 +34,6 @@
 		if (e.key === 'Escape' && overlay.classList.contains('open')) close(false);
 	});
 
-	// HTMX hx-confirm -> custom modal
 	document.body.addEventListener('htmx:confirm', function(e) {
 		if (!e.detail.question) return;
 		e.preventDefault();
@@ -44,7 +42,6 @@
 		});
 	});
 
-	// Standard form data-confirm attribute
 	document.addEventListener('submit', function(e) {
 		var form = e.target;
 		if (!(form instanceof HTMLFormElement)) return;

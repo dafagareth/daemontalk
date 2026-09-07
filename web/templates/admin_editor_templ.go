@@ -13,9 +13,6 @@ import (
 	"fmt"
 )
 
-// AdminPostEditor is a distraction-free post editor.
-// Includes large borderless title, Quill bubble WYSIWYG editor with markdown conversion,
-// real-time autosave status indicator, and post details / publish modal.
 func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -44,7 +41,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("%d", p.ID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 16, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 13, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -57,13 +54,13 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("%t", p.Draft))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 17, Col: 41}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 14, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><!-- Editor Top Action Bar --><div class=\"flex items-center gap-3 mb-10 pb-4 border-b border-border/60\"><a href=\"/admin#content\" class=\"inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-text px-3 py-1.5 rounded-none hover:bg-hover transition-colors shrink-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div class=\"flex items-center gap-3 mb-10 pb-4 border-b border-border/60\"><a href=\"/admin#content\" class=\"inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-text px-3 py-1.5 rounded-none hover:bg-hover transition-colors shrink-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -121,7 +118,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(errMsg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 45, Col: 18}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 41, Col: 18}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -132,20 +129,20 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<!-- Post Title Input --><input id=\"ed-title\" type=\"text\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<input id=\"ed-title\" type=\"text\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 52, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 47, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" placeholder=\"Title\" maxlength=\"200\" autocomplete=\"off\" class=\"display w-full bg-transparent border-0 outline-none text-3xl sm:text-4xl font-bold text-text mb-6 placeholder:text-muted/50\"><!-- Quill Editor Body --><div id=\"ed-body\" class=\"min-h-[350px] text-base leading-relaxed\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" placeholder=\"Title\" maxlength=\"200\" autocomplete=\"off\" class=\"display w-full bg-transparent border-0 outline-none text-3xl sm:text-4xl font-bold text-text mb-6 placeholder:text-muted/50\"><div id=\"ed-body\" class=\"min-h-[350px] text-base leading-relaxed\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -153,7 +150,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></section><!-- Publish / Post Details Modal --><div id=\"ed-modal\" class=\"fixed inset-0 z-50 hidden items-start justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto\"><div class=\"w-full max-w-lg mt-10 sm:mt-16 rounded-none border border-border bg-bg p-6 sm:p-8 shadow-2xl\"><div class=\"flex items-center justify-between mb-6 pb-3 border-b border-border/60\"><div><h2 class=\"text-lg font-bold text-text\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></section><div id=\"ed-modal\" class=\"fixed inset-0 z-50 hidden items-start justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto\"><div class=\"w-full max-w-lg mt-10 sm:mt-16 rounded-none border border-border bg-bg p-6 sm:p-8 shadow-2xl\"><div class=\"flex items-center justify-between mb-6 pb-3 border-b border-border/60\"><div><h2 class=\"text-lg font-bold text-text\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -175,7 +172,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(publishAction(p))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 79, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 72, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -188,7 +185,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 80, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 73, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -201,7 +198,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.BodyMD)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 81, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 74, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -219,7 +216,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Slug)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 85, Col: 65}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 78, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
@@ -237,7 +234,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Slug)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 87, Col: 65}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 80, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {
@@ -255,7 +252,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Date)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 93, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 86, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
@@ -288,7 +285,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Tags)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 105, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 98, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 		if templ_7745c5c3_Err != nil {
@@ -301,7 +298,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Cover)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 109, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 102, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 		if templ_7745c5c3_Err != nil {
@@ -314,7 +311,7 @@ func AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) templ.C
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(p.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 113, Col: 277}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 106, Col: 277}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -350,7 +347,6 @@ func publishAction(p postdb.WebPost) templ.SafeURL {
 	return templ.SafeURL(fmt.Sprintf("/admin/posts/%d/publish", p.ID))
 }
 
-// AdminWebPostsSection displays web posts list on the admin content page.
 func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -394,7 +390,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var16 templ.SafeURL
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/blog/" + wp.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 156, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 148, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -407,7 +403,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(wp.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 156, Col: 126}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 148, Col: 126}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -430,7 +426,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(wp.Slug)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 161, Col: 62}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 153, Col: 62}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -443,7 +439,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(wp.Date)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 161, Col: 83}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 153, Col: 83}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
@@ -456,7 +452,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var20 string
 				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(wp.Lang)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 161, Col: 104}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 153, Col: 104}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
@@ -469,7 +465,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var21 templ.SafeURL
 				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/admin/posts/%d/edit", wp.ID)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 163, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 155, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
@@ -482,7 +478,7 @@ func AdminWebPostsSection(webPosts []postdb.WebPost) templ.Component {
 				var templ_7745c5c3_Var22 templ.SafeURL
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/admin/posts/%d/delete", wp.ID)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 164, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_editor.templ`, Line: 156, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {

@@ -48,7 +48,7 @@ func SavedPage(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconArrowLeft("w-3.5 h-3.5").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -67,7 +67,7 @@ func SavedPage(ui i18n.UI, lang string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></a><h1 class=\"display text-2xl sm:text-3xl font-black text-text tracking-tight\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></a><h1 class=\"display text-2xl sm:text-3xl font-black text-text tracking-tight uppercase\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -132,20 +132,48 @@ func SavedPage(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" class=\"sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans\"><div class=\"border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono text-muted select-none\"><div class=\"flex items-center gap-3 text-text font-bold min-w-0\"><span class=\"text-link font-black font-mono text-base sm:text-lg shrink-0 select-none\">❯</span> <code class=\"text-sm sm:text-base font-mono truncate\">cat ~/.local/share/daemontalk/saved</code></div><span id=\"saved-count-display\" class=\"text-xs font-mono text-muted font-bold shrink-0\">0 ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" data-lang=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
-		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Saved_Count)
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(lang)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/saved.templ`, Line: 38, Col: 109}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/saved.templ`, Line: 31, Col: 19}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></div><div id=\"saved-list\" class=\"divide-y divide-border/60 mt-4 sm:mt-0\"><div class=\"p-12 text-center font-mono\"><p class=\"text-xs text-muted flex items-center justify-center gap-2\"><span class=\"w-1.5 h-1.5 bg-accent animate-pulse\"></span> Reading saved dispatches...</p></div></div></div></section><script src=\"/static/js/saved.js\" defer></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" class=\"border-0 sm:border border-border bg-transparent sm:bg-surface/10 font-sans overflow-hidden\"><div class=\"border-b border-border bg-transparent sm:bg-surface/50 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-3 text-xs font-sans select-none\"><span class=\"font-bold text-text uppercase tracking-wider text-xs\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "id" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "ARTIKEL TERSIMPAN")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "BOOKMARKED DISPATCHES")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</span> <span id=\"saved-count-display\" class=\"text-xs font-sans text-muted font-bold shrink-0\">0 ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Saved_Count)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/saved.templ`, Line: 42, Col: 109}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</span></div><div id=\"saved-list\" class=\"divide-y divide-border/60\"><div class=\"p-8 sm:p-12 text-center font-sans\"><p class=\"text-xs text-muted flex items-center justify-center gap-2\"><span class=\"w-1.5 h-1.5 bg-accent animate-pulse\"></span> Reading saved dispatches...</p></div></div></div></section><script src=\"/static/js/saved.js\" defer></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

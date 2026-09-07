@@ -1,7 +1,5 @@
 @layer components {
-  /* Admin — tombol, badge, kartu. Lapisan komponen kecil untuk admin shell;
-     bisa dipakai ulang di halaman publik nanti, tapi untuk sekarang hanya
-     dipakai di admin.templ / admin_editor.templ. */
+
   .btn {
     display: inline-flex;
     align-items: center;
@@ -45,7 +43,6 @@
   }
   .btn-danger:hover { background: var(--c-warn-bg); }
 
-  /* Badge status — bentuk pil, radius beda sengaja dari tombol/kartu */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -65,7 +62,6 @@
     color: var(--c-ok);
   }
 
-  /* Kartu & kontainer list admin */
   .admin-card {
     border: 1px solid var(--c-border);
     border-radius: 0;
@@ -79,7 +75,6 @@
     background: var(--c-surface);
   }
 
-  /* Admin tab — minimal text-only tab button */
   .admin-tab {
     padding: 0.45rem 0.75rem;
     font-size: 0.875rem;

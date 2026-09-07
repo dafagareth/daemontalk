@@ -1,4 +1,3 @@
-// KaTeX Math Rendering & Scroll Overflow Indicators
 function dtAttachMathScrollFade() {
 	requestAnimationFrame(function() {
 		document.querySelectorAll(".katex-display, .math-display").forEach(function(el) {

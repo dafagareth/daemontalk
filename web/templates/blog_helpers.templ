@@ -14,7 +14,6 @@ type tagStat struct {
 	Count int
 }
 
-// PostNav holds the previous/next post links for blog post navigation.
 type PostNav struct {
 	HasPrev bool
 	HasNext bool
@@ -52,7 +51,6 @@ func sortedTags(m map[string]int) []tagStat {
 	return out
 }
 
-// Minimalist Monochrome / Accent SVG icons for technical tags
 templ tagIcon(t string, sizeClass string) {
 	switch strings.ToLower(t) {
 		case "go":
@@ -122,7 +120,7 @@ func timeAgoOrDate(d time.Time, lang string) string {
 		}
 		return fmt.Sprintf("%d days ago", days)
 	}
-	
+
 	now := time.Now()
 	if d.Year() == now.Year() {
 		return fmtDayMonthFull(d, lang)
@@ -179,7 +177,6 @@ func fmtFullDate(d time.Time, lang string) string {
 	return fmt.Sprintf("%s WIB", d.Format("Monday, 02 January 2006"))
 }
 
-// searchIndex builds the haystack used by the client-side blog search.
 func searchIndex(p post.Post) string {
 	return strings.ToLower(p.Title + " " + strings.Join(p.Tags, " ") + " " + p.Description)
 }
@@ -191,7 +188,6 @@ func blogPrefix(lang string) string {
 	return ""
 }
 
-// homeURL points to post list (main page after blog-first pivot).
 func homeURL(lang string) string {
 	if lang == "id" {
 		return "/id"
@@ -199,7 +195,6 @@ func homeURL(lang string) string {
 	return "/"
 }
 
-// postThumbnail renders the post cover image if available, or a minimalist "No Photo" fallback box.
 templ postThumbnail(p post.Post, linkURL string) {
 	if linkURL != "" {
 		<a href={ templ.SafeURL(linkURL) } class="block w-full h-full">
@@ -210,7 +205,6 @@ templ postThumbnail(p post.Post, linkURL string) {
 	}
 }
 
-// postThumbnailImg renders pure thumbnail image/placeholder without outer link wrapper.
 templ postThumbnailImg(p post.Post) {
 	if p.Cover != "" {
 		<img
@@ -232,9 +226,9 @@ func postCover(p post.Post) string {
 
 templ langBadge(lang string) {
 	if lang == "id" {
-		<span class="text-xs px-2 py-0.5 bg-[var(--c-warn-bg)] text-[var(--c-warn)] rounded-none font-mono">ID</span>
+		<span class="text-xs px-2 py-0.5 bg-[var(--c-warn-bg)] text-[var(--c-warn)] rounded-none font-sans font-bold text-[10px] tracking-wider">ID</span>
 	} else {
-		<span class="text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-mono">EN</span>
+		<span class="text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-sans font-bold text-[10px] tracking-wider">EN</span>
 	}
 }
 

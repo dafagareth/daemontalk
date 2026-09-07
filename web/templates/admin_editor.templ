@@ -5,9 +5,6 @@ import (
 	"fmt"
 )
 
-// AdminPostEditor is a distraction-free post editor.
-// Includes large borderless title, Quill bubble WYSIWYG editor with markdown conversion,
-// real-time autosave status indicator, and post details / publish modal.
 templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 	<link rel="stylesheet" href="/static/css/quill.bubble.css"/>
 	<section
@@ -16,7 +13,6 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 		data-post-id={ fmt.Sprintf("%d", p.ID) }
 		data-draft={ fmt.Sprintf("%t", p.Draft) }
 	>
-		<!-- Editor Top Action Bar -->
 		<div class="flex items-center gap-3 mb-10 pb-4 border-b border-border/60">
 			<a
 				href="/admin#content"
@@ -45,7 +41,6 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 				<span>{ errMsg }</span>
 			</div>
 		}
-		<!-- Post Title Input -->
 		<input
 			id="ed-title"
 			type="text"
@@ -55,12 +50,10 @@ templ AdminPostEditor(p postdb.WebPost, editorHTML string, errMsg string) {
 			autocomplete="off"
 			class="display w-full bg-transparent border-0 outline-none text-3xl sm:text-4xl font-bold text-text mb-6 placeholder:text-muted/50"
 		/>
-		<!-- Quill Editor Body -->
 		<div id="ed-body" class="min-h-[350px] text-base leading-relaxed">
 			@templ.Raw(editorHTML)
 		</div>
 	</section>
-	<!-- Publish / Post Details Modal -->
 	<div id="ed-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
 		<div class="w-full max-w-lg mt-10 sm:mt-16 rounded-none border border-border bg-bg p-6 sm:p-8 shadow-2xl">
 			<div class="flex items-center justify-between mb-6 pb-3 border-b border-border/60">
@@ -139,7 +132,6 @@ func publishAction(p postdb.WebPost) templ.SafeURL {
 	return templ.SafeURL(fmt.Sprintf("/admin/posts/%d/publish", p.ID))
 }
 
-// AdminWebPostsSection displays web posts list on the admin content page.
 templ AdminWebPostsSection(webPosts []postdb.WebPost) {
 	<div class="flex items-center justify-between mb-4">
 		<h2 class="text-sm font-semibold text-text">Web Editor Posts</h2>

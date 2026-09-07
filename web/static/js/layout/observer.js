@@ -1,4 +1,3 @@
-// Scroll reveal observer & comment datetime formatting
 (function() {
 	var els = document.querySelectorAll('.reveal');
 	if (!els.length) return;
@@ -13,7 +12,6 @@
 	els.forEach(function(el) { io.observe(el); });
 })();
 
-// Visited / Read post styling marker
 (function() {
 	function markVisited() {
 		var read = [];
@@ -22,7 +20,8 @@
 		var set = {};
 		read.forEach(function(s) { set[s] = true; });
 
-		document.querySelectorAll('a[data-slug], a[href*="/blog/"]').forEach(function(a) {
+		document.querySelectorAll('a[data-slug], a[href^="/blog/"], a[href^="/id/blog/"]').forEach(function(a) {
+			if (a.closest('#guest-menu-container, #user-menu-container, #nav-auth-badge, nav')) return;
 			var slug = a.dataset.slug;
 			if (!slug) {
 				var href = a.getAttribute('href') || '';
@@ -102,7 +101,6 @@
 		});
 	}
 
-	// Close comment-menu dropdowns when clicking or touching outside
 	document.addEventListener('click', function(e) {
 		document.querySelectorAll('details.comment-menu[open]').forEach(function(el) {
 			if (!el.contains(e.target)) {
@@ -156,6 +154,11 @@
 
 		if (parentInput) parentInput.value = id;
 		if (authorEl) authorEl.textContent = '@' + author;
+		var targetCommentEl = document.getElementById('comment-' + id);
+		if (targetCommentEl) {
+			var groupDetails = targetCommentEl.querySelector('details.comment-replies-group');
+			if (groupDetails) groupDetails.open = true;
+		}
 		if (indicator) {
 			indicator.classList.remove('hidden');
 			indicator.classList.add('flex');
@@ -202,7 +205,6 @@
 	window.setCommentReply = setCommentReply;
 	window.cancelCommentReply = cancelCommentReply;
 
-	// Delegated touch and click handler for instant responsiveness on mobile
 	document.addEventListener('click', function(e) {
 		var replyBtn = e.target.closest('[data-reply-btn]');
 		if (replyBtn) {

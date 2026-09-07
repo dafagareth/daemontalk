@@ -31,14 +31,14 @@ func adminContentTab(stats AdminStats) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"tab-content\" class=\"hidden space-y-6\"><!-- Header with Actions --><div class=\"flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-border/60\"><div><h1 class=\"text-lg font-semibold text-text\">Channel Content & Dispatches</h1><p class=\"text-xs text-muted mt-0.5\">Manage, upload, and edit markdown dispatches directly.</p></div><div class=\"flex items-center gap-2\"><button type=\"button\" onclick=\"document.getElementById('admin-md-upload-input').click()\" class=\"inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-chip border border-border text-text text-xs font-mono font-medium transition-colors hover:bg-hover cursor-pointer\"><span>Upload .md</span></button><form id=\"admin-md-upload-form\" action=\"/admin/posts/upload-md\" method=\"post\" enctype=\"multipart/form-data\" class=\"hidden\"><input type=\"file\" id=\"admin-md-upload-input\" name=\"file\" accept=\".md,.markdown\" multiple onchange=\"this.form.submit()\"></form></div></div><!-- Quick Drag & Drop Ingest Card --><div id=\"admin-drop-zone\" class=\"border-2 border-dashed border-border/80 bg-surface/40 hover:bg-surface/80 hover:border-[var(--c-link)] transition-all p-6 text-center cursor-pointer rounded-none\" onclick=\"document.getElementById('admin-md-upload-input').click()\"><p class=\"text-xs font-mono font-medium text-text\">Drag & drop your <span class=\"text-link\">.md</span> or <span class=\"text-link\">.markdown</span> files here to publish instantly</p><p class=\"text-[11px] text-muted font-mono mt-1\">Supports multiple files. Frontmatter (title, slug, date, tags) is parsed automatically.</p></div><!-- File-based Markdown Posts --><div class=\"space-y-3\"><div class=\"flex items-center justify-between\"><h2 class=\"text-xs font-semibold text-text uppercase tracking-wider flex items-center gap-2\"><span class=\"w-2 h-2 rounded-none bg-[var(--c-muted)]\"></span> <span>Markdown Dispatches (")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"tab-content\" class=\"hidden space-y-6\"><div class=\"flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-border/60\"><div><h1 class=\"text-lg font-semibold text-text\">Channel Content & Dispatches</h1><p class=\"text-xs text-muted mt-0.5\">Manage, upload, and edit markdown dispatches directly.</p></div><div class=\"flex items-center gap-2\"><button type=\"button\" onclick=\"document.getElementById('admin-md-upload-input').click()\" class=\"inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-chip border border-border text-text text-xs font-mono font-medium transition-colors hover:bg-hover cursor-pointer\"><span>Upload .md</span></button><form id=\"admin-md-upload-form\" action=\"/admin/posts/upload-md\" method=\"post\" enctype=\"multipart/form-data\" class=\"hidden\"><input type=\"file\" id=\"admin-md-upload-input\" name=\"file\" accept=\".md,.markdown\" multiple onchange=\"this.form.submit()\"></form></div></div><div id=\"admin-drop-zone\" class=\"border-2 border-dashed border-border/80 bg-surface/40 hover:bg-surface/80 hover:border-[var(--c-link)] transition-all p-6 text-center cursor-pointer rounded-none\" onclick=\"document.getElementById('admin-md-upload-input').click()\"><p class=\"text-xs font-mono font-medium text-text\">Drag & drop your <span class=\"text-link\">.md</span> or <span class=\"text-link\">.markdown</span> files here to publish instantly</p><p class=\"text-[11px] text-muted font-mono mt-1\">Supports multiple files. Frontmatter (title, slug, date, tags) is parsed automatically.</p></div><div class=\"space-y-3\"><div class=\"flex items-center justify-between\"><h2 class=\"text-xs font-semibold text-text uppercase tracking-wider flex items-center gap-2\"><span class=\"w-2 h-2 rounded-none bg-[var(--c-muted)]\"></span> <span>Markdown Dispatches (")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(stats.FilePosts)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 51, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 48, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,7 +51,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("content/posts/*.md")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 53, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 50, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -69,7 +69,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var4 templ.SafeURL
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/blog/" + p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 71, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 68, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -82,7 +82,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 71, Col: 109}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 68, Col: 109}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -95,7 +95,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(p.Slug)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 72, Col: 66}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 69, Col: 66}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -123,7 +123,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmtDate(p, "en"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 81, Col: 97}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 78, Col: 97}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -136,7 +136,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.Views[p.Slug]))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 82, Col: 111}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 79, Col: 111}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -149,7 +149,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", adminCommentCount(stats.Comments, p.Slug)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 83, Col: 134}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 80, Col: 134}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -162,7 +162,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var10 templ.SafeURL
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-edit?slug=" + p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 87, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 84, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -175,7 +175,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var11 templ.SafeURL
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-archive?slug=" + p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 92, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 89, Col: 96}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -188,7 +188,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("Archive post '%s'? It will be hidden from public feeds.", p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 92, Col: 192}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 89, Col: 192}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 			if templ_7745c5c3_Err != nil {
@@ -201,7 +201,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var13 templ.SafeURL
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-delete?slug=" + p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 95, Col: 95}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 92, Col: 95}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -214,7 +214,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("Permanently delete post '%s' and all image assets? This cannot be undone.", p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 95, Col: 209}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 92, Col: 209}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 			if templ_7745c5c3_Err != nil {
@@ -227,7 +227,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var15 templ.SafeURL
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/export?slug=" + p.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 99, Col: 69}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 96, Col: 69}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -245,7 +245,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var16 templ.SafeURL
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/blog/" + p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 107, Col: 51}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 104, Col: 51}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -269,7 +269,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</tbody></table></div></div><!-- Archived Posts Section -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</tbody></table></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -281,7 +281,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(stats.ArchivedPosts)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 129, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 125, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -294,7 +294,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs("content/posts/*.md.archive")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 131, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 127, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
@@ -312,7 +312,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(p.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 147, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 143, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
@@ -325,7 +325,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var20 string
 				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(p.Slug)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 148, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 144, Col: 64}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
@@ -338,7 +338,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var21 string
 				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmtDate(p, "en"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 153, Col: 98}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 149, Col: 98}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
@@ -351,7 +351,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var22 templ.SafeURL
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-edit?slug=" + p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 157, Col: 73}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 153, Col: 73}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
@@ -364,7 +364,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var23 templ.SafeURL
 				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-restore?slug=" + p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 162, Col: 97}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 158, Col: 97}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 				if templ_7745c5c3_Err != nil {
@@ -377,7 +377,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var24 string
 				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("Restore post '%s'? It will be published back to active dispatches.", p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 162, Col: 204}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 158, Col: 204}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
 				if templ_7745c5c3_Err != nil {
@@ -390,7 +390,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var25 templ.SafeURL
 				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/file-delete?slug=" + p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 165, Col: 96}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 161, Col: 96}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 				if templ_7745c5c3_Err != nil {
@@ -403,7 +403,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var26 string
 				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("Permanently delete archived post '%s'? This cannot be undone.", p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 165, Col: 198}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 161, Col: 198}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var26)
 				if templ_7745c5c3_Err != nil {
@@ -416,7 +416,7 @@ func adminContentTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var27 templ.SafeURL
 				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/admin/posts/export?slug=" + p.Slug))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 169, Col: 70}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_content.templ`, Line: 165, Col: 70}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 				if templ_7745c5c3_Err != nil {

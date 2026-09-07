@@ -1,4 +1,3 @@
-// Local date formatting for the daily edition
 (function() {
 	function initDailyDate() {
 		var el = document.getElementById("daily-date");

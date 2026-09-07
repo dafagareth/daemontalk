@@ -1,25 +1,38 @@
 package templates
 
-// SiteBaseURL is the base canonical domain for social/OG tags and links.
-// It defaults to production and can be configured at startup via BASE_URL.
+import (
+	"fmt"
+	"os"
+	"strings"
+)
+
 var SiteBaseURL = "https://www.daemontalk.com"
 
-// AssetVersion is a cache-busting token appended to static CSS/JS URLs. It is
-// set once at startup (see main.go) so a rebuild of main.css is picked up by
-// browsers immediately instead of serving a stale cached copy.
 var AssetVersion = "dev"
 
 func assetURL(path string) string {
+	cleanPath := strings.TrimPrefix(path, "/")
+	if fi, err := os.Stat("web/" + cleanPath); err == nil {
+		return path + fmt.Sprintf("?v=%d", fi.ModTime().Unix())
+	}
 	return path + "?v=" + AssetVersion
 }
 
 type PageMeta struct {
 	Description   string
 	Image         string
-	Type          string // "website" or "article"
-	JSONLD        string // optional schema.org JSON-LD, injected raw into <head>
-	PublishedTime string // RFC3339, for article:published_time
+	URL           string
+	Type          string
+	JSONLD        string
+	PublishedTime string
 	Author        string
+}
+
+func (m PageMeta) ogURL(currentPath string) string {
+	if m.URL != "" {
+		return m.URL
+	}
+	return SiteBaseURL + currentPath
 }
 
 func (m PageMeta) ogType() string {
@@ -43,8 +56,6 @@ func (m PageMeta) ogImage() string {
 	return SiteBaseURL + "/og.png"
 }
 
-// AbsoluteURL turns a site-relative path ("/static/...") into a full URL for
-// use in social/OG tags. Already-absolute URLs are returned unchanged.
 func AbsoluteURL(path string) string {
 	if path == "" {
 		return ""

@@ -18,7 +18,20 @@ type ContributeSections struct {
 templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 	<section class="container-page py-8 sm:py-12 min-h-[75vh] font-sans">
 		<div class="mb-6 font-sans">
-			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					if lang == "id" {
+						Kembali ke Beranda
+					} else {
+						Back to Dispatches
+					}
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight uppercase">
 				if lang == "id" {
 					Panduan Menulis & Kontribusi
 				} else {
@@ -26,40 +39,8 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 				}
 			</h1>
 		</div>
-		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
-			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-3.5 sm:p-6 flex items-center justify-between gap-3 select-none">
-				<div class="flex items-center gap-2.5 sm:gap-3 font-mono text-text font-bold min-w-0">
-					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
-					<code class="text-xs sm:text-base font-mono truncate">man 7 contributing</code>
-				</div>
-				<div class="flex items-center gap-1.5 sm:gap-2 font-mono text-xs shrink-0">
-					<a
-						href="/download/daemontalk-template.md"
-						download="daemontalk-template.md"
-						class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 border border-border bg-chip text-text hover:border-link transition-colors font-bold"
-						title="Download daemontalk-template.md"
-						aria-label="Download template markdown"
-					>
-						@IconDownload("w-3.5 h-3.5 text-muted")
-						<span class="hidden sm:inline ml-1.5">Download daemontalk-template.md</span>
-					</a>
-					<a
-						href="https://github.com/dafagareth/daemontalk"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 border border-border bg-chip text-link hover:border-link transition-colors font-bold"
-						title="GitHub Repository"
-						aria-label="GitHub Repository"
-					>
-						@IconGitHub()
-						<span class="hidden sm:inline ml-1.5">GitHub</span>
-						<span class="hidden sm:inline">
-							@IconArrowUpRight("w-3 h-3 ml-0.5")
-						</span>
-					</a>
-				</div>
-			</div>
-			<div class="mt-4 sm:mt-0 border border-border sm:border-0 sm:border-b sm:border-border flex items-center justify-between overflow-x-auto text-xs font-mono select-none" id="contribute-tabs">
+		<div class="border-0 sm:border border-border bg-transparent sm:bg-surface/10 font-sans overflow-hidden">
+			<div class="border-b border-border bg-transparent sm:bg-surface/30 flex items-center justify-between overflow-x-auto text-xs font-sans select-none" id="contribute-tabs">
 				<div class="flex items-center shrink-0">
 					<button
 						type="button"
@@ -67,7 +48,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 						id="tab-btn-dispatches"
 						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors bg-surface text-text font-bold border-b-2 border-b-link whitespace-nowrap"
 					>
-						01. Dispatches
+						Dispatches
 					</button>
 					<button
 						type="button"
@@ -75,7 +56,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 						id="tab-btn-engine"
 						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap"
 					>
-						02. Core Engine
+						Core Engine
 					</button>
 					<button
 						type="button"
@@ -83,7 +64,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 						id="tab-btn-corrections"
 						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap"
 					>
-						03. Corrections
+						Corrections
 					</button>
 					<button
 						type="button"
@@ -91,7 +72,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 						id="tab-btn-i18n"
 						class="contribute-tab-btn px-4 sm:px-5 py-3 border-r border-border cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap"
 					>
-						04. Localization
+						Localization
 					</button>
 					<button
 						type="button"
@@ -99,7 +80,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 						id="tab-btn-contributors"
 						class="contribute-tab-btn px-4 sm:px-5 py-3 cursor-pointer transition-colors text-muted hover:text-text bg-chip/30 border-b-2 border-b-transparent whitespace-nowrap flex items-center gap-1.5"
 					>
-						<span>05. Contributors</span>
+						<span>Contributors</span>
 						if len(sections.Contributors) > 0 {
 							<span class="px-1.5 py-0.2 bg-chip border border-border text-[10px] text-link font-bold">
 								{ fmt.Sprintf("%d", len(sections.Contributors)) }
@@ -123,12 +104,12 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 				</div>
 				<div id="panel-contributors" class="contribute-panel hidden font-sans space-y-6">
 					<div>
-						<h2 class="text-xl font-bold text-text font-mono">
+						<h2 class="text-xl font-bold text-text font-sans">
 							Contributors Directory
 						</h2>
 					</div>
 					if len(sections.Contributors) > 0 {
-						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-2 font-mono text-xs">
+						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-2 font-sans text-xs">
 							for _, c := range sections.Contributors {
 								<div class="flex items-center gap-3 py-2">
 									<img
@@ -149,7 +130,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 							}
 						</div>
 					} else {
-						<div class="p-8 text-center font-mono text-xs text-muted">
+						<div class="p-8 text-center font-sans text-xs text-muted">
 							if lang == "id" {
 								Belum ada data kontributor yang terdaftar.
 							} else {
@@ -157,7 +138,7 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 							}
 						</div>
 					}
-					<div class="pt-6 border-t border-border/40 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+					<div class="pt-6 border-t border-border/40 font-sans text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 						<div>
 							<strong class="text-text block mb-1">
 								if lang == "id" {
@@ -187,13 +168,6 @@ templ ContributePage(ui i18n.UI, sections ContributeSections, lang string) {
 				</div>
 			</div>
 		</div>
-		<a
-			href={ templ.SafeURL(blogPrefix(lang) + "/") }
-			class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-10 font-mono"
-		>
-			@IconArrowLeft("w-3.5 h-3.5")
-			<span>{ ui.Post_Back }</span>
-		</a>
 		<script src={ assetURL("/static/js/contribute.js") } defer></script>
 	</section>
 }

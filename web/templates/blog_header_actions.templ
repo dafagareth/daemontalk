@@ -1,0 +1,278 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ blogPostTopBar(ui i18n.UI, p post.Post, lang string) {
+	<div class="mt-5 flex items-center justify-between gap-3 text-xs not-prose font-sans select-none">
+		<div class="relative">
+			<button
+				type="button"
+				onclick="toggleReadingPopover(event)"
+				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors font-sans font-medium text-xs cursor-pointer select-none"
+				if lang == "id" {
+					title="Pengaturan Tampilan"
+				} else {
+					title="Display Settings"
+				}
+				aria-label="Display Settings"
+			>
+				<span class="font-serif font-bold text-xs leading-none">Aa</span>
+				<span>Display</span>
+			</button>
+			<div
+				id="reading-popover-menu"
+				class="hidden absolute left-0 top-full mt-2 w-64 sm:w-72 bg-surface border border-border shadow-2xl z-40 p-3.5 font-sans text-xs rounded-none select-none"
+			>
+				<div class="space-y-3">
+					<div class="flex items-center justify-between pb-2 border-b border-border/60 text-xs">
+						<span class="text-text font-bold">
+							{ ui.Post_TextSize }
+						</span>
+						<button
+							type="button"
+							onclick="toggleReadingPopover(event)"
+							class="text-muted hover:text-text px-1 cursor-pointer transition-colors"
+							aria-label="Close"
+						>
+							✕
+						</button>
+					</div>
+					<div class="space-y-3 pt-1">
+						<div class="flex items-center gap-3">
+							<button
+								type="button"
+								onclick="setTextSizeIndex(0)"
+								class="font-serif font-bold text-xs text-text/80 hover:text-text cursor-pointer select-none leading-none shrink-0"
+								title={ ui.Post_TextSize_Small }
+							>
+								a
+							</button>
+							<div class="relative flex-1 flex items-center py-2">
+								<div class="absolute inset-x-0 flex justify-between items-center pointer-events-none z-0 px-1">
+									<span class="w-1.5 h-1.5 rounded-full bg-border"></span>
+									<span class="w-1.5 h-1.5 rounded-full bg-border"></span>
+									<span class="w-1.5 h-1.5 rounded-full bg-border"></span>
+								</div>
+								<input
+									type="range"
+									min="0"
+									max="2"
+									value="1"
+									step="1"
+									class="text-size-slider w-full cursor-pointer relative z-10"
+									aria-label={ ui.Post_TextSize }
+									oninput="setTextSizeIndex(this.value)"
+								/>
+							</div>
+							<button
+								type="button"
+								onclick="setTextSizeIndex(2)"
+								class="font-serif font-bold text-base text-text/80 hover:text-text cursor-pointer select-none leading-none shrink-0"
+								title={ ui.Post_TextSize_Large }
+							>
+								A
+							</button>
+						</div>
+						<div class="flex justify-between items-center text-[11px] font-sans select-none px-0.5 text-muted">
+							<button
+								type="button"
+								onclick="setTextSizeIndex(0)"
+								data-size-step="0"
+								class="cursor-pointer hover:text-text transition-colors text-muted text-left"
+							>
+								{ ui.Post_TextSize_Small }
+							</button>
+							<button
+								type="button"
+								onclick="setTextSizeIndex(1)"
+								data-size-step="1"
+								class="cursor-pointer hover:text-text transition-colors text-text font-bold text-center"
+							>
+								{ ui.Post_TextSize_Medium }
+							</button>
+							<button
+								type="button"
+								onclick="setTextSizeIndex(2)"
+								data-size-step="2"
+								class="cursor-pointer hover:text-text transition-colors text-muted text-right"
+							>
+								{ ui.Post_TextSize_Large }
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="flex items-center gap-1.5 sm:gap-2">
+			<button
+				type="button"
+				onclick="toggleBookmark(this)"
+				data-slug={ p.Slug }
+				data-title={ p.Title }
+				data-date={ p.Date.Format("2006-01-02") }
+				class="bookmark-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors font-sans font-medium text-xs cursor-pointer select-none"
+				if lang == "id" {
+					title="Simpan artikel"
+				} else {
+					title="Save post"
+				}
+				aria-label="Save post"
+			>
+				@IconBookmark("bookmark-icon w-3.5 h-3.5 shrink-0")
+				<span class="bookmark-text">
+					if lang == "id" {
+						Simpan
+					} else {
+						Save
+					}
+				</span>
+			</button>
+			<div class="relative">
+				<button
+					type="button"
+					onclick="toggleSharePopover(event, 'header-share-popover-menu')"
+					class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors font-sans font-medium text-xs cursor-pointer select-none"
+					if lang == "id" {
+						title="Bagikan artikel"
+					} else {
+						title="Share article"
+					}
+					aria-label="Share article"
+				>
+					@IconShare("w-3.5 h-3.5 shrink-0")
+					<span>
+						if lang == "id" {
+							Bagikan
+						} else {
+							Share
+						}
+					</span>
+				</button>
+				<div
+					id="header-share-popover-menu"
+					class="hidden absolute right-0 top-full mt-2.5 bg-surface border border-border shadow-2xl z-40 p-1.5 sm:p-2 font-sans text-xs rounded-none select-none whitespace-nowrap"
+				>
+					<div class="flex items-center gap-1.5 sm:gap-2">
+						<button
+							type="button"
+							onclick="copyPostUrl(this, event)"
+							class="px-3 py-2 text-muted hover:text-text hover:bg-hover flex items-center gap-2 cursor-pointer rounded-none transition-colors group font-bold text-xs"
+							title="Copy link to clipboard"
+						>
+							@IconLink("w-4 h-4 text-muted group-hover:text-text shrink-0")
+							<span class="share-label-text">
+								if lang == "id" {
+									Salin
+								} else {
+									Copy
+								}
+							</span>
+							<span class="share-copied-status hidden text-text font-bold">
+								if lang == "id" {
+									Tersalin
+								} else {
+									Copied
+								}
+							</span>
+						</button>
+						<div class="h-5 w-px bg-border mx-0.5"></div>
+						<button type="button" onclick="shareToTwitter(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on X" aria-label="Share on X">
+							@IconX("w-4 h-4 shrink-0")
+						</button>
+						<button type="button" onclick="shareToBluesky(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on Bluesky" aria-label="Share on Bluesky">
+							@IconBluesky("w-4 h-4 shrink-0")
+						</button>
+						<button type="button" onclick="shareToLinkedIn(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on LinkedIn" aria-label="Share on LinkedIn">
+							@IconLinkedIn("w-4 h-4 shrink-0")
+						</button>
+						<button type="button" onclick="shareToThreads(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on Threads" aria-label="Share on Threads">
+							@IconThreads("w-4 h-4 shrink-0")
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="relative">
+				<button
+					type="button"
+					onclick="toggleMorePopover(event, 'header-more-popover-menu')"
+					class="inline-flex items-center justify-center px-2 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors cursor-pointer select-none"
+					if lang == "id" {
+						title="Opsi lainnya"
+					} else {
+						title="More options"
+					}
+					aria-label="More options"
+				>
+					@IconMoreHorizontal("w-3.5 h-3.5 shrink-0")
+				</button>
+				<div
+					id="header-more-popover-menu"
+					class="hidden absolute right-0 top-full mt-2.5 bg-surface border border-border shadow-2xl z-40 p-1.5 min-w-[220px] font-sans text-xs rounded-none select-none whitespace-nowrap"
+				>
+					<button
+						type="button"
+						onclick="copyBibtex(this)"
+						data-bibtex={ bibtexFromMeta(p.Slug, p.Title, p.Date.Format("2006-01-02")) }
+						class="w-full px-3 py-2 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
+					>
+						<span class="flex items-center gap-2.5">
+							<span class="font-serif font-bold text-base leading-none text-text">”</span>
+							<span>
+								if lang == "id" {
+									Salin BibTeX
+								} else {
+									Copy BibTeX
+								}
+							</span>
+						</span>
+						<span class="bibtex-copied-status hidden text-accent font-bold text-[11px]">
+							if lang == "id" {
+								Tersalin
+							} else {
+								Copied
+							}
+						</span>
+					</button>
+					<div class="h-px bg-border/60 my-1.5"></div>
+					<a
+						href={ templ.SafeURL("https://github.com/dafagareth/daemontalk/edit/main/content/posts/" + p.Slug + ".md") }
+						target="_blank"
+						rel="noopener noreferrer"
+						class="w-full px-3 py-2 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
+					>
+						<span class="flex items-center gap-2.5">
+							@IconEditSuggest("w-4 h-4 text-muted group-hover:text-text shrink-0")
+							<span>
+								if lang == "id" {
+									Edit di GitHub
+								} else {
+									Edit on GitHub
+								}
+							</span>
+						</span>
+						@IconArrowUpRight("w-3 h-3 text-muted/60")
+					</a>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/contribute") }
+						class="w-full px-3 py-2 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
+					>
+						<span class="flex items-center gap-2.5">
+							@IconContribute("w-4 h-4 text-muted group-hover:text-text shrink-0")
+							<span>
+								if lang == "id" {
+									Pedoman Kontribusi
+								} else {
+									Contribute
+								}
+							</span>
+						</span>
+						@IconArrowUpRight("w-3 h-3 text-muted/60")
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+}

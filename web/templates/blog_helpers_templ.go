@@ -22,7 +22,6 @@ type tagStat struct {
 	Count int
 }
 
-// PostNav holds the previous/next post links for blog post navigation.
 type PostNav struct {
 	HasPrev bool
 	HasNext bool
@@ -60,7 +59,6 @@ func sortedTags(m map[string]int) []tagStat {
 	return out
 }
 
-// Minimalist Monochrome / Accent SVG icons for technical tags
 func tagIcon(t string, sizeClass string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -248,7 +246,6 @@ func fmtFullDate(d time.Time, lang string) string {
 	return fmt.Sprintf("%s WIB", d.Format("Monday, 02 January 2006"))
 }
 
-// searchIndex builds the haystack used by the client-side blog search.
 func searchIndex(p post.Post) string {
 	return strings.ToLower(p.Title + " " + strings.Join(p.Tags, " ") + " " + p.Description)
 }
@@ -260,7 +257,6 @@ func blogPrefix(lang string) string {
 	return ""
 }
 
-// homeURL points to post list (main page after blog-first pivot).
 func homeURL(lang string) string {
 	if lang == "id" {
 		return "/id"
@@ -268,7 +264,6 @@ func homeURL(lang string) string {
 	return "/"
 }
 
-// postThumbnail renders the post cover image if available, or a minimalist "No Photo" fallback box.
 func postThumbnail(p post.Post, linkURL string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -298,7 +293,7 @@ func postThumbnail(p post.Post, linkURL string) templ.Component {
 			var templ_7745c5c3_Var5 templ.SafeURL
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(linkURL))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 205, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 200, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -326,7 +321,6 @@ func postThumbnail(p post.Post, linkURL string) templ.Component {
 	})
 }
 
-// postThumbnailImg renders pure thumbnail image/placeholder without outer link wrapper.
 func postThumbnailImg(p post.Post) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -356,7 +350,7 @@ func postThumbnailImg(p post.Post) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Cover)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 217, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 211, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -369,7 +363,7 @@ func postThumbnailImg(p post.Post) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 218, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 212, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -423,12 +417,12 @@ func langBadge(lang string) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if lang == "id" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"text-xs px-2 py-0.5 bg-[var(--c-warn-bg)] text-[var(--c-warn)] rounded-none font-mono\">ID</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"text-xs px-2 py-0.5 bg-[var(--c-warn-bg)] text-[var(--c-warn)] rounded-none font-sans font-bold text-[10px] tracking-wider\">ID</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-mono\">EN</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"text-xs px-2 py-0.5 bg-[var(--c-link-bg)] text-link rounded-none font-sans font-bold text-[10px] tracking-wider\">EN</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -500,7 +494,7 @@ func categoryMultiLinks(tagKey string, lang string, linkClass string, separatorC
 			var templ_7745c5c3_Var14 templ.SafeURL
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + l.Slug))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 247, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 241, Col: 67}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -526,7 +520,7 @@ func categoryMultiLinks(tagKey string, lang string, linkClass string, separatorC
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(l.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 248, Col: 11}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/blog_helpers.templ`, Line: 242, Col: 11}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {

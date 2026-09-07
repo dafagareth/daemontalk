@@ -10,8 +10,6 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "daemontalk/internal/i18n"
 
-// AdminLayout is a minimal shell for the admin dashboard.
-// Top navigation with text-only tabs, no sidebar, no decorative branding.
 func AdminLayout(page string, currentPath string, content templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -69,7 +67,7 @@ func AdminLayout(page string, currentPath string, content templ.Component) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</button></div></div><!-- Mobile tabs --><div class=\"flex sm:hidden items-center gap-2 pb-2 overflow-x-auto -mt-1\"><a href=\"/admin\" onclick=\"switchAdminTab('dashboard', event)\" data-tab=\"dashboard\" data-tab-btn=\"dashboard\" class=\"admin-tab active text-xs shrink-0\">Dashboard</a> <a href=\"/admin/content\" onclick=\"switchAdminTab('content', event)\" data-tab=\"content\" data-tab-btn=\"content\" class=\"admin-tab text-xs shrink-0\">Content</a> <a href=\"/admin/analytics\" onclick=\"switchAdminTab('analytics', event)\" data-tab=\"analytics\" data-tab-btn=\"analytics\" class=\"admin-tab text-xs shrink-0\">Analytics</a> <a href=\"/admin/comments\" onclick=\"switchAdminTab('comments', event)\" data-tab=\"comments\" data-tab-btn=\"comments\" class=\"admin-tab text-xs shrink-0\">Comments</a> <a href=\"/admin/digest\" onclick=\"switchAdminTab('digest', event)\" data-tab=\"digest\" data-tab-btn=\"digest\" class=\"admin-tab text-xs shrink-0\">Digest</a></div></div></header><main class=\"flex-1 w-full bg-bg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</button></div></div><div class=\"flex sm:hidden items-center gap-2 pb-2 overflow-x-auto -mt-1\"><a href=\"/admin\" onclick=\"switchAdminTab('dashboard', event)\" data-tab=\"dashboard\" data-tab-btn=\"dashboard\" class=\"admin-tab active text-xs shrink-0\">Dashboard</a> <a href=\"/admin/content\" onclick=\"switchAdminTab('content', event)\" data-tab=\"content\" data-tab-btn=\"content\" class=\"admin-tab text-xs shrink-0\">Content</a> <a href=\"/admin/analytics\" onclick=\"switchAdminTab('analytics', event)\" data-tab=\"analytics\" data-tab-btn=\"analytics\" class=\"admin-tab text-xs shrink-0\">Analytics</a> <a href=\"/admin/comments\" onclick=\"switchAdminTab('comments', event)\" data-tab=\"comments\" data-tab-btn=\"comments\" class=\"admin-tab text-xs shrink-0\">Comments</a> <a href=\"/admin/digest\" onclick=\"switchAdminTab('digest', event)\" data-tab=\"digest\" data-tab-btn=\"digest\" class=\"admin-tab text-xs shrink-0\">Digest</a></div></div></header><main class=\"flex-1 w-full bg-bg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

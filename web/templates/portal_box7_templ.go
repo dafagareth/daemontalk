@@ -63,7 +63,7 @@ func portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang str
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div><div class=\"flex items-center justify-between mb-4 sm:mb-5\"><div class=\"text-xs font-mono font-black uppercase tracking-widest text-text flex items-center gap-1.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div><div class=\"flex items-center justify-between mb-4 sm:mb-5\"><div class=\"text-xs font-sans font-black uppercase tracking-widest text-text flex items-center gap-1.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -84,11 +84,11 @@ func portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang str
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"text-[10px] font-mono font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group shrink-0\" aria-label=\"Explore topic\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"text-[10px] font-sans font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group shrink-0\" aria-label=\"Explore topic\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -118,7 +118,7 @@ func portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang str
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</h4><div class=\"text-[11px] font-mono text-muted\"><span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</h4><div class=\"text-[11px] font-sans text-muted\"><span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -163,7 +163,7 @@ func portalBox7KnowledgeIndex(ui i18n.UI, categories []CategorySection, lang str
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</h4><div class=\"text-[11px] font-mono text-muted/80\"><span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</h4><div class=\"text-[11px] font-sans text-muted/80\"><span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}

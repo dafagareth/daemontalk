@@ -6,16 +6,14 @@ import (
 	"daemontalk/internal/i18n"
 )
 
-// NotFound renders a minimal 404 Not Found page.
 templ NotFound(ui i18n.UI, lang string) {
 	@ErrorPage(404, ui.NotFound_Title, ui.NotFound_Body, ui.NotFound_Home, ui, lang)
 }
 
-// ErrorPage renders a simple, minimalist error page.
 templ ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) {
 	<div class="max-w-3xl mx-auto px-6 py-20 sm:py-32">
 		<div class="space-y-6 max-w-lg">
-			<div class="text-6xl sm:text-7xl font-mono font-black text-text tracking-tight mb-4">
+			<div class="text-6xl sm:text-7xl font-sans font-black text-text tracking-tight mb-4">
 				{ fmt.Sprintf("%d", code) }
 			</div>
 			<h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-text">

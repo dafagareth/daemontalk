@@ -10,7 +10,6 @@
     font-family: var(--font-sans);
   }
 
-  /* Offset anchor targets so sticky navbar never overlaps headings */
   :target,
   [id] {
     scroll-margin-top: 5.5rem;
@@ -31,21 +30,18 @@
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   }
 
-  /* Display face untuk judul halaman & artikel */
   .display {
     font-family: var(--font-sans);
     letter-spacing: -0.02em;
     line-height: 1.15;
   }
 
-  /* Theme toggle icons */
   .icon-sun  { display: none; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
   .icon-moon { display: block; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
 
   [data-theme="dark"] .icon-sun  { display: block; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
   [data-theme="dark"] .icon-moon { display: none; }
 
-  /* Theme logo switching */
   .logo-light { display: block; }
   .logo-dark  { display: none; }
 
@@ -59,11 +55,9 @@
     html:not([data-theme="light"]) .logo-dark  { display: block; }
   }
 
-  /* Footer always shows dark-mode (white) logo */
   footer .logo-light { display: none !important; }
   footer .logo-dark { display: block !important; }
 
-  /* KaTeX / Math formula responsive wrapping & center alignment */
   .katex-scroll-wrapper {
     position: relative;
     width: 100%;

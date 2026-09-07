@@ -1,6 +1,6 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-serif: "Lora", "Source Serif 4", Georgia, serif;
   --color-text: var(--c-text);
   --color-muted: var(--c-muted);
   --color-surface: var(--c-surface);
@@ -14,7 +14,7 @@
   --color-ok: var(--c-ok);
   --color-warn: var(--c-warn);
 }
-/* Semantic color tokens — The Crisp Broadsheet palette */
+
 :root {
   --c-bg:        #f6f6f8;
   --c-surface:   #ffffff;
@@ -46,12 +46,11 @@
   --term-cursor:   #1a7f37;
 }
 
-/* System dark preference (fallback when no manual toggle) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --c-bg:        #18181b;
     --c-surface:   #222225;
-    --c-nav:       #121215;
+    --c-nav:       #18181b;
     --c-footer:    #121215;
     --c-text:      #e6edf3;
     --c-muted:     #9ea8b3;
@@ -78,11 +77,10 @@
   }
 }
 
-/* Manual dark toggle */
 [data-theme="dark"] {
   --c-bg:        #18181b;
   --c-surface:   #222225;
-  --c-nav:       #121215;
+  --c-nav:       #18181b;
   --c-footer:    #121215;
   --c-text:      #e6edf3;
   --c-muted:     #9ea8b3;

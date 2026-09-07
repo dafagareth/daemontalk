@@ -1,4 +1,3 @@
-// Global keyboard shortcuts (?, /, ~, j/k, g+h/b/p/t/l/u)
 window.openShortcuts = function() {
 	var el = document.getElementById("shortcuts-overlay");
 	if (el) el.classList.add("open");
@@ -15,7 +14,6 @@ window.openShortcuts = function() {
 		return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
 	}
 
-	// Global Ctrl+Enter / Cmd+Enter shortcut for textareas to submit forms directly
 	document.addEventListener('keydown', function(e) {
 		if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
 			var target = e.target;
@@ -61,6 +59,16 @@ window.openShortcuts = function() {
 		}
 
 		if (e.key === '/') {
+			var path = window.location.pathname;
+			if (path === '/graph' || path === '/id/graph' || path.startsWith('/graph/') || path.startsWith('/id/graph/')) {
+				var gs = document.getElementById('graph-search');
+				if (gs) {
+					e.preventDefault();
+					gs.focus();
+					gs.select();
+					return;
+				}
+			}
 			e.preventDefault();
 			pendingG = false;
 			var si = document.getElementById('header-search-input') || document.getElementById('blog-search');
@@ -69,7 +77,7 @@ window.openShortcuts = function() {
 				si.select();
 				if (window.openSearchPopper) window.openSearchPopper();
 			} else {
-				window.location.href = '/search';
+				window.location.href = (document.documentElement.lang === 'id' ? '/id' : '') + '/search';
 			}
 			return;
 		}
@@ -78,7 +86,16 @@ window.openShortcuts = function() {
 			pendingG = false;
 			clearTimeout(gTimer);
 			e.preventDefault();
-			var destinations = { h: '/', b: '/', p: '/colophon#projects', c: '/colophon', s: '/socket', l: '/saved' };
+			var prefix = document.documentElement.lang === 'id' ? '/id' : '';
+			var destinations = {
+				h: prefix || '/',
+				b: prefix || '/',
+				p: prefix + '/colophon#projects',
+				c: prefix + '/colophon',
+				s: prefix + '/socket',
+				g: prefix + '/graph',
+				l: prefix + '/saved'
+			};
 			if (destinations[e.key]) window.location.href = destinations[e.key];
 			return;
 		}

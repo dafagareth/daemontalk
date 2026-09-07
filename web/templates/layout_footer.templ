@@ -5,134 +5,174 @@ import (
 	"strings"
 )
 
-templ footer(ui i18n.UI, lang string) {
-	<footer class="w-full bg-[#0d0d10] text-[#e6edf3] py-0 sm:py-12 transition-all mt-0">
-		<div class="container-page !px-0 sm:!px-6 lg:!px-8">
-			<div class="border-t sm:border border-[#27272a] w-full bg-[#121214] shadow-sm mb-6 sm:mb-6 mt-6 sm:mt-0">
-				<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#27272a]">
-					<div class="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between">
-						<div>
-							<a href={ templ.SafeURL(prefix(lang) + "/") } class="inline-flex items-center shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-								@BrandLogo("h-7 w-auto")
-							</a>
-							<p class="text-[11px] sm:text-sm text-[#8b949e] leading-relaxed mb-4 max-w-sm">
-								{ ui.Footer_Bio }
-							</p>
-							<div class="relative bg-zinc-950 text-[#e6edf3] font-mono text-[11px] p-2.5 pr-8 border border-[#27272a] overflow-hidden mb-4 group">
-								<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
-									<span class="text-zinc-500 mr-1.5">$</span>ssh ssh.daemontalk.com -p 2222
+func isMainHome(path string) bool {
+	p := strings.TrimPrefix(path, "/id")
+	return p == "" || p == "/" || p == "/blog" || p == "/blog/"
+}
+
+templ footer(ui i18n.UI, lang string, currentPath string) {
+	if isSocketApp(currentPath) {
+	} else if isMainHome(currentPath) {
+		<footer class="w-full bg-[#0d0d10] text-[#e6edf3] py-0 sm:py-12 transition-all mt-0">
+			<div class="container-page !px-0 sm:!px-6 lg:!px-8">
+				<div class="border-t sm:border border-[#27272a] w-full bg-[#121214] shadow-sm mb-6 sm:mb-6 mt-6 sm:mt-0">
+					<div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#27272a]">
+						<div class="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between">
+							<div>
+								<a href={ templ.SafeURL(prefix(lang) + "/") } class="inline-flex items-center shrink-0 mb-3 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+									@BrandLogo("h-7 w-auto")
+								</a>
+								<p class="text-[11px] sm:text-sm text-[#8b949e] leading-relaxed mb-4 max-w-sm">
+									{ ui.Footer_Bio }
+								</p>
+								<div class="relative bg-zinc-950 text-[#e6edf3] font-mono text-[11px] p-2.5 pr-8 border border-[#27272a] overflow-hidden mb-4 group">
+									<div class="overflow-x-auto select-all scrollbar-none whitespace-nowrap">
+										<span class="text-zinc-500 mr-1.5">$</span>ssh ssh.daemontalk.com -p 2222
+									</div>
+									<button
+										onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#ffffff'; setTimeout(()=>i.style.color='', 1000);"
+										title="Copy command"
+										aria-label="Copy command"
+										class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-80 group-hover:opacity-100 cursor-pointer"
+									>
+										@IconCopy("w-3.5 h-3.5 transition-colors")
+									</button>
 								</div>
-								<button
-									onclick="navigator.clipboard.writeText('ssh ssh.daemontalk.com -p 2222'); var i=this.querySelector('svg'); i.style.color='#ffffff'; setTimeout(()=>i.style.color='', 1000);"
-									title="Copy command"
-									aria-label="Copy command"
-									class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors opacity-80 group-hover:opacity-100 cursor-pointer"
-								>
-									@IconCopy("w-3.5 h-3.5 transition-colors")
-								</button>
+							</div>
+							<div class="flex items-center gap-1 pt-2 border-t border-[#27272a]/60">
+								@footerSocial("https://github.com/dafagareth", "GitHub") {
+									@IconGitHub()
+								}
+								@footerSocial("https://x.com/daemontalk", "X / Twitter") {
+									@IconX()
+								}
+								@footerSocial("https://instagram.com/daemontalk", "Instagram") {
+									@IconInstagram()
+								}
+								@footerSocial("https://threads.net/@daemontalk", "Threads") {
+									@IconThreads()
+								}
+								@footerSocial("mailto:realdaemontalk@gmail.com", "Email") {
+									@IconEmail()
+								}
+								@footerSocial("/rss.xml", "RSS") {
+									@IconRSS()
+								}
 							</div>
 						</div>
-						<div class="flex items-center gap-1 pt-2 border-t border-[#27272a]/60">
-							@footerSocial("https://github.com/dafagareth", "GitHub") {
-								@IconGitHub()
-							}
-							@footerSocial("https://x.com/daemontalk", "X / Twitter") {
-								@IconX()
-							}
-							@footerSocial("https://instagram.com/daemontalk", "Instagram") {
-								@IconInstagram()
-							}
-							@footerSocial("https://threads.net/@daemontalk", "Threads") {
-								@IconThreads()
-							}
-							@footerSocial("mailto:realdaemontalk@gmail.com", "Email") {
-								@IconEmail()
-							}
-							@footerSocial("/rss.xml", "RSS") {
-								@IconRSS()
-							}
-						</div>
-					</div>
-					<div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 bg-[#18181b]/30">
-						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 border-[#27272a]">
-							<div>
-								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest mb-3">
-									{ ui.Footer_Read }
-								</p>
-								<ul class="space-y-2">
-									@footerLink(prefix(lang)+"/", ui.Nav_Home)
-									@footerLink(prefix(lang)+"/about", ui.Link_About)
-									@footerLink(prefix(lang)+"/saved", ui.Link_ReadingList)
-								</ul>
+						<div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 bg-[#18181b]/30">
+							<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 border-[#27272a]">
+								<div>
+									<p class="text-[10px] sm:text-xs font-sans font-bold text-[#e6edf3] uppercase tracking-wider mb-3">
+										{ ui.Footer_Read }
+									</p>
+									<ul class="space-y-2">
+										@footerLink(prefix(lang)+"/", ui.Nav_Home)
+										@footerLink(prefix(lang)+"/about", ui.Link_About)
+										@footerLink(prefix(lang)+"/saved", ui.Link_ReadingList)
+									</ul>
+								</div>
 							</div>
-						</div>
-						<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 sm:border-x border-[#27272a]">
-							<div>
-								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest mb-3">
-									{ ui.Footer_Topics }
-								</p>
-								<ul class="space-y-2">
-									@footerLink(prefix(lang)+"/?tag=linux", "Linux & Kernel")
-									@footerLink(prefix(lang)+"/?tag=go", "Go & Backend")
-									@footerLink(prefix(lang)+"/?tag=devops", "DevOps & Cloud")
-									@footerLink(prefix(lang)+"/?tag=security", "Security & Systems")
-									@footerLink(prefix(lang)+"/?tag=performance", "Performance & Memory")
-								</ul>
+							<div class="p-5 sm:p-6 flex flex-col justify-between border-b sm:border-b-0 sm:border-x border-[#27272a]">
+								<div>
+									<p class="text-[10px] sm:text-xs font-sans font-bold text-[#e6edf3] uppercase tracking-wider mb-3">
+										{ ui.Footer_Topics }
+									</p>
+									<ul class="space-y-2">
+										@footerLink(prefix(lang)+"/blog/tag/linux", "Linux & Kernel")
+										@footerLink(prefix(lang)+"/blog/tag/go", "Go & Backend")
+										@footerLink(prefix(lang)+"/blog/tag/devops", "DevOps & Cloud")
+										@footerLink(prefix(lang)+"/blog/tag/security", "Security & Systems")
+										@footerLink(prefix(lang)+"/blog/tag/performance", "Performance & Memory")
+									</ul>
+								</div>
 							</div>
-						</div>
-						<div class="p-5 sm:p-6 flex flex-col justify-between sm:border-l border-[#27272a]">
-							<div>
-								<p class="text-[10px] sm:text-xs font-mono font-black text-[#e6edf3] uppercase tracking-widest mb-3">
-									{ ui.Footer_Community }
-								</p>
-								<ul class="space-y-2">
-									@footerLink("https://github.com/dafagareth/daemontalk", "GitHub Repository")
-									@footerLink(prefix(lang)+"/contribute", ui.Link_ContribGuide)
-									@footerLink(prefix(lang)+"/socket", ui.Link_Discussions)
-									@footerLink("/rss.xml", "RSS 2.0 (XML)")
-									@footerLink("/feed.json", "JSON Feed (v1.1)")
-									<li>
-										<button
-											type="button"
-											onclick="openShortcuts()"
-											class="text-xs text-[#8b949e] hover:text-[#58a6ff] transition-colors inline-flex items-center gap-1.5 cursor-pointer font-mono pt-1"
-										>
-											<span>{ ui.Link_Shortcuts }</span>
-											<kbd class="px-1 py-0.5 rounded-none border border-[#27272a] bg-[#18181b] text-[10px] font-mono leading-none text-[#8b949e]">?</kbd>
-										</button>
-									</li>
-								</ul>
+							<div class="p-5 sm:p-6 flex flex-col justify-between sm:border-l border-[#27272a]">
+								<div>
+									<p class="text-[10px] sm:text-xs font-sans font-bold text-[#e6edf3] uppercase tracking-wider mb-3">
+										{ ui.Footer_Community }
+									</p>
+									<ul class="space-y-2">
+										@footerLink("https://github.com/dafagareth/daemontalk", "GitHub Repository")
+										@footerLink(prefix(lang)+"/contribute", ui.Link_ContribGuide)
+										@footerLink(prefix(lang)+"/socket", ui.Link_Discussions)
+										@footerLink("/rss.xml", "RSS 2.0 (XML)")
+										@footerLink("/feed.json", "JSON Feed (v1.1)")
+										<li>
+											<button
+												type="button"
+												onclick="openShortcuts()"
+												class="text-xs text-[#8b949e] hover:text-[#58a6ff] transition-colors inline-flex items-center gap-1.5 cursor-pointer font-sans font-medium pt-1"
+											>
+												<span>{ ui.Link_Shortcuts }</span>
+												<kbd class="px-1 py-0.5 rounded-none border border-[#27272a] bg-[#18181b] text-[10px] font-mono leading-none text-[#8b949e]">?</kbd>
+											</button>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="px-5 sm:px-0 flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-4 text-xs font-sans text-[#8b949e] pt-4 sm:pt-1 pb-8 sm:pb-0">
+					@footerCopyrightRow(ui, lang, true)
 				</div>
 			</div>
-			<div class="px-5 sm:px-0 flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-4 text-xs font-mono text-[#8b949e] pt-4 sm:pt-1 pb-8 sm:pb-0">
-				<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 sm:gap-x-4 sm:gap-y-2 w-full">
-					<div class="flex items-center justify-between w-full sm:w-auto">
-						<span class="text-[#e6edf3] font-bold inline-flex items-center gap-1.5">
-							@IconCopyright("w-3.5 h-3.5 text-[#8b949e]")
-							<span>2026 daemontalk</span>
-						</span>
-						<span class="hidden sm:inline">·</span>
-					</div>
-					<div class="flex flex-wrap items-center gap-x-4 gap-y-2.5">
-						<a href={ templ.SafeURL(prefix(lang) + "/terms") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Terms_Title }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/privacy") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Privacy_Title }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/contribute") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Contribute }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/license") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_License }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/accessibility") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Accessibility }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/stats") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Stats_Title }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/changelog") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Changelog_Title }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/colophon") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Colophon_Nav }</a>
-						<a href="/rss.xml" class="hover:text-[#e6edf3] hover:underline transition-colors">RSS</a>
-						<a href="/manifest.json" class="hover:text-[#e6edf3] hover:underline transition-colors">Manifest</a>
-						<a href="mailto:realdaemontalk@gmail.com" class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Contact }</a>
-					</div>
-				</div>
+		</footer>
+	} else {
+		<footer class="w-full bg-bg py-8 sm:py-10 text-xs font-sans text-muted mt-auto transition-colors">
+			<div class="container-page flex justify-center text-center">
+				@footerCopyrightRow(ui, lang, false)
+			</div>
+		</footer>
+	}
+}
+
+templ footerCopyrightRow(ui i18n.UI, lang string, isHome bool) {
+	if isHome {
+		<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 sm:gap-x-4 sm:gap-y-2 w-full font-sans">
+			<div class="flex items-center justify-between w-full sm:w-auto">
+				<span class="text-[#e6edf3] font-bold inline-flex items-center gap-1.5">
+					@IconCopyright("w-3.5 h-3.5 text-[#8b949e]")
+					<span>2026 daemontalk</span>
+				</span>
+				<span class="hidden sm:inline text-muted/50">·</span>
+			</div>
+			<div class="flex flex-wrap items-center gap-x-4 gap-y-2.5 text-[#8b949e]">
+				<a href={ templ.SafeURL(prefix(lang) + "/terms") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Terms_Title }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/privacy") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Privacy_Title }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/contribute") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Contribute }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/license") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_License }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/accessibility") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Accessibility }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/stats") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Stats_Title }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/colophon") } class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Colophon_Nav }</a>
+				<a href="/rss.xml" class="hover:text-[#e6edf3] hover:underline transition-colors">RSS</a>
+				<a href="/manifest.json" class="hover:text-[#e6edf3] hover:underline transition-colors">Manifest</a>
+				<a href="mailto:realdaemontalk@gmail.com" class="hover:text-[#e6edf3] hover:underline transition-colors">{ ui.Link_Contact }</a>
 			</div>
 		</div>
-	</footer>
+	} else {
+		<div class="flex flex-col sm:flex-row sm:flex-wrap items-center justify-center text-center gap-3 sm:gap-x-4 sm:gap-y-2 text-xs font-sans text-muted w-full">
+			<div class="flex items-center justify-center gap-2 w-full sm:w-auto">
+				<span class="text-text font-bold inline-flex items-center gap-1.5 shrink-0">
+					@IconCopyright("w-3.5 h-3.5 text-muted")
+					<span>2026 daemontalk</span>
+				</span>
+				<span class="hidden sm:inline text-muted/40">·</span>
+			</div>
+			<div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center">
+				<a href={ templ.SafeURL(prefix(lang) + "/terms") } class="hover:text-text hover:underline transition-colors">{ ui.Terms_Title }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/privacy") } class="hover:text-text hover:underline transition-colors">{ ui.Privacy_Title }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/contribute") } class="hover:text-text hover:underline transition-colors">{ ui.Link_Contribute }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/license") } class="hover:text-text hover:underline transition-colors">{ ui.Link_License }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/accessibility") } class="hover:text-text hover:underline transition-colors">{ ui.Link_Accessibility }</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/stats") } class="hover:text-text hover:underline transition-colors">Stats</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/colophon") } class="hover:text-text hover:underline transition-colors">{ ui.Colophon_Nav }</a>
+				<a href="/manifest.json" class="hover:text-text hover:underline transition-colors">Manifest</a>
+				<a href="mailto:realdaemontalk@gmail.com" class="hover:text-text hover:underline transition-colors">{ ui.Link_Contact }</a>
+			</div>
+		</div>
+	}
 }
 
 templ footerSocial(href string, label string) {

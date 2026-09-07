@@ -2,8 +2,6 @@ package templates
 
 import "daemontalk/internal/i18n"
 
-// AdminLayout is a minimal shell for the admin dashboard.
-// Top navigation with text-only tabs, no sidebar, no decorative branding.
 templ AdminLayout(page string, currentPath string, content templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -36,7 +34,6 @@ templ AdminLayout(page string, currentPath string, content templ.Component) {
 							</button>
 						</div>
 					</div>
-					<!-- Mobile tabs -->
 					<div class="flex sm:hidden items-center gap-2 pb-2 overflow-x-auto -mt-1">
 						<a href="/admin" onclick="switchAdminTab('dashboard', event)" data-tab="dashboard" data-tab-btn="dashboard" class="admin-tab active text-xs shrink-0">Dashboard</a>
 						<a href="/admin/content" onclick="switchAdminTab('content', event)" data-tab="content" data-tab-btn="content" class="admin-tab text-xs shrink-0">Content</a>

@@ -2,6 +2,7 @@
 @source "../../../web/templates/**/*.templ";
 @source "../../../web/static/js/**/*.js";
 @source "../../../internal/**/*.go";
+@source "../../../content/**/*.md";
 @source "../../../main.go";
 
 @import "./theme.css";

@@ -1,5 +1,4 @@
 (function() {
-    // Interactive Footnotes Popover Preview
     var activePopover = null;
 
     function removePopover() {

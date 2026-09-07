@@ -65,7 +65,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</button></div></div><div class=\"flex items-center justify-between text-[10px] font-mono text-muted pt-2\"><span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px]\">Enter</kbd> Reader</span> <span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px]\">t</kbd> 7 Themes</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 lg:border-b-0 lg:border-r border-border/40\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</button></div></div><div class=\"flex items-center justify-between text-[10px] font-sans text-muted pt-2\"><span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px] font-mono\">Enter</kbd> Reader</span> <span class=\"flex items-center gap-1\"><kbd class=\"px-1 py-0.2 bg-surface border border-border text-[9px] font-mono\">t</kbd> 7 Themes</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 lg:border-b-0 lg:border-r border-border/40 font-sans\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -102,7 +102,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" class=\"text-xs font-mono text-text hover:text-link transition-colors uppercase tracking-wider truncate mr-2\">#")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" class=\"text-xs font-sans font-medium text-text hover:text-link transition-colors uppercase tracking-wider truncate mr-2\">#")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -115,14 +115,14 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</a> <span class=\"text-[10px] font-mono text-muted bg-surface border border-border/50 px-1.5 py-0.5 shrink-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</a> <span class=\"text-[10px] font-sans text-muted bg-surface border border-border/50 px-1.5 py-0.5 shrink-0 tabular-nums\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", tagCounts[tag]))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 59, Col: 148}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/portal_box8.templ`, Line: 59, Col: 161}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -133,7 +133,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div></div><div class=\"hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 sm:border-r border-border\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div></div><div class=\"hidden sm:flex flex-col px-5 sm:px-6 py-8 sm:py-9 lg:py-12 lg:px-7 justify-between border-b sm:border-b-0 sm:border-r border-border font-sans\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -156,23 +156,23 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</p><div class=\"flex flex-col gap-2\"><a href=\"/rss.xml\" class=\"flex items-center justify-between text-[10px] sm:text-xs px-2.5 py-1.5 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider group\"><span>RSS 2.0</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</p><div class=\"flex flex-col gap-2\"><a href=\"/rss.xml\" class=\"flex items-center justify-between text-[10px] sm:text-xs px-2.5 py-1.5 border border-border hover:bg-hover text-text transition-colors font-sans font-medium uppercase tracking-wider group\"><span>RSS 2.0</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconArrowRight("w-3 h-3 text-muted group-hover:text-text shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</a> <a href=\"/feed.json\" class=\"flex items-center justify-between text-[10px] sm:text-xs px-2.5 py-1.5 border border-border hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider group\"><span>JSON</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</a> <a href=\"/feed.json\" class=\"flex items-center justify-between text-[10px] sm:text-xs px-2.5 py-1.5 border border-border hover:bg-hover text-text transition-colors font-sans font-medium uppercase tracking-wider group\"><span>JSON</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconArrowRight("w-3 h-3 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconArrowRight("w-3 h-3 text-muted group-hover:text-text shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</a></div></div><div class=\"text-[9px] sm:text-[10px] font-mono text-muted pt-2 mt-3\"><span>Format: Full-text</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</a></div></div><div class=\"text-[9px] sm:text-[10px] font-sans text-muted pt-2 mt-3\"><span>Format: Full-text</span></div></div><div class=\"flex flex-col px-5 sm:px-6 py-7 sm:py-9 lg:py-12 lg:px-7 justify-between font-sans\"><div><h3 class=\"font-sans text-[13px] font-black uppercase tracking-wider text-text mb-3 flex items-center gap-1.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -219,7 +219,7 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" class=\"flex items-center justify-between text-[10px] sm:text-xs px-3 py-2 border border-border bg-surface hover:bg-hover text-text transition-colors font-mono uppercase tracking-wider group mt-auto\"><span class=\"font-bold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" class=\"flex items-center justify-between text-[10px] sm:text-xs px-3 py-2 border border-border bg-surface hover:bg-hover text-text transition-colors font-sans font-semibold uppercase tracking-wider group mt-auto\"><span class=\"font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -238,11 +238,11 @@ func portalBox8Cockpit(ui i18n.UI, tagCounts map[string]int, lang string, totalP
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5 text-muted group-hover:text-text transition-transform group-hover:translate-x-0.5 shrink-0").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5 text-muted group-hover:text-text shrink-0").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</a></div><div class=\"text-[9px] sm:text-[10px] font-mono text-muted pt-2 mt-3 flex items-center justify-between\"><span class=\"truncate pr-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</a></div><div class=\"text-[9px] sm:text-[10px] font-sans text-muted pt-2 mt-3 flex items-center justify-between\"><span class=\"truncate pr-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

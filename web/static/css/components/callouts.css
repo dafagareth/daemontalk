@@ -1,5 +1,5 @@
 @layer components {
-  /* FAQ accordion & raw details */
+
   .prose details {
     border: 1px solid var(--c-border);
     border-radius: 0;
@@ -39,13 +39,90 @@
     padding: 0 1rem 1rem 1rem;
     color: var(--c-muted);
     font-size: 0.9375em;
-    line-height: 1.75;
+    line-height: 1.62;
   }
   .prose .faq-body p { margin-bottom: 0.5rem; }
   .prose .faq-body code { font-size: 0.875em; }
 
-  /* FAQ Arrow Rotation */
   details[open] > summary > svg {
     transform: rotate(180deg);
+  }
+
+  .post-callout {
+    position: relative;
+    margin: 1.5rem 0;
+    padding: 0 0 0 1.25rem;
+    border: none;
+    border-left: 3px solid var(--c-border);
+    border-radius: 0;
+    background: transparent !important;
+    font-family: inherit;
+    transition: border-color 0.15s ease;
+  }
+
+  [data-theme="dark"] .post-callout,
+  :root[data-theme="dark"] .post-callout {
+    border-left-color: #3f3f46 !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .post-callout {
+      border-left-color: #3f3f46 !important;
+    }
+  }
+
+  .post-callout .callout-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.375rem;
+    font-style: normal;
+  }
+
+  .post-callout .callout-label {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .post-callout .callout-body {
+    font-size: 1em;
+    line-height: 1.68;
+    color: var(--c-text);
+    font-style: italic;
+  }
+
+  .post-callout .callout-body p {
+    margin: 0;
+    font-style: italic;
+  }
+
+  .post-callout .callout-body p + p {
+    margin-top: 0.5rem;
+  }
+
+  .post-callout .callout-body code {
+    font-style: normal;
+  }
+
+  .post-callout-note .callout-label {
+    color: var(--c-link);
+  }
+
+  .post-callout-tip .callout-label {
+    color: var(--c-ok);
+  }
+
+  .post-callout-warning .callout-label {
+    color: var(--c-accent);
+  }
+
+  .post-callout-important .callout-label {
+    color: var(--c-link);
+  }
+
+  .post-callout-caution .callout-label {
+    color: var(--c-warn);
   }
 }

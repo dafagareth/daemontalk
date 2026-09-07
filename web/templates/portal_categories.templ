@@ -84,7 +84,7 @@ templ editorialTowerLeadPost(p post.Post, lang string, ui i18n.UI) {
 						{ p.Description }
 					</p>
 				}
-				<div class="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-auto pt-1 sm:pt-0">
+				<div class="flex items-center gap-2 text-[10px] sm:text-xs font-sans text-muted mt-auto pt-1 sm:pt-0">
 					<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 					<span>·</span>
 					<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
@@ -109,7 +109,7 @@ templ editorialShelfLeadPost(p post.Post, lang string, ui i18n.UI) {
 						{ p.Description }
 					</p>
 				}
-				<div class="flex items-center gap-2 text-[10px] font-mono text-muted mt-auto pt-1">
+				<div class="flex items-center gap-2 text-[10px] font-sans text-muted mt-auto pt-1">
 					<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 					<span>·</span>
 					<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
@@ -130,7 +130,7 @@ templ editorialTowerTopPost(p post.Post, lang string, ui i18n.UI) {
 					{ p.Title }
 				</h3>
 			</div>
-			<div class="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-muted mt-auto pt-1">
+			<div class="flex items-center gap-2 text-[10px] sm:text-[11px] font-sans text-muted mt-auto pt-1">
 				<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 				<span>·</span>
 				<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
@@ -149,7 +149,7 @@ templ editorialTowerSubPost(p post.Post, lang string, ui i18n.UI) {
 				<h4 class="display text-base sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug mb-1.5 line-clamp-3 sm:line-clamp-none">
 					{ p.Title }
 				</h4>
-				<div class="flex items-center gap-2 text-[10px] font-mono text-muted mt-auto pt-1">
+				<div class="flex items-center gap-2 text-[10px] font-sans text-muted mt-auto pt-1">
 					<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 					<span>·</span>
 					<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
@@ -169,29 +169,11 @@ templ editorialLargeShelfPost(p post.Post, lang string, ui i18n.UI) {
 				<h3 class="display text-base sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug mb-1.5 line-clamp-3 sm:line-clamp-none">
 					{ p.Title }
 				</h3>
-				<div class="flex items-center gap-2 text-[10px] font-mono text-muted mt-auto pt-1">
+				<div class="flex items-center gap-2 text-[10px] font-sans text-muted mt-auto pt-1">
 					<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
 					<span>·</span>
 					<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
 				</div>
-			</div>
-		</div>
-	</a>
-}
-
-templ editorialFeedListItem(p post.Post, lang string, ui i18n.UI) {
-	<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="group flex items-start gap-4 sm:gap-5 py-2">
-		<div class="w-28 sm:w-40 shrink-0 bg-surface overflow-hidden border border-[var(--c-border)] aspect-[16/9]">
-			@postThumbnailImg(p)
-		</div>
-		<div class="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
-			<h4 class="display text-lg sm:text-lg font-bold text-text group-hover:text-link transition-colors leading-snug mb-1.5">
-				{ p.Title }
-			</h4>
-			<div class="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-muted mt-auto">
-				<time datetime={ p.Date.Format("2006-01-02") }>{ fmtDate(p, lang) }</time>
-				<span>·</span>
-				<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
 			</div>
 		</div>
 	</a>

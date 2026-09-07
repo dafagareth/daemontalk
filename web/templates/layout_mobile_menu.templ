@@ -1,0 +1,165 @@
+package templates
+
+import (
+	"daemontalk/internal/i18n"
+	"fmt"
+)
+
+templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
+	<div
+		id="mobile-menu-overlay"
+		class="fixed inset-0 z-50 bg-surface flex flex-col justify-between p-5 sm:p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+	>
+		<div class="flex items-center justify-between pb-3.5 mb-2 border-b border-border">
+			<button
+				type="button"
+				onclick="toggleMobileMenu()"
+				aria-label="Close mobile menu"
+				class="w-10 h-10 flex items-center justify-center text-muted hover:text-text transition-colors cursor-pointer shrink-0"
+			>
+				@IconClose("w-5 h-5")
+			</button>
+			<div class="flex items-center justify-center shrink-0">
+				<a href={ templ.SafeURL(prefix(lang) + "/") } onclick="toggleMobileMenu()" class="flex items-center justify-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+					@BrandLogo("h-7 sm:h-8 w-auto")
+				</a>
+			</div>
+			<div class="w-10 h-10 shrink-0"></div>
+		</div>
+		<div class="flex-1 flex flex-col gap-4 py-1">
+			<div
+				id="mobile-nav-auth-badge"
+				hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s&mode=mobile", currentPath, lang))) }
+				hx-trigger="load"
+				class="w-full"
+			></div>
+			<nav class="flex flex-col py-1 font-sans text-base font-bold">
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/") }
+					onclick="toggleMobileMenu()"
+					class={ "py-2.5 flex items-center justify-between hover:text-link transition-colors", templ.KV("text-link", isHomeOrTagFilter(currentPath)), templ.KV("text-text", !isHomeOrTagFilter(currentPath)) }
+				>
+					<span>
+						if lang == "id" {
+							Tulisan Terbaru
+						} else {
+							Dispatches
+						}
+					</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/socket") }
+					onclick="toggleMobileMenu()"
+					class={ "py-2.5 flex items-center justify-between hover:text-link transition-colors", templ.KV("text-link", isSocketPath(currentPath)), templ.KV("text-text", !isSocketPath(currentPath)) }
+				>
+					<span>Socket</span>
+				</a>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/saved") }
+					onclick="toggleMobileMenu()"
+					class={ "py-2.5 flex items-center justify-between hover:text-link transition-colors", templ.KV("text-link", currentPath == "/saved" || currentPath == "/id/saved"), templ.KV("text-text", currentPath != "/saved" && currentPath != "/id/saved") }
+				>
+					<span>Reading List</span>
+				</a>
+				if IsRadarEnabled() {
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/graph") }
+						onclick="toggleMobileMenu()"
+						class={ "py-2.5 flex items-center justify-between hover:text-link transition-colors", templ.KV("text-link", isGraphPath(currentPath)), templ.KV("text-text", !isGraphPath(currentPath)) }
+					>
+						<span>Knowledge Graph</span>
+					</a>
+				}
+			</nav>
+			<div class="pt-2">
+				<div class="text-[10px] font-sans font-bold uppercase tracking-wider text-muted pb-2">
+					if lang == "id" {
+						Topik Pilihan
+					} else {
+						Explore Topics
+					}
+				</div>
+				<div class="flex flex-wrap gap-1.5 font-sans">
+					for _, tg := range []string{"software", "linux", "ai", "security", "networking", "gaming", "tools", "science"} {
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/blog/tag/" + tg) }
+							onclick="toggleMobileMenu()"
+							class="px-2.5 py-1 text-xs font-semibold bg-surface border border-border text-muted hover:text-text hover:border-text transition-colors"
+						>
+							{ "#" + tg }
+						</a>
+					}
+				</div>
+			</div>
+			<div class="pt-3 border-t border-border/40 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted font-sans font-medium">
+				<a href={ templ.SafeURL(prefix(lang) + "/about") } onclick="toggleMobileMenu()" class="hover:text-text hover:underline transition-colors">
+					if lang == "id" {
+						Tentang
+					} else {
+						About
+					}
+				</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/colophon") } onclick="toggleMobileMenu()" class="hover:text-text hover:underline transition-colors">
+					Colophon
+				</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/stats") } onclick="toggleMobileMenu()" class="hover:text-text hover:underline transition-colors">
+					if lang == "id" {
+						Statistik
+					} else {
+						Statistics
+					}
+				</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/contribute") } onclick="toggleMobileMenu()" class="hover:text-text hover:underline transition-colors">
+					Contribute
+				</a>
+			</div>
+		</div>
+		<div class="mt-auto pt-4 border-t border-border flex flex-col gap-3">
+			<div class="flex items-center justify-between gap-2.5">
+				<button
+					onclick="toggleTheme()"
+					aria-label="Toggle theme"
+					class="flex items-center justify-center gap-2 h-9 px-3 border border-border bg-surface hover:bg-hover text-xs font-sans font-semibold text-text transition-colors cursor-pointer flex-1"
+				>
+					@sunIcon()
+					@moonIcon()
+					<span class="text-xs">
+						if lang == "id" {
+							Tema
+						} else {
+							Theme
+						}
+					</span>
+				</button>
+				<a
+					href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
+					class="flex items-center justify-center gap-1.5 h-9 px-3 border border-border bg-surface hover:bg-hover text-xs font-sans font-semibold text-text transition-colors flex-1"
+					title="Switch language"
+				>
+					<span class="text-muted text-[10px] uppercase font-bold tracking-wider">Lang:</span>
+					<span class="text-xs font-bold">{ ui.Lang_Switch }</span>
+				</a>
+			</div>
+			<div class="flex items-center justify-center gap-5 text-muted pt-2">
+				<a href="https://github.com/dafagareth" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="hover:text-text transition-colors p-1">
+					@IconGitHub()
+				</a>
+				<a href="https://x.com/daemontalk" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" class="hover:text-text transition-colors p-1">
+					@IconX()
+				</a>
+				<a href="https://instagram.com/daemontalk" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-text transition-colors p-1">
+					@IconInstagram()
+				</a>
+				<a href="https://threads.net/@daemontalk" target="_blank" rel="noopener noreferrer" aria-label="Threads" class="hover:text-text transition-colors p-1">
+					@IconThreads()
+				</a>
+				<a href="mailto:realdaemontalk@gmail.com" aria-label="Email" class="hover:text-text transition-colors p-1">
+					@IconEmail()
+				</a>
+				<a href={ templ.SafeURL(prefix(lang) + "/rss.xml") } target="_blank" rel="noopener noreferrer" aria-label="RSS Feed" class="hover:text-text transition-colors p-1">
+					@IconRSS()
+				</a>
+			</div>
+		</div>
+	</div>
+}

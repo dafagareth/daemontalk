@@ -8,226 +8,210 @@ import (
 )
 
 templ topNav(ui i18n.UI, lang string, page string, currentPath string) {
-	<div id="site-header-wrapper" class="sticky top-0 z-40 w-full transition-transform duration-300 ease-in-out bg-[var(--c-nav)]">
-		<header class="bg-[var(--c-nav)] text-text transition-colors">
-			<div class="container-page py-4 sm:py-6 flex items-center justify-between gap-4 min-w-0">
-				<div class="flex items-center gap-3 min-w-0">
-					<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-						@BrandLogo("h-8 sm:h-10 md:h-11 w-auto")
-					</a>
-					if strings.Contains(currentPath, "/discussions") || strings.Contains(currentPath, "/socket") {
-						<span class="text-muted font-mono text-xs hidden sm:inline">/</span>
-						<a href={ templ.SafeURL(prefix(lang) + "/discussions") } class="text-[11px] font-mono font-bold uppercase tracking-wider text-text border border-border px-2 py-0.5 hover:text-link transition-colors shrink-0">
-							Socket
+	<div id="site-header-wrapper" class="sticky top-0 z-40 w-full shrink-0 transition-transform duration-300 ease-in-out bg-[var(--c-nav)] relative">
+		<header
+			class={
+				"bg-[var(--c-nav)] text-text transition-colors border-b border-border relative",
+				templ.KV("md:border-b-0", isHomeOrTagFilter(currentPath) || isSocketPath(currentPath) || isGraphPath(currentPath)),
+			}
+		>
+			<div class="flex md:hidden items-center justify-between px-2 sm:px-3 h-13 min-w-0">
+				<button
+					type="button"
+					onclick="toggleMobileMenu()"
+					aria-label="Open mobile navigation menu"
+					class="w-10 h-10 flex items-center justify-center text-muted hover:text-text transition-colors cursor-pointer shrink-0"
+				>
+					@IconMenu("w-5 h-5")
+				</button>
+				<div class="flex items-center justify-center shrink-0 min-w-0">
+					if isSocketPath(currentPath) {
+						<a href={ templ.SafeURL(prefix(lang) + "/socket") } class="flex items-center gap-2 hover:opacity-85 transition-opacity" aria-label="socket">
+							@BrandIcon("h-6 sm:h-7 w-auto shrink-0")
+							<span class="font-serif font-bold text-xl sm:text-2xl tracking-tight text-text leading-none">
+								socket
+							</span>
+						</a>
+					} else if isGraphPath(currentPath) {
+						<a href={ templ.SafeURL(prefix(lang) + "/graph") } class="flex items-center gap-2 hover:opacity-85 transition-opacity" aria-label="graph">
+							@BrandIcon("h-6 sm:h-7 w-auto shrink-0")
+							<span class="font-serif font-bold text-xl sm:text-2xl tracking-tight text-text leading-none">
+								graph
+							</span>
+						</a>
+					} else {
+						<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center justify-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+							@BrandLogo("h-7 sm:h-8 w-auto")
 						</a>
 					}
 				</div>
-				<div class="hidden md:flex items-center gap-3 shrink-0 flex-1 justify-end">
-					if !strings.Contains(currentPath, "/discussions") && !strings.Contains(currentPath, "/socket") {
-						<div id="nav-search-container" class="relative w-full max-w-sm lg:max-w-md">
-							<form action={ templ.SafeURL(prefix(lang) + "/search") } method="get" class="relative group w-full" onsubmit="handleNavSearchSubmit(event)">
-								<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted group-focus-within:text-link transition-colors">
-									@IconSearch("w-4 h-4")
-								</div>
-								<input
-									id="header-search-input"
-									type="search"
-									name="q"
-									placeholder="Search systems, articles..."
-									class="w-full h-10 bg-surface border border-border text-text text-sm rounded-none focus:outline-none focus:border-[var(--c-link)] pl-10 pr-12 transition-colors placeholder:text-muted"
-									autocomplete="off"
-									aria-label="Search"
-									hx-get={ string(templ.SafeURL(prefix(lang) + "/search?type=quick")) }
-									hx-trigger="input changed delay:150ms"
-									hx-target="#search-dropdown-results"
-									onkeydown="handleSearchKeyNav(event)"
-								/>
-								<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
-									<kbd class="inline-flex items-center justify-center w-6 h-6 text-[11px] font-mono border border-border bg-bg text-muted">/</kbd>
-								</div>
-							</form>
+				<a
+					href={ templ.SafeURL(prefix(lang) + "/search") }
+					aria-label="Search"
+					title={ ui.Search_Title }
+					class="w-10 h-10 flex items-center justify-center text-muted hover:text-text transition-colors cursor-pointer shrink-0"
+				>
+					@IconSearch("w-4 h-4")
+				</a>
+			</div>
+			if isHomeOrTagFilter(currentPath) {
+				<div class="hidden md:flex container-page h-18 lg:h-20 items-center justify-between gap-4 min-w-0">
+					<div class="flex-1 basis-0 min-w-0"></div>
+					<div class="flex items-center gap-3 min-w-0 justify-center shrink-0">
+						<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+							@BrandLogo("h-9 md:h-10 lg:h-11 w-auto")
+						</a>
+					</div>
+					<div class="flex-1 basis-0 min-w-0 flex items-center gap-2 shrink-0 justify-end">
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/search") }
+							aria-label="Search"
+							title={ ui.Search_Title }
+							class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover hover:border-text transition-colors cursor-pointer shrink-0"
+						>
+							@IconSearch("w-4 h-4")
+						</a>
+						<div class="flex items-center shrink-0">
 							<div
-								id="search-dropdown-popper"
-								class="hidden absolute top-full left-0 right-0 mt-1.5 z-50 bg-surface border-2 border-border shadow-2xl overflow-hidden"
-							>
-								<div id="search-dropdown-results"></div>
-							</div>
+								id="nav-auth-badge"
+								hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s", currentPath, lang))) }
+								hx-trigger="load"
+								class="shrink-0"
+							></div>
 						</div>
-					}
-					<div class="flex items-center shrink-0">
-						<div
-							id="nav-auth-badge"
-							hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s", currentPath, lang))) }
-							hx-trigger="load"
-							class="shrink-0"
-						></div>
 					</div>
 				</div>
-				<div class="flex md:hidden items-center gap-2 shrink-0">
-					if isBlogPostPath(currentPath) {
-						<button
-							type="button"
-							onclick="toggleMobileReadingModal()"
-							aria-label="Reading preferences"
-							title="Reading Preferences"
-							class="w-10 h-10 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:text-link hover:border-link transition-colors cursor-pointer shrink-0"
+			} else if isSocketPath(currentPath) {
+				<div class="hidden md:flex container-page h-18 lg:h-20 items-center justify-between gap-4 min-w-0">
+					<div class="flex-1 basis-0 min-w-0"></div>
+					<div class="flex items-center gap-3 min-w-0 justify-center shrink-0">
+						<a href={ templ.SafeURL(prefix(lang) + "/socket") } class="flex items-center gap-2.5 sm:gap-3 hover:opacity-85 transition-opacity select-none" aria-label="socket">
+							@BrandIcon("h-8 md:h-9 lg:h-10 w-auto shrink-0")
+							<span class="font-serif font-bold text-2xl md:text-3xl lg:text-4xl tracking-tight text-text leading-none">
+								socket
+							</span>
+						</a>
+					</div>
+					<div class="flex-1 basis-0 min-w-0 flex items-center gap-2 shrink-0 justify-end">
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/search") }
+							aria-label="Search"
+							title={ ui.Search_Title }
+							class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover hover:border-text transition-colors cursor-pointer shrink-0"
 						>
-							@IconTypography("w-4 h-4")
-						</button>
-					}
-					<button
-						type="button"
-						onclick="toggleMobileMenu()"
-						aria-label="Open mobile navigation menu"
-						class="w-10 h-10 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:bg-hover transition-colors cursor-pointer shrink-0"
-					>
-						@IconMenu("w-5 h-5")
-					</button>
+							@IconSearch("w-4 h-4")
+						</a>
+						<div class="flex items-center shrink-0">
+							<div
+								id="nav-auth-badge"
+								hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s", currentPath, lang))) }
+								hx-trigger="load"
+								class="shrink-0"
+							></div>
+						</div>
+					</div>
 				</div>
-			</div>
+			} else if isGraphPath(currentPath) {
+				<div class="hidden md:flex container-page h-18 lg:h-20 items-center justify-between gap-4 min-w-0">
+					<div class="flex-1 basis-0 min-w-0"></div>
+					<div class="flex items-center gap-3 min-w-0 justify-center shrink-0">
+						<a href={ templ.SafeURL(prefix(lang) + "/graph") } class="flex items-center gap-2.5 sm:gap-3 hover:opacity-85 transition-opacity select-none" aria-label="graph">
+							@BrandIcon("h-8 md:h-9 lg:h-10 w-auto shrink-0")
+							<span class="font-serif font-bold text-2xl md:text-3xl lg:text-4xl tracking-tight text-text leading-none">
+								graph
+							</span>
+						</a>
+					</div>
+					<div class="flex-1 basis-0 min-w-0 flex items-center gap-2 shrink-0 justify-end">
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/search") }
+							aria-label="Search"
+							title={ ui.Search_Title }
+							class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover hover:border-text transition-colors cursor-pointer shrink-0"
+						>
+							@IconSearch("w-4 h-4")
+						</a>
+						<div class="flex items-center shrink-0">
+							<div
+								id="nav-auth-badge"
+								hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s", currentPath, lang))) }
+								hx-trigger="load"
+								class="shrink-0"
+							></div>
+						</div>
+					</div>
+				</div>
+			} else {
+				<div class="hidden md:flex container-page h-14 items-center justify-between gap-4 min-w-0">
+					<div class="flex-1 basis-0 min-w-0 flex items-center">
+						<a href={ templ.SafeURL(prefix(lang) + "/") } class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
+							@BrandLogo("h-7 sm:h-8 w-auto")
+						</a>
+					</div>
+					if isBlogPostPath(currentPath) {
+						<div
+							id="nav-post-title"
+							class="shrink min-w-0 max-w-md lg:max-w-xl xl:max-w-2xl flex items-center justify-center opacity-0 -translate-y-1 pointer-events-none transition-all duration-300 select-none px-2"
+						>
+							<button
+								type="button"
+								onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+								class="truncate text-xs sm:text-sm font-bold text-text hover:text-link cursor-pointer transition-colors text-center inline-flex items-center justify-center leading-none py-1"
+								title={ postTitleFromPage(page) }
+							>
+								{ postTitleFromPage(page) }
+							</button>
+						</div>
+					} else {
+						<div class="shrink-0"></div>
+					}
+					<div class="flex-1 basis-0 min-w-0 flex items-center gap-2 shrink-0 justify-end">
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/search") }
+							aria-label="Search"
+							title={ ui.Search_Title }
+							class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover hover:border-text transition-colors cursor-pointer shrink-0"
+						>
+							@IconSearch("w-4 h-4")
+						</a>
+						<div class="flex items-center shrink-0">
+							<div
+								id="nav-auth-badge-compact"
+								hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s", currentPath, lang))) }
+								hx-trigger="load"
+								class="shrink-0"
+							></div>
+						</div>
+					</div>
+				</div>
+			}
+			if isBlogPostPath(currentPath) {
+				<div
+					id="reading-progress-bar"
+					class="absolute -bottom-[1px] left-0 h-[2px] bg-text opacity-30 transition-[width] duration-75 ease-out z-50 pointer-events-none"
+					style="width: 0%"
+					aria-hidden="true"
+				></div>
+			}
 		</header>
-		if !strings.Contains(currentPath, "/discussions") && !strings.Contains(currentPath, "/socket") {
-			<div class="hidden md:block border-b border-border bg-[var(--c-nav)] transition-colors">
-				<div class="container-page h-11 flex items-center justify-between gap-4 min-w-0 overflow-x-auto scrollbar-none text-xs font-mono uppercase tracking-wider font-semibold">
-					<div id="subnav-tags" class="flex items-center gap-4 sm:gap-6 shrink-0">
-						<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-text hover:text-link transition-colors">{ ui.Nav_All }</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/software") } data-tag="software" class="subnav-tag text-text hover:text-link transition-colors">Software</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/linux") } data-tag="linux" class="subnav-tag text-text hover:text-link transition-colors">Linux</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/ai") } data-tag="ai" class="subnav-tag text-text hover:text-link transition-colors">AI</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/security") } data-tag="security" class="subnav-tag text-text hover:text-link transition-colors">Security</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/networking") } data-tag="networking" class="subnav-tag text-text hover:text-link transition-colors">Network</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/gaming") } data-tag="gaming" class="subnav-tag text-text hover:text-link transition-colors">Gaming</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/tools") } data-tag="tools" class="subnav-tag text-text hover:text-link transition-colors">Tools</a>
-						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/science") } data-tag="science" class="subnav-tag text-text hover:text-link transition-colors">Science</a>
+		if isHomeOrTagFilter(currentPath) {
+			<div class="hidden md:block bg-[var(--c-nav)] transition-colors">
+				<div class="container-page h-10 flex items-center justify-center min-w-0 overflow-x-auto scrollbar-none text-xs font-sans uppercase tracking-wider font-semibold">
+					<div id="subnav-tags" class="flex items-center gap-5 sm:gap-6 lg:gap-8 shrink-0">
+						<a href={ templ.SafeURL(prefix(lang) + "/") } data-tag="" class="subnav-tag text-muted hover:text-text transition-colors">{ ui.Nav_All }</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/software") } data-tag="software" class="subnav-tag text-muted hover:text-text transition-colors">Software</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/linux") } data-tag="linux" class="subnav-tag text-muted hover:text-text transition-colors">Linux</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/ai") } data-tag="ai" class="subnav-tag text-muted hover:text-text transition-colors">AI</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/security") } data-tag="security" class="subnav-tag text-muted hover:text-text transition-colors">Security</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/networking") } data-tag="networking" class="subnav-tag text-muted hover:text-text transition-colors">Network</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/gaming") } data-tag="gaming" class="subnav-tag text-muted hover:text-text transition-colors">Gaming</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/tools") } data-tag="tools" class="subnav-tag text-muted hover:text-text transition-colors">Tools</a>
+						<a href={ templ.SafeURL(prefix(lang) + "/blog/tag/science") } data-tag="science" class="subnav-tag text-muted hover:text-text transition-colors">Science</a>
 					</div>
 				</div>
 			</div>
 		}
 	</div>
-}
-
-// mobileMenu renders a full-screen slide-in mobile navigation drawer.
-templ mobileMenu(ui i18n.UI, lang string, page string, currentPath string) {
-	<div
-		id="mobile-menu-overlay"
-		class="fixed inset-0 z-50 bg-surface flex flex-col justify-between p-6 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
-	>
-		<div class="flex items-center justify-between pb-4 mb-6">
-			<a href={ templ.SafeURL(prefix(lang) + "/") } onclick="toggleMobileMenu()" class="flex items-center shrink-0 hover:opacity-85 transition-opacity" aria-label="daemontalk">
-				@BrandLogo("h-8 sm:h-9 w-auto")
-			</a>
-			<button
-				type="button"
-				onclick="toggleMobileMenu()"
-				aria-label="Close mobile menu"
-				class="w-10 h-10 flex items-center justify-center rounded-none border border-border bg-surface text-text hover:bg-hover transition-colors cursor-pointer"
-			>
-				@IconClose("w-5 h-5")
-			</button>
-		</div>
-		<div class="flex-1 flex flex-col gap-5 py-2">
-			<div
-				id="mobile-nav-auth-badge"
-				hx-get={ string(templ.SafeURL(fmt.Sprintf("/auth/badge?path=%s&lang=%s&mode=mobile", currentPath, lang))) }
-				hx-trigger="load"
-				class="w-full"
-			></div>
-			<a
-				href={ templ.SafeURL(prefix(lang) + "/search") }
-				onclick="toggleMobileMenu()"
-				class="flex items-center gap-3 px-4 py-3 border border-border bg-bg text-muted hover:text-text rounded-none transition-colors w-full"
-			>
-				@IconSearch("w-4 h-4")
-				<span class="text-sm font-sans">Search articles...</span>
-			</a>
-			<div class="pt-2">
-				<div class="flex flex-wrap gap-2">
-					for _, tg := range []string{"software", "linux", "ai", "security", "networking", "gaming", "tools", "science"} {
-						<a
-							href={ templ.SafeURL(prefix(lang) + "/blog/tag/" + tg) }
-							onclick="toggleMobileMenu()"
-							class="text-xs font-sans px-3 py-1.5 rounded-none bg-chip hover:bg-hover text-text border border-border transition-colors uppercase"
-						>
-							{ tg }
-						</a>
-					}
-				</div>
-			</div>
-			<div class="flex flex-col gap-2 font-sans text-base font-semibold pt-2">
-				if IsRadarEnabled() {
-					<a
-						href={ templ.SafeURL(prefix(lang) + "/graph") }
-						onclick="toggleMobileMenu()"
-						class="py-3 text-text hover:text-link transition-colors"
-					>
-						<span>Systems Radar & Graph</span>
-					</a>
-				}
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/saved") }
-					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link transition-colors"
-				>
-					<span>Reading List</span>
-				</a>
-				<a
-					href={ templ.SafeURL(prefix(lang) + "/socket") }
-					onclick="toggleMobileMenu()"
-					class="py-3 text-text hover:text-link transition-colors"
-				>
-					<span>{ ui.Link_Discussions }</span>
-				</a>
-			</div>
-		</div>
-		<div class="mt-auto pt-8 flex items-center">
-			<button
-				onclick="toggleTheme()"
-				aria-label="Toggle theme"
-				class="w-10 h-10 flex items-center justify-center border border-border bg-surface text-text cursor-pointer hover:bg-hover transition-colors"
-			>
-				@sunIcon()
-				@moonIcon()
-			</button>
-			<a
-				href={ templ.SafeURL(switchLangURL(lang, currentPath)) }
-				class="w-10 h-10 flex items-center justify-center text-xs font-mono font-bold border border-border border-l-0 bg-surface text-muted hover:text-text hover:bg-hover transition-colors"
-			>
-				{ ui.Lang_Switch }
-			</a>
-		</div>
-		<div class="pt-6 pb-2 flex items-center justify-start gap-5 text-muted flex-wrap">
-			<a href="https://github.com/dafagareth" target="_blank" aria-label="GitHub" class="hover:text-text transition-colors">
-				@IconGitHub()
-			</a>
-			<a href="https://x.com/daemontalk" target="_blank" aria-label="X (Twitter)" class="hover:text-text transition-colors">
-				@IconX()
-			</a>
-			<a href="https://instagram.com/daemontalk" target="_blank" aria-label="Instagram" class="hover:text-text transition-colors">
-				@IconInstagram()
-			</a>
-			<a href="https://threads.net/@daemontalk" target="_blank" aria-label="Threads" class="hover:text-text transition-colors">
-				@IconThreads()
-			</a>
-			<a href="mailto:realdaemontalk@gmail.com" aria-label="Email" class="hover:text-text transition-colors">
-				@IconEmail()
-			</a>
-			<a href={ templ.SafeURL(prefix(lang) + "/rss.xml") } target="_blank" aria-label="RSS Feed" class="hover:text-text transition-colors">
-				@IconRSS()
-			</a>
-		</div>
-	</div>
-}
-
-templ topNavItem(href string, label string, active bool) {
-	if active {
-		<a href={ templ.SafeURL(href) } class="font-mono text-sm font-medium text-text underline underline-offset-4 decoration-[var(--c-link)]">
-			{ label }
-		</a>
-	} else {
-		<a href={ templ.SafeURL(href) } class="font-mono text-sm text-muted hover:text-text transition-colors">
-			{ label }
-		</a>
-	}
 }
 
 templ sunIcon() {
@@ -242,16 +226,30 @@ templ iconArrowLeft() {
 	@IconArrowLeft("w-3.5 h-3.5 inline-block shrink-0 stroke-[2.5]")
 }
 
-templ iconArrowRight() {
-	@IconArrowRight("w-3.5 h-3.5 inline-block shrink-0 stroke-[2.5]")
-}
-
 templ iconArrowUpRight() {
 	@IconArrowUpRight("w-3.5 h-3.5 inline-block shrink-0 stroke-[2.5]")
 }
 
+func isHomeOrTagFilter(path string) bool {
+	p := strings.TrimPrefix(path, "/id")
+	return p == "" || p == "/" || p == "/blog" || p == "/blog/" || strings.HasPrefix(p, "/blog/tag/") || p == "/search" || p == "/search/"
+}
+
+func isSocketPath(path string) bool {
+	p := strings.TrimPrefix(path, "/id")
+	return p == "/socket" || strings.HasPrefix(p, "/socket/")
+}
+
+func isGraphPath(path string) bool {
+	p := strings.TrimPrefix(path, "/id")
+	return p == "/graph" || strings.HasPrefix(p, "/graph/")
+}
+
 func isBlogPostPath(path string) bool {
-	return (strings.HasPrefix(path, "/blog/") || strings.HasPrefix(path, "/id/blog/")) &&
-		!strings.Contains(path, "/tag/") &&
-		!strings.Contains(path, "/search")
+	p := strings.TrimPrefix(path, "/id")
+	return strings.HasPrefix(p, "/blog/") && !strings.HasPrefix(p, "/blog/tag/") && p != "/blog" && p != "/blog/" && p != "/blog/posts"
+}
+
+func postTitleFromPage(page string) string {
+	return strings.TrimSuffix(page, " · daemontalk")
 }

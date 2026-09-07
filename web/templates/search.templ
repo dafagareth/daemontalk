@@ -7,7 +7,6 @@ import (
 	"daemontalk/internal/post"
 )
 
-// SearchResult wraps a post for the search results page.
 type SearchResult struct {
 	Post post.Post
 }
@@ -19,7 +18,7 @@ templ SearchPage(ui i18n.UI, query string, results []SearchResult, lang string, 
 				href={ templ.SafeURL(prefix(lang) + "/") }
 				class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors mb-3 group select-none"
 			>
-				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				@IconArrowLeft("w-3.5 h-3.5")
 				<span>
 					if lang == "id" {
 						Kembali ke Beranda
@@ -32,11 +31,11 @@ templ SearchPage(ui i18n.UI, query string, results []SearchResult, lang string, 
 				{ ui.Search_Title }
 			</h1>
 		</div>
-		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden">
-			<div class={ "border border-border sm:border-0 bg-surface p-4 sm:p-6", templ.KV("sm:border-b sm:border-border", query != "") }>
+		<div class="border-0 sm:border border-border bg-transparent sm:bg-surface font-sans overflow-hidden">
+			<div class={ "border-b border-border bg-transparent sm:bg-surface px-0 sm:px-5 py-3.5 sm:py-5", templ.KV("border-b border-border", query != "") }>
 				<form action={ templ.SafeURL(prefix(lang) + "/search") } method="get" onsubmit="event.preventDefault()">
 					<div class="flex items-center gap-3">
-						<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
+						@IconSearch("w-4 h-4 text-muted shrink-0")
 						<input
 							id="search-input"
 							type="search"
@@ -57,7 +56,7 @@ templ SearchPage(ui i18n.UI, query string, results []SearchResult, lang string, 
 								type="button"
 								onclick="clearSearchInput()"
 								aria-label="Clear search"
-								class="text-xs font-mono text-muted hover:text-text px-2 py-0.5 border border-border bg-chip hover:bg-hover transition-colors shrink-0 cursor-pointer"
+								class="text-xs font-sans font-medium text-muted hover:text-text px-2 py-0.5 border border-border bg-chip hover:bg-hover transition-colors shrink-0 cursor-pointer"
 							>
 								ESC
 							</button>
@@ -75,7 +74,7 @@ templ SearchPage(ui i18n.UI, query string, results []SearchResult, lang string, 
 templ SearchResultsList(ui i18n.UI, query string, results []SearchResult, lang string, viewCounts map[string]int) {
 	if query != "" {
 		if len(results) == 0 {
-			<div class="p-12 text-center font-mono">
+			<div class="p-12 text-center font-sans">
 				<p class="text-sm font-bold text-text mb-1">{ ui.Blog_NoResults }</p>
 				<p class="text-xs text-muted">
 					if lang == "id" {
@@ -97,22 +96,21 @@ templ SearchResultsList(ui i18n.UI, query string, results []SearchResult, lang s
 
 templ searchResultItem(ui i18n.UI, p post.Post, query string, lang string, viewCounts map[string]int) {
 	<li class="hover:bg-hover transition-colors group">
-		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="px-0 sm:px-7 py-4 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
-			<h2 class="text-sm sm:text-base font-bold text-text group-hover:text-link leading-snug transition-colors">
+		<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="px-3 sm:px-7 py-4 sm:py-5 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
+			<h2 class="text-base sm:text-lg font-bold text-text group-hover:text-link leading-snug transition-colors">
 				@templ.Raw(string(highlightHTML(p.Title, query)))
 			</h2>
-			<time datetime={ p.Date.Format("2006-01-02") } class="text-xs font-mono text-muted shrink-0">
+			<time datetime={ p.Date.Format("2006-01-02") } class="text-xs font-sans text-muted shrink-0">
 				{ fmtDate(p, lang) }
 			</time>
 		</a>
 	</li>
 }
 
-// SearchDropdownResults renders the instant flyout popper results directly under the header search bar.
 templ SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, lang string, viewCounts map[string]int) {
 	if query != "" {
 		if len(results) == 0 {
-			<div class="p-6 text-center font-mono">
+			<div class="p-6 text-center font-sans">
 				<p class="text-xs text-muted">{ ui.Blog_NoResults }</p>
 			</div>
 		} else {
@@ -125,24 +123,24 @@ templ SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, la
 							tabindex="0"
 							data-index={ fmt.Sprintf("%d", i) }
 						>
-							<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-3 mb-1">
-								<h4 class="text-sm font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors font-sans">
+							<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-3 mb-1">
+								<h4 class="text-sm sm:text-base font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors font-sans">
 									@templ.Raw(string(highlightHTML(sr.Post.Title, query)))
 								</h4>
-								<span class="text-[10px] font-mono text-muted shrink-0 mt-0.5">{ fmtDate(sr.Post, lang) }</span>
+								<span class="text-xs font-sans text-muted shrink-0 mt-0.5">{ fmtDate(sr.Post, lang) }</span>
 							</div>
 						</a>
 					}
 				}
 			</div>
-			<div class="px-3.5 py-2.5 bg-surface border-t border-border flex items-center justify-between text-[11px] font-mono text-muted">
+			<div class="px-3.5 py-2.5 bg-surface border-t border-border flex items-center justify-between text-xs font-sans text-muted">
 				<span>{ fmt.Sprintf("%d artikel ditemukan", len(results)) }</span>
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/search?q=" + query) }
 					class="font-bold text-link hover:underline inline-flex items-center gap-1 group"
 				>
 					<span>{ ui.Search_SeeAll }</span>
-					@IconArrowRight("w-3 h-3 transition-transform group-hover:translate-x-0.5")
+					@IconArrowRight("w-3 h-3")
 				</a>
 			</div>
 		}

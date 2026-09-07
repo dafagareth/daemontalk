@@ -20,10 +20,9 @@ function setTagActive(btn) {
 }
 
 function initLoadMore(btn) {
-	// HTMX handles swap
+
 }
 
-// Bookmark state: set ★/☆ on all bookmark buttons based on localStorage.
 function syncBookmarks() {
 	var bookmarks = [];
 	try { bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch(e) {}
@@ -36,7 +35,6 @@ function syncBookmarks() {
 syncBookmarks();
 document.addEventListener("htmx:afterSwap", syncBookmarks);
 
-// Live Masthead Clock
 (function() {
 	var clock = document.getElementById('masthead-clock');
 	if (clock) {
@@ -51,7 +49,6 @@ document.addEventListener("htmx:afterSwap", syncBookmarks);
 	}
 })();
 
-// Live Dispatch Ticker Slider
 (function() {
 	var cur = 0;
 	var total = 5;
@@ -90,7 +87,6 @@ document.addEventListener("htmx:afterSwap", syncBookmarks);
 	}
 })();
 
-// Portal Hero Slider Controller
 (function() {
 	var curHero = 0;
 	var heroTimer = null;
@@ -137,7 +133,6 @@ document.addEventListener("htmx:afterSwap", syncBookmarks);
 		heroContainer.addEventListener('mouseenter', function() { if (heroTimer) clearInterval(heroTimer); });
 		heroContainer.addEventListener('mouseleave', function() { startHeroTimer(); });
 
-		// Touch swipe support for mobile
 		var touchStartX = 0;
 		var touchStartY = 0;
 		heroContainer.addEventListener('touchstart', function(e) {
@@ -177,16 +172,17 @@ window.toggleBookmark = function(btn) {
 	if (idx >= 0) {
 		bookmarks.splice(idx, 1);
 		btn.textContent = "☆";
-		btn.style.color = "";
+		btn.classList.remove("text-text");
+		btn.classList.add("text-muted");
 	} else {
 		bookmarks.unshift({slug: slug, title: title, date: date});
 		btn.textContent = "★";
-		btn.style.color = "#f59e0b";
+		btn.classList.remove("text-muted");
+		btn.classList.add("text-text");
 	}
 	localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 };
 
-// Mark visited post titles with faded color
 (function() {
 	var read = [];
 	try { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}
@@ -194,12 +190,11 @@ window.toggleBookmark = function(btn) {
 	var readSet = {};
 	read.forEach(function(s) { readSet[s] = true; });
 
-	// Find all post links and mark their titles
 	document.querySelectorAll('a[href*="/blog/"]').forEach(function(a) {
 		var href = a.getAttribute('href') || '';
 		var match = href.match(/\/blog\/([^\/\?#]+)$/);
 		if (match && readSet[match[1]]) {
-			// Find heading inside this link
+
 			var heading = a.querySelector('h1, h2, h3, h4');
 			if (heading) {
 				heading.classList.add('post-visited');

@@ -14,10 +14,10 @@ templ portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []p
 					<article class="flex flex-col justify-between group py-6 px-5 sm:p-6 lg:p-7">
 						<div class="flex flex-col gap-3 sm:gap-4">
 							<div class="flex items-center justify-between gap-2">
-								<div class="text-xs font-mono font-bold uppercase tracking-widest text-accent flex items-center gap-1.5">
+								<div class="text-xs font-sans font-bold uppercase tracking-wider text-accent flex items-center gap-1.5">
 									@categoryMultiLinks(cat.Tag, lang, "hover:underline", "text-muted/60 select-none")
 								</div>
-								<span class="text-[11px] font-mono text-muted">
+								<span class="text-[11px] font-sans text-muted">
 									{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }
 								</span>
 							</div>
@@ -36,7 +36,7 @@ templ portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []p
 											{ cat.LeadPost.Description }
 										</p>
 									}
-									<div class="flex text-[10px] sm:text-xs font-mono text-muted items-center justify-between mt-auto pt-1 sm:pt-2">
+									<div class="flex text-[10px] sm:text-xs font-sans text-muted items-center justify-between mt-auto pt-1 sm:pt-2">
 										<span class="font-bold text-text">
 											if cat.LeadPost.Author != "" {
 												{ cat.LeadPost.Author }
@@ -53,11 +53,11 @@ templ portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []p
 				}
 			</div>
 			<div class="lg:col-span-4 flex flex-col bg-surface/30">
-				<div class="flex items-center justify-between px-4 py-3 border-b border-border bg-surface text-xs font-mono font-bold uppercase tracking-wider">
+				<div class="flex items-center justify-between px-4 py-3 border-b border-border bg-surface text-xs font-sans font-bold uppercase tracking-wider">
 					<div class="flex items-center gap-2 text-text">
 						<span>RECENT DISPATCHES</span>
 					</div>
-					<span class="text-[10px] text-muted font-normal uppercase font-mono tracking-wider">INDEX</span>
+					<span class="text-[10px] text-muted font-normal uppercase font-sans tracking-wider">INDEX</span>
 				</div>
 				<div class="px-5 sm:px-6 py-6 flex flex-col divide-y divide-border/40 flex-1 justify-around">
 					for _, p := range wirePosts {
@@ -67,12 +67,12 @@ templ portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []p
 									<span class="text-accent text-[10px] font-bold uppercase tracking-wider">{ p.Tags[0] }</span>
 								}
 								<span class="text-muted text-[11px]">·</span>
-								<time class="text-muted text-[11px] font-mono">{ fmtDate(p, lang) }</time>
+								<time class="text-muted text-[11px] font-sans">{ fmtDate(p, lang) }</time>
 							</div>
 							<h4 class="display text-base font-bold group-hover:text-link transition-colors leading-snug line-clamp-2 mb-1.5">
 								{ p.Title }
 							</h4>
-							<div class="text-[11px] font-mono text-muted">
+							<div class="text-[11px] font-sans text-muted">
 								{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }
 							</div>
 						</a>

@@ -1,4 +1,3 @@
-// Theme toggle (Dark / Light)
 window.toggleTheme = function() {
 	var html = document.documentElement;
 	var current = html.getAttribute("data-theme");

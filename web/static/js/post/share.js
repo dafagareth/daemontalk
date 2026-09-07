@@ -1,35 +1,74 @@
 (function() {
-    // Toggle Share Popover Menu
-    window.toggleSharePopover = function(e) {
-        if (e) e.stopPropagation();
-        var menu = document.getElementById('share-popover-menu');
+    function isMobileDevice() {
+        return (
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+            (window.matchMedia && window.matchMedia("(max-width: 768px)").matches) ||
+            ('ontouchstart' in window && window.innerWidth <= 1024)
+        );
+    }
+
+    function showShareMenu(menuId) {
+        document.querySelectorAll('[id*="more-popover-menu"], #reading-popover-menu').forEach(function(m) {
+            m.classList.add('hidden');
+        });
+        var id = menuId || 'share-popover-menu';
+        var menu = document.getElementById(id);
         if (menu) {
-            menu.classList.toggle('hidden');
+            var isClosed = menu.classList.contains('hidden');
+            document.querySelectorAll('[id*="share-popover-menu"]').forEach(function(m) {
+                m.classList.add('hidden');
+            });
+            if (isClosed) {
+                menu.classList.remove('hidden');
+            }
         }
+    }
+
+    window.toggleSharePopover = function(e, menuId) {
+        if (e) e.stopPropagation();
+
+        var info = getPostInfo();
+        if (navigator.share && isMobileDevice()) {
+            var shareData = {
+                title: info.title,
+                url: info.url
+            };
+            if (info.text) {
+                shareData.text = info.text;
+            }
+            navigator.share(shareData).catch(function(err) {
+                if (err && err.name !== 'AbortError') {
+                    showShareMenu(menuId);
+                }
+            });
+            return;
+        }
+
+        showShareMenu(menuId);
     };
 
-    // Close share popover when clicking anywhere outside
     document.addEventListener('click', function(e) {
-        var menu = document.getElementById('share-popover-menu');
-        if (menu && !menu.contains(e.target) && !e.target.closest('[onclick*="toggleSharePopover"]')) {
-            menu.classList.add('hidden');
-        }
+        document.querySelectorAll('[id*="share-popover-menu"]').forEach(function(menu) {
+            if (!menu.contains(e.target) && !e.target.closest('[onclick*="toggleSharePopover"]')) {
+                menu.classList.add('hidden');
+            }
+        });
     });
 
     function getPostInfo() {
         var title = (document.querySelector("h1") || {}).textContent || "DaemonTalk Article";
+        var descMeta = document.querySelector('meta[name="description"]');
+        var text = descMeta ? descMeta.getAttribute("content") : "";
         var url = window.location.href;
-        return { title: title.trim(), url: url };
+        return { title: title.trim(), text: text, url: url };
     }
 
-    // Copy standard URL with badge feedback
     window.copyPostUrl = function(btn, e) {
         if (e) e.stopPropagation();
         var info = getPostInfo();
         performCopy(info.url, btn);
     };
 
-    // Copy Markdown formatted link: [Title](URL)
     window.copyMarkdownLink = function(btn, e) {
         if (e) e.stopPropagation();
         var info = getPostInfo();
@@ -74,7 +113,6 @@
         document.body.removeChild(ta);
     }
 
-    // Social share triggers
     window.shareToBluesky = function(e) {
         if (e) e.stopPropagation();
         var info = getPostInfo();

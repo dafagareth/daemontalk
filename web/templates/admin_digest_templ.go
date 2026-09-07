@@ -31,20 +31,20 @@ func adminDigestTab(stats AdminStats) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"tab-digest\" class=\"hidden space-y-6\"><div class=\"flex items-center justify-between gap-4 border-b border-[var(--c-border)] pb-4\"><div><h1 class=\"text-lg font-semibold text-text\">Weekly Systems Digest Generator</h1><p class=\"text-xs text-muted mt-0.5\">Automated markdown newsletter & dispatch summary for subscribers.</p></div><button onclick=\"copyDigestMarkdown()\" id=\"copy-digest-btn\" class=\"px-3 py-1.5 bg-[var(--c-text)] text-[var(--c-bg)] text-xs font-medium hover:opacity-90 transition-opacity\">Copy Markdown</button></div><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\"><!-- Markdown Output --><div class=\"space-y-2\"><label class=\"block text-xs font-mono text-muted uppercase tracking-wider\">Raw Markdown Digest</label> <textarea id=\"digest-markdown\" readonly class=\"w-full h-[460px] p-3 text-xs font-mono bg-[var(--c-surface)] border border-[var(--c-border)] text-[var(--c-text)] resize-none focus:outline-none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"tab-digest\" class=\"hidden space-y-6\"><div class=\"flex items-center justify-between gap-4 border-b border-[var(--c-border)] pb-4\"><div><h1 class=\"text-lg font-semibold text-text\">Weekly Systems Digest Generator</h1><p class=\"text-xs text-muted mt-0.5\">Automated markdown newsletter & dispatch summary for subscribers.</p></div><button onclick=\"copyDigestMarkdown()\" id=\"copy-digest-btn\" class=\"px-3 py-1.5 bg-[var(--c-text)] text-[var(--c-bg)] text-xs font-medium hover:opacity-90 transition-opacity\">Copy Markdown</button></div><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6\"><div class=\"space-y-2\"><label class=\"block text-xs font-mono text-muted uppercase tracking-wider\">Raw Markdown Digest</label> <textarea id=\"digest-markdown\" readonly class=\"w-full h-[460px] p-3 text-xs font-mono bg-[var(--c-surface)] border border-[var(--c-border)] text-[var(--c-text)] resize-none focus:outline-none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(generateDigestText(stats.Posts))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 20, Col: 230}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 19, Col: 230}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</textarea></div><!-- Live Visual Preview --><div class=\"space-y-2\"><label class=\"block text-xs font-mono text-muted uppercase tracking-wider\">Digest Live Breakdown</label><div class=\"h-[460px] p-4 bg-[var(--c-surface)] border border-[var(--c-border)] overflow-y-auto space-y-4 text-xs\"><div class=\"border-b border-[var(--c-border)] pb-3\"><span class=\"text-[11px] font-mono text-[var(--c-muted)]\">daemontalk Weekly Issue</span><h3 class=\"text-base font-sans font-bold text-[var(--c-text)] mt-1\">Systems & Tech Dispatch</h3></div><div class=\"space-y-3\"><span class=\"font-mono text-muted uppercase tracking-wider text-[11px] block\">Dispatches Included:</span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</textarea></div><div class=\"space-y-2\"><label class=\"block text-xs font-mono text-muted uppercase tracking-wider\">Digest Live Breakdown</label><div class=\"h-[460px] p-4 bg-[var(--c-surface)] border border-[var(--c-border)] overflow-y-auto space-y-4 text-xs\"><div class=\"border-b border-[var(--c-border)] pb-3\"><span class=\"text-[11px] font-mono text-[var(--c-muted)]\">daemontalk Weekly Issue</span><h3 class=\"text-base font-sans font-bold text-[var(--c-text)] mt-1\">Systems & Tech Dispatch</h3></div><div class=\"space-y-3\"><span class=\"font-mono text-muted uppercase tracking-wider text-[11px] block\">Dispatches Included:</span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -57,7 +57,7 @@ func adminDigestTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 35, Col: 77}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 33, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -70,7 +70,7 @@ func adminDigestTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(p.Date.Format("02 Jan 2006"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 36, Col: 82}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 34, Col: 82}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -83,7 +83,7 @@ func adminDigestTab(stats AdminStats) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d min", p.ReadTime))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 36, Col: 123}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_digest.templ`, Line: 34, Col: 123}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {

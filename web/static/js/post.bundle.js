@@ -1,5 +1,5 @@
 (function() {
-    // Clipboard helper: falls back to execCommand for HTTP (non-secure) contexts
+
     window.copyText = function(text, done) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(done).catch(function() { fallback(text, done); });
@@ -17,13 +17,13 @@
         document.body.removeChild(ta);
     }
 })();
-// Bookmark toggle (supports SVG icons & text state)
 (function() {
     function updateBookmarkBtnUI(btn, isSaved) {
         var icon = btn.querySelector('.bookmark-icon');
         var text = btn.querySelector('.bookmark-text');
         if (isSaved) {
-            btn.classList.add("bg-accent/15", "text-accent", "border-accent");
+            btn.classList.add("is-saved", "bg-hover", "text-text", "font-bold");
+            btn.classList.remove("border-text/70", "bg-accent/15", "text-accent", "border-accent");
             if (icon) {
                 icon.setAttribute("fill", "currentColor");
             }
@@ -32,7 +32,7 @@
                 text.textContent = lang === "id" ? "Tersimpan" : "Saved";
             }
         } else {
-            btn.classList.remove("bg-accent/15", "text-accent", "border-accent");
+            btn.classList.remove("is-saved", "bg-hover", "text-text", "border-text/70", "font-bold", "bg-accent/15", "text-accent", "border-accent");
             if (icon) {
                 icon.setAttribute("fill", "none");
             }
@@ -43,20 +43,22 @@
         }
         if (!icon && !text) {
             btn.textContent = isSaved ? "★" : "☆";
-            if (isSaved) btn.classList.add("text-accent");
-            else btn.classList.remove("text-accent");
+            if (isSaved) btn.classList.add("text-text");
+            else btn.classList.remove("text-text", "text-accent");
         }
     }
 
-    var bookmarks = [];
-    try { bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch(e) {}
-    var saved = {};
-    bookmarks.forEach(function(b) { saved[b.slug] = true; });
-    document.querySelectorAll(".bookmark-btn").forEach(function(btn) {
-        if (saved[btn.dataset.slug]) {
-            updateBookmarkBtnUI(btn, true);
-        }
-    });
+    function syncPostBookmarks() {
+        var bookmarks = [];
+        try { bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch(e) {}
+        var saved = {};
+        bookmarks.forEach(function(b) { saved[b.slug] = true; });
+        document.querySelectorAll(".bookmark-btn").forEach(function(btn) {
+            updateBookmarkBtnUI(btn, !!saved[btn.dataset.slug]);
+        });
+    }
+    syncPostBookmarks();
+    document.addEventListener("htmx:afterSwap", syncPostBookmarks);
 
     window.toggleBookmark = function(btn) {
         var slug = btn.dataset.slug;
@@ -75,94 +77,140 @@
         }
         localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 
-        // Update all buttons for this slug
         document.querySelectorAll('.bookmark-btn[data-slug="' + slug + '"]').forEach(function(el) {
             updateBookmarkBtnUI(el, isNowSaved);
         });
     };
 })();
 (function() {
-    // 1. Font Size Adjuster (A- / A+)
-    var SIZES = [13, 14, 15, 16, 17, 18, 20];
-    var DEFAULT = 3;
-    function applySize(idx) {
+
+    var SCALES = [
+        { mobile: 15,   desktop: 17.5 },
+        { mobile: 17,   desktop: 19.5 },
+        { mobile: 19.5, desktop: 22   }
+    ];
+    var DEFAULT_STEP = 1;
+
+    function applySizeStep(step) {
+        var idx = Math.max(0, Math.min(SCALES.length - 1, parseInt(step) || 0));
+        var scale = SCALES[idx];
+
+        document.documentElement.style.setProperty("--prose-size-mobile", scale.mobile + "px");
+        document.documentElement.style.setProperty("--prose-size-desktop", scale.desktop + "px");
+
         var el = document.getElementById("prose-body");
         if (el) {
-            el.style.fontSize = SIZES[idx] + "px";
-            document.documentElement.style.setProperty("--prose-size", SIZES[idx] + "px");
+            el.style.fontSize = "";
         }
+
+        var sliders = document.querySelectorAll(".text-size-slider");
+        sliders.forEach(function(s) {
+            s.value = idx;
+        });
+
+        var stepLabels = document.querySelectorAll("[data-size-step]");
+        stepLabels.forEach(function(l) {
+            var sVal = parseInt(l.getAttribute("data-size-step"));
+            if (sVal === idx) {
+                l.classList.add("text-text", "font-bold");
+                l.classList.remove("text-muted");
+            } else {
+                l.classList.remove("text-text", "font-bold");
+                l.classList.add("text-muted");
+            }
+        });
     }
+
+    window.setTextSizeIndex = function(step) {
+        var idx = Math.max(0, Math.min(SCALES.length - 1, parseInt(step) || 0));
+        localStorage.setItem("prose-size-step", idx);
+        applySizeStep(idx);
+    };
+
     window.adjustProseSize = function(dir) {
-        var idx = parseInt(localStorage.getItem("prose-size"));
-        if (isNaN(idx)) idx = DEFAULT;
-        idx = Math.max(0, Math.min(SIZES.length - 1, idx + dir));
-        localStorage.setItem("prose-size", idx);
-        applySize(idx);
+        var current = parseInt(localStorage.getItem("prose-size-step"));
+        if (isNaN(current)) current = DEFAULT_STEP;
+        window.setTextSizeIndex(current + dir);
     };
-    var savedSize = parseInt(localStorage.getItem("prose-size"));
-    if (!isNaN(savedSize)) applySize(savedSize);
 
-    // 2. Serif / Sans Font Toggle (Default: Serif, No Orange Highlight)
-    function applySerif(isSerif) {
-        var el = document.getElementById("prose-body");
-        var labelDesktop = document.getElementById("serif-toggle-label");
-        var labelModal = document.getElementById("serif-toggle-label-modal");
-        if (!el) return;
-        if (isSerif) {
-            el.classList.add("prose-serif");
-            el.classList.remove("prose-sans");
-            if (labelDesktop) labelDesktop.textContent = "Serif";
-            if (labelModal) labelModal.textContent = "Serif";
-        } else {
-            el.classList.remove("prose-serif");
-            el.classList.add("prose-sans");
-            if (labelDesktop) labelDesktop.textContent = "Sans";
-            if (labelModal) labelModal.textContent = "Sans";
-        }
+    var savedStep = parseInt(localStorage.getItem("prose-size-step"));
+    if (isNaN(savedStep) || savedStep < 0 || savedStep >= SCALES.length) {
+        savedStep = DEFAULT_STEP;
     }
+    applySizeStep(savedStep);
 
-    window.toggleSerif = function() {
-        var el = document.getElementById("prose-body");
-        var currentIsSerif = el ? !el.classList.contains("prose-sans") : true;
-        var nextIsSerif = !currentIsSerif;
-        localStorage.setItem("prose-serif", nextIsSerif ? "1" : "0");
-        applySerif(nextIsSerif);
+    window.toggleReadingPopover = function(e) {
+        if (e) e.stopPropagation();
+        document.querySelectorAll('[id*="share-popover-menu"], [id*="more-popover-menu"]').forEach(function(m) {
+            m.classList.add('hidden');
+        });
+        var pop = document.getElementById('reading-popover-menu');
+        if (pop) {
+            pop.classList.toggle('hidden');
+        }
     };
 
-    // Initialize state on page load: default to Serif (unless explicitly set to "0" for Sans)
-    var savedSerif = localStorage.getItem("prose-serif");
-    applySerif(savedSerif !== "0");
-
-    // 3. Zen / Focus Mode (Shortcut: Z - Desktop only)
-    document.addEventListener("keydown", function(e) {
-        // Abaikan jika user sedang mengetik di input/textarea
-        if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-        
-        if (e.key === 'z' || e.key === 'Z') {
-            document.body.classList.toggle('zen-mode');
+    document.addEventListener('click', function(e) {
+        var pop = document.getElementById('reading-popover-menu');
+        if (pop && !pop.classList.contains('hidden')) {
+            if (!pop.contains(e.target) && !e.target.closest('[onclick*="toggleReadingPopover"]')) {
+                pop.classList.add('hidden');
+            }
         }
     });
 
-    // 4. Copy BibTeX Citation
+    window.toggleMorePopover = function(e, menuId) {
+        if (e) e.stopPropagation();
+        document.querySelectorAll('[id*="share-popover-menu"], #reading-popover-menu').forEach(function(m) {
+            m.classList.add('hidden');
+        });
+        var id = menuId || 'header-more-popover-menu';
+        var pop = document.getElementById(id);
+        if (pop) {
+            var isClosed = pop.classList.contains('hidden');
+            document.querySelectorAll('[id*="more-popover-menu"]').forEach(function(p) {
+                p.classList.add('hidden');
+            });
+            if (isClosed) {
+                pop.classList.remove('hidden');
+            }
+        }
+    };
+
+    document.addEventListener('click', function(e) {
+        document.querySelectorAll('[id*="more-popover-menu"]').forEach(function(pop) {
+            if (!pop.contains(e.target) && !e.target.closest('[onclick*="toggleMorePopover"]')) {
+                pop.classList.add('hidden');
+            }
+        });
+    });
+
     window.copyBibtex = function(btn) {
         var bibtex = btn.getAttribute('data-bibtex');
         if (!bibtex) return;
-        
+
         navigator.clipboard.writeText(bibtex).then(function() {
-            var originalHTML = btn.innerHTML;
-            btn.innerHTML = '<span class="font-mono font-bold tracking-widest">[✓]</span><span>Copied</span>';
-            btn.classList.add('!text-[var(--c-link)]');
-            
-            setTimeout(function() {
-                btn.innerHTML = originalHTML;
-                btn.classList.remove('!text-[var(--c-link)]');
-            }, 2000);
+            var status = btn.querySelector('.bibtex-copied-status');
+            if (status) {
+                status.classList.remove('hidden');
+                setTimeout(function() {
+                    status.classList.add('hidden');
+                }, 2000);
+            } else {
+                var originalHTML = btn.innerHTML;
+                btn.innerHTML = '<span class="font-serif font-bold text-sm text-accent">✓</span>';
+                btn.classList.add('text-accent');
+
+                setTimeout(function() {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('text-accent');
+                }, 2000);
+            }
         }).catch(function(err) {
             console.error('Failed to copy bibtex: ', err);
         });
     };
 
-    // 5. Mobile Center Reading Modal
     window.toggleMobileReadingModal = function() {
         var modal = document.getElementById("mobile-reading-modal-overlay");
         if (!modal) return;
@@ -186,7 +234,7 @@
     });
 })();
 (function() {
-    // Enhanced Code block wrapper: adds language badges and copy button.
+
     document.querySelectorAll("#prose-body pre").forEach(function(pre) {
         if (pre.closest(".code-tabs-wrap") || pre.closest(".code-output-wrap")) return;
         var wrap = document.createElement("div");
@@ -197,7 +245,6 @@
         var codeEl = pre.querySelector("code");
         var codeText = codeEl ? codeEl.innerText : pre.innerText;
 
-        // Detect language from class or content
         var lang = "";
         var classNames = (pre.className + " " + (codeEl ? codeEl.className : "")).toLowerCase();
         var langMatch = classNames.match(/language-([a-z0-9_-]+)/) || classNames.match(/lang-([a-z0-9_-]+)/);
@@ -215,17 +262,14 @@
             lang = "bash";
         }
 
-        // Detect diagram / architecture schematics
         var isDiagram = codeText.indexOf("┌") >= 0 || codeText.indexOf("┼") >= 0 || codeText.indexOf("-->") >= 0 || codeText.indexOf("──►") >= 0 || codeText.indexOf("flowchart") >= 0 || codeText.indexOf("graph TD") >= 0 || lang === "mermaid" || lang === "diagram";
         if (isDiagram && !lang) {
             lang = "diagram";
         }
 
-        // Create action toolbar
         var toolbar = document.createElement("div");
         toolbar.className = "code-toolbar";
 
-        // Language or Diagram badge
         if (lang) {
             var badge = document.createElement("span");
             badge.className = "code-lang-badge" + (isDiagram ? " text-link font-bold" : "");
@@ -233,7 +277,6 @@
             toolbar.appendChild(badge);
         }
 
-        // Interactive Diagram Zoom/Focus Toggle
         if (isDiagram) {
             var zoomBtn = document.createElement("button");
             zoomBtn.textContent = "expand";
@@ -254,7 +297,6 @@
             toolbar.appendChild(zoomBtn);
         }
 
-        // Copy button
         var copyBtn = document.createElement("button");
         copyBtn.textContent = "copy";
         copyBtn.className = "copy-btn";
@@ -278,7 +320,6 @@
         wrap.appendChild(toolbar);
     });
 
-    // Code Line & Diff Highlighting Post-processor
     document.querySelectorAll("#prose-body pre code").forEach(function(block) {
         if (block.dataset.hlProcessed) return;
         block.dataset.hlProcessed = "true";
@@ -306,37 +347,76 @@
     });
 })();
 (function() {
-    // Toggle Share Popover Menu
-    window.toggleSharePopover = function(e) {
-        if (e) e.stopPropagation();
-        var menu = document.getElementById('share-popover-menu');
+    function isMobileDevice() {
+        return (
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+            (window.matchMedia && window.matchMedia("(max-width: 768px)").matches) ||
+            ('ontouchstart' in window && window.innerWidth <= 1024)
+        );
+    }
+
+    function showShareMenu(menuId) {
+        document.querySelectorAll('[id*="more-popover-menu"], #reading-popover-menu').forEach(function(m) {
+            m.classList.add('hidden');
+        });
+        var id = menuId || 'share-popover-menu';
+        var menu = document.getElementById(id);
         if (menu) {
-            menu.classList.toggle('hidden');
+            var isClosed = menu.classList.contains('hidden');
+            document.querySelectorAll('[id*="share-popover-menu"]').forEach(function(m) {
+                m.classList.add('hidden');
+            });
+            if (isClosed) {
+                menu.classList.remove('hidden');
+            }
         }
+    }
+
+    window.toggleSharePopover = function(e, menuId) {
+        if (e) e.stopPropagation();
+
+        var info = getPostInfo();
+        if (navigator.share && isMobileDevice()) {
+            var shareData = {
+                title: info.title,
+                url: info.url
+            };
+            if (info.text) {
+                shareData.text = info.text;
+            }
+            navigator.share(shareData).catch(function(err) {
+                if (err && err.name !== 'AbortError') {
+                    showShareMenu(menuId);
+                }
+            });
+            return;
+        }
+
+        showShareMenu(menuId);
     };
 
-    // Close share popover when clicking anywhere outside
     document.addEventListener('click', function(e) {
-        var menu = document.getElementById('share-popover-menu');
-        if (menu && !menu.contains(e.target) && !e.target.closest('[onclick*="toggleSharePopover"]')) {
-            menu.classList.add('hidden');
-        }
+        document.querySelectorAll('[id*="share-popover-menu"]').forEach(function(menu) {
+            if (!menu.contains(e.target) && !e.target.closest('[onclick*="toggleSharePopover"]')) {
+                menu.classList.add('hidden');
+            }
+        });
     });
 
     function getPostInfo() {
         var title = (document.querySelector("h1") || {}).textContent || "DaemonTalk Article";
+        var descMeta = document.querySelector('meta[name="description"]');
+        var text = descMeta ? descMeta.getAttribute("content") : "";
         var url = window.location.href;
-        return { title: title.trim(), url: url };
+        return { title: title.trim(), text: text, url: url };
     }
 
-    // Copy standard URL with badge feedback
     window.copyPostUrl = function(btn, e) {
         if (e) e.stopPropagation();
         var info = getPostInfo();
         performCopy(info.url, btn);
     };
 
-    // Copy Markdown formatted link: [Title](URL)
     window.copyMarkdownLink = function(btn, e) {
         if (e) e.stopPropagation();
         var info = getPostInfo();
@@ -381,7 +461,6 @@
         document.body.removeChild(ta);
     }
 
-    // Social share triggers
     window.shareToBluesky = function(e) {
         if (e) e.stopPropagation();
         var info = getPostInfo();
@@ -407,21 +486,42 @@
     };
 })();
 (function() {
-    // ToC: highlight active section
+
     var tocLinks = document.querySelectorAll(".toc-link");
     if (tocLinks.length > 0) {
-        var headings = Array.from(tocLinks).map(function(a) {
-            return document.getElementById(a.getAttribute("href").slice(1));
-        }).filter(Boolean);
-        function setActive() {
-            var scrollY = window.scrollY + 100;
-            var active = headings[0];
-            for (var i = 0; i < headings.length; i++) {
-                if (headings[i].offsetTop <= scrollY) active = headings[i];
+        var headings = [];
+        var seenIds = new Set();
+        tocLinks.forEach(function(a) {
+            var href = a.getAttribute("href");
+            if (href && href.startsWith("#")) {
+                var id = href.slice(1);
+                if (!seenIds.has(id)) {
+                    seenIds.add(id);
+                    var el = document.getElementById(id);
+                    if (el) headings.push(el);
+                }
             }
+        });
+
+        function setActive() {
+            var navOffset = 120;
+            var active = null;
+
+            var isAtBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60);
+            if (isAtBottom && headings.length > 0) {
+                active = headings[headings.length - 1];
+            } else {
+                for (var i = 0; i < headings.length; i++) {
+                    var rect = headings[i].getBoundingClientRect();
+                    if (rect.top <= navOffset) {
+                        active = headings[i];
+                    }
+                }
+            }
+
             tocLinks.forEach(function(a) {
                 var isActive = active && a.getAttribute("href") === "#" + active.id;
-                a.classList.toggle("toc-active", isActive);
+                a.classList.toggle("toc-active", !!isActive);
             });
         }
         tocLinks.forEach(function(a) {
@@ -442,7 +542,6 @@
         setActive();
     }
 
-    // Mobile ToC chevron
     var details = document.querySelector("details");
     if (details) {
         details.addEventListener("toggle", function() {
@@ -452,7 +551,7 @@
     }
 })();
 (function() {
-    // Interactive task lists / checklists with local persistence
+
     var path = window.location.pathname;
     var match = path.match(/\/blog\/([^\/]+)$/);
     var postSlug = match ? match[1] : (window.location.pathname.split("/").filter(Boolean).pop() || "default");
@@ -477,7 +576,6 @@
             if (parentUl) parentUl.style.listStyle = "none";
         }
 
-        // Restore saved state
         if (state[idx]) {
             cb.checked = true;
             if (parentLi) parentLi.classList.add("task-checked");
@@ -496,7 +594,6 @@
     });
 })();
 (function() {
-    // Interactive Footnotes Popover Preview
     var activePopover = null;
 
     function removePopover() {
@@ -576,14 +673,13 @@
     });
 })();
 (function() {
-    // Multi-File Code Tabs Interactive Switching & Touch/Drag Swiping
+
     document.querySelectorAll("[data-code-tabs]").forEach(function(wrap) {
         var navTrack = wrap.querySelector(".tabs-nav-track");
         var buttons = wrap.querySelectorAll(".tab-btn");
         var panes = wrap.querySelectorAll(".tab-pane");
         var copyBtn = wrap.querySelector(".copy-tab-code");
 
-        // Mouse drag-to-scroll for horizontal tabs header
         if (navTrack) {
             var isDown = false;
             var startX, scrollLeft;
@@ -607,7 +703,6 @@
                 navTrack.scrollLeft = scrollLeft - walk;
             });
 
-            // Touch swipe for mobile
             var touchStartX;
             navTrack.addEventListener("touchstart", function(e) {
                 touchStartX = e.touches[0].pageX;
@@ -666,7 +761,6 @@
         });
     });
 })();
-// Mark post as read in localStorage
 (function() {
     var path = window.location.pathname;
     var match = path.match(/\/blog\/([^\/]+)$/);
@@ -676,341 +770,70 @@
         try { read = JSON.parse(localStorage.getItem('readPosts') || '[]'); } catch(e) {}
         if (read.indexOf(slug) === -1) {
             read.push(slug);
-            // Keep only the last 200 entries
+
             if (read.length > 200) read = read.slice(-200);
             localStorage.setItem('readPosts', JSON.stringify(read));
         }
     }
 })();
-(function() {
-    // Image Lightbox / Full Photo Viewer for Articles & Carousels
-    var lightbox = null;
-    var imgEl = null;
-    var captionEl = null;
-    var counterEl = null;
-    var bottomCountEl = null;
-    var bottomBarEl = null;
-    var prevBtn = null;
-    var nextBtn = null;
-
-    var galleryItems = [];
-    var currentIndex = 0;
-
-    function createLightbox() {
-        if (lightbox) return;
-
-        lightbox = document.createElement("div");
-        lightbox.className = "lightbox-overlay";
-        lightbox.innerHTML = `
-            <div class="lightbox-backdrop"></div>
-            <div class="lightbox-toolbar">
-                <div class="lightbox-caption"></div>
-                <div class="lightbox-actions">
-                    <span class="lightbox-counter"></span>
-                    <button type="button" class="lightbox-close" aria-label="Close photo viewer">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <button type="button" class="lightbox-nav-btn lightbox-prev" aria-label="Previous photo">
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-
-            <div class="lightbox-content">
-                <img class="lightbox-img" src="" alt="" />
-            </div>
-
-            <button type="button" class="lightbox-nav-btn lightbox-next" aria-label="Next photo">
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-
-            <div class="lightbox-bottom-bar">
-                <button type="button" class="lightbox-bottom-btn lightbox-bottom-prev" aria-label="Previous slide">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                    <span>PREV</span>
-                </button>
-                <span class="lightbox-bottom-count"></span>
-                <button type="button" class="lightbox-bottom-btn lightbox-bottom-next" aria-label="Next slide">
-                    <span>NEXT</span>
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-            </div>
-        `;
-        document.body.appendChild(lightbox);
-
-        imgEl = lightbox.querySelector(".lightbox-img");
-        captionEl = lightbox.querySelector(".lightbox-caption");
-        counterEl = lightbox.querySelector(".lightbox-counter");
-        bottomCountEl = lightbox.querySelector(".lightbox-bottom-count");
-        bottomBarEl = lightbox.querySelector(".lightbox-bottom-bar");
-
-        prevBtn = lightbox.querySelector(".lightbox-prev");
-        nextBtn = lightbox.querySelector(".lightbox-next");
-        var bPrevBtn = lightbox.querySelector(".lightbox-bottom-prev");
-        var bNextBtn = lightbox.querySelector(".lightbox-bottom-next");
-
-        // Click event listeners
-        lightbox.querySelector(".lightbox-close").addEventListener("click", closeLightbox);
-        lightbox.querySelector(".lightbox-backdrop").addEventListener("click", closeLightbox);
-
-        prevBtn.addEventListener("click", prevPhoto);
-        nextBtn.addEventListener("click", nextPhoto);
-        bPrevBtn.addEventListener("click", prevPhoto);
-        bNextBtn.addEventListener("click", nextPhoto);
-
-        lightbox.querySelector(".lightbox-content").addEventListener("click", function(e) {
-            if (e.target === this) {
-                closeLightbox();
-            }
-        });
-
-        // Touch swipe support on mobile
-        var touchStartX = 0;
-        var touchStartY = 0;
-        var contentEl = lightbox.querySelector(".lightbox-content");
-
-        contentEl.addEventListener("touchstart", function(e) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        contentEl.addEventListener("touchend", function(e) {
-            if (!touchStartX || !touchStartY) return;
-            var diffX = e.changedTouches[0].clientX - touchStartX;
-            var diffY = e.changedTouches[0].clientY - touchStartY;
-
-            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
-                if (diffX > 0) {
-                    prevPhoto();
-                } else {
-                    nextPhoto();
-                }
-            } else if (Math.abs(diffY) > 80 && Math.abs(diffY) > Math.abs(diffX)) {
-                closeLightbox();
-            }
-
-            touchStartX = 0;
-            touchStartY = 0;
-        }, { passive: true });
-
-        // Keyboard controls
-        document.addEventListener("keydown", function(e) {
-            if (!lightbox || !lightbox.classList.contains("open")) return;
-            if (e.key === "Escape") {
-                closeLightbox();
-            } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
-                prevPhoto();
-            } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
-                nextPhoto();
-            }
-        });
-    }
-
-    function renderActivePhoto() {
-        if (!galleryItems.length || currentIndex < 0 || currentIndex >= galleryItems.length) return;
-
-        var item = galleryItems[currentIndex];
-        imgEl.style.opacity = "0.4";
-        imgEl.style.transform = "scale(0.96)";
-
-        setTimeout(function() {
-            imgEl.src = item.src;
-            imgEl.alt = item.alt || "";
-
-            if (item.caption) {
-                captionEl.textContent = item.caption;
-                captionEl.style.display = "block";
-            } else {
-                captionEl.textContent = "";
-                captionEl.style.display = "none";
-            }
-
-            var showNav = galleryItems.length > 1;
-            var countStr = showNav ? ((currentIndex + 1) + " / " + galleryItems.length) : "";
-            counterEl.textContent = countStr;
-            counterEl.style.display = showNav ? "block" : "none";
-            bottomCountEl.textContent = countStr;
-
-            prevBtn.style.display = showNav ? "flex" : "none";
-            nextBtn.style.display = showNav ? "flex" : "none";
-            bottomBarEl.style.display = showNav ? "flex" : "none";
-
-            imgEl.style.opacity = "1";
-            imgEl.style.transform = "scale(1)";
-        }, 80);
-    }
-
-    function nextPhoto() {
-        if (galleryItems.length <= 1) return;
-        currentIndex = (currentIndex + 1) % galleryItems.length;
-        renderActivePhoto();
-    }
-
-    function prevPhoto() {
-        if (galleryItems.length <= 1) return;
-        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
-        renderActivePhoto();
-    }
-
-    function openGallery(items, startIdx) {
-        createLightbox();
-        galleryItems = items;
-        currentIndex = startIdx || 0;
-
-        renderActivePhoto();
-        lightbox.classList.add("open");
-        document.body.style.overflow = "hidden";
-    }
-
-    function closeLightbox() {
-        if (!lightbox) return;
-        lightbox.classList.remove("open");
-        document.body.style.overflow = "";
-        setTimeout(function() {
-            if (imgEl && !lightbox.classList.contains("open")) {
-                imgEl.src = "";
-            }
-        }, 250);
-    }
-
-    function initLightbox() {
-        // Collect all images in articles, covers, galleries, and carousels
-        var containerSelectors = [
-            ".post-carousel-wrap",
-            ".post-gallery-wrap",
-            "figure",
-            ".post-cover",
-            "#prose-body"
-        ];
-
-        // Also bind standalone cover & content images
-        var images = document.querySelectorAll("#prose-body img, .post-cover img, figure img, .post-gallery-wrap img, .post-carousel-wrap img, article header img");
-
-        images.forEach(function(img) {
-            if (img.dataset.lightboxBound) return;
-            img.dataset.lightboxBound = "true";
-            img.classList.add("lightbox-trigger");
-
-            img.addEventListener("click", function(e) {
-                var parentLink = img.closest("a");
-                if (parentLink && parentLink.href && !parentLink.href.match(/\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i)) {
-                    return; // Standard web links navigate normally
-                }
-
-                e.preventDefault();
-
-                // Determine gallery scope: ONLY carousel or gallery containers
-                var carouselScope = img.closest(".post-carousel-wrap") || img.closest(".post-gallery-wrap");
-                var scopeImages = [];
-
-                if (carouselScope) {
-                    scopeImages = Array.from(carouselScope.querySelectorAll("img")).filter(function(i) {
-                        return i.src && !i.closest(".post-author-card") && !i.closest(".no-lightbox");
-                    });
-                }
-
-                if (!scopeImages.length) {
-                    scopeImages = [img];
-                }
-
-                var items = scopeImages.map(function(i) {
-                    var cap = "";
-                    var fig = i.closest("figure");
-                    if (fig) {
-                        var fc = fig.querySelector("figcaption");
-                        if (fc) cap = fc.innerText;
-                    }
-                    if (!cap && i.alt) cap = i.alt;
-                    if (!cap && i.title) cap = i.title;
-
-                    var pLink = i.closest("a");
-                    var src = (pLink && pLink.href && pLink.href.match(/\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i)) ? pLink.href : i.src;
-                    return { src: src, alt: i.alt || "", caption: cap };
-                });
-
-                var activeIndex = scopeImages.indexOf(img);
-                if (activeIndex < 0) activeIndex = 0;
-
-                openGallery(items, activeIndex);
-            });
-        });
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initLightbox);
-    } else {
-        initLightbox();
-    }
-
-    document.addEventListener("htmx:afterSwap", initLightbox);
-})();
 document.addEventListener('DOMContentLoaded', () => {
     const wikiLinks = document.querySelectorAll('.prose a[href*="wikipedia.org/wiki/"]');
     if (wikiLinks.length === 0) return;
 
-    const tooltip = document.createElement('div');
-    tooltip.className = 'wiki-tooltip';
-    document.body.appendChild(tooltip);
+    const wikiCache = new Map();
 
-    let hoverTimeout;
-    let currentLink = null;
+    async function getWikiSummary(lang, title) {
+        const safeTitle = encodeURIComponent(decodeURIComponent(title));
+        const key = `${lang}:${safeTitle}`;
+        if (wikiCache.has(key)) return wikiCache.get(key);
 
-    wikiLinks.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            clearTimeout(hoverTimeout);
-            currentLink = link;
+        const apiUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${safeTitle}?redirect=true`;
 
-            const url = new URL(link.href);
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        wikiCache.set(key, data);
+        return data;
+    }
+
+    function parseWikiUrl(href) {
+        try {
+            const url = new URL(href);
             const langMatch = url.hostname.match(/^([a-z\-]+)\.wikipedia\.org/);
             const lang = langMatch ? langMatch[1] : 'en';
-            const title = url.pathname.split('/wiki/')[1];
-            
-            if (!title) return;
-
-            hoverTimeout = setTimeout(() => {
-                showLoading(link);
-                fetchWikiData(lang, title, link);
-            }, 300);
-        });
-
-        link.addEventListener('mouseleave', () => {
-            clearTimeout(hoverTimeout);
-            if (currentLink === link) {
-                hoverTimeout = setTimeout(hideTooltip, 300);
-            }
-        });
-    });
-
-    tooltip.addEventListener('mouseenter', () => clearTimeout(hoverTimeout));
-    tooltip.addEventListener('mouseleave', () => {
-        hoverTimeout = setTimeout(hideTooltip, 300);
-    });
-
-    function showLoading(targetEl) {
-        positionTooltip(targetEl);
-        tooltip.innerHTML = '<div class="wiki-loading">Memuat dari Wikipedia...</div>';
-        tooltip.classList.add('visible');
+            const parts = url.pathname.split('/wiki/');
+            if (parts.length < 2 || !parts[1]) return null;
+            return { lang, title: parts[1], href: url.href };
+        } catch {
+            return null;
+        }
     }
 
-    function hideTooltip() {
-        tooltip.classList.remove('visible');
+    function isMobileOrTouch() {
+        return window.innerWidth < 768 || window.matchMedia('(hover: none)').matches || window.matchMedia('(pointer: coarse)').matches;
     }
 
-    function positionTooltip(targetEl) {
+    const desktopTooltip = document.createElement('div');
+    desktopTooltip.className = 'wiki-tooltip';
+    document.body.appendChild(desktopTooltip);
+
+    let hoverTimeout;
+    let currentDesktopLink = null;
+
+    function showDesktopLoading(targetEl) {
+        positionDesktopTooltip(targetEl);
+        desktopTooltip.innerHTML = '<div class="wiki-loading">Memuat dari Wikipedia...</div>';
+        desktopTooltip.classList.add('visible');
+    }
+
+    function hideDesktopTooltip() {
+        desktopTooltip.classList.remove('visible');
+    }
+
+    function positionDesktopTooltip(targetEl) {
         const rect = targetEl.getBoundingClientRect();
         const tooltipWidth = 320;
-        
+
         let top = rect.bottom + window.scrollY + 8;
         let left = rect.left + window.scrollX - (tooltipWidth / 2) + (rect.width / 2);
 
@@ -1019,54 +842,325 @@ document.addEventListener('DOMContentLoaded', () => {
             left = window.innerWidth - tooltipWidth - 16;
         }
 
-        tooltip.style.top = `${top}px`;
-        tooltip.style.left = `${left}px`;
+        desktopTooltip.style.top = `${top}px`;
+        desktopTooltip.style.left = `${left}px`;
     }
 
-    async function fetchWikiData(lang, title, targetEl) {
-        try {
-            const safeTitle = encodeURIComponent(decodeURIComponent(title));
-            const apiUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${safeTitle}?redirect=true`;
-            
-            // Mengirim request polos (tanpa header khusus) agar menjadi CORS "Simple Request".
-            // Jika ada header tambahan, browser akan mengirim preflight (OPTIONS).
-            // Preflight yang berujung pada Redirect (301) dari Wikipedia akan diblokir browser (NetworkError).
-            const res = await fetch(apiUrl);
-            
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            
-            if (currentLink !== targetEl || !tooltip.classList.contains('visible')) return;
-
-            renderTooltip(data);
-            positionTooltip(targetEl);
-        } catch (e) {
-            if (currentLink === targetEl) {
-                tooltip.innerHTML = `<div class="wiki-error">Gagal: ${e.message}</div>`;
-            }
-        }
-    }
-
-    function renderTooltip(data) {
+    function renderDesktopTooltip(data) {
         let html = '';
         if (data.thumbnail && data.thumbnail.source) {
             html += `<img src="${data.thumbnail.source}" class="wiki-thumb" alt="">`;
         }
         html += `<div class="wiki-content">`;
         html += `<div class="wiki-title">${data.title}</div>`;
-        
-        let extract = data.extract;
+
+        let extract = data.extract || '';
         if (extract.length > 200) extract = extract.substring(0, 200) + '...';
-        
+
         html += `<p class="wiki-extract">${extract}</p>`;
         html += `<div class="wiki-footer">W — Disediakan oleh Wikipedia</div>`;
         html += `</div>`;
-        
-        tooltip.innerHTML = html;
+
+        desktopTooltip.innerHTML = html;
     }
+
+    desktopTooltip.addEventListener('mouseenter', () => clearTimeout(hoverTimeout));
+    desktopTooltip.addEventListener('mouseleave', () => {
+        hoverTimeout = setTimeout(hideDesktopTooltip, 300);
+    });
+
+    const sheetModal = document.createElement('div');
+    sheetModal.id = 'wiki-bottom-sheet';
+    sheetModal.className = 'wiki-sheet-modal';
+    sheetModal.setAttribute('role', 'dialog');
+    sheetModal.setAttribute('aria-modal', 'true');
+    sheetModal.setAttribute('aria-hidden', 'true');
+    sheetModal.setAttribute('aria-label', 'Wikipedia Preview');
+    sheetModal.innerHTML = `
+        <div class="wiki-sheet-backdrop"></div>
+        <div class="wiki-sheet-container">
+            <div class="wiki-sheet-drag-area">
+                <div class="wiki-sheet-handle"></div>
+            </div>
+            <div class="wiki-sheet-header">
+                <div class="wiki-sheet-badge">
+                    <svg class="wiki-sheet-logo" viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                        <path d="M12.09 13.124l2.77-7.858h2.02l-4.148 10.978h-1.606l-2.614-7.398-2.615 7.398H4.29L.142 5.266h2.02l2.77 7.858 2.383-6.732h1.666l2.383 6.732 2.726-7.724z"/>
+                    </svg>
+                    <span>Wikipedia</span>
+                </div>
+                <button type="button" class="wiki-sheet-close" aria-label="Tutup pratinjau">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="wiki-sheet-body"></div>
+            <div class="wiki-sheet-footer">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="wiki-sheet-btn">
+                    <span>Buka di Wikipedia</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(sheetModal);
+
+    const sheetBackdrop = sheetModal.querySelector('.wiki-sheet-backdrop');
+    const sheetContainer = sheetModal.querySelector('.wiki-sheet-container');
+    const sheetDragArea = sheetModal.querySelector('.wiki-sheet-drag-area');
+    const sheetCloseBtn = sheetModal.querySelector('.wiki-sheet-close');
+    const sheetBody = sheetModal.querySelector('.wiki-sheet-body');
+    const sheetExtBtn = sheetModal.querySelector('.wiki-sheet-btn');
+
+    function openBottomSheet(lang, title, href) {
+        hideDesktopTooltip();
+        document.body.classList.add('wiki-sheet-lock');
+        sheetExtBtn.href = href;
+        sheetContainer.style.transform = '';
+        sheetBody.innerHTML = `
+            <div class="wiki-sheet-loading">
+                <div class="wiki-sheet-spinner"></div>
+                <span>Memuat ringkasan Wikipedia...</span>
+            </div>
+        `;
+        sheetModal.classList.add('open');
+        sheetModal.setAttribute('aria-hidden', 'false');
+
+        getWikiSummary(lang, title).then(data => {
+            if (!sheetModal.classList.contains('open')) return;
+            renderBottomSheet(data);
+        }).catch(err => {
+            if (!sheetModal.classList.contains('open')) return;
+            sheetBody.innerHTML = `
+                <div class="wiki-sheet-error">
+                    <p>Gagal memuat pratinjau Wikipedia.</p>
+                </div>
+            `;
+        });
+    }
+
+    function renderBottomSheet(data) {
+        let html = '';
+        if (data.thumbnail && data.thumbnail.source) {
+            html += `<div class="wiki-sheet-thumb-wrap"><img src="${data.thumbnail.source}" class="wiki-sheet-thumb" alt="${data.title || ''}"></div>`;
+        }
+        html += `<div class="wiki-sheet-text">`;
+        html += `<h3 class="wiki-sheet-title">${data.title}</h3>`;
+        if (data.description) {
+            html += `<div class="wiki-sheet-meta">${data.description}</div>`;
+        }
+        let extract = data.extract || '';
+        if (extract.length > 280) extract = extract.substring(0, 280) + '...';
+        html += `<p class="wiki-sheet-extract">${extract}</p>`;
+        html += `</div>`;
+        sheetBody.innerHTML = html;
+    }
+
+    function closeBottomSheet() {
+        sheetModal.classList.remove('open');
+        sheetModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('wiki-sheet-lock');
+        sheetContainer.style.transform = '';
+    }
+
+    sheetBackdrop.addEventListener('click', closeBottomSheet);
+    sheetCloseBtn.addEventListener('click', closeBottomSheet);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sheetModal.classList.contains('open')) {
+            closeBottomSheet();
+        }
+    });
+
+    let startY = 0;
+    let isDragging = false;
+    let currentDelta = 0;
+
+    sheetDragArea.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        currentDelta = 0;
+        sheetContainer.style.transition = 'none';
+    }, { passive: true });
+
+    sheetDragArea.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touchY = e.touches[0].clientY;
+        currentDelta = touchY - startY;
+        if (currentDelta > 0) {
+            sheetContainer.style.transform = `translateY(${currentDelta}px)`;
+        }
+    }, { passive: true });
+
+    sheetDragArea.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        sheetContainer.style.transition = '';
+        if (currentDelta > 70) {
+            closeBottomSheet();
+        } else {
+            sheetContainer.style.transform = '';
+        }
+        startY = 0;
+        currentDelta = 0;
+    });
+
+    wikiLinks.forEach(link => {
+        const parsed = parseWikiUrl(link.href);
+        if (!parsed) return;
+
+        link.addEventListener('mouseenter', () => {
+            if (isMobileOrTouch()) return;
+            clearTimeout(hoverTimeout);
+            currentDesktopLink = link;
+
+            hoverTimeout = setTimeout(async () => {
+                showDesktopLoading(link);
+                try {
+                    const data = await getWikiSummary(parsed.lang, parsed.title);
+                    if (currentDesktopLink === link && desktopTooltip.classList.contains('visible')) {
+                        renderDesktopTooltip(data);
+                        positionDesktopTooltip(link);
+                    }
+                } catch (e) {
+                    if (currentDesktopLink === link) {
+                        desktopTooltip.innerHTML = `<div class="wiki-error">Gagal: ${e.message}</div>`;
+                    }
+                }
+            }, 300);
+        });
+
+        link.addEventListener('mouseleave', () => {
+            if (isMobileOrTouch()) return;
+            clearTimeout(hoverTimeout);
+            if (currentDesktopLink === link) {
+                hoverTimeout = setTimeout(hideDesktopTooltip, 300);
+            }
+        });
+
+        link.addEventListener('click', (e) => {
+            if (isMobileOrTouch()) {
+                e.preventDefault();
+                openBottomSheet(parsed.lang, parsed.title, link.href);
+            }
+        });
+    });
 });
-// Real-time comments SSE
 (function() {
+    window.commentVisibleCount = 3;
+
+    function handleLoadMoreComments() {
+        var container = document.getElementById('comment-items-container');
+        var btnContainer = document.getElementById('comment-load-more-container');
+        if (!container) return;
+
+        var hiddenItems = container.querySelectorAll('.comment-root-item.hidden');
+        var step = 10;
+        for (var i = 0; i < hiddenItems.length && i < step; i++) {
+            hiddenItems[i].classList.remove('hidden');
+        }
+
+        var currentlyVisible = container.querySelectorAll('.comment-root-item:not(.hidden)').length;
+        window.commentVisibleCount = currentlyVisible;
+
+        var remaining = container.querySelectorAll('.comment-root-item.hidden').length;
+        if (remaining === 0) {
+            if (btnContainer) btnContainer.classList.add('hidden');
+        } else {
+            var countEl = document.getElementById('comment-remaining-count');
+            if (countEl) countEl.textContent = '(' + remaining + ')';
+        }
+    }
+    window.handleLoadMoreComments = handleLoadMoreComments;
+
+    function syncCommentVisibility() {
+        var container = document.getElementById('comment-items-container');
+        var btnContainer = document.getElementById('comment-load-more-container');
+        if (!container) return;
+
+        var targetVisible = window.commentVisibleCount || 3;
+        var items = container.querySelectorAll('.comment-root-item');
+        var hiddenCount = 0;
+        for (var i = 0; i < items.length; i++) {
+            if (i < targetVisible) {
+                items[i].classList.remove('hidden');
+            } else {
+                items[i].classList.add('hidden');
+                hiddenCount++;
+            }
+        }
+
+        if (btnContainer) {
+            if (hiddenCount === 0) {
+                btnContainer.classList.add('hidden');
+            } else {
+                btnContainer.classList.remove('hidden');
+                var countEl = document.getElementById('comment-remaining-count');
+                if (countEl) countEl.textContent = '(' + hiddenCount + ')';
+            }
+        }
+    }
+    window.syncCommentVisibility = syncCommentVisibility;
+
+    function onCommentPosted(parentId) {
+        if (parentId) {
+            var parentEl = document.getElementById('comment-' + parentId);
+            if (parentEl) {
+                var details = parentEl.querySelector('details.comment-replies-group');
+                if (details) details.open = true;
+                setTimeout(function() {
+                    parentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        } else {
+            var container = document.getElementById('comment-items-container');
+            if (container) {
+                var items = container.querySelectorAll('.comment-root-item');
+                if (items.length > 0) {
+                    var firstItem = items[0];
+                    firstItem.classList.remove('hidden');
+                    firstItem.classList.add('bg-hover/60');
+                    setTimeout(function() {
+                        firstItem.classList.remove('bg-hover/60');
+                    }, 2000);
+                    setTimeout(function() {
+                        firstItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            }
+            var btnContainer = document.getElementById('comment-load-more-container');
+            if (btnContainer) {
+                var remaining = document.querySelectorAll('.comment-root-item.hidden').length;
+                if (remaining === 0) {
+                    btnContainer.classList.add('hidden');
+                } else {
+                    var countEl = document.getElementById('comment-remaining-count');
+                    if (countEl) countEl.textContent = '(' + remaining + ')';
+                }
+            }
+        }
+    }
+    window.onCommentPosted = onCommentPosted;
+
+    document.addEventListener('htmx:afterSwap', function(e) {
+        if (e.target && (e.target.id === 'comment-list' || (e.target.querySelector && e.target.querySelector('#comment-list')))) {
+            syncCommentVisibility();
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.closest && e.target.closest('#comment-load-more-btn')) {
+            e.preventDefault();
+            handleLoadMoreComments();
+        }
+    });
+
     var cl = document.getElementById("comment-list");
     if (cl) {
         var s = cl.getAttribute("data-slug");

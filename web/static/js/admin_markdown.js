@@ -1,4 +1,3 @@
-// Markdown Raw Editor: Tab indentation, live statistics, draft recovery, and image upload
 (function() {
 	var tx = document.getElementById('md-editor-textarea');
 	var charCount = document.getElementById('md-char-count');
@@ -15,7 +14,7 @@
 	if (tx) {
 		var slugEl = document.getElementById('md-slug-val');
 		var draftKey = 'daemontalk_draft_' + ((slugEl && slugEl.value) ? slugEl.value : 'new');
-		
+
 		var savedDraft = localStorage.getItem(draftKey);
 		if (savedDraft && savedDraft !== tx.value) {
 			if (confirm("Found an unsaved draft in your browser. Do you want to restore it?")) {
@@ -70,9 +69,9 @@
 
 		if (!targetSlug) {
 			var rootEl = document.getElementById('md-editor-root');
-			targetSlug = (rootEl ? rootEl.getAttribute('data-slug') : "") || 
-						 (document.getElementById('md-slug-val') || {}).value || 
-						 new URLSearchParams(window.location.search).get('slug') || 
+			targetSlug = (rootEl ? rootEl.getAttribute('data-slug') : "") ||
+						 (document.getElementById('md-slug-val') || {}).value ||
+						 new URLSearchParams(window.location.search).get('slug') ||
 						 "uploads";
 		}
 

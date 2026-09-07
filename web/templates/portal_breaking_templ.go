@@ -34,7 +34,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg\"><div class=\"flex items-center justify-between px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-2 bg-bg text-xs font-mono font-bold uppercase tracking-wider\"><span class=\"text-text font-black tracking-widest text-sm sm:text-[15px]\">DEEP DIVE SPOTLIGHT</span></div><div class=\"flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:divide-x divide-[var(--c-border)]\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg\"><div class=\"flex items-center justify-between px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-2 bg-bg text-xs font-sans font-bold uppercase tracking-wider\"><span class=\"text-text font-black tracking-widest text-sm sm:text-[15px]\">DEEP DIVE SPOTLIGHT</span></div><div class=\"flex overflow-x-auto snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:divide-x divide-[var(--c-border)]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -59,7 +59,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div><div class=\"flex items-center justify-between mb-4 sm:mb-5\"><div class=\"text-xs sm:text-[13px] font-mono font-black uppercase tracking-widest text-accent flex items-center gap-1.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><div><div class=\"flex items-center justify-between mb-4 sm:mb-5\"><div class=\"text-xs sm:text-[13px] font-sans font-bold uppercase tracking-wider text-accent flex items-center gap-1.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -80,7 +80,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"text-xs font-mono font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group/btn shrink-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"text-xs font-sans font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group/btn shrink-0\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -95,7 +95,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = IconArrowRight("w-3.5 h-3.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -169,7 +169,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"flex items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-auto pt-1 sm:pt-0\"><time datetime=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"flex items-center gap-2 text-[10px] sm:text-xs font-sans text-muted mt-auto pt-1 sm:pt-0\"><time datetime=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -245,7 +245,7 @@ func portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) templ
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</h4><div class=\"flex items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-1.5 sm:mt-2.5\"><time datetime=\"")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</h4><div class=\"flex items-center gap-2 text-[10px] sm:text-xs font-sans text-muted mt-1.5 sm:mt-2.5\"><time datetime=\"")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}

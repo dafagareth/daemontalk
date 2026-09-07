@@ -1,5 +1,4 @@
-/* Code Blocks & Code Tabs Component Styles */
-  .prose code {
+.prose code {
     font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
     font-size: 0.875em;
     background: var(--c-chip);
@@ -7,16 +6,17 @@
     padding: 0.125em 0.375em;
     border-radius: 0;
     border: 1px solid var(--c-border);
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
-  /* Wrapper added by JS around each <pre>; anchors the copy button to the
-     visible top-right (the wrapper itself never scrolls). */
+
   .prose .code-wrap {
     position: relative;
     margin-bottom: 1.5rem;
   }
-  /* Plain and Chroma-highlighted code blocks.
-     Top padding 2.5rem leaves a clean header area for language badge & copy button
-     so single-line and multi-line code text is NEVER overlapped. */
+
   .prose pre,
   .prose pre.chroma {
     font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
@@ -28,7 +28,7 @@
     overflow-x: auto;
     margin-bottom: 0;
   }
-  /* Single code block with top toolbar header space (Option B: 2.5rem top, 1.5rem sides & bottom) */
+
   .prose .code-wrap pre,
   .prose .code-wrap pre.chroma {
     padding: 2.5rem 1.5rem 2.5rem 1.75rem;
@@ -41,6 +41,8 @@
     padding: 0;
     font-size: 1em;
     line-height: 1.65;
+    word-break: normal;
+    overflow-wrap: normal;
   }
   @media (max-width: 640px) {
     .prose pre,
@@ -58,7 +60,6 @@
     }
   }
 
-  /* Code block action toolbar — pinned to header space at top-right */
   .code-toolbar {
     position: absolute;
     top: 0.55rem;
@@ -125,7 +126,6 @@
     border-color: var(--c-text);
   }
 
-  /* Attached In-Article Terminal Output Box */
   .code-output-wrap {
     margin-top: -0.25rem;
     margin-bottom: 1.5rem;
@@ -175,7 +175,6 @@
     .code-toolbar { opacity: 1; }
   }
 
-  /* Code Line & Diff Highlighting */
   .line-add {
     background-color: rgba(34, 197, 94, 0.14);
     border-left: 3px solid #22c55e;
@@ -199,7 +198,6 @@
     display: block;
   }
 
-  /* Code Tabs Styling — Clean layout & exact height fitting */
   .code-tabs-wrap {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
@@ -222,7 +220,7 @@
     border-radius: 0 !important;
     padding: 0 !important;
   }
-  /* Code Tabs Padding: less top padding because header bar exists, align left with tab text */
+
   .code-tabs-wrap pre.chroma,
   .code-tabs-wrap pre {
     padding: 1.25rem 1.5rem 2.5rem 1.75rem !important;
@@ -230,8 +228,7 @@
     font-size: 0.9em !important;
     line-height: 1.65 !important;
   }
-  
-  /* Single Code Block Padding: needs 2.5rem top padding for language badge */
+
   .code-wrap pre,
   .code-wrap pre.chroma {
     padding: 2.5rem 1.5rem 2.5rem 1.75rem !important;
@@ -257,4 +254,3 @@
       padding: 2.25rem 1rem 2rem 1.25rem !important;
     }
   }
-

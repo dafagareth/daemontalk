@@ -17,9 +17,9 @@ templ settingsContent(ui i18n.UI, user *auth.User, lang string, currentPath stri
 		<div class="mb-6">
 			<a
 				href={ templ.SafeURL(prefix(lang) + "/") }
-				class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text transition-colors mb-3 group select-none"
+				class="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-text transition-colors mb-3 group select-none"
 			>
-				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				@IconArrowLeft("w-3.5 h-3.5")
 				<span>
 					if lang == "id" {
 						Kembali ke Beranda
@@ -37,50 +37,90 @@ templ settingsContent(ui i18n.UI, user *auth.User, lang string, currentPath stri
 			</h1>
 		</div>
 		if user == nil {
-			<div class="border border-border bg-surface p-8 text-center font-mono text-xs text-muted shadow-xl">
-				if lang == "id" {
-					Silakan masuk dengan GitHub untuk melihat pengaturan Anda.
-				} else {
-					Please log in with GitHub to view your settings.
-				}
+			<div class="border border-border bg-surface p-8 sm:p-12 text-center font-sans text-xs text-muted">
+				<p class="mb-4">
+					if lang == "id" {
+						Silakan masuk dengan GitHub untuk mengelola pengaturan akun Anda.
+					} else {
+						Please sign in with GitHub to manage your account settings.
+					}
+				</p>
+				<a
+					href={ templ.SafeURL("/auth/github?return_to=" + prefix(lang) + "/settings") }
+					class="inline-flex items-center gap-2 px-4 py-2 border border-border bg-chip hover:border-text text-text font-bold transition-colors font-sans"
+				>
+					@IconGitHub()
+					<span>Login with GitHub</span>
+				</a>
 			</div>
 		} else {
-			<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
-				<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between text-xs sm:text-sm font-mono select-none flex-wrap gap-3">
-					<div class="flex items-center gap-3 text-text font-bold min-w-0">
-						<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
-						<code class="text-sm sm:text-base font-mono truncate">cat /etc/daemontalk/settings.conf</code>
+			<div class="border-0 sm:border border-border bg-transparent sm:bg-surface/20 font-sans overflow-hidden">
+				<div class="border-b border-border bg-transparent sm:bg-surface/50 px-0 sm:px-5 py-3 sm:py-5 flex items-center justify-between gap-4 font-sans select-none">
+					<div class="flex items-center gap-3 min-w-0">
+						if user.AvatarURL != "" {
+							<img src={ user.AvatarURL } alt={ user.Username } class="w-9 h-9 rounded-none border border-border object-cover shrink-0"/>
+						} else {
+							<div class="w-9 h-9 bg-chip flex items-center justify-center font-sans font-bold text-text text-xs border border-border shrink-0">
+								{ string([]rune(user.Username)[:1]) }
+							</div>
+						}
+						<div class="min-w-0">
+							<div class="text-sm font-bold text-text truncate">{ "@" + user.Username }</div>
+							<div class="text-[11px] text-muted truncate">{ user.DisplayName }</div>
+						</div>
 					</div>
-					<span class="text-xs font-mono text-muted font-bold uppercase shrink-0">USER: { "@" + user.Username }</span>
-				</div>
-				<div class="divide-y divide-border text-xs sm:text-sm font-mono mt-4 sm:mt-0">
-					<div class="p-4 sm:p-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
-						<span class="font-bold text-text">
-							if lang == "id" {
-								Tema Tampilan
-							} else {
-								Visual Theme
-							}
+					<div class="flex items-center gap-2 shrink-0">
+						<span class="border border-border bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted font-sans">
+							{ user.Role }
 						</span>
+					</div>
+				</div>
+				<div class="divide-y divide-border/60 text-xs sm:text-sm font-sans">
+					<div class="px-0 sm:px-6 py-4 sm:py-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
+						<div>
+							<span class="font-bold text-text block">
+								if lang == "id" {
+									Tema Tampilan
+								} else {
+									Visual Theme
+								}
+							</span>
+							<span class="text-xs text-muted block mt-0.5 font-sans">
+								if lang == "id" {
+									Ganti antara mode terang dan gelap
+								} else {
+									Toggle between light and dark broadsheet
+								}
+							</span>
+						</div>
 						<button
 							type="button"
 							onclick="toggleTheme()"
-							class="inline-flex items-center gap-2 px-3 py-1.5 border border-border bg-chip hover:bg-hover text-text text-xs font-bold transition-colors cursor-pointer"
+							class="inline-flex items-center gap-2 px-3 py-1.5 border border-border bg-chip hover:bg-hover text-text text-xs font-bold transition-colors cursor-pointer shrink-0 font-sans"
 						>
 							@sunIcon()
 							@moonIcon()
 							<span>Ganti Tema</span>
 						</button>
 					</div>
-					<div class="p-4 sm:p-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
-						<span class="font-bold text-text">
-							if lang == "id" {
-								Bahasa Antarmuka
-							} else {
-								Interface Language
-							}
-						</span>
-						<div class="flex items-center gap-1">
+					<div class="px-0 sm:px-6 py-4 sm:py-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
+						<div>
+							<span class="font-bold text-text block">
+								if lang == "id" {
+									Bahasa Antarmuka
+								} else {
+									Interface Language
+								}
+							</span>
+							<span class="text-xs text-muted block mt-0.5 font-sans">
+								if lang == "id" {
+									Bahasa yang digunakan pada tombol dan navigasi
+								} else {
+									Language used for navigational controls
+								}
+							</span>
+						</div>
+						<div class="flex items-center gap-1 shrink-0 font-sans">
 							<a
 								href={ templ.SafeURL(toLangURL("id", currentPath)) }
 								class={ "px-2.5 py-1 border text-xs font-bold transition-colors", templ.KV("border-text text-text bg-chip", lang == "id"), templ.KV("border-border text-muted hover:text-text", lang != "id") }
@@ -95,20 +135,29 @@ templ settingsContent(ui i18n.UI, user *auth.User, lang string, currentPath stri
 							</a>
 						</div>
 					</div>
-					<div class="p-4 sm:p-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
-						<span class="font-bold text-text">{ ui.Auth_ExportData }</span>
+					<div class="px-0 sm:px-6 py-4 sm:py-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
+						<div>
+							<span class="font-bold text-text block">{ ui.Auth_ExportData }</span>
+							<span class="text-xs text-muted block mt-0.5 font-sans">
+								if lang == "id" {
+									Unduh salinan data profil dan aktivitas akun Anda
+								} else {
+									Download an archive of your profile and comments
+								}
+							</span>
+						</div>
 						<a
 							href="/auth/export"
-							class="px-3 py-1.5 border border-border bg-chip hover:bg-hover text-text text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+							class="px-3 py-1.5 border border-border bg-chip hover:bg-hover text-text text-xs font-bold transition-colors inline-flex items-center gap-1.5 shrink-0 font-sans"
 							download
 						>
 							<span>EXPORT JSON</span>
 						</a>
 					</div>
-					<div class="p-4 sm:p-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
+					<div class="px-0 sm:px-6 py-4 sm:py-6 flex items-center justify-between gap-4 hover:bg-hover transition-colors">
 						<div>
 							<span class="font-bold text-rose-500 block">{ ui.Auth_DeleteAccount }</span>
-							<span class="text-xs text-muted block mt-0.5">
+							<span class="text-xs text-muted block mt-0.5 font-sans">
 								if lang == "id" {
 									Menghapus seluruh akun dan data terkait secara permanen.
 								} else {
@@ -119,7 +168,7 @@ templ settingsContent(ui i18n.UI, user *auth.User, lang string, currentPath stri
 						<form action="/auth/delete" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini secara permanen? Tindakan ini tidak dapat dibatalkan.');">
 							<button
 								type="submit"
-								class="px-3 py-1.5 border border-rose-500/50 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white text-xs font-bold transition-colors cursor-pointer"
+								class="px-3 py-1.5 border border-rose-500/50 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white text-xs font-bold transition-colors cursor-pointer shrink-0 font-sans"
 							>
 								<span>DELETE</span>
 							</button>

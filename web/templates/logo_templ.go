@@ -8,7 +8,6 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-// BrandIcon renders the standalone moth icon image, adapting to light/dark themes.
 func BrandIcon(class string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -78,8 +77,6 @@ func BrandIcon(class string) templ.Component {
 	})
 }
 
-// BrandLogo renders the complete combined logo image (Icon + "daemontalk" wordmark as a single unified graphic),
-// adapting seamlessly to light and dark themes using optimized WebP with PNG fallback.
 func BrandLogo(class string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

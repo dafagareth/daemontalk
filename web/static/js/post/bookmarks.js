@@ -1,10 +1,10 @@
-// Bookmark toggle (supports SVG icons & text state)
 (function() {
     function updateBookmarkBtnUI(btn, isSaved) {
         var icon = btn.querySelector('.bookmark-icon');
         var text = btn.querySelector('.bookmark-text');
         if (isSaved) {
-            btn.classList.add("bg-accent/15", "text-accent", "border-accent");
+            btn.classList.add("is-saved", "bg-hover", "text-text", "font-bold");
+            btn.classList.remove("border-text/70", "bg-accent/15", "text-accent", "border-accent");
             if (icon) {
                 icon.setAttribute("fill", "currentColor");
             }
@@ -13,7 +13,7 @@
                 text.textContent = lang === "id" ? "Tersimpan" : "Saved";
             }
         } else {
-            btn.classList.remove("bg-accent/15", "text-accent", "border-accent");
+            btn.classList.remove("is-saved", "bg-hover", "text-text", "border-text/70", "font-bold", "bg-accent/15", "text-accent", "border-accent");
             if (icon) {
                 icon.setAttribute("fill", "none");
             }
@@ -24,20 +24,22 @@
         }
         if (!icon && !text) {
             btn.textContent = isSaved ? "★" : "☆";
-            if (isSaved) btn.classList.add("text-accent");
-            else btn.classList.remove("text-accent");
+            if (isSaved) btn.classList.add("text-text");
+            else btn.classList.remove("text-text", "text-accent");
         }
     }
 
-    var bookmarks = [];
-    try { bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch(e) {}
-    var saved = {};
-    bookmarks.forEach(function(b) { saved[b.slug] = true; });
-    document.querySelectorAll(".bookmark-btn").forEach(function(btn) {
-        if (saved[btn.dataset.slug]) {
-            updateBookmarkBtnUI(btn, true);
-        }
-    });
+    function syncPostBookmarks() {
+        var bookmarks = [];
+        try { bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]"); } catch(e) {}
+        var saved = {};
+        bookmarks.forEach(function(b) { saved[b.slug] = true; });
+        document.querySelectorAll(".bookmark-btn").forEach(function(btn) {
+            updateBookmarkBtnUI(btn, !!saved[btn.dataset.slug]);
+        });
+    }
+    syncPostBookmarks();
+    document.addEventListener("htmx:afterSwap", syncPostBookmarks);
 
     window.toggleBookmark = function(btn) {
         var slug = btn.dataset.slug;
@@ -56,7 +58,6 @@
         }
         localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 
-        // Update all buttons for this slug
         document.querySelectorAll('.bookmark-btn[data-slug="' + slug + '"]').forEach(function(el) {
             updateBookmarkBtnUI(el, isNowSaved);
         });

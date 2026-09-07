@@ -1,5 +1,5 @@
 (function() {
-    // Clipboard helper: falls back to execCommand for HTTP (non-secure) contexts
+
     window.copyText = function(text, done) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(done).catch(function() { fallback(text, done); });

@@ -18,44 +18,64 @@ func getDailyBriefingDate(articles []post.Post) time.Time {
 
 templ DailyPage(ui i18n.UI, lang string, articles []post.Post, host string) {
 	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
-		<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-6 font-sans">
-			<div>
-				<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight mb-1">
-					{ ui.Daily_Title }
-				</h1>
-				<p id="daily-date" class="text-xs font-mono text-muted">
-					{ fmtFullDate(getDailyBriefingDate(articles), lang) }
-				</p>
-			</div>
-			<span class="text-xs font-mono text-muted">
-				{ fmt.Sprintf("%d %s", len(articles), ui.Daily_Dispatches) }
-			</span>
-		</div>
-		<div class="sm:border sm:border-border sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
-			<div class="border border-border sm:border-0 sm:border-b sm:border-border bg-surface p-4 sm:p-6 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono text-muted select-none">
-				<div class="flex items-center gap-3 text-text font-bold min-w-0">
-					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
-					<code class="text-sm sm:text-base font-mono truncate">curl -sL https://{ host }/daily</code>
+		<div class="mb-6 font-sans">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					if lang == "id" {
+						Kembali ke Beranda
+					} else {
+						Back to Dispatches
+					}
+				</span>
+			</a>
+			<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+				<div>
+					<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight uppercase mb-1">
+						{ ui.Daily_Title }
+					</h1>
+					<p id="daily-date" class="text-xs font-sans text-muted">
+						{ fmtFullDate(getDailyBriefingDate(articles), lang) }
+					</p>
 				</div>
-				<button
-					type="button"
-					onclick={ templ.ComponentScript{Call: fmt.Sprintf("navigator.clipboard.writeText('curl -sL https://%s/daily'); this.textContent = 'COPIED!'; this.style.color='#3fb950'; setTimeout(() => { this.textContent = 'COPY'; this.style.color=''; }, 1200)", host)} }
-					class="text-[11px] px-2 py-0.5 border border-border bg-chip text-muted hover:text-text hover:border-link transition-colors cursor-pointer shrink-0 font-mono"
-				>
-					COPY
-				</button>
+				<span class="text-xs font-sans font-bold text-muted tabular-nums">
+					{ fmt.Sprintf("%d %s", len(articles), ui.Daily_Dispatches) }
+				</span>
 			</div>
-			<ul class="divide-y divide-border/60 mt-4 sm:mt-0">
-				for i, p := range articles {
+		</div>
+		<div class="border-0 sm:border border-border bg-transparent sm:bg-surface/10 font-sans overflow-hidden">
+			<div class="border-b border-border bg-transparent sm:bg-surface/50 px-0 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-3 text-xs font-sans select-none">
+				<span class="font-bold text-text uppercase tracking-wider text-xs">
+					if lang == "id" {
+						RINGKASAN HARIAN
+					} else {
+						DAILY DIGEST
+					}
+				</span>
+				<div class="flex items-center gap-2">
+					<button
+						type="button"
+						onclick={ templ.ComponentScript{Call: fmt.Sprintf("navigator.clipboard.writeText('curl -sL https://%s/daily'); this.textContent = 'COPIED!'; setTimeout(() => { this.textContent = 'CURL'; }, 1200)", host)} }
+						class="text-[11px] px-2.5 py-1 border border-border bg-chip text-text hover:border-text transition-colors cursor-pointer shrink-0 font-sans font-bold"
+						title="Copy CLI curl command"
+					>
+						CURL
+					</button>
+				</div>
+			</div>
+			<ul class="divide-y divide-border/60">
+				for _, p := range articles {
 					<li class="hover:bg-hover transition-colors group">
-						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="px-0 sm:px-7 py-4 sm:py-6 flex items-baseline justify-between gap-4">
-							<div class="flex items-baseline gap-2.5 min-w-0">
-								<span class="text-link font-mono font-bold text-xs shrink-0">{ fmt.Sprintf("%02d.", i+1) }</span>
-								<h2 class="text-sm sm:text-base font-bold text-text group-hover:text-link leading-snug transition-colors truncate">
+						<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/" + p.Slug) } class="px-0 sm:px-7 py-3.5 sm:py-5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+							<div class="min-w-0 flex-1">
+								<h2 class="text-sm sm:text-base font-bold text-text group-hover:text-link leading-snug transition-colors line-clamp-2 sm:line-clamp-1">
 									{ p.Title }
 								</h2>
 							</div>
-							<time datetime={ p.Date.Format("2006-01-02") } class="text-xs font-mono text-muted shrink-0">
+							<time datetime={ p.Date.Format("2006-01-02") } class="text-[11px] sm:text-xs font-sans text-muted shrink-0 mt-0.5 sm:mt-0">
 								{ fmtDate(p, lang) }
 							</time>
 						</a>

@@ -1,12 +1,11 @@
 (function() {
-    // Multi-File Code Tabs Interactive Switching & Touch/Drag Swiping
+
     document.querySelectorAll("[data-code-tabs]").forEach(function(wrap) {
         var navTrack = wrap.querySelector(".tabs-nav-track");
         var buttons = wrap.querySelectorAll(".tab-btn");
         var panes = wrap.querySelectorAll(".tab-pane");
         var copyBtn = wrap.querySelector(".copy-tab-code");
 
-        // Mouse drag-to-scroll for horizontal tabs header
         if (navTrack) {
             var isDown = false;
             var startX, scrollLeft;
@@ -30,7 +29,6 @@
                 navTrack.scrollLeft = scrollLeft - walk;
             });
 
-            // Touch swipe for mobile
             var touchStartX;
             navTrack.addEventListener("touchstart", function(e) {
                 touchStartX = e.touches[0].pageX;

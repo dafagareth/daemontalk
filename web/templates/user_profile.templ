@@ -1,6 +1,8 @@
 package templates
 
 import (
+	"fmt"
+
 	"daemontalk/internal/auth"
 	"daemontalk/internal/forum"
 	"daemontalk/internal/i18n"
@@ -21,13 +23,14 @@ templ UserProfilePage(ui i18n.UI, profileUser *auth.User, stats forum.UserStats,
 }
 
 templ userProfileContent(ui i18n.UI, profileUser *auth.User, stats forum.UserStats, recentTopics []*forum.Topic, lang string, currentPath string) {
+	{{ _ = recentTopics }}
 	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
-		<div class="mb-6">
+		<div class="mb-6 sm:mb-8">
 			<a
 				href={ templ.SafeURL(prefix(lang) + "/") }
-				class="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-text transition-colors group select-none"
+				class="inline-flex items-center gap-1.5 text-xs font-sans text-muted hover:text-text transition-colors mb-3 group select-none font-medium"
 			>
-				@IconArrowLeft("w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform")
+				@IconArrowLeft("w-3.5 h-3.5")
 				<span>
 					if lang == "id" {
 						Kembali ke Beranda
@@ -36,9 +39,16 @@ templ userProfileContent(ui i18n.UI, profileUser *auth.User, stats forum.UserSta
 					}
 				</span>
 			</a>
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight uppercase">
+				if lang == "id" {
+					Profil Anggota
+				} else {
+					Member Profile
+				}
+			</h1>
 		</div>
 		if profileUser == nil {
-			<div class="border border-border bg-surface p-12 text-center font-mono text-xs text-muted shadow-xl">
+			<div class="border border-border bg-surface/10 p-12 text-center font-sans text-xs text-muted">
 				if lang == "id" {
 					Pengguna tidak ditemukan di dalam sistem.
 				} else {
@@ -46,62 +56,238 @@ templ userProfileContent(ui i18n.UI, profileUser *auth.User, stats forum.UserSta
 				}
 			</div>
 		} else {
-			<div class="border border-border bg-surface shadow-xl overflow-hidden font-sans">
-				<div class="border-b border-border bg-surface p-4 sm:p-5 flex items-center justify-between text-xs font-mono select-none flex-wrap gap-2">
-					<div class="flex items-center gap-2 text-text font-bold">
-						<span class="text-link font-black">❯</span>
-						<span>finger { profileUser.Username }</span>
-					</div>
-					<div class="flex items-center gap-2 text-xs font-mono font-bold uppercase">
-						if profileUser.Role == "admin" {
-							<span class="px-2 py-0.5 border border-amber-500 text-amber-500 bg-amber-500/10">[ADMIN]</span>
-						} else if profileUser.Role == "contributor" {
-							<span class="px-2 py-0.5 border border-link text-link bg-link/10">[CONTRIBUTOR]</span>
-						} else {
-							<span class="text-muted">ROLE: { profileUser.Role }</span>
-						}
-					</div>
-				</div>
-				<div class="p-6 sm:p-8 space-y-6">
-					<div class="flex flex-col sm:flex-row items-start gap-5">
-						if profileUser.AvatarURL != "" {
-							<img
-								src={ profileUser.AvatarURL }
-								alt={ profileUser.Username }
-								class="w-16 h-16 sm:w-20 sm:h-20 rounded-none border-2 border-border object-cover shrink-0"
-							/>
-						} else {
-							<img
-								src="/static/images/deleted-user.png"
-								alt="User"
-								class="w-16 h-16 sm:w-20 sm:h-20 rounded-none border-2 border-border object-cover shrink-0"
-							/>
-						}
-						<div class="space-y-2 text-xs sm:text-sm font-mono flex-1">
-							<div class="flex items-baseline gap-4">
-								<span class="text-muted w-24 shrink-0 select-none">USERNAME:</span>
-								<span class="font-bold text-text">{ "@" + profileUser.Username }</span>
+			<div class="border-0 sm:border border-border bg-transparent sm:bg-surface/10 font-sans sm:overflow-hidden mb-12">
+				<div class="p-0 sm:p-8 py-4 sm:py-8 border-b-0 sm:border-b border-border">
+					<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+						<div class="flex items-center gap-4 sm:gap-6 min-w-0">
+							if profileUser.AvatarURL != "" {
+								<img
+									src={ profileUser.AvatarURL }
+									alt={ profileUser.Username }
+									class="w-16 h-16 sm:w-20 sm:h-20 rounded-none border border-border object-cover shrink-0"
+								/>
+							} else {
+								<div class="w-16 h-16 sm:w-20 sm:h-20 bg-chip flex items-center justify-center font-sans font-bold text-text text-xl border border-border shrink-0">
+									{ string([]rune(profileUser.Username)[:1]) }
+								</div>
+							}
+							<div class="space-y-1.5 font-sans min-w-0">
+								<div class="flex items-center gap-2.5 flex-wrap">
+									<span class="text-xl sm:text-2xl font-bold text-text tracking-tight font-sans">
+										if profileUser.DisplayName != "" {
+											{ profileUser.DisplayName }
+										} else {
+											{ profileUser.Username }
+										}
+									</span>
+									if profileUser.Role == "admin" {
+										<span class="px-2 py-0.5 border border-amber-500/60 bg-amber-500/10 text-amber-500 text-[10px] font-bold tracking-wider uppercase font-sans">ADMIN</span>
+									} else if profileUser.Role == "contributor" {
+										<span class="px-2 py-0.5 border border-link/60 bg-link/10 text-link text-[10px] font-bold tracking-wider uppercase font-sans">CONTRIBUTOR</span>
+									} else {
+										<span class="px-2 py-0.5 border border-border bg-surface text-muted text-[10px] font-bold tracking-wider uppercase font-sans">MEMBER</span>
+									}
+								</div>
+								<div class="text-xs sm:text-sm text-muted font-sans">{ "@" + profileUser.Username }</div>
 							</div>
-							<div class="flex items-baseline gap-4">
-								<span class="text-muted w-24 shrink-0 select-none">DISPLAY:</span>
-								<span class="text-text">{ profileUser.DisplayName }</span>
+						</div>
+						<div class="flex flex-wrap sm:flex-col items-start sm:items-end gap-3 sm:gap-2 text-xs text-muted font-sans">
+							<div class="flex items-center gap-2">
+								<span class="text-muted/60 uppercase text-[10px] tracking-wider">
+									if lang == "id" {
+										Bergabung:
+									} else {
+										Joined:
+									}
+								</span>
+								<span class="text-text font-bold tabular-nums">{ profileUser.CreatedAt.Format("02 Jan 2006") }</span>
 							</div>
 							if profileUser.GitHubURL != "" {
-								<div class="flex items-baseline gap-4">
-									<span class="text-muted w-24 shrink-0 select-none">GITHUB:</span>
+								<div class="flex items-center gap-2">
+									<span class="text-muted/60 uppercase text-[10px] tracking-wider">GitHub:</span>
 									<a
 										href={ templ.SafeURL(profileUser.GitHubURL) }
 										target="_blank"
 										rel="noopener noreferrer"
-										class="text-link hover:underline break-all"
+										class="text-link hover:underline truncate inline-flex items-center gap-1 font-bold"
 									>
-										{ profileUser.GitHubURL }
+										@IconGitHub()
+										<span>{ profileUser.Username }</span>
+										<span class="text-[10px]">↗</span>
 									</a>
 								</div>
 							}
-							<div class="flex items-baseline gap-4">
-								<span class="text-muted w-24 shrink-0 select-none">JOINED:</span>
-								<span class="text-text">{ profileUser.CreatedAt.Format("02 Jan 2006") }</span>
+						</div>
+					</div>
+				</div>
+				<div class="hidden sm:grid sm:grid-cols-4 divide-x divide-border">
+					<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+						<span class="text-[11px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								TOPIK
+							} else {
+								TOPICS
+							}
+						</span>
+						<div class="mt-3">
+							<div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.TopicsCount) }
+							</div>
+							<div class="text-xs text-muted mt-1 font-sans">
+								if lang == "id" {
+									Diskusi dibuat
+								} else {
+									Discussions started
+								}
+							</div>
+						</div>
+					</div>
+					<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+						<span class="text-[11px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								BALASAN
+							} else {
+								REPLIES
+							}
+						</span>
+						<div class="mt-3">
+							<div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.RepliesCount) }
+							</div>
+							<div class="text-xs text-muted mt-1 font-sans">
+								if lang == "id" {
+									Tanggapan teknis
+								} else {
+									Discussion responses
+								}
+							</div>
+						</div>
+					</div>
+					<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+						<span class="text-[11px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								SOLUSI
+							} else {
+								SOLUTIONS
+							}
+						</span>
+						<div class="mt-3">
+							<div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.SolutionsCount) }
+							</div>
+							<div class="text-xs text-muted mt-1 font-sans">
+								if lang == "id" {
+									Solusi terverifikasi
+								} else {
+									Verified solutions
+								}
+							</div>
+						</div>
+					</div>
+					<div class="p-6 lg:p-7 flex flex-col justify-between hover:bg-hover/30 transition-colors">
+						<span class="text-[11px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								REPUTASI
+							} else {
+								REPUTATION
+							}
+						</span>
+						<div class="mt-3">
+							<div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.TotalVotes) }
+							</div>
+							<div class="text-xs text-muted mt-1 font-sans">
+								if lang == "id" {
+									Dukungan suara
+								} else {
+									Total upvotes
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="sm:hidden grid grid-cols-2 gap-x-6 gap-y-7 pt-6 pb-2">
+					<div class="flex flex-col justify-between">
+						<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								TOPIK
+							} else {
+								TOPICS
+							}
+						</span>
+						<div class="mt-1.5">
+							<div class="text-2xl sm:text-3xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.TopicsCount) }
+							</div>
+							<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+								if lang == "id" {
+									Diskusi dibuat
+								} else {
+									Discussions started
+								}
+							</div>
+						</div>
+					</div>
+					<div class="flex flex-col justify-between">
+						<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								BALASAN
+							} else {
+								REPLIES
+							}
+						</span>
+						<div class="mt-1.5">
+							<div class="text-2xl sm:text-3xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.RepliesCount) }
+							</div>
+							<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+								if lang == "id" {
+									Tanggapan teknis
+								} else {
+									Discussion responses
+								}
+							</div>
+						</div>
+					</div>
+					<div class="flex flex-col justify-between">
+						<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								SOLUSI
+							} else {
+								SOLUTIONS
+							}
+						</span>
+						<div class="mt-1.5">
+							<div class="text-2xl sm:text-3xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.SolutionsCount) }
+							</div>
+							<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+								if lang == "id" {
+									Solusi terverifikasi
+								} else {
+									Verified solutions
+								}
+							</div>
+						</div>
+					</div>
+					<div class="flex flex-col justify-between">
+						<span class="text-[10px] uppercase tracking-wider text-muted font-bold font-sans">
+							if lang == "id" {
+								REPUTASI
+							} else {
+								REPUTATION
+							}
+						</span>
+						<div class="mt-1.5">
+							<div class="text-2xl sm:text-3xl font-extrabold tracking-tight text-text tabular-nums font-sans">
+								{ fmt.Sprintf("%d", stats.TotalVotes) }
+							</div>
+							<div class="text-xs text-muted mt-0.5 font-sans leading-tight">
+								if lang == "id" {
+									Dukungan suara
+								} else {
+									Total upvotes
+								}
 							</div>
 						</div>
 					</div>

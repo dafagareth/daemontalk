@@ -6,10 +6,6 @@ import (
 	"daemontalk/internal/i18n"
 )
 
-// headTags renders the shared <head> for both public pages and the admin
-// shell. Public-only SEO tags (feeds, hreflang, OG/Twitter, JSON-LD) are
-// skipped when noindex is true: the admin shell has nothing worth indexing
-// and gets a robots exclusion instead.
 templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 	<head>
 		<meta charset="UTF-8"/>
@@ -23,7 +19,6 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 		<link rel="icon" type="image/png" sizes="96x96" href="/static/logo/icon-96x96.png"/>
 		<link rel="icon" type="image/png" sizes="192x192" href="/static/logo/icon-192x192.png"/>
 		<link rel="apple-touch-icon" sizes="180x180" href="/static/logo/apple-touch-icon.png"/>
-		<!-- Set theme before first paint to avoid a flash of the wrong theme. -->
 		<script>
 			(function() {
 				var t = localStorage.getItem("theme");
@@ -31,8 +26,6 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 			})();
 		</script>
 		if !noindex {
-			<!-- Intro animation only on first visit per session; subsequent
-			     navigation appears immediately (no fade on every page load). -->
 			<script>
 				(function() {
 					try {
@@ -49,7 +42,7 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 		}
 		<link rel="preconnect" href="https://fonts.googleapis.com"/>
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap"/>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap"/>
 		<link rel="stylesheet" href={ assetURL("/static/css/chroma.css") }/>
 		<link rel="stylesheet" href={ assetURL("/static/css/main.css") }/>
 		if noindex {
@@ -65,7 +58,7 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 			<meta property="og:title" content={ pageTitle(page) }/>
 			<meta property="og:description" content={ meta.ogDesc() }/>
 			<meta property="og:type" content={ meta.ogType() }/>
-			<meta property="og:url" content={ SiteBaseURL + currentPath }/>
+			<meta property="og:url" content={ meta.ogURL(currentPath) }/>
 			<meta property="og:image" content={ meta.ogImage() }/>
 			<meta property="og:image:width" content="1200"/>
 			<meta property="og:image:height" content="630"/>
@@ -91,29 +84,47 @@ templ headTags(page string, currentPath string, meta PageMeta, noindex bool) {
 
 templ Layout(ui i18n.UI, lang string, page string, currentPath string, meta PageMeta, content templ.Component) {
 	<!DOCTYPE html>
-	<html lang={ lang }>
+	<html lang={ lang } class={ templ.KV("h-full", isSocketApp(currentPath)) }>
 		@headTags(page, currentPath, meta, false)
-		<body class="min-h-screen flex flex-col">
+		<body
+			class={
+				"flex flex-col bg-bg text-text",
+				templ.KV("h-screen h-[100dvh] overflow-hidden", isSocketApp(currentPath)),
+				templ.KV("min-h-screen", !isSocketApp(currentPath)),
+			}
+		>
 			@topNav(ui, lang, page, currentPath)
 			@mobileMenu(ui, lang, page, currentPath)
-			<main class="w-full flex-1">
+			<main
+				class={
+					"w-full flex-1",
+					templ.KV("min-h-0 overflow-hidden flex flex-col", isSocketApp(currentPath)),
+				}
+			>
 				@content
 			</main>
-			@footer(ui, lang)
+			if !isSocketApp(currentPath) {
+				@footer(ui, lang, currentPath)
+				<button
+					id="back-to-top"
+					onclick="window.scrollTo({top:0,behavior:'smooth'})"
+					aria-label="Back to top"
+					title="Back to top"
+					class="hidden sm:block fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
+				>
+					@IconArrowUp()
+				</button>
+			}
 			@shortcutsModal(ui, lang)
 			@confirmModal(ui)
-			<button
-				id="back-to-top"
-				onclick="window.scrollTo({top:0,behavior:'smooth'})"
-				aria-label="Back to top"
-				title="Back to top"
-				class="hidden sm:block fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text hover:border-[var(--c-link)] shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
-			>
-				@IconArrowUp()
-			</button>
 			@layoutScripts()
 		</body>
 	</html>
+}
+
+func isSocketApp(path string) bool {
+	p := strings.TrimPrefix(path, "/id")
+	return p == "/socket" || (strings.HasPrefix(p, "/socket/") && p != "/socket/new") || p == "/graph" || strings.HasPrefix(p, "/graph/")
 }
 
 func prefix(lang string) string {
@@ -124,7 +135,6 @@ func prefix(lang string) string {
 }
 
 func switchLangURL(lang string, currentPath string) string {
-	// 1-Click Toggle: EN <-> ID
 	if lang == "id" {
 		p := strings.TrimPrefix(currentPath, "/id")
 		if p == "" {
@@ -182,8 +192,6 @@ func pageTitle(page string) string {
 		return "Search · " + suffix
 	case "resume":
 		return "Resume · " + suffix
-	case "changelog":
-		return "Changelog · " + suffix
 	case "links":
 		return "Links · " + suffix
 	case "404":
@@ -200,7 +208,6 @@ func pageTitle(page string) string {
 	}
 }
 
-// hreflangEN returns the English-equivalent path by stripping any /id prefix.
 func hreflangEN(path string) string {
 	p := strings.TrimPrefix(path, "/id")
 	if p == "" {

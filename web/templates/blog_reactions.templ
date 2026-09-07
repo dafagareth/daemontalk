@@ -5,117 +5,168 @@ import (
 	"fmt"
 )
 
-// reactionIcon returns an SVG icon for a given emoji reaction.
-templ reactionIcon(emoji string, active bool) {
-	if emoji == "like" {
-		@IconReactionThumbsUp(active)
-	} else if emoji == "heart" {
-		@IconReactionHeart(active)
-	} else if emoji == "fire" {
-		@IconReactionFire(active)
-	} else if emoji == "mindblown" {
-		@IconReactionMindBlown(active)
-	} else if emoji == "insightful" {
-		@IconReactionInsightful(active)
-	} else {
-		{ emoji }
-	}
-}
-
-// ReactionsBar renders the 5 authentic emoji reactions along with Bookmark and Share dock.
 templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang string, userReaction string, commentCount int, title string, date string) {
-	<div id="reactions-bar" class="w-full mt-6 flex items-center justify-between gap-2 sm:gap-3 select-none font-mono text-xs not-prose">
-		<div class="flex items-center gap-1.5 sm:gap-3 flex-nowrap">
-			for _, emoji := range []string{"like", "heart", "fire"} {
-				{{
-					active := emoji == userReaction
-					count := reactions[emoji]
-				}}
-				<button
-					hx-post={ blogPrefix(lang) + "/blog/" + slug + "/reactions/" + emoji }
-					hx-target="#reactions-bar"
-					hx-swap="outerHTML"
-					class={
-						"inline-flex items-center gap-1.5 px-2 py-1.5 sm:px-3 sm:py-2 text-sm transition-transform hover:scale-110 cursor-pointer rounded hover:bg-surface shrink-0",
-						templ.KV("text-text font-bold bg-surface", active),
-						templ.KV("text-muted hover:text-text opacity-75 hover:opacity-100", !active),
-					}
-					title={ reactionName(emoji) }
-					aria-label={ reactionName(emoji) }
-				>
-					@reactionIcon(emoji, active)
-					if count > 0 {
-						<span class={ "text-xs sm:text-sm font-mono font-medium", templ.KV("text-text font-bold", active), templ.KV("text-muted", !active) }>{ fmt.Sprintf("%d", count) }</span>
-					}
-				</button>
-			}
-		</div>
-		<div class="flex items-center gap-1 sm:gap-2 relative shrink-0">
-			<a
-				href={ templ.SafeURL("https://github.com/dafagareth/daemontalk/edit/main/content/posts/" + slug + ".md") }
-				target="_blank"
-				rel="noopener noreferrer"
-				class="p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 flex items-center justify-center cursor-pointer"
-				if lang == "id" {
-					title="Saran perbaikan artikel (Edit di GitHub)"
-				} else {
-					title="Suggest an edit on GitHub"
-				}
-				aria-label="Suggest an edit"
-			>
-				@IconEditSuggest("w-4 h-4 shrink-0")
-			</a>
-			<a
-				href={ templ.SafeURL(prefix(lang) + "/contribute") }
-				class="p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 flex items-center justify-center cursor-pointer"
-				if lang == "id" {
-					title="Tulis artikel baru (Pedoman Kontribusi)"
-				} else {
-					title="Write a dispatch (Contribution Guide)"
-				}
-				aria-label="Contribution Guide"
-			>
-				@IconContribute("w-4 h-4 shrink-0")
-			</a>
+	{{
+		active := userReaction == "like"
+		count := reactions["like"]
+	}}
+	<div id="reactions-bar" class="w-full mt-10 mb-8 not-prose font-sans select-none">
+		<div class="py-2 flex items-center justify-between gap-3 text-xs">
 			<button
 				type="button"
-				onclick="toggleBookmark(this)"
-				data-slug={ slug }
-				data-title={ title }
-				data-date={ date }
-				class="bookmark-btn p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center"
-				title="Save / Bookmark post"
-				aria-label="Save post"
+				hx-post={ blogPrefix(lang) + "/blog/" + slug + "/reactions/like" }
+				hx-target="#reactions-bar"
+				hx-swap="outerHTML"
+				class={
+					"inline-flex items-center gap-2 px-3 py-1.5 rounded-none border border-border transition-colors cursor-pointer group text-xs font-sans select-none",
+					templ.KV("bg-hover text-text font-bold", active),
+					templ.KV("bg-surface hover:bg-hover text-text", !active),
+				}
+				if lang == "id" {
+					title="Sukai artikel ini"
+				} else {
+					title="Like this article"
+				}
+				aria-label="Like"
 			>
-				@IconBookmark("bookmark-icon w-4 h-4 shrink-0")
+				@IconReactionThumbsUp(active)
+				<span>
+					if lang == "id" {
+						Suka
+					} else {
+						Like
+					}
+				</span>
+				if count > 0 {
+					<span class="text-muted/40 font-normal">·</span>
+					<span class="font-bold font-sans text-text tabular-nums">
+						{ fmt.Sprintf("%d", count) }
+					</span>
+				}
 			</button>
-			<div class="relative">
+			<div class="flex items-center gap-1.5 sm:gap-2">
 				<button
 					type="button"
-					onclick="toggleSharePopover(event)"
-					class="p-2 sm:p-1.5 text-muted hover:text-text transition-transform hover:scale-110 cursor-pointer flex items-center justify-center group"
-					title="Share article"
-					aria-label="Share article"
+					onclick="toggleBookmark(this)"
+					data-slug={ slug }
+					data-title={ title }
+					data-date={ date }
+					class="bookmark-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors font-sans font-medium text-xs cursor-pointer select-none"
+					if lang == "id" {
+						title="Simpan artikel"
+					} else {
+						title="Save post"
+					}
+					aria-label="Save post"
 				>
-					@IconShare("w-4 h-4 shrink-0")
+					@IconBookmark("bookmark-icon w-3.5 h-3.5 shrink-0")
+					<span class="bookmark-text">
+						if lang == "id" {
+							Simpan
+						} else {
+							Save
+						}
+					</span>
 				</button>
-				<div id="share-popover-menu" class="hidden absolute right-0 bottom-full mb-3 bg-surface border border-border shadow-2xl z-40 p-1 font-mono text-xs rounded-none select-none whitespace-nowrap">
-					<div class="flex items-center gap-1">
+				<div class="relative">
+					<button
+						type="button"
+						onclick="toggleSharePopover(event, 'footer-share-popover-menu')"
+						class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors font-sans font-medium text-xs cursor-pointer select-none"
+						if lang == "id" {
+							title="Bagikan artikel"
+						} else {
+							title="Share article"
+						}
+						aria-label="Share article"
+					>
+						@IconShare("w-3.5 h-3.5 shrink-0")
+						<span>
+							if lang == "id" {
+								Bagikan
+							} else {
+								Share
+							}
+						</span>
+					</button>
+					<div
+						id="footer-share-popover-menu"
+						class="hidden absolute right-0 bottom-full mb-2.5 bg-surface border border-border shadow-2xl z-40 p-1.5 sm:p-2 font-sans text-xs rounded-none select-none whitespace-nowrap"
+					>
+						<div class="flex items-center gap-1.5 sm:gap-2">
+							<button
+								type="button"
+								onclick="copyPostUrl(this, event)"
+								class="px-3 py-2 text-muted hover:text-text hover:bg-hover flex items-center gap-2 cursor-pointer rounded-none transition-colors group font-bold text-xs"
+								title="Copy link to clipboard"
+							>
+								@IconLink("w-4 h-4 text-muted group-hover:text-text shrink-0")
+								<span class="share-label-text">
+									if lang == "id" {
+										Salin
+									} else {
+										Copy
+									}
+								</span>
+								<span class="share-copied-status hidden text-text font-bold">
+									if lang == "id" {
+										Tersalin
+									} else {
+										Copied
+									}
+								</span>
+							</button>
+							<div class="h-5 w-px bg-border mx-0.5"></div>
+							<button type="button" onclick="shareToTwitter(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on X" aria-label="Share on X">
+								@IconX("w-4 h-4 shrink-0")
+							</button>
+							<button type="button" onclick="shareToBluesky(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on Bluesky" aria-label="Share on Bluesky">
+								@IconBluesky("w-4 h-4 shrink-0")
+							</button>
+							<button type="button" onclick="shareToLinkedIn(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on LinkedIn" aria-label="Share on LinkedIn">
+								@IconLinkedIn("w-4 h-4 shrink-0")
+							</button>
+							<button type="button" onclick="shareToThreads(event)" class="w-8 h-8 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center" title="Share on Threads" aria-label="Share on Threads">
+								@IconThreads("w-4 h-4 shrink-0")
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="relative">
+					<button
+						type="button"
+						onclick="toggleMorePopover(event, 'footer-more-popover-menu')"
+						class="inline-flex items-center justify-center px-2 py-1.5 rounded-none border border-border bg-surface hover:bg-hover text-text transition-colors cursor-pointer select-none"
+						if lang == "id" {
+							title="Opsi lainnya"
+						} else {
+							title="More options"
+						}
+						aria-label="More options"
+					>
+						@IconMoreHorizontal("w-3.5 h-3.5 shrink-0")
+					</button>
+					<div
+						id="footer-more-popover-menu"
+						class="hidden absolute right-0 bottom-full mb-2.5 bg-surface border border-border shadow-2xl z-40 p-1.5 min-w-[220px] font-sans text-xs rounded-none select-none whitespace-nowrap"
+					>
 						<button
 							type="button"
-							onclick="copyPostUrl(this, event)"
-							class="px-2.5 py-1.5 text-muted hover:text-text hover:bg-hover flex items-center gap-1.5 cursor-pointer rounded-none transition-colors group font-bold text-xs"
-							title="Copy link to clipboard"
+							onclick="copyBibtex(this)"
+							data-bibtex={ bibtexFromMeta(slug, title, date) }
+							class="w-full px-3 py-2 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
 						>
-							@IconLink("w-3.5 h-3.5 text-muted group-hover:text-text shrink-0")
-							<span class="share-label-text">
-								if lang == "id" {
-									Salin
-								} else {
-									Copy
-								}
+							<span class="flex items-center gap-2.5">
+								<span class="font-serif font-bold text-base leading-none text-text">”</span>
+								<span>
+									if lang == "id" {
+										Salin BibTeX
+									} else {
+										Copy BibTeX
+									}
+								</span>
 							</span>
-							<span class="share-copied-status hidden text-accent font-bold">
+							<span class="bibtex-copied-status hidden text-accent font-bold text-[11px]">
 								if lang == "id" {
 									Tersalin
 								} else {
@@ -123,43 +174,41 @@ templ ReactionsBar(ui i18n.UI, reactions map[string]int, slug string, lang strin
 								}
 							</span>
 						</button>
-						<div class="h-4 w-px bg-border/60 mx-0.5"></div>
-						<button
-							type="button"
-							onclick="shareToTwitter(event)"
-							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
-							title="Share on X"
-							aria-label="Share on X"
+						<div class="h-px bg-border/60 my-1.5"></div>
+						<a
+							href={ templ.SafeURL("https://github.com/dafagareth/daemontalk/edit/main/content/posts/" + slug + ".md") }
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-full px-3 py-2 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
 						>
-							@IconX("w-3.5 h-3.5 shrink-0")
-						</button>
-						<button
-							type="button"
-							onclick="shareToBluesky(event)"
-							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
-							title="Share on Bluesky"
-							aria-label="Share on Bluesky"
+							<span class="flex items-center gap-2.5">
+								@IconEditSuggest("w-4 h-4 text-muted group-hover:text-text shrink-0")
+								<span>
+									if lang == "id" {
+										Edit di GitHub
+									} else {
+										Edit on GitHub
+									}
+								</span>
+							</span>
+							@IconArrowUpRight("w-3 h-3 text-muted/60")
+						</a>
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/contribute") }
+							class="w-full px-3 py-2 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
 						>
-							@IconBluesky("w-3.5 h-3.5 shrink-0")
-						</button>
-						<button
-							type="button"
-							onclick="shareToLinkedIn(event)"
-							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
-							title="Share on LinkedIn"
-							aria-label="Share on LinkedIn"
-						>
-							@IconLinkedIn("w-3.5 h-3.5 shrink-0")
-						</button>
-						<button
-							type="button"
-							onclick="shareToThreads(event)"
-							class="p-1.5 text-muted hover:text-text hover:bg-hover cursor-pointer rounded-none transition-colors flex items-center justify-center"
-							title="Share on Threads"
-							aria-label="Share on Threads"
-						>
-							@IconThreads("w-3.5 h-3.5 shrink-0")
-						</button>
+							<span class="flex items-center gap-2.5">
+								@IconContribute("w-4 h-4 text-muted group-hover:text-text shrink-0")
+								<span>
+									if lang == "id" {
+										Pedoman Kontribusi
+									} else {
+										Contribute
+									}
+								</span>
+							</span>
+							@IconArrowUpRight("w-3 h-3 text-muted/60")
+						</a>
 					</div>
 				</div>
 			</div>

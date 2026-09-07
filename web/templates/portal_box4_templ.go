@@ -40,7 +40,7 @@ func portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []po
 			return templ_7745c5c3_Err
 		}
 		for _, cat := range leftCats {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<article class=\"flex flex-col justify-between group py-6 px-5 sm:p-6 lg:p-7\"><div class=\"flex flex-col gap-3 sm:gap-4\"><div class=\"flex items-center justify-between gap-2\"><div class=\"text-xs font-mono font-bold uppercase tracking-widest text-accent flex items-center gap-1.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<article class=\"flex flex-col justify-between group py-6 px-5 sm:p-6 lg:p-7\"><div class=\"flex flex-col gap-3 sm:gap-4\"><div class=\"flex items-center justify-between gap-2\"><div class=\"text-xs font-sans font-bold uppercase tracking-wider text-accent flex items-center gap-1.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -48,7 +48,7 @@ func portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []po
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><span class=\"text-[11px] font-mono text-muted\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><span class=\"text-[11px] font-sans text-muted\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -131,7 +131,7 @@ func portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []po
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"flex text-[10px] sm:text-xs font-mono text-muted items-center justify-between mt-auto pt-1 sm:pt-2\"><span class=\"font-bold text-text\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"flex text-[10px] sm:text-xs font-sans text-muted items-center justify-between mt-auto pt-1 sm:pt-2\"><span class=\"font-bold text-text\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -182,7 +182,7 @@ func portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []po
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div class=\"lg:col-span-4 flex flex-col bg-surface/30\"><div class=\"flex items-center justify-between px-4 py-3 border-b border-border bg-surface text-xs font-mono font-bold uppercase tracking-wider\"><div class=\"flex items-center gap-2 text-text\"><span>RECENT DISPATCHES</span></div><span class=\"text-[10px] text-muted font-normal uppercase font-mono tracking-wider\">INDEX</span></div><div class=\"px-5 sm:px-6 py-6 flex flex-col divide-y divide-border/40 flex-1 justify-around\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div class=\"lg:col-span-4 flex flex-col bg-surface/30\"><div class=\"flex items-center justify-between px-4 py-3 border-b border-border bg-surface text-xs font-sans font-bold uppercase tracking-wider\"><div class=\"flex items-center gap-2 text-text\"><span>RECENT DISPATCHES</span></div><span class=\"text-[10px] text-muted font-normal uppercase font-sans tracking-wider\">INDEX</span></div><div class=\"px-5 sm:px-6 py-6 flex flex-col divide-y divide-border/40 flex-1 justify-around\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -223,7 +223,7 @@ func portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []po
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-muted text-[11px]\">·</span> <time class=\"text-muted text-[11px] font-mono\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"text-muted text-[11px]\">·</span> <time class=\"text-muted text-[11px] font-sans\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -249,7 +249,7 @@ func portalBox4SplitRiver(ui i18n.UI, leftCats []CategorySection, wirePosts []po
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</h4><div class=\"text-[11px] font-mono text-muted\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</h4><div class=\"text-[11px] font-sans text-muted\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

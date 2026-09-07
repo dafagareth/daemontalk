@@ -19,171 +19,267 @@ templ DiscussionsIndexPage(
 	totalCount int,
 	page int,
 	totalPages int,
+	activeTopic *forum.Topic,
+	activeReplies []*forum.Reply,
+	isDetailView bool,
 ) {
-	<section class="container-page py-6 sm:py-10 min-h-[75vh]">
-		<div class="border-0 sm:border sm:border-muted/30 bg-transparent sm:bg-surface/20 sm:shadow-xl sm:overflow-hidden font-sans">
-			<!-- Terminal Command & Action: The ONLY boxed element on mobile -->
-			<div class="border border-muted/30 bg-surface sm:border-0 sm:border-b sm:border-muted/30 px-4 py-3 sm:px-6 sm:py-3.5 flex items-center justify-between gap-3 text-xs sm:text-sm font-mono select-none mb-5 sm:mb-0">
-				<div class="flex items-center gap-2 sm:gap-3 text-text font-bold min-w-0">
-					<span class="text-link font-black font-mono text-base sm:text-lg shrink-0 select-none">❯</span>
-					<code class="text-xs sm:text-sm font-mono truncate">nc -l /dev/socket</code>
-					<span class="text-[10px] sm:text-[11px] font-mono text-muted font-normal bg-chip px-1.5 py-0.5 border border-muted/30 shrink-0">
-						if author != "" {
-							{ fmt.Sprintf("@%s (%d)", author, totalCount) }
-						} else if searchQuery != "" {
-							{ fmt.Sprintf("\"%s\" (%d)", searchQuery, totalCount) }
-						} else if selectedTag != "" {
-							{ fmt.Sprintf("#%s (%d)", selectedTag, totalCount) }
-						} else {
-							{ fmt.Sprintf("%d", totalCount) }
+	<section class="container-page !px-0 sm:!px-6 lg:!px-8 py-0 sm:py-3 lg:py-4 h-full flex-1 min-h-0 flex flex-col">
+		<div class="border-0 sm:border border-border bg-surface w-full h-full flex-1 min-h-0 flex flex-col overflow-hidden font-sans">
+			<div
+				class={
+					"border-b border-border bg-surface px-4 py-2 sm:px-6 sm:py-2.5 items-center justify-between gap-4 text-xs font-sans select-none flex-wrap shrink-0",
+					templ.KV("hidden lg:flex", isDetailView),
+					templ.KV("flex", !isDetailView),
+				}
+			>
+				<div class="flex items-center gap-3 overflow-x-auto text-xs font-sans font-medium">
+					<a
+						href={ templ.SafeURL(getFilterURL(prefix(lang), selectedTag, "latest")) }
+						class={
+							"transition-colors tracking-wider",
+							templ.KV("text-text font-bold underline underline-offset-4 decoration-text", sortOrder == "latest" || sortOrder == ""),
+							templ.KV("text-muted hover:text-text", sortOrder != "latest" && sortOrder != ""),
 						}
-					</span>
+					>
+						if lang == "id" {
+							semua
+						} else {
+							threads
+						}
+					</a>
+					<span class="text-border select-none">/</span>
+					<a
+						href={ templ.SafeURL(getFilterURL(prefix(lang), selectedTag, "unsolved")) }
+						class={
+							"transition-colors tracking-wider",
+							templ.KV("text-text font-bold underline underline-offset-4 decoration-text", sortOrder == "unsolved"),
+							templ.KV("text-muted hover:text-text", sortOrder != "unsolved"),
+						}
+					>
+						if lang == "id" {
+							belum solved
+						} else {
+							unsolved
+						}
+					</a>
+					<span class="text-border select-none">/</span>
+					<a
+						href={ templ.SafeURL(getFilterURL(prefix(lang), selectedTag, "votes")) }
+						class={
+							"transition-colors tracking-wider",
+							templ.KV("text-text font-bold underline underline-offset-4 decoration-text", sortOrder == "votes"),
+							templ.KV("text-muted hover:text-text", sortOrder != "votes"),
+						}
+					>
+						if lang == "id" {
+							populer
+						} else {
+							top votes
+						}
+					</a>
 				</div>
-				<!-- + New Discussion button -->
 				<a
 					href={ templ.SafeURL(prefix(lang) + "/socket/new") }
-					class="inline-flex items-center gap-1 px-3 py-1.5 bg-[var(--c-text)] text-[var(--c-bg)] hover:opacity-90 font-mono font-bold text-xs uppercase tracking-wider transition-all shrink-0"
+					class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-border bg-bg hover:bg-hover hover:border-text text-text font-sans text-xs font-semibold transition-colors shrink-0"
 				>
 					<span>+</span>
 					<span>{ ui.Discussions_New }</span>
 				</a>
 			</div>
-
-			if selectedTag != "" {
-				<div class="border-b border-muted/30 bg-surface/30 px-4 sm:px-6 py-2.5 flex items-center justify-between text-xs font-mono select-none mb-4 sm:mb-0">
-					<div class="flex items-center gap-2">
-						<span class="text-muted uppercase">Tag:</span>
-						<span class="text-accent font-bold font-mono">#{ selectedTag }</span>
-						<span class="text-muted/40">·</span>
-						<span class="text-muted">{ fmt.Sprintf("%d topics", totalCount) }</span>
-					</div>
-					<a
-						href={ templ.SafeURL(prefix(lang) + "/socket") }
-						class="text-muted hover:text-text hover:underline flex items-center gap-1 text-[11px]"
-					>
-						<span>✕</span>
-						<span>
-							if lang == "id" {
-								Hapus filter
-							} else {
-								Clear filter
+			<div class="grid grid-rows-1 grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border flex-1 min-h-0 h-full overflow-hidden">
+				<div
+					class={
+						"lg:col-span-5 xl:col-span-4 flex flex-col bg-surface min-h-0 h-full overflow-hidden",
+						templ.KV("hidden lg:flex", isDetailView),
+						templ.KV("flex", !isDetailView),
+					}
+				>
+					<div id="socket-topics-list" class="flex-1 min-h-0 overflow-y-auto divide-y divide-border/40 [scrollbar-width:thin]">
+						if len(topics) == 0 {
+							<div class="p-8 text-center font-sans">
+								<p class="text-xs font-bold text-text mb-1">No Topics Found</p>
+								<p class="text-[11px] text-muted mb-3">Start the first technical discussion.</p>
+								<a
+									href={ templ.SafeURL(prefix(lang) + "/socket/new") }
+									class="inline-flex items-center gap-1 text-xs font-sans text-link hover:underline font-bold"
+								>
+									<span>+ New Topic</span>
+									@IconArrowRight("w-3 h-3")
+								</a>
+							</div>
+						} else {
+							for _, t := range topics {
+								@DiscussionsTopicRow(ui, lang, t, activeTopic != nil && activeTopic.ID == t.ID)
 							}
-						</span>
-					</a>
-				</div>
-			}
-
-			if len(topics) == 0 {
-				<div class="p-12 text-center font-mono">
-					<p class="text-sm font-bold text-text mb-1">No Topics Found</p>
-					<p class="text-xs text-muted mb-4">Start the first topic or ask an architectural question.</p>
-					<a
-						href={ templ.SafeURL(prefix(lang) + "/socket/new") }
-						class="inline-flex items-center gap-1 text-xs font-mono text-link hover:underline font-bold"
-					>
-						<span>+ Start New Topic</span>
-						@IconArrowRight("w-3 h-3")
-					</a>
-				</div>
-			} else {
-				<div class="divide-y divide-muted/25 sm:divide-muted/30">
-					for _, t := range topics {
-						<div class={
-							"py-5 px-1.5 sm:px-6 sm:py-4 flex items-start sm:items-center justify-between gap-4 sm:gap-5 transition-all group",
-							templ.KV("border-l-4 border-l-emerald-500 bg-emerald-500/[0.03] hover:bg-emerald-500/[0.07]", t.IsSolved),
-							templ.KV("border-l-4 border-l-transparent hover:bg-hover", !t.IsSolved),
-						}>
-							<div class="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
-								<div class="shrink-0 pt-0.5 sm:pt-0">
-									@DiscussionsVoteButton("topic", t.ID, t.VotesCount, t.UserVoted)
-								</div>
-								<div class="min-w-0 flex-1 space-y-1.5">
-									<a
-										href={ templ.SafeURL(prefix(lang) + "/socket/" + t.Slug) }
-										class="font-bold text-base leading-snug transition-colors break-words block text-text group-hover:text-link"
-									>
-										{ t.Title }
-									</a>
-									<div class="flex items-center gap-2 text-xs font-mono text-muted flex-wrap pt-0.5">
-										if len(t.Tags) > 0 {
-											for _, tag := range t.Tags {
-												<a
-													href={ templ.SafeURL(fmt.Sprintf("%s/socket?tag=%s", prefix(lang), tag)) }
-													class="text-accent hover:underline font-mono text-xs font-bold mr-1"
-												>
-													{ "#" + tag }
-												</a>
-											}
-											<span class="text-muted/40">·</span>
-										}
-										if t.AuthorUsername != "" && t.AuthorUsername != "ghost" {
-											<span class="text-text font-medium">{ "@" + t.AuthorUsername }</span>
-											<span class="text-muted/40">·</span>
-										} else if t.AuthorName != "" {
-											<span class="text-text font-medium">{ t.AuthorName }</span>
-											<span class="text-muted/40">·</span>
-										}
-										<time datetime={ t.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time">
-											{ timeAgoOrDate(t.CreatedAt, lang) }
-										</time>
-										<span class="sm:hidden text-muted/40">·</span>
-										<span class="sm:hidden font-medium text-text">
-											if lang == "id" {
-												{ fmt.Sprintf("%d balasan", t.RepliesCount) }
-											} else {
-												{ fmt.Sprintf("%d replies", t.RepliesCount) }
-											}
-										</span>
-									</div>
-								</div>
-							</div>
-							<div class="shrink-0 hidden sm:flex items-center gap-3 text-xs font-mono text-muted text-right">
-								<span class="text-text font-medium">
-									if lang == "id" {
-										{ fmt.Sprintf("%d balasan", t.RepliesCount) }
-									} else {
-										{ fmt.Sprintf("%d replies", t.RepliesCount) }
-									}
-								</span>
-								<span class="text-muted/40">·</span>
-								<span>{ fmt.Sprintf("%d views", t.ViewsCount) }</span>
-							</div>
+						}
+					</div>
+					if totalPages > 1 {
+						<div class="border-t border-border bg-surface px-4 py-2 sm:py-2.5 flex items-center justify-between text-[11px] font-sans text-muted select-none shrink-0 mt-auto">
+							if page > 1 {
+								<a
+									href={ templ.SafeURL(getPageURL(prefix(lang), selectedTag, sortOrder, page-1)) }
+									class="inline-flex items-center gap-1 text-text hover:text-link font-bold"
+								>
+									@IconArrowLeft("w-3 h-3")
+									<span>PREV</span>
+								</a>
+							} else {
+								<div></div>
+							}
+							<span>{ fmt.Sprintf("%d / %d", page, totalPages) }</span>
+							if page < totalPages {
+								<a
+									href={ templ.SafeURL(getPageURL(prefix(lang), selectedTag, sortOrder, page+1)) }
+									class="inline-flex items-center gap-1 text-text hover:text-link font-bold"
+								>
+									<span>NEXT</span>
+									@IconArrowRight("w-3 h-3")
+								</a>
+							}
 						</div>
 					}
 				</div>
-			}
-			if totalPages > 1 {
-				<div class="border-t border-muted/30 bg-surface px-5 sm:px-7 py-3 flex items-center justify-between text-xs font-mono text-muted select-none">
-					if page > 1 {
-						<a
-							href={ templ.SafeURL(getPageURL(prefix(lang), selectedTag, page-1)) }
-							class="inline-flex items-center gap-1 text-link hover:underline font-bold"
-						>
-							@IconArrowLeft("w-3.5 h-3.5")
-							<span>PREV</span>
-						</a>
-					} else {
-						<div></div>
+				<div
+					id="socket-detail-pane"
+					class={
+						"lg:col-span-7 xl:col-span-8 flex flex-col min-h-0 h-full overflow-y-auto bg-surface [scrollbar-width:thin]",
+						templ.KV("hidden lg:flex", !isDetailView),
+						templ.KV("flex", isDetailView),
 					}
-					<span>{ fmt.Sprintf("PAGE %d / %d", page, totalPages) }</span>
-					if page < totalPages {
-						<a
-							href={ templ.SafeURL(getPageURL(prefix(lang), selectedTag, page+1)) }
-							class="inline-flex items-center gap-1 text-link hover:underline font-bold"
-						>
-							<span>NEXT</span>
-							@IconArrowRight("w-3.5 h-3.5")
-						</a>
+				>
+					if activeTopic != nil {
+						@DiscussionsTopicPane(ui, lang, currentUser, activeTopic, activeReplies)
+					} else {
+						@DiscussionsEmptyPane(ui, lang)
 					}
 				</div>
-			}
+			</div>
 		</div>
 	</section>
+	@socketShortcutsScript()
 }
 
-func getPageURL(prefixStr, tag string, p int) string {
+templ DiscussionsTopicRow(ui i18n.UI, lang string, t *forum.Topic, isActive bool) {
+	<div
+		id={ fmt.Sprintf("topic-row-%d", t.ID) }
+		data-topic-id={ fmt.Sprintf("%d", t.ID) }
+		data-topic-slug={ t.Slug }
+		class={
+			"topic-row transition-colors select-none group",
+			templ.KV("bg-bg", isActive),
+			templ.KV("hover:bg-bg/60", !isActive),
+		}
+	>
+		<a
+			href={ templ.SafeURL(prefix(lang) + "/socket/" + t.Slug) }
+			hx-get={ templ.SafeURL(prefix(lang) + "/socket/" + t.Slug) }
+			hx-target="#socket-detail-pane"
+			hx-swap="innerHTML"
+			hx-push-url="true"
+			onclick="if (window.innerWidth < 1024) { window.location.href = this.getAttribute('href'); return false; } selectSocketTopicRow(this);"
+			class="block p-4 sm:px-6 sm:py-4.5 w-full min-w-0 space-y-2 cursor-pointer"
+		>
+			<h3 class="font-bold text-sm sm:text-base leading-snug text-text group-hover:text-link transition-colors line-clamp-2">
+				if t.IsSolved {
+					<span class="text-emerald-500 font-sans font-bold text-xs sm:text-sm mr-1.5 select-none">✓</span>
+				}
+				{ t.Title }
+			</h3>
+			<div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[13px] font-sans text-muted flex-wrap">
+				<time datetime={ t.CreatedAt.UTC().Format("2006-01-02T15:04:05Z07:00") } class="comment-time">
+					{ timeAgoOrDate(t.CreatedAt, lang) }
+				</time>
+				<span class="text-muted/30">·</span>
+				if t.AuthorUsername != "" && t.AuthorUsername != "ghost" {
+					<span>{ "@" + t.AuthorUsername }</span>
+				} else {
+					<span>{ t.AuthorName }</span>
+				}
+				<span class="text-muted/30">·</span>
+				<span>
+					if lang == "id" {
+						{ fmt.Sprintf("%d balasan", t.RepliesCount) }
+					} else {
+						{ fmt.Sprintf("%d replies", t.RepliesCount) }
+					}
+				</span>
+				if t.VotesCount > 0 {
+					<span class="text-muted/30">·</span>
+					<span>
+						if lang == "id" {
+							{ fmt.Sprintf("%d upvote", t.VotesCount) }
+						} else {
+							{ fmt.Sprintf("%d upvotes", t.VotesCount) }
+						}
+					</span>
+				}
+			</div>
+		</a>
+	</div>
+}
+
+templ socketShortcutsScript() {
+	<script>
+		function selectSocketTopicRow(linkEl) {
+			document.querySelectorAll('.topic-row').forEach(function(row) {
+				row.classList.remove('bg-bg');
+			});
+			var parentRow = linkEl.closest('.topic-row');
+			if (parentRow) {
+				parentRow.classList.add('bg-bg');
+			}
+			var pane = document.getElementById('socket-detail-pane');
+			if (pane) {
+				pane.scrollTop = 0;
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', function() {
+			document.addEventListener('keydown', function(e) {
+				if (e.target.matches('input, textarea, select')) return;
+				if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+				if (e.key === 'r') {
+					var replyForm = document.getElementById('reply-form');
+					if (replyForm) {
+						e.preventDefault();
+						replyForm.scrollIntoView({ behavior: 'smooth' });
+						var ta = replyForm.querySelector('textarea');
+						if (ta) ta.focus();
+					}
+				} else if (e.key === 'j' || e.key === 'k') {
+					var rows = Array.from(document.querySelectorAll('.topic-row a[hx-get]'));
+					if (rows.length === 0) return;
+					var activeIdx = rows.findIndex(function(a) {
+						return a.closest('.topic-row').classList.contains('bg-bg');
+					});
+					if (activeIdx === -1) activeIdx = 0;
+					var nextIdx = e.key === 'j' ? activeIdx + 1 : activeIdx - 1;
+					if (nextIdx >= 0 && nextIdx < rows.length) {
+						e.preventDefault();
+						rows[nextIdx].click();
+						rows[nextIdx].scrollIntoView({ block: 'nearest' });
+					}
+				}
+			});
+		});
+	</script>
+}
+
+func getFilterURL(prefixStr, tag, sort string) string {
 	if tag != "" {
-		return fmt.Sprintf("%s/socket?tag=%s&p=%d", prefixStr, tag, p)
+		return fmt.Sprintf("%s/socket?tag=%s&sort=%s", prefixStr, tag, sort)
 	}
-	return fmt.Sprintf("%s/socket?p=%d", prefixStr, p)
+	return fmt.Sprintf("%s/socket?sort=%s", prefixStr, sort)
+}
+
+func getPageURL(prefixStr, tag, sort string, p int) string {
+	query := fmt.Sprintf("p=%d", p)
+	if tag != "" {
+		query += fmt.Sprintf("&tag=%s", tag)
+	}
+	if sort != "" && sort != "latest" {
+		query += fmt.Sprintf("&sort=%s", sort)
+	}
+	return fmt.Sprintf("%s/socket?%s", prefixStr, query)
 }

@@ -1,4 +1,3 @@
-// Tab switching and hash routing for the contribute page
 function switchContributeTab(tabName) {
 	document.querySelectorAll('.contribute-panel').forEach(function(p) {
 		p.classList.add('hidden');

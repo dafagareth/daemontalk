@@ -7,7 +7,7 @@ import (
 
 templ portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) {
 	<div class="border-0 sm:border-x sm:border-b border-border w-full mb-0 sm:mb-0 bg-bg">
-		<div class="flex items-center justify-between px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-2 bg-bg text-xs font-mono font-bold uppercase tracking-wider">
+		<div class="flex items-center justify-between px-5 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-2 bg-bg text-xs font-sans font-bold uppercase tracking-wider">
 			<span class="text-text font-black tracking-widest text-sm sm:text-[15px]">
 				DEEP DIVE SPOTLIGHT
 			</span>
@@ -22,16 +22,16 @@ templ portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) {
 				>
 					<div>
 						<div class="flex items-center justify-between mb-4 sm:mb-5">
-							<div class="text-xs sm:text-[13px] font-mono font-black uppercase tracking-widest text-accent flex items-center gap-1.5">
+							<div class="text-xs sm:text-[13px] font-sans font-bold uppercase tracking-wider text-accent flex items-center gap-1.5">
 								@categoryMultiLinks(cat.Tag, lang, "hover:underline", "text-muted/60 select-none")
 							</div>
-							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-mono font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group/btn shrink-0">
+							<a href={ templ.SafeURL(blogPrefix(lang) + "/blog/tag/" + cat.Tag) } class="text-xs font-sans font-bold uppercase tracking-wider text-muted hover:text-link flex items-center gap-1 group/btn shrink-0">
 								if lang == "id" {
 									<span>Lihat Semua</span>
 								} else {
 									<span>See More</span>
 								}
-								@IconArrowRight("w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5")
+								@IconArrowRight("w-3.5 h-3.5")
 							</a>
 						</div>
 						<article class="group/lead mb-6 sm:mb-8">
@@ -50,7 +50,7 @@ templ portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) {
 											{ cat.LeadPost.Description }
 										</p>
 									}
-									<div class="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-auto pt-1 sm:pt-0">
+									<div class="flex items-center gap-2 text-[10px] sm:text-xs font-sans text-muted mt-auto pt-1 sm:pt-0">
 										<time datetime={ cat.LeadPost.Date.Format("2006-01-02") }>{ fmtDate(cat.LeadPost, lang) }</time>
 										<span>·</span>
 										<span>{ fmt.Sprintf("%d %s", cat.LeadPost.ReadTime, ui.Blog_MinRead) }</span>
@@ -69,7 +69,7 @@ templ portalDeepDive(ui i18n.UI, categories []CategorySection, lang string) {
 												<h4 class="display text-base sm:text-[17px] lg:text-lg font-bold text-text group-hover/sub:text-link transition-colors leading-snug line-clamp-2 sm:line-clamp-none">
 													{ sub.Title }
 												</h4>
-												<div class="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-muted mt-1.5 sm:mt-2.5">
+												<div class="flex items-center gap-2 text-[10px] sm:text-xs font-sans text-muted mt-1.5 sm:mt-2.5">
 													<time datetime={ sub.Date.Format("2006-01-02") }>{ fmtDate(sub, lang) }</time>
 													<span>·</span>
 													<span>{ fmt.Sprintf("%d %s", sub.ReadTime, ui.Blog_MinRead) }</span>
