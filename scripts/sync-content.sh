@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Fast-track script to sync Markdown content and trigger in-memory reload
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -9,12 +8,10 @@ echo "[info] Pulling latest markdown content..."
 git fetch origin main
 git checkout origin/main -- content/
 
-# Fix permissions
 chown -R 10001:10001 content 2>/dev/null || true
 chmod -R 775 content || true
 
 echo "[info] Triggering Webhook to reload memory..."
-# We send a local webhook payload to the container
 BODY='{"ref":"refs/heads/main"}'
 SECRET="${GITHUB_WEBHOOK_SECRET:-}"
 

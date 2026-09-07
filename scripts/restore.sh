@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Production Restore Script
-# Safely restores SQLite databases and content from a backup archive.
-# Usage: ./scripts/restore.sh /path/to/archive.tar.gz
 
 set -euo pipefail
 
@@ -30,18 +27,15 @@ if [[ ! "${CONFIRM}" =~ ^[Yy]$ ]]; then
     exit 0
 fi
 
-# Stop container to avoid file locks
 echo "[info] Stopping Docker container..."
 cd "${DEST_DIR}"
 docker compose down || true
 
-# Pre-restore safety copy
 if [ -d "${DEST_DIR}/data" ]; then
     echo "[info] Creating safety copy at data_prerestore_${TIMESTAMP}..."
     cp -r "${DEST_DIR}/data" "${DEST_DIR}/data_prerestore_${TIMESTAMP}"
 fi
 
-# Extract archive
 echo "[info] Extracting backup archive..."
 TMP_EXTRACT="$(mktemp -d)"
 trap 'rm -rf "${TMP_EXTRACT}"' EXIT
@@ -57,7 +51,6 @@ if [ -d "${TMP_EXTRACT}/content" ]; then
     cp -r "${TMP_EXTRACT}/content/"* "${DEST_DIR}/content/" 2>/dev/null || true
 fi
 
-# Restart container
 echo "[info] Restarting Docker container..."
 docker compose up -d --build
 

@@ -1,17 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Local Development Helper
-# Usage: ./scripts/dev.sh <command>
-#
-# Commands:
-#   up / run       Full build (templ + css + go) and start server
-#   watch          Full build and start file watcher for auto-reload
-#   build          Full build without starting server
-#   css            Rebuild Tailwind CSS bundle only
-#   templ          Run templ generate only
-#   restart        Restart server process
-#   stop           Terminate running development server
-#   logs           Stream server logs
-#   help           Show usage help
 
 set -euo pipefail
 
@@ -53,7 +40,6 @@ start_server() {
 		warn ".env file not found, running with default environment"
 	fi
 	set -a
-	# shellcheck disable=SC1091
 	[ -f .env ] && . ./.env
 	set +a
 	nohup "$BIN" >"$LOG" 2>&1 &
@@ -135,7 +121,6 @@ _handle_change() {
 			rebuild_css=1
 			;;
 		content/posts/*)
-			# Markdown content reload handled at startup or in-memory
 			;;
 		*)
 			rebuild_go=1

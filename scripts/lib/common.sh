@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Content Management - Common Shared Library
 
 set -euo pipefail
 

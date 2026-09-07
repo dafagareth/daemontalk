@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Production Backup Script
-# Safely backs up SQLite databases (WAL mode safe) and markdown content.
-# Keeps the last 7 daily archives.
-# Usage: ./scripts/backup.sh
 
 set -euo pipefail
 
@@ -20,7 +16,6 @@ echo "[$(date +'%Y-%m-%d %H:%M:%S')] [backup] Starting backup procedure..."
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "${TMP_DIR}"' EXIT
 
-# Safe SQLite database dump
 if [ -d "${DATA_DIR}" ]; then
     mkdir -p "${TMP_DIR}/data"
     for db in "${DATA_DIR}"/*.db; do
@@ -35,16 +30,13 @@ if [ -d "${DATA_DIR}" ]; then
     done
 fi
 
-# Copy markdown articles
 if [ -d "${CONTENT_DIR}" ]; then
     cp -r "${CONTENT_DIR}" "${TMP_DIR}/content"
 fi
 
-# Compress into tar.gz
 tar -czf "${BACKUP_DIR}/${ARCHIVE_NAME}" -C "${TMP_DIR}" .
 
 echo "[ok] Backup created: ${BACKUP_DIR}/${ARCHIVE_NAME} ($(du -h "${BACKUP_DIR}/${ARCHIVE_NAME}" | cut -f1))"
 
-# Rotate archives older than 7 days
 find "${BACKUP_DIR}" -name "daemontalk_backup_*.tar.gz" -type f -mtime +7 -exec rm -f {} +
 echo "[ok] Old backup rotation complete."

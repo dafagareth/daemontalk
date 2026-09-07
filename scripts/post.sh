@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-# DaemonTalk Technical Post & Content Management CLI Entrypoint
-# Usage: ./scripts/post.sh [command] [args...]
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_DIR="${SCRIPT_DIR}/lib"
 
-# Load modular components
 source "${LIB_DIR}/common.sh"
 source "${LIB_DIR}/post_create.sh"
 source "${LIB_DIR}/post_lifecycle.sh"

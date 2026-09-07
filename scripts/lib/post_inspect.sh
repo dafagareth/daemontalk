@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Content Management - Inspection & Validation Module
 
 set -euo pipefail
 

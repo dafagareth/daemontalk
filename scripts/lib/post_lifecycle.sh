@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Content Management - Post Lifecycle Module (Publish, Draft, Archive, Delete)
 
 set -euo pipefail
 

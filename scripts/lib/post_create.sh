@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Content Management - Post Creation Module
 
 set -euo pipefail
 
@@ -20,7 +19,6 @@ cmd_new() {
     local title=""
     local custom_slug=""
 
-    # Parse arguments
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --uid|-u|--hex|-h)
@@ -51,7 +49,6 @@ cmd_new() {
     readable_slug=$(generate_slug "$title")
 
     if [ "$use_uid" = "true" ]; then
-        # Generate 8-character hexadecimal UID (e.g. 7f4a9b2c)
         slug=$(generate_hex_uid)
     elif [ -n "$custom_slug" ]; then
         slug="$custom_slug"

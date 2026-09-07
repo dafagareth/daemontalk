@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# DaemonTalk Production Health Watchdog
-# Checks HTTP /healthz and auto-restarts container if unresponsive.
-# Usage: ./scripts/healthcheck.sh
 
 set -euo pipefail
 
