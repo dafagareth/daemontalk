@@ -1,19 +1,17 @@
+# Production Docker Compose stack: runs the DaemonTalk web application and SSH TUI service.
+
 services:
   web:
     image: ghcr.io/dafagareth/daemontalk:latest
     ports:
-      # Reverse-proxied via Caddy on localhost
       - "127.0.0.1:8080:8080"
-      # Exposed for direct Wish SSH TUI access
       - "2222:2222"
     environment:
       PORT: "8080"
       SSH_PORT: "2222"
       ENV: "${ENV:-production}"
       BASE_URL: "${BASE_URL:-https://www.daemontalk.com}"
-      # Comment moderation: login via /admin?admin=TOKEN
       ADMIN_TOKEN: "${ADMIN_TOKEN:-}"
-      # SMTP for contact form (optional; form still works without it — messages get logged)
       SMTP_HOST: "${SMTP_HOST:-}"
       SMTP_PORT: "${SMTP_PORT:-587}"
       SMTP_USER: "${SMTP_USER:-}"
@@ -25,9 +23,7 @@ services:
       SESSION_SECRET: "${SESSION_SECRET:-}"
       TZ: "Asia/Jakarta"
     volumes:
-      # Persistent host directory mount for SQLite DBs (comments, views, posts) & SSH keys.
       - ./data:/app/data
-      # Direct mount for markdown content & post images so article updates take effect immediately
       - ./content:/app/content
       - ./.git:/app/.git:ro
       - ./web/static/images/posts:/app/web/static/images/posts

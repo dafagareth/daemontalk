@@ -1,3 +1,5 @@
+# Development Docker Compose stack: hot-reloading with live compilation (Air, Templ, Tailwind).
+
 services:
   web:
     build:
@@ -17,13 +19,8 @@ services:
       SMTP_PASS: "${SMTP_PASS:-}"
       SMTP_TO:   "${SMTP_TO:-}"
     volumes:
-      # Bind-mount the entire project folder to allow hot-reloading
       - .:/app
-      # Avoid mounting host node_modules to keep container node_modules isolated
       - /app/node_modules
-      # Avoid mounting host tmp / build files if needed
       - /app/bin
-    # Run as host user so container process owns its own bind-mounted files.
-    # No chmod 777 needed — the container user IS the file owner.
     user: "${UID:-1000}:${GID:-1000}"
     restart: unless-stopped

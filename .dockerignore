@@ -1,10 +1,10 @@
-# Version control and editor
+# Files and directories excluded from the Docker build context.
+
 .git/
 .gitignore
 .vscode/
 .idea/
 
-# Dependencies and build outputs
 node_modules/
 bin/
 dist/
@@ -13,12 +13,10 @@ daemontalk
 *.exe
 *.tmp
 
-# Environment and secrets
 .env
 .env.*
 !.env.example
 
-# Runtime SQLite data and backups
 data/
 backups/
 *.db
@@ -26,7 +24,6 @@ backups/
 *.sqlite
 *.sqlite-*
 
-# Scratchpads and local logs
 *.log
 *.bak
 claude.md
