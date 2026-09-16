@@ -71,3 +71,10 @@ Bagi arsitek sistem, ini adalah standar plugin yang sesungguhnya. Anda tidak per
 Untuk beban kerja serverless, cold start kontainer yang berkisar puluhan hingga ratusan milidetik dapat dipangkas mendekati nol. Modul ringan bisa dimuat dan dieksekusi dalam hitungan mikrodetik.
 
 WASM bukan lagi sekadar eksperimen peramban. Dengan Component Model dan WASI Preview 2, fondasi komputasi modular lintas bahasa akhirnya siap digunakan di lingkungan produksi.
+
+```references
+- title: "The WebAssembly Component Model Specification"
+  author: "Bytecode Alliance"
+  year: 2024
+  url: "https://component-model.bytecodealliance.org/"
+```

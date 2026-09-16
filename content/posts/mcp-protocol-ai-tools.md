@@ -54,3 +54,10 @@ Anda tidak perlu lagi menulis adapter khusus untuk setiap vendor model. Anda cuk
 Ketika aplikasi klien terhubung, model AI membaca skema tools yang tersedia secara dinamis. Jika tahun depan tim Anda memutuskan berganti penyedia LLM, server MCP Anda tetap bekerja tanpa perlu diubah satu baris pun.
 
 HTTP menyatukan pertukaran dokumen web, TCP/IP menyatukan jaringan, dan USB menyatukan kabel perangkat keras. MCP membawa pendekatan serupa untuk menghubungkan model AI non-deterministik dengan sistem deterministik yang kita rawat setiap hari.
+
+```references
+- title: "Model Context Protocol Specification"
+  author: "Anthropic"
+  year: 2024
+  url: "https://modelcontextprotocol.io/"
+```
