@@ -1,0 +1,90 @@
+package pages
+
+import (
+	"fmt"
+
+	"daemontalk/internal/auth"
+	"daemontalk/internal/forum"
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+)
+
+templ UserProfilePage(ui i18n.UI, profileUser *auth.User, stats forum.UserStats, recentTopics []*forum.Topic, lang string, currentPath string) {
+	{{ _ = recentTopics }}
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<a
+			href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+			class="inline-flex items-center gap-1.5 text-xs font-sans text-muted hover:text-text transition-colors mb-8 group select-none font-medium"
+		>
+			@components.IconArrowLeft("w-3.5 h-3.5")
+			<span>Back to Dispatches</span>
+		</a>
+		if profileUser == nil {
+			<p class="text-xs text-muted font-sans">User not found.</p>
+		} else {
+			<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-border mb-8">
+				<div class="flex items-center gap-4 min-w-0">
+					if profileUser.AvatarURL != "" {
+						<img
+							src={ profileUser.AvatarURL }
+							alt={ profileUser.Username }
+							class="w-14 h-14 rounded-none border border-border object-cover shrink-0"
+						/>
+					} else {
+						<div class="w-14 h-14 bg-chip flex items-center justify-center font-bold text-text text-lg border border-border shrink-0">
+							{ string([]rune(profileUser.Username)[:1]) }
+						</div>
+					}
+					<div class="font-sans min-w-0">
+						<div class="flex items-center gap-2 flex-wrap mb-1">
+							<span class="text-lg font-bold text-text tracking-tight">
+								if profileUser.DisplayName != "" {
+									{ profileUser.DisplayName }
+								} else {
+									{ profileUser.Username }
+								}
+							</span>
+							if profileUser.Role == "admin" {
+								<span class="px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-amber-500 border border-amber-500/40">ADMIN</span>
+							} else if profileUser.Role == "contributor" {
+								<span class="px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-link border border-link/40">CONTRIBUTOR</span>
+							} else {
+								<span class="px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-muted border border-border">MEMBER</span>
+							}
+						</div>
+						<div class="text-xs text-muted">{ "@" + profileUser.Username }</div>
+					</div>
+				</div>
+				<div class="flex sm:flex-col items-start sm:items-end gap-3 sm:gap-1.5 text-xs font-sans text-muted">
+					<span>Joined <span class="text-text font-semibold tabular-nums">{ profileUser.CreatedAt.Format("02 Jan 2006") }</span></span>
+					if profileUser.GitHubURL != "" {
+						<a
+							href={ templ.SafeURL(profileUser.GitHubURL) }
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-link hover:underline inline-flex items-center gap-1 font-semibold"
+						>
+							@components.IconGitHub()
+							<span>{ profileUser.Username }</span>
+							<span class="text-[10px]">↗</span>
+						</a>
+					}
+				</div>
+			</div>
+			<div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+				@profileStatItem("Topics", stats.TopicsCount, "started")
+				@profileStatItem("Replies", stats.RepliesCount, "posted")
+				@profileStatItem("Solutions", stats.SolutionsCount, "verified")
+				@profileStatItem("Reputation", stats.TotalVotes, "upvotes")
+			</div>
+		}
+	</section>
+}
+
+templ profileStatItem(label string, count int, sub string) {
+	<div class="font-sans">
+		<div class="text-2xl sm:text-3xl font-bold text-text tabular-nums">{ fmt.Sprintf("%d", count) }</div>
+		<div class="text-xs text-muted mt-1">{ label } <span class="text-muted/60">{ sub }</span></div>
+	</div>
+}

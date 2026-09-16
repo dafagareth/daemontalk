@@ -11,8 +11,6 @@ import (
 	"daemontalk/internal/forum"
 	"daemontalk/internal/handler"
 	"daemontalk/internal/post"
-	"daemontalk/internal/postdb"
-	"daemontalk/internal/project"
 )
 
 func newTestHandler(t *testing.T) *handler.Handler {
@@ -33,25 +31,17 @@ func newTestHandler(t *testing.T) *handler.Handler {
 		t.Fatalf("failed to open test forum db: %v", err)
 	}
 
-	postDBStore, err := postdb.Open(filepath.Join(tmpDir, "test_posts.db"))
-	if err != nil {
-		t.Fatalf("failed to open test postdb: %v", err)
-	}
-
 	t.Cleanup(func() {
 		_ = commentStore.Close()
 		_ = authStore.Close()
 		_ = forumStore.Close()
-		_ = postDBStore.Close()
 	})
 
 	h := &handler.Handler{
-		ContentDir:  "content",
-		AllProjects: project.All,
+		ContentDir: "content",
 		FilePosts: []post.Post{
 			{Title: "Test Dispatch", Slug: "test-dispatch", Description: "Test summary"},
 		},
-		PostDB:   postDBStore,
 		Comments: commentStore,
 		Auth:     authStore,
 		Forum:    forumStore,
@@ -79,7 +69,7 @@ func TestRouterEndpoints(t *testing.T) {
 		{"GET", "/", http.StatusOK, "", ""},
 		{"GET", "/colophon", http.StatusOK, "", ""},
 		{"GET", "/blog", http.StatusMovedPermanently, "Location", "/"},
-		{"GET", "/projects", http.StatusMovedPermanently, "Location", "/colophon#projects"},
+		{"GET", "/projects", http.StatusMovedPermanently, "Location", "/colophon"},
 		{"GET", "/uses", http.StatusMovedPermanently, "Location", "/colophon"},
 		{"GET", "/now", http.StatusMovedPermanently, "Location", "/colophon"},
 		{"GET", "/terminal", http.StatusMovedPermanently, "Location", "/"},

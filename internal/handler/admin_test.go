@@ -3,14 +3,11 @@ package handler
 import (
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
 	"daemontalk/internal/post"
-	"daemontalk/internal/postdb"
-	"daemontalk/web/templates"
 )
 
 func TestIsAdmin(t *testing.T) {
@@ -110,20 +107,8 @@ func TestConfirmModalMarkupPresent(t *testing.T) {
 }
 
 func TestAdminPageIsHumanized(t *testing.T) {
-	pdb, err := postdb.Open(filepath.Join(t.TempDir(), "posts.db"))
-	if err != nil {
-		t.Fatalf("open postdb: %v", err)
-	}
-	if _, err := pdb.Create(postdb.WebPost{
-		Slug: "tulisan-web", Title: "Tulisan dari Web", BodyMD: "isi",
-		Lang: "id", Date: "2026-07-01",
-	}); err != nil {
-		t.Fatalf("create webpost: %v", err)
-	}
-
 	h := &Handler{
 		AdminToken: "secret",
-		PostDB:     pdb,
 		FilePosts: []post.Post{
 			{Title: "Belajar Go dari Nol", Slug: "belajar-go-dari-nol", Date: time.Date(2026, 7, 2, 0, 0, 0, 0, time.UTC)},
 		},
@@ -196,7 +181,7 @@ func TestPublicPageStillHasPublicNavAndFooter(t *testing.T) {
 	h.BlogIndex(rec, req)
 
 	body := rec.Body.String()
-	for _, want := range []string{`href="/about"`, "github.com", `hreflang="en"`} {
+	for _, want := range []string{`href="/about"`, "github.com", `rel="canonical"`} {
 		if !strings.Contains(body, want) {
 			t.Errorf("public page should still include %q after headTags() extraction", want)
 		}
@@ -216,53 +201,5 @@ func TestAdminUnauthorizedReturnsNotFoundPage(t *testing.T) {
 	body := rec.Body.String()
 	if !strings.Contains(body, "404") {
 		t.Error("Unauthorized admin access should return 404 error page")
-	}
-}
-
-func TestAdminToggleRadar(t *testing.T) {
-	h := &Handler{AdminToken: "secret"}
-
-	templates.SetRadarEnabled(false)
-
-	reqGraph := httptest.NewRequest(http.MethodGet, "/graph", nil)
-	recGraph := httptest.NewRecorder()
-	h.Graph(recGraph, reqGraph)
-	if recGraph.Code != http.StatusNotFound {
-		t.Fatalf("expected 404 when radar is disabled, got %d", recGraph.Code)
-	}
-
-	reqToggle := httptest.NewRequest(http.MethodPost, "/admin/settings/toggle-radar", nil)
-	reqToggle.AddCookie(&http.Cookie{Name: "admin_token", Value: "secret"})
-	recToggle := httptest.NewRecorder()
-	h.AdminToggleRadar(recToggle, reqToggle)
-
-	if recToggle.Code != http.StatusSeeOther {
-		t.Fatalf("expected 303 on toggle, got %d", recToggle.Code)
-	}
-	if !templates.IsRadarEnabled() {
-		t.Fatal("expected radar to be enabled after toggle")
-	}
-
-	reqGraph2 := httptest.NewRequest(http.MethodGet, "/graph", nil)
-	recGraph2 := httptest.NewRecorder()
-	h.Graph(recGraph2, reqGraph2)
-	if recGraph2.Code != http.StatusOK {
-		t.Fatalf("expected 200 when radar is enabled, got %d", recGraph2.Code)
-	}
-
-	reqAPI := httptest.NewRequest(http.MethodGet, "/api/graph", nil)
-	recAPI := httptest.NewRecorder()
-	h.GraphDataAPI(recAPI, reqAPI)
-	if recAPI.Code != http.StatusOK {
-		t.Fatalf("expected 200 on /api/graph, got %d", recAPI.Code)
-	}
-	if !strings.Contains(recAPI.Body.String(), `"nodes"`) {
-		t.Errorf("expected nodes in /api/graph response")
-	}
-
-	recToggle2 := httptest.NewRecorder()
-	h.AdminToggleRadar(recToggle2, reqToggle)
-	if templates.IsRadarEnabled() {
-		t.Fatal("expected radar to be disabled after second toggle")
 	}
 }

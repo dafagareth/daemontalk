@@ -4,19 +4,18 @@ Guidelines for submitting technical articles, writing incident dispatches, and c
 
 ## Local Development Setup
 
-Ensure you have Go (>= 1.25), Node.js (>= 20), `templ`, and `air` installed.
+Ensure you have Go (>= 1.25), `templ`, and `air` installed. (Tailwind CSS standalone CLI is automatically downloaded on first run).
 
 ```bash
 # Clone the repository
 git clone https://github.com/dafagareth/daemontalk.git
 cd daemontalk
 
-# Install tools and dependencies
+# Install Go tools
 go install github.com/a-h/templ/cmd/templ@v0.3.1020
 go install github.com/air-verse/air@latest
-npm install
 
-# Start the live-reloading development server (HTTP :8080 & SSH :2222)
+# Start the live-reloading development server (HTTP :8080)
 make dev
 ```
 
@@ -56,9 +55,9 @@ summary: "Exploring asynchronous I/O batching and ring-buffer submissions using 
 DaemonTalk follows a minimalist, zero-heavy-client-JS architecture:
 
 - **Routing & HTTP:** `go-chi/chi/v5` in `internal/router/` and `internal/handler/`.
-- **HTML Templates:** Type-safe AOT-compiled templates in `web/templates/*.templ`.
-- **SSH Terminal Reader (TUI):** `charmbracelet/wish` and `bubbletea` in `internal/tui/` and `internal/tuisrv/`.
-- **Storage:** Embedded SQLite with WAL mode in `internal/comment/` and `internal/postdb/`.
+- **HTML Templates:** Type-safe AOT-compiled templates in `web/templates/**/*.templ`.
+- **Dispatches & Content:** Markdown filesystem storage with YAML frontmatter in `content/posts/`.
+- **Storage:** Embedded SQLite with WAL mode in `internal/comment/`, `internal/auth/`, and `internal/forum/`.
 
 ## Development & Makefile Reference
 

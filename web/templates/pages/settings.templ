@@ -1,0 +1,77 @@
+package pages
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+)
+
+templ SettingsPage(ui i18n.UI, user *auth.User, lang string) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<a
+			href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+			class="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-text transition-colors mb-8 group select-none"
+		>
+			@components.IconArrowLeft("w-3.5 h-3.5")
+			<span>Back to Dispatches</span>
+		</a>
+		<h1 class="text-2xl sm:text-3xl font-black text-text tracking-tight mb-8">Settings</h1>
+		if user == nil {
+			<p class="text-xs text-muted font-sans mb-4">Please sign in with GitHub to manage your account settings.</p>
+			<a
+				href={ templ.SafeURL("/auth/github?return_to=" + shared.Prefix(lang) + "/settings") }
+				class="inline-flex items-center gap-2 px-4 py-2 border border-border bg-chip text-text text-xs font-bold font-sans"
+			>
+				@components.IconGitHub()
+				<span>Login with GitHub</span>
+			</a>
+		} else {
+			<div class="flex items-center gap-3 pb-6 mb-6 border-b border-border font-sans">
+				if user.AvatarURL != "" {
+					<img src={ user.AvatarURL } alt={ user.Username } class="w-9 h-9 rounded-none border border-border object-cover shrink-0"/>
+				} else {
+					<div class="w-9 h-9 bg-chip flex items-center justify-center font-bold text-text text-xs border border-border shrink-0">
+						{ string([]rune(user.Username)[:1]) }
+					</div>
+				}
+				<div class="min-w-0">
+					<div class="text-sm font-bold text-text">{ "@" + user.Username }</div>
+					if user.DisplayName != "" {
+						<div class="text-[11px] text-muted">{ user.DisplayName }</div>
+					}
+				</div>
+				<span class="ml-auto text-[10px] font-bold uppercase tracking-wider text-muted font-sans">{ user.Role }</span>
+			</div>
+			<div class="space-y-6 font-sans">
+				<div class="flex items-center justify-between gap-4 py-4 border-b border-border/40">
+					<div>
+						<div class="text-sm font-bold text-text mb-0.5">{ ui.Auth_ExportData }</div>
+						<div class="text-xs text-muted">Download an archive of your profile and comments</div>
+					</div>
+					<a
+						href="/auth/export"
+						download
+						class="px-3 py-1.5 border border-border bg-chip text-text text-xs font-bold inline-flex items-center shrink-0"
+					>
+						EXPORT JSON
+					</a>
+				</div>
+				<div class="flex items-center justify-between gap-4 py-4">
+					<div>
+						<div class="text-sm font-bold text-rose-500 mb-0.5">{ ui.Auth_DeleteAccount }</div>
+						<div class="text-xs text-muted">Permanently delete your account and all associated data.</div>
+					</div>
+					<form action="/auth/delete" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini secara permanen? Tindakan ini tidak dapat dibatalkan.');">
+						<button
+							type="submit"
+							class="px-3 py-1.5 border border-rose-500/50 bg-rose-500/10 text-rose-400 text-xs font-bold cursor-pointer shrink-0"
+						>
+							DELETE
+						</button>
+					</form>
+				</div>
+			</div>
+		}
+	</section>
+}

@@ -1,0 +1,20 @@
+package pages
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"html/template"
+)
+
+templ TermsPage(ui i18n.UI, body template.HTML, lang string) {
+	<section class="container-page py-8 sm:py-12">
+		<div class="prose max-w-none font-sans">
+			@templ.Raw(string(body))
+		</div>
+		<a href={ templ.SafeURL(shared.Prefix(lang) + "/") } class="inline-flex items-center gap-1.5 text-sm text-link hover:underline mt-12 font-sans font-medium">
+			@components.IconArrowLeft("w-3.5 h-3.5")
+			<span>{ ui.Post_Back }</span>
+		</a>
+	</section>
+}

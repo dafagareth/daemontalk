@@ -21,22 +21,11 @@ jobs:
           go-version: 'stable'
           cache: true
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
+      - name: Install Templ
+        run: go install github.com/a-h/templ/cmd/templ@v0.3.1020
 
-      - name: Install dependencies
-        run: |
-          npm ci || npm install
-          go install github.com/a-h/templ/cmd/templ@v0.3.1020
-
-      - name: Generate Templ components
-        run: templ generate
-
-      - name: Build Tailwind CSS bundle
-        run: npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css --minify
+      - name: Build Web Assets (Templ & Tailwind CSS)
+        run: make assets
 
       - name: Run Go Vet
         run: go vet ./...
@@ -49,6 +38,3 @@ jobs:
 
       - name: Build Server Binary
         run: CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/daemontalk .
-
-      - name: Build TUI Client Binary
-        run: CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/daemontalk-tui ./cmd/tui

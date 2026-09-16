@@ -1,0 +1,142 @@
+package pages
+
+import (
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"fmt"
+
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+type SearchResult struct {
+	Post post.Post
+}
+
+templ SearchPage(ui i18n.UI, query string, results []SearchResult, lang string, viewCounts map[string]int) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6 pb-4 border-b border-border/20">
+			<a
+				href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors mb-3 group select-none font-medium"
+			>
+				@components.IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					Back to Dispatches
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-4xl font-black text-text tracking-tight uppercase">
+				{ ui.Search_Title }
+			</h1>
+		</div>
+		<div class="w-full font-sans">
+			<div class="py-3 mb-6 border-b border-border/30">
+				<form action={ templ.SafeURL(shared.Prefix(lang) + "/search") } method="get" onsubmit="event.preventDefault()">
+					<div class="flex items-center gap-3">
+						@components.IconSearch("w-5 h-5 text-muted shrink-0")
+						<input
+							id="search-input"
+							type="search"
+							name="q"
+							value={ query }
+							placeholder={ ui.Blog_SearchPlaceholder }
+							autofocus
+							hx-get={ string(templ.SafeURL(shared.Prefix(lang) + "/search")) }
+							hx-trigger="input changed delay:120ms, search"
+							hx-target="#search-results"
+							hx-push-url="true"
+							class="w-full bg-transparent text-text font-sans text-base sm:text-lg focus:outline-none placeholder:text-muted"
+							autocomplete="off"
+							aria-label="Search"
+						/>
+						if query != "" {
+							<button
+								type="button"
+								onclick="clearSearchInput()"
+								aria-label="Clear search"
+								class="kbd kbd-sm hover:bg-hover transition-colors shrink-0 cursor-pointer text-xs"
+							>
+								ESC
+							</button>
+						}
+					</div>
+				</form>
+			</div>
+			<div id="search-results">
+				@SearchResultsList(ui, query, results, lang, viewCounts)
+			</div>
+		</div>
+	</section>
+}
+
+templ SearchResultsList(ui i18n.UI, query string, results []SearchResult, lang string, viewCounts map[string]int) {
+	if query != "" {
+		if len(results) == 0 {
+			<div class="py-12 text-center font-sans">
+				<p class="text-sm font-bold text-text mb-1">{ ui.Blog_NoResults }</p>
+				<p class="text-xs text-muted">
+					No dispatches found matching "{ query }".
+				</p>
+			</div>
+		} else {
+			<ul class="divide-y divide-border/20 pt-1">
+				for _, sr := range results {
+					@searchResultItem(ui, sr.Post, query, lang, viewCounts)
+				}
+			</ul>
+		}
+	}
+}
+
+templ searchResultItem(ui i18n.UI, p post.Post, query string, lang string, viewCounts map[string]int) {
+	<li class="group">
+		<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="py-3 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
+			<h2 class="text-base sm:text-lg font-bold text-text group-hover:text-link leading-snug transition-colors">
+				@templ.Raw(string(highlightHTML(p.Title, query)))
+			</h2>
+			<time datetime={ p.Date.Format("2006-01-02") } class="text-xs font-sans text-muted shrink-0">
+				{ shared.FmtDate(p, lang) }
+			</time>
+		</a>
+	</li>
+}
+
+templ SearchDropdownResults(ui i18n.UI, query string, results []SearchResult, lang string, viewCounts map[string]int) {
+	if query != "" {
+		if len(results) == 0 {
+			<div class="p-6 text-center font-sans">
+				<p class="text-xs text-muted">{ ui.Blog_NoResults }</p>
+			</div>
+		} else {
+			<div class="divide-y divide-border/30 max-h-[360px] overflow-y-auto scrollbar-thin" id="search-dropdown-list">
+				for i, sr := range results {
+					if i < 6 {
+						<a
+							href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + sr.Post.Slug) }
+							class="search-popper-item block p-3 hover:bg-hover transition-colors group focus:bg-hover focus:outline-none"
+							tabindex="0"
+							data-index={ fmt.Sprintf("%d", i) }
+						>
+							<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-3 mb-1">
+								<h4 class="text-sm sm:text-base font-bold text-text group-hover:text-link group-focus:text-link leading-snug line-clamp-1 transition-colors font-sans">
+									@templ.Raw(string(highlightHTML(sr.Post.Title, query)))
+								</h4>
+								<span class="text-xs font-sans text-muted shrink-0 mt-0.5">{ shared.FmtDate(sr.Post, lang) }</span>
+							</div>
+						</a>
+					}
+				}
+			</div>
+			<div class="px-3.5 py-2.5 bg-surface border-t border-border/40 flex items-center justify-between text-xs font-sans text-muted">
+				<span>{ fmt.Sprintf("%d artikel ditemukan", len(results)) }</span>
+				<a
+					href={ templ.SafeURL(shared.Prefix(lang) + "/search?q=" + query) }
+					class="font-bold text-link hover:underline inline-flex items-center gap-1 group"
+				>
+					<span>{ ui.Search_SeeAll }</span>
+					@components.IconArrowRight("w-3 h-3")
+				</a>
+			</div>
+		}
+	}
+}

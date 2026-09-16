@@ -1,0 +1,132 @@
+package forum
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+)
+
+templ NewPage(
+	ui i18n.UI,
+	lang string,
+	currentUser *auth.User,
+) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6">
+			<a
+				href={ templ.SafeURL(prefix(lang) + "/socket") }
+				class="inline-flex items-center gap-1.5 text-xs font-sans text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@components.IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					Back to Socket
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-3xl font-black text-text tracking-tight">
+				Start Discussion Topic
+			</h1>
+		</div>
+		if currentUser == nil {
+			<div class="border border-border bg-surface p-8 sm:p-12 text-center space-y-4 font-sans shadow-xl">
+				<div class="w-12 h-12 bg-chip border border-border mx-auto flex items-center justify-center text-text">
+					@components.IconGitHub()
+				</div>
+				<h2 class="text-base font-bold text-text">
+					Authentication Required
+				</h2>
+				<p class="text-xs text-muted max-w-md mx-auto leading-relaxed">
+					To maintain discussion quality and prevent spam, creating a new topic requires GitHub authentication.
+				</p>
+				<a
+					href={ templ.SafeURL("/auth/github?return_to=" + prefix(lang) + "/socket/new") }
+					class="btn btn-solid"
+				>
+					@components.IconGitHub()
+					<span>
+						Sign in with GitHub
+					</span>
+				</a>
+			</div>
+		} else {
+			<form
+				method="post"
+				action={ templ.SafeURL(prefix(lang) + "/socket/new") }
+				class="border-0 sm:border border-border bg-transparent sm:bg-surface/10 font-sans overflow-hidden"
+			>
+				<div class="border-b border-border bg-transparent sm:bg-surface/50 px-0 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between text-xs font-sans select-none flex-wrap gap-3">
+					<span class="font-bold text-text uppercase tracking-wider text-xs">
+						START NEW TOPIC
+					</span>
+					<div class="text-muted text-xs flex items-center gap-1.5 font-sans">
+						<span class="text-muted/60 uppercase text-[10px]">
+							AUTHOR:
+						</span>
+						<span class="text-text font-bold">{ "@" + currentUser.Username }</span>
+					</div>
+				</div>
+				<div class="py-6 px-0 sm:p-8 space-y-4">
+					<div>
+						<input
+							type="text"
+							name="title"
+							required
+							placeholder="Topic title or technical question..."
+							class="form-input-title sm:text-2xl"
+						/>
+					</div>
+					<input type="hidden" name="category" value="general"/>
+					<div class="flex items-center gap-2 pt-1 pb-2">
+						<span class="text-xs font-sans text-muted select-none">
+							Tags:
+						</span>
+						<div class="flex-1 flex items-center gap-1.5">
+							<span class="text-xs font-sans text-muted select-none">#</span>
+							<input
+								type="text"
+								name="tags"
+								placeholder="architecture, kernel, go, memory, performance (comma separated)"
+								class="input input-bordered input-sm font-sans"
+							/>
+						</div>
+					</div>
+					<div>
+						<textarea
+							name="body"
+							rows="14"
+							required
+							placeholder="Describe problem context, system architecture, code snippets, or diagnostics (Markdown & code)..."
+							class="w-full p-0 pt-3 text-sm sm:text-base font-sans bg-transparent border-0 border-t border-border/40 focus:ring-0 focus:outline-none text-text placeholder:text-muted/50 leading-relaxed resize-y"
+						></textarea>
+					</div>
+				</div>
+				<div class="border-t border-border bg-transparent sm:bg-surface/50 px-0 sm:px-8 py-4 flex items-center justify-between text-xs font-sans text-muted flex-wrap gap-4 select-none">
+					<span>
+						[SYS] Use ```go or ```bash · <kbd class="kbd kbd-xs">Ctrl+Enter</kbd> submit
+					</span>
+					<div class="flex items-center gap-4">
+						<a
+							href={ templ.SafeURL(prefix(lang) + "/socket") }
+							class="text-muted hover:text-text transition-colors"
+						>
+							Cancel
+						</a>
+						<button
+							type="submit"
+							class="btn btn-solid uppercase"
+						>
+							PUBLISH TOPIC
+						</button>
+					</div>
+				</div>
+			</form>
+		}
+	</section>
+}
+
+templ DiscussionsNewPage(
+	ui i18n.UI,
+	lang string,
+	currentUser *auth.User,
+) {
+	@NewPage(ui, lang, currentUser)
+}

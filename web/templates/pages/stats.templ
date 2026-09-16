@@ -1,0 +1,145 @@
+package pages
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+)
+
+type StatsData struct {
+	TotalPosts    int
+	TotalWords    int
+	TotalTags     int
+	TotalViews    int
+	TotalComments int
+	TotalTopics   int
+	TotalReplies  int
+	SolvedTopics  int
+	TotalUsers    int
+	TotalVotes    int
+	LangEN        int
+	LangID        int
+	TopPages      []StatTopPage
+}
+
+type StatTopPage struct {
+	Path  string
+	Count int
+}
+
+templ StatsPage(ui i18n.UI, lang string, data StatsData) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh] font-sans">
+		<div class="mb-8 sm:mb-12">
+			<a
+				href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors mb-3 group select-none font-medium"
+			>
+				@components.IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					Back to Dispatches
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-4xl font-black text-text tracking-tight uppercase">
+				{ ui.Stats_Title }
+			</h1>
+		</div>
+		<div class="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-12 sm:mb-16">
+			@statKpiItem("PUBLICATION", fmtNumber(data.TotalPosts), ui.Stats_TotalArticles)
+			@statKpiItem("VOLUME", fmtNumber(data.TotalWords), ui.Stats_TotalWords)
+			@statKpiItem("AUDIENCE", fmtNumber(data.TotalViews), ui.Stats_PageViews)
+			@statKpiItem("SOCKET", fmtNumber(data.TotalTopics), ui.Stats_Topics)
+			@statKpiItem("RESOLUTION", fmtNumber(data.SolvedTopics), ui.Stats_Solved)
+			@statKpiItem("MEMBERS", fmtNumber(data.TotalUsers), ui.Stats_Members)
+		</div>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14">
+			<div>
+				<div class="pb-3 mb-4 flex items-center justify-between">
+					<span class="font-bold text-text uppercase tracking-wider text-xs">
+						CONTENT & COMMUNITY BREAKDOWN
+					</span>
+					<span class="text-[10px] text-muted uppercase font-bold tracking-wider">REAL-TIME</span>
+				</div>
+				<div class="space-y-3 text-xs sm:text-sm">
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_Comments }</span>
+						<span class="font-semibold text-text tabular-nums">{ fmtNumber(data.TotalComments) }</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_Replies }</span>
+						<span class="font-semibold text-text tabular-nums">{ fmtNumber(data.TotalReplies) }</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_Votes }</span>
+						<span class="font-semibold text-text tabular-nums">{ fmtNumber(data.TotalVotes) }</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_SystemTags }</span>
+						<span class="font-semibold text-text tabular-nums">{ fmtNumber(data.TotalTags) }</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_LangID }</span>
+						<span class="font-semibold text-text tabular-nums">{ fmtNumber(data.LangID) }</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_LangEN }</span>
+						<span class="font-semibold text-text tabular-nums">{ fmtNumber(data.LangEN) }</span>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="pb-3 mb-4 flex items-center justify-between">
+					<span class="font-bold text-text uppercase tracking-wider text-xs">
+						INFRASTRUCTURE & ENGINE SPECS
+					</span>
+					<span class="text-[10px] text-accent uppercase font-bold tracking-wider">SYSTEMS</span>
+				</div>
+				<div class="space-y-3 text-xs sm:text-sm">
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_ServerArch }</span>
+						<span class="font-semibold text-text text-right">Go Monolith (Static Binary)</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_DBStorage }</span>
+						<span class="font-semibold text-text text-right">SQLite3 (WAL + FTS5)</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">{ ui.Stats_TemplateEngine }</span>
+						<span class="font-semibold text-text text-right">A-H Templ + HTMX</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">
+							Real-time Streaming
+						</span>
+						<span class="font-semibold text-text text-right">Server-Sent Events (SSE)</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">
+							Delivery Protocol
+						</span>
+						<span class="font-semibold text-text text-right">HTTP/2 + TLS 1.3 Strict</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-muted">
+							External Daemons
+						</span>
+						<span class="font-semibold text-emerald-500 text-right">0 (Zero External Deps)</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+}
+
+templ statKpiItem(kicker string, value string, label string) {
+	<div class="flex flex-col justify-between">
+		<span class="text-[11px] uppercase tracking-wider text-muted font-bold">{ kicker }</span>
+		<div class="mt-2">
+			<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text tabular-nums">
+				{ value }
+			</div>
+			<div class="text-xs sm:text-sm text-muted mt-1">
+				{ label }
+			</div>
+		</div>
+	</div>
+}

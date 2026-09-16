@@ -61,13 +61,6 @@
       "icons": [{ "src": "/static/logo/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Knowledge Graph",
-      "short_name": "Graph",
-      "description": "Interactive topic constellation and topology",
-      "url": "/graph",
-      "icons": [{ "src": "/static/logo/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
       "name": "System Stats",
       "short_name": "Stats",
       "description": "Real-time publication and engine metrics",

@@ -1,0 +1,167 @@
+package portal
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"fmt"
+)
+
+templ PortalHero(ui i18n.UI, leadPost post.Post, secondaryPosts []post.Post, centerSubPosts []post.Post, popularPosts []post.Post, lang string) {
+	<section class="w-full bg-bg font-sans">
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+			<div class="lg:col-span-3 flex flex-col gap-6 sm:gap-7 order-2 lg:order-1 border-b lg:border-b-0 lg:border-r border-border/40 pb-8 lg:pb-0 lg:pr-8 xl:pr-10">
+				for _, p := range secondaryPosts {
+					<article class="flex flex-col justify-between group">
+						<div>
+							<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block mb-2.5">
+								<div class="relative w-full aspect-[16/9] bg-surface overflow-hidden">
+									@components.PostThumbnailImg(p)
+								</div>
+							</a>
+							if len(p.Tags) > 0 {
+								<div class="flex items-center gap-1.5 mb-1.5">
+									<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + p.Tags[0]) } class="tag-badge hover:underline">
+										{ p.Tags[0] }
+									</a>
+								</div>
+							}
+							<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block group">
+								<h2 class="card-title text-base sm:text-[17px] line-clamp-3 mb-1">
+									{ p.Title }
+								</h2>
+							</a>
+						</div>
+						<div class="flex items-center gap-1.5 text-xs text-muted mt-2 pt-1">
+							<time datetime={ p.Date.Format("2006-01-02") }>{ shared.FmtDate(p, lang) }</time>
+							<span>·</span>
+							<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+						</div>
+					</article>
+				}
+			</div>
+			<div class="lg:col-span-6 flex flex-col justify-between order-1 lg:order-2 border-b lg:border-b-0 lg:border-r border-border/40 pb-8 lg:pb-0 lg:pr-8 xl:pr-10">
+				if leadPost.Slug != "" {
+					<article class="group">
+						<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + leadPost.Slug) } class="block">
+							<div class="relative -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full aspect-[16/9] sm:aspect-[16/9] bg-surface overflow-hidden mb-3">
+								@components.PostThumbnailImg(leadPost)
+							</div>
+							<div class="flex items-center gap-2 mb-2">
+								if len(leadPost.Tags) > 0 {
+									<span class="badge">
+										{ leadPost.Tags[0] }
+									</span>
+									<span class="text-muted/60 text-xs">·</span>
+								}
+								<span class="text-xs text-muted">
+									{ fmt.Sprintf("%d %s", leadPost.ReadTime, ui.Blog_MinRead) }
+								</span>
+							</div>
+							<h1 class="card-title text-2xl sm:text-3xl font-extrabold leading-tight mb-2">
+								{ leadPost.Title }
+							</h1>
+							if leadPost.Description != "" {
+								<p class="text-xs sm:text-sm text-muted line-clamp-2 leading-relaxed mb-3">
+									{ leadPost.Description }
+								</p>
+							}
+						</a>
+						<div class="flex items-center gap-2 text-xs text-muted pt-1">
+							<span class="font-bold text-text">
+								if leadPost.Author != "" {
+									{ leadPost.Author }
+								} else {
+									daemontalk editorial
+								}
+							</span>
+							<span>·</span>
+							<time datetime={ leadPost.Date.Format("2006-01-02") }>{ shared.FmtDate(leadPost, lang) }</time>
+						</div>
+					</article>
+				}
+				if len(centerSubPosts) > 0 {
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6 pt-6 border-t border-border/40">
+						for _, sub := range centerSubPosts {
+							<article class="group flex flex-col justify-between">
+								<div>
+									if len(sub.Tags) > 0 {
+										<div class="flex items-center gap-1.5 mb-1.5">
+											<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + sub.Tags[0]) } class="tag-badge hover:underline">
+												{ sub.Tags[0] }
+											</a>
+										</div>
+									}
+									<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + sub.Slug) } class="block group">
+										<h3 class="card-title text-sm sm:text-[15px] line-clamp-2 mb-1">
+											{ sub.Title }
+										</h3>
+									</a>
+								</div>
+								<span class="text-xs text-muted mt-2">{ shared.FmtDate(sub, lang) }</span>
+							</article>
+						}
+					</div>
+				}
+			</div>
+			<div class="lg:col-span-3 flex flex-col justify-between order-3">
+				<div>
+					<div class="flex items-center justify-between pb-2 mb-3">
+						<span class="text-xs uppercase tracking-wider text-accent font-bold">
+							POPULAR
+						</span>
+						<span class="text-[10px] uppercase font-bold text-muted tracking-wider">
+							THIS WEEK
+						</span>
+					</div>
+					<div class="flex flex-col gap-3.5">
+						for i, p := range popularPosts {
+							if i == 0 {
+								<article class="group pb-3 mb-1 border-b border-border/40">
+									<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block mb-2">
+										<div class="relative w-full aspect-[16/9] bg-surface overflow-hidden">
+											@components.PostThumbnailImg(p)
+										</div>
+									</a>
+									if len(p.Tags) > 0 {
+										<div class="mb-1">
+											<span class="tag-badge">{ p.Tags[0] }</span>
+										</div>
+									}
+									<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block group">
+										<h4 class="card-title text-sm sm:text-[15px] line-clamp-2">
+											{ p.Title }
+										</h4>
+									</a>
+								</article>
+							} else {
+								<article class="group">
+									if len(p.Tags) > 0 {
+										<div class="mb-0.5">
+											<span class="tag-badge">{ p.Tags[0] }</span>
+										</div>
+									}
+									<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block group">
+										<h4 class="card-title text-xs sm:text-[13px] line-clamp-2">
+											{ p.Title }
+										</h4>
+									</a>
+								</article>
+							}
+						}
+					</div>
+				</div>
+				<div class="flex items-center gap-2 pt-4 mt-4 text-xs">
+					<a href={ templ.SafeURL(shared.Prefix(lang) + "/rss.xml") } class="text-muted hover:text-accent transition-colors flex items-center gap-1">
+						<span>RSS</span>
+					</a>
+					<span class="text-muted/40">/</span>
+					<a href={ templ.SafeURL(shared.Prefix(lang) + "/feed.json") } class="text-muted hover:text-accent transition-colors flex items-center gap-1">
+						<span>JSON Feed</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+}

@@ -59,16 +59,6 @@ window.openShortcuts = function() {
 		}
 
 		if (e.key === '/') {
-			var path = window.location.pathname;
-			if (path === '/graph' || path === '/id/graph' || path.startsWith('/graph/') || path.startsWith('/id/graph/')) {
-				var gs = document.getElementById('graph-search');
-				if (gs) {
-					e.preventDefault();
-					gs.focus();
-					gs.select();
-					return;
-				}
-			}
 			e.preventDefault();
 			pendingG = false;
 			var si = document.getElementById('header-search-input') || document.getElementById('blog-search');
@@ -77,7 +67,7 @@ window.openShortcuts = function() {
 				si.select();
 				if (window.openSearchPopper) window.openSearchPopper();
 			} else {
-				window.location.href = (document.documentElement.lang === 'id' ? '/id' : '') + '/search';
+				window.location.href = '/search';
 			}
 			return;
 		}
@@ -86,15 +76,12 @@ window.openShortcuts = function() {
 			pendingG = false;
 			clearTimeout(gTimer);
 			e.preventDefault();
-			var prefix = document.documentElement.lang === 'id' ? '/id' : '';
 			var destinations = {
-				h: prefix || '/',
-				b: prefix || '/',
-				p: prefix + '/colophon#projects',
-				c: prefix + '/colophon',
-				s: prefix + '/socket',
-				g: prefix + '/graph',
-				l: prefix + '/saved'
+				h: '/',
+				b: '/',
+				c: '/colophon',
+				s: '/socket',
+				l: '/saved'
 			};
 			if (destinations[e.key]) window.location.href = destinations[e.key];
 			return;

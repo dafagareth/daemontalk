@@ -1,0 +1,26 @@
+package components
+
+import "daemontalk/internal/i18n"
+
+templ ConfirmModal(ui i18n.UI) {
+	<div
+		class="shortcuts-overlay"
+		id="confirm-overlay"
+		onclick="if(event.target===this)this.querySelector('[data-confirm-cancel]').click()"
+	>
+		<div class="shortcuts-modal">
+			<p id="confirm-message" class="text-sm text-text mb-5"></p>
+			<div class="flex items-center justify-end gap-3">
+				<button type="button" data-confirm-cancel class="text-sm px-4 py-2 rounded-none border border-border text-muted hover:bg-hover transition-colors">{ ui.Modal_Cancel }</button>
+				<button type="button" data-confirm-ok class="text-sm px-4 py-2 rounded-none bg-[var(--c-warn)] text-white font-medium hover:brightness-110 transition-all">{ ui.Modal_Delete }</button>
+			</div>
+		</div>
+	</div>
+}
+
+templ ShortcutRow(key string, description string) {
+	<div class="flex items-center justify-between gap-4">
+		<kbd class="text-xs font-mono px-2 py-0.5 border border-border rounded-none bg-bg text-muted shrink-0">{ key }</kbd>
+		<span class="text-xs text-muted text-right">{ description }</span>
+	</div>
+}

@@ -13,9 +13,6 @@ func TestLoadDefaults(t *testing.T) {
 	if cfg.Port != "8080" {
 		t.Errorf("expected default Port 8080, got %s", cfg.Port)
 	}
-	if cfg.SSHPort != "2222" {
-		t.Errorf("expected default SSHPort 2222, got %s", cfg.SSHPort)
-	}
 	if cfg.Env != "development" {
 		t.Errorf("expected default Env development, got %s", cfg.Env)
 	}
@@ -38,7 +35,6 @@ func TestLoadDefaults(t *testing.T) {
 
 func TestLoadFromEnv(t *testing.T) {
 	t.Setenv("PORT", "9090")
-	t.Setenv("SSH_PORT", "22222")
 	t.Setenv("ENV", "production")
 	t.Setenv("ADMIN_TOKEN", "supersecret")
 	t.Setenv("SMTP_HOST", "smtp.example.com")
@@ -49,9 +45,6 @@ func TestLoadFromEnv(t *testing.T) {
 
 	if cfg.Port != "9090" {
 		t.Errorf("expected Port 9090, got %s", cfg.Port)
-	}
-	if cfg.SSHPort != "22222" {
-		t.Errorf("expected SSHPort 22222, got %s", cfg.SSHPort)
 	}
 	if !cfg.IsProduction() {
 		t.Errorf("expected IsProduction true, got false")

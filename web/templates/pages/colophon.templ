@@ -1,0 +1,32 @@
+package pages
+
+import (
+	"daemontalk/internal/github"
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+)
+
+templ Colophon(ui i18n.UI, lang string, ghStats github.Stats) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh] font-sans">
+		<div class="mb-8 sm:mb-12 font-sans">
+			<a
+				href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors mb-3 group select-none font-medium"
+			>
+				@components.IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					Back to Dispatches
+				</span>
+			</a>
+			<h1 class="display text-2xl sm:text-4xl font-black text-text tracking-tight uppercase">
+				Colophon & Specifications
+			</h1>
+		</div>
+		<div class="w-full font-sans space-y-12 sm:space-y-16">
+			@colophonKpis(lang)
+			@colophonSpecs()
+			@colophonContacts(lang)
+		</div>
+	</section>
+}

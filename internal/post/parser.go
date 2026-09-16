@@ -13,7 +13,6 @@ import (
 	"unicode"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
-	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	meta "github.com/yuin/goldmark-meta"
@@ -60,7 +59,6 @@ var md = goldmark.New(
 		extension.GFM,
 		extension.Footnote,
 		meta.Meta,
-		mathjax.MathJax,
 		highlighting.NewHighlighting(
 			highlighting.WithFormatOptions(
 				chromahtml.WithClasses(true),

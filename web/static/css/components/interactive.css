@@ -27,7 +27,7 @@
   }
 
   #article-toc .toc-link {
-    font-family: var(--font-serif) !important;
+    font-family: var(--font-sans) !important;
     font-size: 1.0625rem !important;
     line-height: 1.65;
     color: var(--c-muted);

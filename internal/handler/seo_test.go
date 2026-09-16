@@ -17,7 +17,7 @@ func TestSitemapAfterPivot(t *testing.T) {
 	if !strings.Contains(body, seoBaseURL+"/colophon") {
 		t.Error("sitemap harus memuat /colophon")
 	}
-	for _, dead := range []string{"/about", "/uses", "/now", "/projects</loc>", "/blog</loc>"} {
+	for _, dead := range []string{"/about", "/uses", "/now", "/projects</loc>", "/blog</loc>", "/resume</loc>", "/graph</loc>"} {
 		if strings.Contains(body, dead) {
 			t.Errorf("sitemap masih memuat route mati %q", dead)
 		}

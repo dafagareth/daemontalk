@@ -1,6 +1,254 @@
 @layer components {
 
+  
+  .form-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    width: 100%;
+  }
+
+  .label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.125rem 0.25rem;
+    user-select: none;
+  }
+
+  .label-text {
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-text);
+  }
+
+  .label-text-alt {
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 0.6875rem;
+    color: var(--c-muted);
+  }
+
+  
+  .input,
   .form-input {
-    @apply w-full px-3 py-2 text-sm border border-border bg-surface text-text placeholder:text-muted focus:outline-none focus:border-text transition-colors;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-radius: 0;
+    border: 1px solid var(--c-border);
+    background-color: var(--c-surface);
+    color: var(--c-text);
+    font-family: var(--font-sans);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .input:focus,
+  .form-input:focus {
+    outline: none;
+    border-color: var(--c-text);
+  }
+
+  .input::placeholder,
+  .form-input::placeholder {
+    color: var(--c-muted);
+    opacity: 0.6;
+  }
+
+  .input:disabled,
+  .form-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--c-hover);
+  }
+
+  
+  .input-xs {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.6875rem;
+  }
+  .input-sm {
+    padding: 0.35rem 0.625rem;
+    font-size: 0.75rem;
+  }
+  .input-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  
+  .input-bordered {
+    border: 1px solid var(--c-border);
+  }
+
+  .input-primary:focus {
+    border-color: var(--c-link) !important;
+  }
+
+  .input-accent:focus {
+    border-color: var(--c-accent) !important;
+  }
+
+  .input-error {
+    border-color: var(--c-warn) !important;
+  }
+
+  .input-ghost {
+    background-color: transparent;
+    border-color: transparent;
+  }
+  .input-ghost:focus {
+    background-color: var(--c-surface);
+    border-color: var(--c-border);
+  }
+
+  
+  .input-title,
+  .form-input-title {
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-text);
+    padding-bottom: 0.75rem;
+    border-radius: 0;
+    transition: border-color 0.15s ease;
+  }
+  .input-title:focus,
+  .form-input-title:focus {
+    outline: none;
+    border-bottom-color: var(--c-link);
+  }
+
+  
+  .textarea,
+  .form-textarea {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    border-radius: 0;
+    border: 1px solid var(--c-border);
+    background-color: var(--c-surface);
+    color: var(--c-text);
+    font-family: var(--font-sans);
+    resize: vertical;
+    transition: border-color 0.15s ease;
+  }
+
+  .textarea:focus,
+  .form-textarea:focus {
+    outline: none;
+  }
+
+  .textarea::placeholder,
+  .form-textarea::placeholder {
+    color: var(--c-muted);
+    opacity: 0.6;
+  }
+
+  .textarea-sm {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+  .textarea-error {
+    border-color: var(--c-warn) !important;
+  }
+
+  
+  .select {
+    display: inline-flex;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    font-family: var(--font-sans);
+    color: var(--c-text);
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 0;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888888'%3E%3Cpath stroke-linecap='square' stroke-linejoin='miter' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-position: right 0.625rem center;
+    background-repeat: no-repeat;
+    background-size: 0.875rem;
+    transition: border-color 0.15s ease;
+  }
+  .select:focus {
+    outline: none;
+    border-color: var(--c-text);
+  }
+  .select-sm {
+    padding: 0.35rem 1.75rem 0.35rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  
+  .checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 1.5px solid var(--c-border);
+    background-color: var(--c-surface);
+    border-radius: 0;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    display: inline-grid;
+    place-content: center;
+    transition: all 0.15s ease;
+  }
+  .checkbox:hover {
+    border-color: var(--c-link);
+  }
+  .checkbox:checked {
+    background-color: var(--c-link);
+    border-color: var(--c-link);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+    background-size: 80% 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .checkbox-sm {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  
+  .toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 2.25rem;
+    height: 1.25rem;
+    border-radius: 0;
+    border: 1px solid var(--c-border);
+    background-color: var(--c-chip);
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .toggle::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(1.25rem - 6px);
+    height: calc(1.25rem - 6px);
+    background-color: var(--c-muted);
+    border-radius: 0;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  .toggle:checked {
+    background-color: var(--c-link-bg);
+    border-color: var(--c-link);
+  }
+  .toggle:checked::before {
+    transform: translateX(1rem);
+    background-color: var(--c-link);
   }
 }

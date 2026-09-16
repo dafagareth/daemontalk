@@ -1,13 +1,14 @@
 @import "tailwindcss";
-@source "../../../web/templates/**/*.templ";
-@source "../../../web/static/js/**/*.js";
-@source "../../../internal/**/*.go";
-@source "../../../content/**/*.md";
+@source "../../../web/templates*.templ";
+@source "../../../web/static/js*.js";
+@source "../../../internal*.go";
+@source "../../../content*.md";
 @source "../../../main.go";
 
 @import "./theme.css";
 @import "./base.css";
 @import "./components/layout.css";
+@import "./components/buttons.css";
 @import "./components/forms.css";
 @import "./components/typography.css";
 @import "./components/code.css";

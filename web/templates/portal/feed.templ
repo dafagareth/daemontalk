@@ -1,0 +1,98 @@
+package portal
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"fmt"
+)
+
+templ PortalFeed(ui i18n.UI, posts []post.Post, lang string) {
+	if len(posts) > 0 {
+		<section class="w-full bg-bg font-sans">
+			<div class="flex items-center justify-between pb-3 mb-6 text-xs text-muted border-b border-border/30">
+				<div class="flex items-center gap-2">
+					<span class="font-mono text-xs font-bold uppercase tracking-wider text-text">
+						THE DISPATCH RIVER
+					</span>
+					<span class="text-muted/40 hidden sm:inline">·</span>
+					<span class="text-[11px] font-mono text-muted hidden sm:inline">CHRONOLOGICAL FEED</span>
+				</div>
+				<span class="text-xs font-mono text-muted tabular-nums">
+					{ fmt.Sprintf("%d STORIES", len(posts)) }
+				</span>
+			</div>
+			<div class="w-full lg:max-w-3xl flex flex-col divide-y divide-border/20">
+				for idx, p := range posts {
+					@feedCard(ui, p, lang, idx)
+				}
+				if len(posts) > 8 {
+					<div id="feed-load-more-wrap" class="py-8 flex justify-center">
+						<button
+							id="feed-load-more-btn"
+							type="button"
+							onclick="loadMoreFeed()"
+							class="p-2.5 sm:p-3 text-muted hover:text-text hover:bg-hover border border-border transition-colors group cursor-pointer"
+							aria-label="Load more dispatches"
+							title="Load more dispatches"
+						>
+							@components.IconArrowDown("w-5 h-5 group-hover:translate-y-0.5 transition-transform")
+						</button>
+					</div>
+				}
+			</div>
+		</section>
+	}
+}
+
+templ feedCard(ui i18n.UI, p post.Post, lang string, idx int) {
+	<article
+		class={ "feed-item group flex flex-col sm:flex-row gap-4 sm:gap-5 py-5 sm:py-6 items-start", templ.KV("hidden", idx >= 8) }
+		data-feed-item
+		data-feed-batch={ fmt.Sprintf("%d", idx/8) }
+	>
+		<div class="relative w-full sm:w-44 md:w-48 aspect-[16/9] bg-surface shrink-0 overflow-hidden border border-border/30">
+			@components.PostThumbnail(p, shared.Prefix(lang)+"/blog/"+p.Slug)
+		</div>
+		<div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+			<div>
+				<div class="feed-meta mb-1.5">
+					if len(p.Tags) > 0 {
+						<a
+							href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + p.Tags[0]) }
+							class="tag-badge hover:underline"
+						>
+							#{ p.Tags[0] }
+						</a>
+						<span class="text-muted/40">·</span>
+					}
+					<time datetime={ p.Date.Format("2006-01-02") } class="text-muted/70">
+						{ shared.FmtDate(p, lang) }
+					</time>
+				</div>
+				<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block group mb-1.5">
+					<h3 class="card-title text-base sm:text-lg line-clamp-2">
+						{ p.Title }
+					</h3>
+				</a>
+				if p.Description != "" {
+					<p class="text-xs sm:text-[13px] text-muted leading-relaxed line-clamp-2 mb-2">
+						{ p.Description }
+					</p>
+				}
+			</div>
+			<div class="feed-meta text-muted/80 pt-1 mt-auto">
+				<span class="font-sans font-medium text-text/80">
+					if p.Author != "" {
+						{ p.Author }
+					} else {
+						daemontalk
+					}
+				</span>
+				<span>·</span>
+				<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+			</div>
+		</div>
+	</article>
+}

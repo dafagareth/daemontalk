@@ -9,8 +9,7 @@
                 icon.setAttribute("fill", "currentColor");
             }
             if (text) {
-                var lang = document.documentElement.lang || "id";
-                text.textContent = lang === "id" ? "Tersimpan" : "Saved";
+                text.textContent = "Saved";
             }
         } else {
             btn.classList.remove("is-saved", "bg-hover", "text-text", "border-text/70", "font-bold", "bg-accent/15", "text-accent", "border-accent");
@@ -18,8 +17,7 @@
                 icon.setAttribute("fill", "none");
             }
             if (text) {
-                var lang = document.documentElement.lang || "id";
-                text.textContent = lang === "id" ? "Simpan" : "Save";
+                text.textContent = "Save";
             }
         }
         if (!icon && !text) {

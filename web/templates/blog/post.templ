@@ -1,0 +1,241 @@
+package blog
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/internal/comment"
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"fmt"
+)
+
+templ BlogPostPage(ui i18n.UI, p post.Post, related []post.Post, comments []comment.Comment, views int, isAdmin bool, lang string, reactions map[string]int, seriesParts []post.Post, nav PostNav, userReaction string, visitorName string, authUser *auth.User) {
+	<div class="container-page max-w-5xl mx-auto py-8 sm:py-12 transition-all">
+		<article id="blog-content" class="relative z-10 w-full">
+			@blogHeader(ui, p, lang, seriesParts)
+			<div class="w-full max-w-[42rem] mx-auto min-w-0 relative">
+				if len(seriesParts) > 1 {
+					@seriesNav(ui, seriesParts, p, lang)
+				}
+				@blogContent(ui, p)
+				if len(seriesParts) > 1 {
+					@seriesBottomNav(ui, seriesParts, p, lang)
+				}
+				@ReactionsBar(ui, reactions, p.Slug, lang, userReaction, len(comments), p.Title, p.Date.Format("2006-01-02"))
+			</div>
+		</article>
+		<div class="w-full max-w-[42rem] mx-auto min-w-0 mt-12">
+			@commentsSection(ui, p.Slug, lang, comments, isAdmin, visitorName, authUser)
+		</div>
+		if len(related) > 0 {
+			<div class="w-full mt-16 pt-4">
+				@blogRelated(ui, related, p.Tags, lang)
+			</div>
+		}
+		@mobileReadingModal(ui, p, lang)
+	</div>
+	<script src={ shared.AssetURL("/static/js/post.bundle.js") } defer></script>
+}
+
+templ mobileReadingModal(ui i18n.UI, p post.Post, lang string) {
+	<div
+		id="mobile-reading-modal-overlay"
+		class="hidden fixed inset-0 z-50 bg-bg/80 backdrop-blur-sm p-4 flex items-center justify-center font-sans select-none"
+		onclick="if(event.target===this) toggleMobileReadingModal()"
+	>
+		<div class="w-full max-w-xs bg-surface border border-border shadow-2xl p-4 font-sans space-y-4">
+			<div class="flex items-center justify-between pb-2.5 border-b border-border text-xs">
+				<span class="text-text font-bold">
+					Reading Tools
+				</span>
+				<button
+					type="button"
+					onclick="toggleMobileReadingModal()"
+					class="text-muted hover:text-text px-1 cursor-pointer transition-colors"
+					aria-label="Close"
+				>
+					✕
+				</button>
+			</div>
+			<div class="space-y-4 pt-1">
+				<div class="text-center font-bold text-xs text-text">
+					{ ui.Post_TextSize }
+				</div>
+				<div class="flex items-center gap-3">
+					<button
+						type="button"
+						onclick="setTextSizeIndex(0)"
+						class="font-serif font-bold text-xs text-text/80 hover:text-text cursor-pointer select-none leading-none shrink-0"
+						title={ ui.Post_TextSize_Small }
+					>
+						a
+					</button>
+					<div class="relative flex-1 flex items-center py-2">
+						<div class="absolute inset-x-0 flex justify-between items-center pointer-events-none z-0 px-1">
+							<span class="w-1.5 h-1.5 rounded-full bg-border"></span>
+							<span class="w-1.5 h-1.5 rounded-full bg-border"></span>
+							<span class="w-1.5 h-1.5 rounded-full bg-border"></span>
+						</div>
+						<input
+							type="range"
+							min="0"
+							max="2"
+							value="1"
+							step="1"
+							class="text-size-slider w-full cursor-pointer relative z-10"
+							aria-label={ ui.Post_TextSize }
+							oninput="setTextSizeIndex(this.value)"
+						/>
+					</div>
+					<button
+						type="button"
+						onclick="setTextSizeIndex(2)"
+						class="font-serif font-bold text-base text-text/80 hover:text-text cursor-pointer select-none leading-none shrink-0"
+						title={ ui.Post_TextSize_Large }
+					>
+						A
+					</button>
+				</div>
+				<div class="flex justify-between items-center text-[11px] font-sans select-none px-0.5 text-muted">
+					<button
+						type="button"
+						onclick="setTextSizeIndex(0)"
+						data-size-step="0"
+						class="cursor-pointer hover:text-text transition-colors text-muted text-left"
+					>
+						{ ui.Post_TextSize_Small }
+					</button>
+					<button
+						type="button"
+						onclick="setTextSizeIndex(1)"
+						data-size-step="1"
+						class="cursor-pointer hover:text-text transition-colors text-text font-bold text-center"
+					>
+						{ ui.Post_TextSize_Medium }
+					</button>
+					<button
+						type="button"
+						onclick="setTextSizeIndex(2)"
+						data-size-step="2"
+						class="cursor-pointer hover:text-text transition-colors text-muted text-right"
+					>
+						{ ui.Post_TextSize_Large }
+					</button>
+				</div>
+			</div>
+			<div class="flex items-center justify-between pt-2 border-t border-border">
+				<span class="text-muted">
+					Citation
+				</span>
+				<button
+					type="button"
+					onclick="copyBibtex(this)"
+					data-bibtex={ bibtex(p) }
+					class="px-2.5 py-1 border border-border bg-bg hover:bg-hover text-text font-bold cursor-pointer transition-colors text-xs"
+				>
+					Copy BibTeX
+				</button>
+			</div>
+		</div>
+	</div>
+}
+
+templ tocList(entries []post.TOCEntry) {
+	<ul class="toc-list space-y-2 m-0 p-0 list-none">
+		for _, e := range entries {
+			<li class={ "toc-item", templ.KV("pl-4 sm:pl-6", e.Level == 3), templ.KV("pl-8 sm:pl-10", e.Level == 4) }>
+				<a
+					href={ templ.SafeURL("#" + e.ID) }
+					class="toc-link block py-0.5 text-muted hover:text-text transition-colors leading-relaxed"
+				>
+					{ e.Title }
+				</a>
+			</li>
+		}
+	</ul>
+}
+
+func getSeriesCurrentIndex(parts []post.Post, slug string) int {
+	for i, p := range parts {
+		if p.Slug == slug {
+			return i
+		}
+	}
+	return 0
+}
+
+func getSeriesPart(parts []post.Post, idx int) *post.Post {
+	if idx >= 0 && idx < len(parts) {
+		return &parts[idx]
+	}
+	return nil
+}
+
+templ seriesNav(ui i18n.UI, parts []post.Post, current post.Post, lang string) {
+	<div class="w-full mb-6 p-3.5 border border-border bg-surface/40 not-prose">
+		<div class="flex items-center justify-between text-[11px] font-mono text-muted mb-2">
+			<span class="font-bold uppercase tracking-wider text-text">
+				Series: { current.Series }
+			</span>
+			<span>
+				{ fmt.Sprintf("%d of %d", getSeriesCurrentIndex(parts, current.Slug)+1, len(parts)) }
+			</span>
+		</div>
+		<ol class="space-y-1.5 m-0 p-0 list-none font-sans text-xs">
+			for i, part := range parts {
+				<li class="flex items-baseline gap-2">
+					<span class="shrink-0 font-mono text-[11px] text-muted tabular-nums">{ fmt.Sprintf("%02d.", i+1) }</span>
+					if part.Slug == current.Slug {
+						<span class="font-medium text-text">
+							{ part.Title }
+							<span class="text-[10px] text-link font-mono ml-1">({ ui.Post_Current })</span>
+						</span>
+					} else {
+						<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + part.Slug) } class="text-muted hover:text-text hover:underline transition-colors">
+							{ part.Title }
+						</a>
+					}
+				</li>
+			}
+		</ol>
+	</div>
+}
+
+templ seriesBottomNav(ui i18n.UI, parts []post.Post, current post.Post, lang string) {
+	if currIdx := getSeriesCurrentIndex(parts, current.Slug); currIdx >= 0 {
+		if prevPart := getSeriesPart(parts, currIdx-1); prevPart != nil || getSeriesPart(parts, currIdx+1) != nil {
+			<div class="my-8 py-4 not-prose">
+				<div class="text-[10px] font-sans text-muted uppercase tracking-wider mb-2">
+					Series · { current.Series }
+				</div>
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+					if prevPart != nil {
+						<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + prevPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-surface transition-colors group">
+							<span class="text-[10px] font-sans text-muted flex items-center gap-1">
+								@components.IconArrowLeft("w-3 h-3")
+								Previous in Series
+							</span>
+							<span class="text-xs font-bold text-text group-hover:text-link line-clamp-1">{ prevPart.Title }</span>
+						</a>
+					} else {
+						<div></div>
+					}
+					if nextPart := getSeriesPart(parts, currIdx+1); nextPart != nil {
+						<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + nextPart.Slug) } class="flex flex-col gap-1 p-3 border border-border bg-surface transition-colors text-right group">
+							<span class="text-[10px] font-sans text-muted flex items-center gap-1 justify-end">
+								Next in Series
+								@components.IconArrowRight("w-3 h-3")
+							</span>
+							<span class="text-xs font-bold text-text group-hover:text-link line-clamp-1">{ nextPart.Title }</span>
+						</a>
+					}
+				</div>
+			</div>
+		}
+	}
+}
+
+func bibtex(p post.Post) string {
+	return shared.BibtexFromMeta(p.Slug, p.Title, p.Date.Format("2006"))
+}

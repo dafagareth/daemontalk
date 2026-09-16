@@ -6,35 +6,20 @@ import (
 )
 
 func TestGet(t *testing.T) {
-	tests := []struct {
-		lang     string
-		expected string
-	}{
-		{"en", "en"},
-		{"id", "id"},
-		{"es", "en"},
-		{"", "en"},
-		{"de", "en"},
-	}
+	tests := []string{"en", "id", "es", "", "de"}
 
-	for _, tc := range tests {
-		t.Run("lang_"+tc.lang, func(t *testing.T) {
-			ui := Get(tc.lang)
-			if tc.expected == "id" {
-				if ui.Nav_Home != "Beranda" {
-					t.Errorf("expected Nav_Home 'Beranda' for id, got %q", ui.Nav_Home)
-				}
-			} else {
-				if ui.Nav_Home != "Home" {
-					t.Errorf("expected Nav_Home 'Home' for en/fallback, got %q", ui.Nav_Home)
-				}
+	for _, lang := range tests {
+		t.Run("lang_"+lang, func(t *testing.T) {
+			ui := Get(lang)
+			if ui.Nav_Home != "Home" {
+				t.Errorf("expected Nav_Home 'Home' for %q, got %q", lang, ui.Nav_Home)
 			}
 		})
 	}
 }
 
 func TestLocalesCompleteness(t *testing.T) {
-	locales := []string{"en", "id"}
+	locales := []string{"en"}
 
 	for _, lang := range locales {
 		t.Run("completeness_"+lang, func(t *testing.T) {

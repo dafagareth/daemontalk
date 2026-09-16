@@ -7,9 +7,6 @@
 	var i18nEmptyHeading = (box && box.dataset.i18nEmptyHeading) || "Reading List is Empty";
 	var i18nEmptyBody = (box && box.dataset.i18nEmptyBody) || "Click the bookmark icon on any article to save it here.";
 	var i18nRemove = (box && box.dataset.i18nRemove) || "REMOVE";
-	var lang = (box && box.dataset.lang) || "";
-	var prefix = lang === "id" ? "/id" : "";
-
 	var bookmarks = [];
 	try {
 		bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
@@ -21,19 +18,19 @@
 	}
 
 	if (bookmarks.length === 0) {
-		list.innerHTML = '<div class="p-12 text-center font-sans"><p class="text-sm font-bold text-text mb-1">' + escHtml(i18nEmptyHeading) + '</p><p class="text-xs text-muted">' + escHtml(i18nEmptyBody) + '</p></div>';
+		list.innerHTML = '<div class="py-12 text-center font-sans"><p class="text-sm font-bold text-text mb-1">' + escHtml(i18nEmptyHeading) + '</p><p class="text-xs text-muted">' + escHtml(i18nEmptyBody) + '</p></div>';
 		return;
 	}
 
 	var html = '';
 	bookmarks.forEach(function(b) {
-		html += '<div class="px-3 sm:px-6 py-4 sm:py-4.5 flex items-center justify-between gap-3 sm:gap-4 hover:bg-hover transition-colors group">';
+		html += '<div class="py-3 flex items-center justify-between gap-3 sm:gap-4 group">';
 		html += '  <div class="flex-1 min-w-0 pr-1 sm:pr-4">';
-		html += '    <a href="' + prefix + '/blog/' + escHtml(b.slug) + '" class="block font-bold text-text text-base sm:text-lg group-hover:text-link leading-snug transition-colors line-clamp-2 sm:line-clamp-1">';
+		html += '    <a href="/blog/' + escHtml(b.slug) + '" class="block font-bold text-text text-base sm:text-lg group-hover:text-link leading-snug transition-colors line-clamp-2 sm:line-clamp-1">';
 		html +=        escHtml(b.title);
 		html += '    </a>';
 		if (b.date) {
-			html += '    <time datetime="' + escHtml(b.date) + '" class="block sm:hidden text-xs font-sans text-muted mt-1.5">' + escHtml(b.date) + '</time>';
+			html += '    <time datetime="' + escHtml(b.date) + '" class="block sm:hidden text-xs font-sans text-muted mt-1">' + escHtml(b.date) + '</time>';
 		}
 		html += '  </div>';
 		html += '  <div class="flex items-center gap-4 shrink-0 text-xs font-sans text-muted">';

@@ -1,0 +1,48 @@
+package pages
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+)
+
+templ SavedPage(ui i18n.UI, lang string) {
+	<section class="container-page py-8 sm:py-12 min-h-[75vh]">
+		<div class="mb-6">
+			<a
+				href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+				class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors mb-3 group select-none"
+			>
+				@components.IconArrowLeft("w-3.5 h-3.5")
+				<span>
+					Back to Dispatches
+				</span>
+			</a>
+			<div class="flex items-baseline justify-between gap-4">
+				<h1 class="display text-2xl sm:text-4xl font-black text-text tracking-tight uppercase">
+					{ ui.Link_ReadingList }
+				</h1>
+				<span id="saved-count-display" class="text-xs font-sans text-muted font-medium shrink-0">0 { ui.Saved_Count }</span>
+			</div>
+		</div>
+		<div
+			id="saved-box"
+			data-i18n-count={ ui.Saved_Count }
+			data-i18n-empty-heading={ ui.Saved_EmptyHeading }
+			data-i18n-empty-body={ ui.Saved_EmptyBody }
+			data-i18n-remove={ ui.Saved_Remove }
+			data-lang={ lang }
+			class="w-full font-sans"
+		>
+			<div id="saved-list" class="flex flex-col gap-2 pt-2">
+				<div class="py-12 text-center font-sans">
+					<p class="text-xs text-muted flex items-center justify-center gap-2">
+						<span class="w-1.5 h-1.5 bg-accent animate-pulse"></span>
+						Reading saved dispatches...
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script src="/static/js/saved.js" defer></script>
+}

@@ -1,0 +1,78 @@
+package pages
+
+templ colophonKpis(lang string) {
+	<div class="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 font-sans">
+		<div class="flex flex-col justify-between">
+			<span class="text-[11px] uppercase tracking-wider text-muted font-bold">
+				LATENCY
+			</span>
+			<div class="mt-2">
+				<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text tabular-nums">
+					&lt; 2ms
+				</div>
+				<div class="text-xs sm:text-sm text-muted mt-1">TTFB</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[11px] uppercase tracking-wider text-muted font-bold">
+				BINARY SIZE
+			</span>
+			<div class="mt-2">
+				<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text tabular-nums">
+					~14MB
+				</div>
+				<div class="text-xs sm:text-sm text-muted mt-1">
+					Static Binary
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[11px] uppercase tracking-wider text-muted font-bold">
+				MEMORY FOOTPRINT
+			</span>
+			<div class="mt-2">
+				<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text tabular-nums">
+					~18MB
+				</div>
+				<div class="text-xs sm:text-sm text-muted mt-1">
+					Idle RAM Load
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[11px] uppercase tracking-wider text-muted font-bold">
+				PERF SCORE
+			</span>
+			<div class="mt-2">
+				<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-emerald-500 tabular-nums">
+					100/100
+				</div>
+				<div class="text-xs sm:text-sm text-muted mt-1">Lighthouse Perfect</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[11px] uppercase tracking-wider text-muted font-bold">
+				CLIENT JS
+			</span>
+			<div class="mt-2">
+				<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text tabular-nums">
+					0 KB
+				</div>
+				<div class="text-xs sm:text-sm text-muted mt-1">
+					Zero JS Frameworks
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col justify-between">
+			<span class="text-[11px] uppercase tracking-wider text-muted font-bold">
+				EMISSION
+			</span>
+			<div class="mt-2">
+				<div class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text tabular-nums">
+					0.04g
+				</div>
+				<div class="text-xs sm:text-sm text-muted mt-1">CO2 / Page View</div>
+			</div>
+		</div>
+	</div>
+}

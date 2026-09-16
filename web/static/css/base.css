@@ -34,6 +34,11 @@
     font-family: var(--font-sans);
     letter-spacing: -0.02em;
     line-height: 1.15;
+    transition: color 0.15s ease;
+  }
+  .group:hover .display,
+  a:hover .display {
+    color: var(--c-link);
   }
 
   .icon-sun  { display: none; width: 0.875rem; height: 0.875rem; flex-shrink: 0; }

@@ -1,14 +1,12 @@
-# Production Docker Compose stack: runs the DaemonTalk web application and SSH TUI service.
+# Production Docker Compose stack: runs the DaemonTalk web application.
 
 services:
   web:
     image: ghcr.io/dafagareth/daemontalk:latest
     ports:
       - "127.0.0.1:8080:8080"
-      - "2222:2222"
     environment:
       PORT: "8080"
-      SSH_PORT: "2222"
       ENV: "${ENV:-production}"
       BASE_URL: "${BASE_URL:-https://www.daemontalk.com}"
       ADMIN_TOKEN: "${ADMIN_TOKEN:-}"

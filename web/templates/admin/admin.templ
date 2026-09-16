@@ -1,0 +1,15 @@
+package admin
+
+templ Page(stats Stats) {
+	<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-10 sm:space-y-12">
+		@dashboardTab(stats)
+		@contentTab(stats)
+		@analyticsTab(stats)
+		@commentsTab(stats)
+		@digestTab(stats)
+	</div>
+}
+
+templ AdminPage(stats Stats) {
+	@Page(stats)
+}

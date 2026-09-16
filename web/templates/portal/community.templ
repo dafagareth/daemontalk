@@ -1,0 +1,65 @@
+package portal
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates/shared"
+	"fmt"
+)
+
+templ PortalCommunity(ui i18n.UI, archivePosts []post.Post, lang string, viewCounts map[string]int) {
+	{{ _ = viewCounts }}
+	<section class="w-full bg-bg font-sans">
+		<div class="flex items-center justify-between pb-3 mb-6 text-xs text-muted border-b border-border/30">
+			<div class="flex items-center gap-2">
+				<span class="font-mono text-xs font-bold uppercase tracking-wider text-text">
+					THE ARCHIVE VAULT
+				</span>
+				<span class="text-muted/40 hidden sm:inline">·</span>
+				<span class="text-[11px] font-mono text-muted hidden sm:inline">CURATED ESSENTIALS</span>
+			</div>
+			<a
+				href={ templ.SafeURL(shared.Prefix(lang) + "/search") }
+				class="text-xs font-mono text-muted hover:text-link transition-colors flex items-center gap-1 group"
+			>
+				<span>{ ui.Search_Title }</span>
+				<span class="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+			</a>
+		</div>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+			for idx, p := range archivePosts {
+				<article class="flex flex-col justify-between group">
+					<div>
+						<div class="flex items-center justify-between text-[11px] font-mono text-muted mb-2.5">
+							if len(p.Tags) > 0 {
+								<a
+									href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + p.Tags[0]) }
+									class="tag-badge hover:underline"
+								>
+									#{ p.Tags[0] }
+								</a>
+							} else {
+								<span class="text-muted/60 font-bold uppercase">#DISPATCH</span>
+							}
+							<span class="tabular-nums font-mono text-muted/60 text-[11px]">{ fmt.Sprintf("%02d", idx+1) }</span>
+						</div>
+						<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block group mb-2">
+							<h3 class="card-title text-sm sm:text-base line-clamp-2">
+								{ p.Title }
+							</h3>
+						</a>
+						if p.Description != "" {
+							<p class="text-xs text-muted leading-relaxed line-clamp-3 mb-3">
+								{ p.Description }
+							</p>
+						}
+					</div>
+					<div class="flex items-center justify-between pt-2.5 border-t border-border/30 text-[11px] font-mono text-muted mt-auto">
+						<time datetime={ p.Date.Format("2006-01-02") }>{ shared.FmtDate(p, lang) }</time>
+						<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+					</div>
+				</article>
+			}
+		</div>
+	</section>
+}

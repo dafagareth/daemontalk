@@ -5,7 +5,6 @@
 .vscode/
 .idea/
 
-node_modules/
 bin/
 dist/
 tmp/

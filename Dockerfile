@@ -30,8 +30,6 @@ RUN git config --system --add safe.directory /app
 
 USER app
 EXPOSE 8080
-EXPOSE 2222
 ENV PORT=8080
-ENV SSH_PORT=2222
 VOLUME ["/app/data"]
 CMD ["./daemontalk"]

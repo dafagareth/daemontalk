@@ -1,19 +1,21 @@
 package handler
 
+import "daemontalk/internal/handler/common"
+
 const (
-	CookieAdminToken         = "admin_token"
-	CookieVisitorID          = "visitor_id"
-	CookieReactedPrefix      = "reacted_"
-	CookieViewCooldownPrefix = "v_post_"
+	CookieAdminToken         = common.CookieAdminToken
+	CookieVisitorID          = common.CookieVisitorID
+	CookieReactedPrefix      = common.CookieReactedPrefix
+	CookieViewCooldownPrefix = common.CookieViewCooldownPrefix
 
-	CookieAdminMaxAge        = 60 * 60 * 24 * 30
-	CookieReactionMaxAge     = 86400 * 365
-	CookieViewCooldownMaxAge = 3600 * 12
-	CookieVisitorExpiryYears = 10
+	CookieAdminMaxAge        = common.CookieAdminMaxAge
+	CookieReactionMaxAge     = common.CookieReactionMaxAge
+	CookieViewCooldownMaxAge = common.CookieViewCooldownMaxAge
+	CookieVisitorExpiryYears = common.CookieVisitorExpiryYears
 
-	DefaultPostsPerPage   = 14
-	MaxMarkdownUploadSize = 20 << 20
-	MaxImageUploadSize    = 10 << 20
+	DefaultPostsPerPage   = common.DefaultPostsPerPage
+	MaxMarkdownUploadSize = common.MaxMarkdownUploadSize
+	MaxImageUploadSize    = common.MaxImageUploadSize
 
-	GuestbookSlug = "__guestbook__"
+	GuestbookSlug = common.GuestbookSlug
 )

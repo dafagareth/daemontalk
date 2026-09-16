@@ -1,0 +1,97 @@
+package portal
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"fmt"
+)
+
+templ PortalDeepDive(ui i18n.UI, essays []post.Post, tagCounts map[string]int, totalPosts int, lang string) {
+	<section class="w-full bg-bg font-sans">
+		<div class="flex items-center justify-between pb-3 mb-4 text-xs text-muted">
+			<span class="font-bold text-text uppercase tracking-wider">
+				IN-DEPTH ESSAYS
+			</span>
+			<span class="text-[11px] hidden sm:inline text-muted/70">ARCHITECTURAL DISPATCHES</span>
+		</div>
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+			<div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
+				for _, essay := range essays {
+					<article class="flex flex-col justify-between group">
+						<div>
+							<div class="flex items-center justify-between gap-2 mb-2">
+								if len(essay.Tags) > 0 {
+									<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + essay.Tags[0]) } class="tag-badge hover:underline">
+										{ essay.Tags[0] }
+									</a>
+								}
+								<span class="text-xs text-muted">
+									{ fmt.Sprintf("%d %s", essay.ReadTime, ui.Blog_MinRead) }
+								</span>
+							</div>
+							<div class="relative aspect-[16/9] max-h-[110px] w-full bg-surface overflow-hidden mb-3">
+								@components.PostThumbnail(essay, shared.Prefix(lang)+"/blog/"+essay.Slug)
+							</div>
+							<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + essay.Slug) } class="block group mb-2">
+								<h3 class="card-title text-base sm:text-lg lg:text-xl line-clamp-3">
+									{ essay.Title }
+								</h3>
+							</a>
+							if essay.Description != "" {
+								<p class="text-xs sm:text-[13px] text-muted line-clamp-3 leading-relaxed mb-3">
+									{ essay.Description }
+								</p>
+							}
+						</div>
+						<div class="flex items-center gap-2 text-xs text-muted pt-2">
+							<span class="font-bold text-text">
+								if essay.Author != "" {
+									{ essay.Author }
+								} else {
+									daemontalk editorial
+								}
+							</span>
+							<span>·</span>
+							<time datetime={ essay.Date.Format("2006-01-02") }>{ shared.FmtDate(essay, lang) }</time>
+						</div>
+					</article>
+				}
+			</div>
+			<div class="lg:col-span-4 flex flex-col justify-between">
+				<div>
+					<div class="pb-4 mb-4">
+						<span class="text-xs uppercase tracking-wider text-muted font-bold block mb-1">
+							VERIFIED DISPATCHES
+						</span>
+						<div class="text-2xl font-bold text-text">{ fmt.Sprintf("%d", totalPosts) }</div>
+						<p class="text-xs text-muted mt-1 leading-relaxed">
+							Independent technical analyses spanning systems architecture, networking, and databases.
+						</p>
+					</div>
+					<div>
+						<span class="text-xs uppercase tracking-wider text-muted font-bold block mb-2.5">
+							CORE TOPICS
+						</span>
+						<div class="flex flex-wrap gap-1.5">
+							for _, tag := range getPopularTags(tagCounts, 10) {
+								<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + tag) } class="text-xs px-2.5 py-1 bg-surface/50 text-muted hover:text-text hover:bg-surface transition-colors">
+									{ tag }
+								</a>
+							}
+						</div>
+					</div>
+				</div>
+				<div class="pt-4 mt-4 text-xs">
+					<a href={ templ.SafeURL(shared.Prefix(lang) + "/stats") } class="text-accent hover:underline flex items-center justify-between">
+						<span>
+							View full telemetry and statistics
+						</span>
+						<span>&rarr;</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+}

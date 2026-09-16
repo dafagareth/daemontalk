@@ -1,0 +1,28 @@
+package components
+
+import "daemontalk/internal/post"
+
+templ PostThumbnail(p post.Post, linkURL string) {
+	if linkURL != "" {
+		<a href={ templ.SafeURL(linkURL) } class="block w-full h-full">
+			@PostThumbnailImg(p)
+		</a>
+	} else {
+		@PostThumbnailImg(p)
+	}
+}
+
+templ PostThumbnailImg(p post.Post) {
+	if p.Cover != "" {
+		<img
+			src={ p.Cover }
+			alt={ p.Title }
+			loading="lazy"
+			class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+		/>
+	} else {
+		<div class="w-full h-full flex flex-col items-center justify-center bg-muted/10 text-muted p-2 text-center select-none group-hover:bg-muted/20 transition-colors">
+			@BrandIcon("w-12 h-12 sm:w-16 sm:h-16 opacity-20 grayscale group-hover:grayscale-0 transition-all")
+		</div>
+	}
+}

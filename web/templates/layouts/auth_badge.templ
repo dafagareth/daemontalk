@@ -1,0 +1,183 @@
+package layouts
+
+import (
+	"daemontalk/internal/auth"
+	"daemontalk/web/templates/components"
+)
+
+templ AuthNavBadge(user *auth.User, returnTo string, lang string, currentPath string) {
+	if user != nil {
+		<div class="relative" id="user-menu-container">
+			<button
+				type="button"
+				onclick="var m=document.getElementById('user-menu-dropdown'); if(m) m.classList.toggle('hidden');"
+				class="w-9 h-9 block p-0 border border-border bg-surface transition-colors cursor-pointer overflow-hidden shrink-0"
+				aria-label="User menu"
+				title={ "@" + user.Username }
+			>
+				if user.AvatarURL != "" {
+					<img src={ user.AvatarURL } alt={ user.Username } class="w-full h-full object-cover rounded-none"/>
+				} else {
+					<div class="w-full h-full bg-chip flex items-center justify-center font-sans font-bold text-text text-sm">
+						{ string([]rune(user.Username)[:1]) }
+					</div>
+				}
+			</button>
+			<div
+				id="user-menu-dropdown"
+				class="hidden absolute right-0 top-full mt-2 w-60 bg-surface border border-border shadow-2xl z-50 overflow-hidden font-sans text-xs select-none whitespace-nowrap rounded-none"
+			>
+				<div class="border-b border-border bg-surface px-4 py-3 space-y-0.5">
+					<div class="flex items-center justify-between gap-2">
+						<span class="text-xs font-bold text-text truncate">{ "@" + user.Username }</span>
+						<span class="border border-border bg-chip px-1.5 py-0.5 text-[9px] uppercase font-bold text-muted shrink-0 font-sans">{ user.Role }</span>
+					</div>
+					if user.DisplayName != "" && user.DisplayName != user.Username {
+						<div class="text-[11px] text-muted truncate">{ user.DisplayName }</div>
+					}
+				</div>
+				<div>
+					<a
+						href={ templ.SafeURL("/u/" + user.Username) }
+						class="w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						<span>Public Profile</span>
+					</a>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/discussions?author=" + user.Username) }
+						class="w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						<span>Topics & Replies</span>
+					</a>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/saved") }
+						class="w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						<span>Reading List</span>
+					</a>
+					if user.GitHubURL != "" {
+						<a
+							href={ templ.SafeURL(user.GitHubURL) }
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors"
+						>
+							<span>GitHub</span>
+							@components.IconArrowUpRight("w-3 h-3 text-muted")
+						</a>
+					}
+				</div>
+				<div class="h-px bg-border"></div>
+				<div>
+					<a
+						href={ templ.SafeURL(prefix(lang) + "/settings") }
+						class="w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors"
+					>
+						<span>Settings</span>
+					</a>
+				</div>
+				<div class="h-px bg-border"></div>
+				<div>
+					<a
+						href="/auth/logout"
+						class="w-full h-10 px-4 flex items-center justify-between text-muted hover:text-rose-500 hover:bg-hover transition-colors font-bold"
+					>
+						<span>Logout</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	} else {
+		<div class="relative flex items-center gap-1.5" id="guest-menu-container">
+			<a
+				href={ templ.SafeURL("/auth/github?return_to=" + returnTo) }
+				class="flex items-center gap-1.5 border border-border bg-surface hover:bg-hover px-2.5 h-9 text-xs font-sans font-bold text-text hover:text-text transition-colors select-none"
+				title="Login with GitHub"
+			>
+				@components.IconGitHub()
+				<span class="hidden lg:inline text-text">Login</span>
+			</a>
+			<button
+				type="button"
+				onclick="var m=document.getElementById('guest-menu-dropdown'); if(m) m.classList.toggle('hidden');"
+				class="w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer"
+				aria-label="Settings"
+				title="Settings"
+			>
+				@components.IconSettings("w-4 h-4")
+			</button>
+			<div
+				id="guest-menu-dropdown"
+				class="hidden absolute right-0 top-full mt-2 w-64 bg-surface border border-border shadow-2xl z-50 font-sans text-xs select-none whitespace-nowrap overflow-hidden rounded-none"
+			>
+				<div class="border-b border-border bg-surface px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted font-sans">
+					Preferences
+				</div>
+				<button
+					type="button"
+					onclick="toggleTheme()"
+					class="w-full h-10 px-4 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group"
+				>
+					<span class="text-text font-medium">
+						Theme
+					</span>
+					<span class="inline-flex items-center gap-2 text-muted group-hover:text-text">
+						@sunIcon()
+						@moonIcon()
+						<span>Toggle</span>
+					</span>
+				</button>
+			</div>
+		</div>
+	}
+}
+
+templ AuthNavBadgeMobile(user *auth.User, returnTo string, lang string, currentPath string) {
+	if user != nil {
+		<div class="py-2.5 px-0.5 border-b border-border/60 flex flex-col gap-2 font-sans">
+			<div class="flex items-center justify-between">
+				<a href={ templ.SafeURL("/u/" + user.Username) } class="flex items-center gap-2.5 min-w-0 hover:opacity-85 transition-opacity">
+					if user.AvatarURL != "" {
+						<img src={ user.AvatarURL } alt={ user.Username } class="w-8 h-8 object-cover border border-border shrink-0"/>
+					} else {
+						<div class="w-8 h-8 bg-chip flex items-center justify-center font-sans font-bold text-text text-xs border border-border shrink-0">
+							{ string([]rune(user.Username)[:1]) }
+						</div>
+					}
+					<div class="min-w-0">
+						<div class="flex items-center gap-1.5">
+							<span class="text-xs font-sans font-bold text-text truncate">{ "@" + user.Username }</span>
+							<span class="border border-border bg-chip px-1.5 py-0.5 text-[8px] uppercase font-sans font-bold text-muted shrink-0">{ user.Role }</span>
+						</div>
+					</div>
+				</a>
+				<a href="/auth/logout" class="text-xs font-sans text-muted hover:text-rose-500 font-bold transition-colors">
+					Logout
+				</a>
+			</div>
+			<div class="flex items-center gap-3 text-xs text-muted pt-0.5">
+				<a href={ templ.SafeURL("/u/" + user.Username) } class="hover:text-text hover:underline transition-colors font-medium">
+					My Profile
+				</a>
+				<span class="text-muted/40">·</span>
+				<a href={ templ.SafeURL(prefix(lang) + "/settings") } class="hover:text-text hover:underline transition-colors font-medium">
+					Settings
+				</a>
+			</div>
+		</div>
+	} else {
+		<a
+			href={ templ.SafeURL("/auth/github?return_to=" + returnTo) }
+			class="flex items-center justify-between w-full py-2.5 px-3 border border-border bg-surface hover:bg-hover font-sans text-xs font-bold text-text transition-colors"
+			title="Login with GitHub"
+		>
+			<span class="flex items-center gap-2">
+				@components.IconGitHub()
+				<span>
+					Login with GitHub
+				</span>
+			</span>
+			<span class="text-muted font-sans text-xs">→</span>
+		</a>
+	}
+}

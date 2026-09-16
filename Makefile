@@ -1,16 +1,30 @@
-.PHONY: build build-prod run dev tui preview draft assets generate templ css css-dev bundle-js test test-v test-race test-cover test-html vet fmt lint tidy clean deploy backup restore health setup-vps new-post new-uid list-posts stats-posts validate-posts archive-post restore-post delete-post docker-build docker-up docker-down docker-logs docker-restart docker-ps docker-dev docker-dev-down
+.PHONY: all full build build-prod run dev preview draft assets generate templ css css-dev bundle-js test test-v test-race test-cover test-html vet fmt lint tidy clean deploy backup restore health setup-vps new-post new-uid list-posts stats-posts validate-posts archive-post restore-post delete-post docker-build docker-up docker-down docker-logs docker-restart docker-ps docker-dev docker-dev-down
+
+all: full
+
+full: fmt assets vet test build
+	@echo "[ok] Full pipeline completed: assets generated, tests passed, and binary built!"
+
+TAILWIND := $(shell which tailwindcss 2>/dev/null || echo $(CURDIR)/bin/tailwindcss)
+
+$(CURDIR)/bin/tailwindcss:
+	@mkdir -p $(CURDIR)/bin
+	@echo "[info] Downloading Tailwind CSS standalone CLI..."
+	@OS=$$(uname -s | tr '[:upper:]' '[:lower:]'); \
+	ARCH=$$(uname -m); \
+	if [ "$$ARCH" = "x86_64" ]; then ARCH="x64"; fi; \
+	if [ "$$ARCH" = "aarch64" ]; then ARCH="arm64"; fi; \
+	URL="https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-$${OS}-$${ARCH}"; \
+	curl -sL "$$URL" -o $(CURDIR)/bin/tailwindcss && chmod +x $(CURDIR)/bin/tailwindcss
 
 run: build
 	@./daemontalk
 
-dev: generate
-	@npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css
-	@templ generate --watch < /dev/null &
-	@npx @tailwindcss/cli -i web/static/css/input.css -o web/static/css/main.css --watch < /dev/null &
-	@air
-
-tui:
-	@go run ./cmd/tui
+dev: generate $(TAILWIND)
+	@trap 'kill 0' EXIT INT TERM; \
+	templ generate --watch < /dev/null & \
+	$(TAILWIND) -i web/static/css/input.css -o web/static/css/main.css --watch < /dev/null & \
+	air
 
 preview: build
 	@./daemontalk
@@ -22,12 +36,12 @@ generate: templ
 templ:
 	@templ generate
 
-css:
-	@npx @tailwindcss/cli -i web/static/css/input.css \
+css: $(TAILWIND)
+	@$(TAILWIND) -i web/static/css/input.css \
 		-o web/static/css/main.css --minify
 
-css-dev:
-	@npx @tailwindcss/cli -i web/static/css/input.css \
+css-dev: $(TAILWIND)
+	@$(TAILWIND) -i web/static/css/input.css \
 		-o web/static/css/main.css
 
 bundle-js:
@@ -41,7 +55,6 @@ bundle-js:
 		web/static/js/post/footnotes.js \
 		web/static/js/post/code-tabs.js \
 		web/static/js/post/read-status.js \
-		web/static/js/post/wikipedia-preview.js \
 		web/static/js/post/comments.js > web/static/js/post.bundle.js
 
 assets: generate css bundle-js

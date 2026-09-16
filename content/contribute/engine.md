@@ -6,7 +6,6 @@ Daemontalk is built from scratch as a high-performance modular monolith in Go wi
 
 - **Backend & Routing**: Go 1.23+, Chi HTTP Router, pure-Go SQLite (`modernc.org/sqlite`), and Goldmark markdown parser.
 - **Frontend & Rendering**: A-h Templ (type-safe templating), Tailwind CSS v4 CLI, and HTMX.
-- **Terminal UI (TUI)**: Charmbracelet Bubble Tea, Lip Gloss styling, and SSH Daemon server (`/tuisrv`).
 - **Auth & Discussions**: GitHub OAuth 2.0, HMAC-SHA256 session cookies, and discussions platform (`/socket`).
 
 ---

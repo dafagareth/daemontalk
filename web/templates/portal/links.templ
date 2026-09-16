@@ -1,0 +1,15 @@
+package portal
+
+import "daemontalk/web/templates/shared"
+
+templ categoryMultiLinks(tagKey string, lang string, linkClass string, separatorClass string) {
+	{{ links := getCategoryTagLinks(tagKey) }}
+	for i, l := range links {
+		if i > 0 {
+			<span class={ separatorClass }>&</span>
+		}
+		<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + l.Slug) } class={ linkClass }>
+			{ l.Name }
+		</a>
+	}
+}

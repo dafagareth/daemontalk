@@ -21,7 +21,13 @@ gen_templ() {
 
 build_css() {
 	say "Rebuilding Tailwind CSS..."
-	npx @tailwindcss/cli -i "$CSS_IN" -o "$CSS_OUT" --minify 2>/dev/null
+	if command -v tailwindcss &>/dev/null; then
+		tailwindcss -i "$CSS_IN" -o "$CSS_OUT" --minify 2>/dev/null
+	elif [ -x "./bin/tailwindcss" ]; then
+		./bin/tailwindcss -i "$CSS_IN" -o "$CSS_OUT" --minify 2>/dev/null
+	else
+		make bin/tailwindcss && ./bin/tailwindcss -i "$CSS_IN" -o "$CSS_OUT" --minify 2>/dev/null
+	fi
 }
 
 build_go() {

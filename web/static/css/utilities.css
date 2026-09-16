@@ -10,16 +10,20 @@
 #prose-body.prose-serif,
 #prose-body.prose-serif p,
 #prose-body.prose-serif li,
-#prose-body.prose-serif blockquote,
-#prose-body.prose-serif h1,
-#prose-body.prose-serif h2,
-#prose-body.prose-serif h3,
-#prose-body.prose-serif h4 {
+#prose-body.prose-serif blockquote {
   font-family: var(--font-serif) !important;
 }
 
+#prose-body h1,
+#prose-body h2,
+#prose-body h3,
+#prose-body h4 {
+  font-family: var(--font-sans) !important;
+}
+
 #prose-body.prose-serif p {
-  line-height: 1.62 !important;
+  line-height: 1.68 !important;
+  margin-bottom: 1.55rem !important;
 }
 
 #prose-body.prose-serif strong,

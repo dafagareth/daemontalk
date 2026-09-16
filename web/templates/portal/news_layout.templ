@@ -1,0 +1,50 @@
+package portal
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ PortalNewsLayout(ui i18n.UI, posts []post.Post, tagCounts map[string]int, lang string, viewCounts map[string]int) {
+	{{
+		var usedSlugs []string
+		var leadPost post.Post
+		var secondaryPosts []post.Post
+		var centerSubPosts []post.Post
+		var popularPosts []post.Post
+
+		if len(posts) > 0 {
+			leadPost = posts[0]
+			usedSlugs = append(usedSlugs, leadPost.Slug)
+		}
+		centerSubPosts = getSupportingPosts(posts, leadPost, &usedSlugs, 2)
+		secondaryPosts = getWirePosts(posts, &usedSlugs, 2)
+		popularPosts = getPopularPostsThisWeek(posts, viewCounts, &usedSlugs, 5)
+
+		matrixCats := []CategorySection{
+			getCategoryCluster(posts, "systems", []string{"systems", "linux", "kernel", "low-level", "cgroups"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "backend", []string{"go", "backend", "architecture", "distributed", "concurrency"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "security", []string{"security", "privacy", "zero-trust", "firewall", "auth"}, 2, &usedSlugs),
+			getCategoryCluster(posts, "tools", []string{"tools", "workflow", "git", "automation", "containers", "podman", "docker"}, 2, &usedSlugs),
+		}
+
+		deepDiveEssays := getWirePosts(posts, &usedSlugs, 2)
+		archivePosts := getPopularPosts(posts, viewCounts, &usedSlugs, 4)
+		remainingPosts := getRemainingPosts(posts, usedSlugs)
+	}}
+	<div class="w-full bg-bg flex flex-col gap-12 sm:gap-16">
+		if len(posts) > 0 {
+			@PortalHero(ui, leadPost, secondaryPosts, centerSubPosts, popularPosts, lang)
+			<div class="w-full border-t border-border/30"></div>
+		}
+		@PortalMatrix(ui, matrixCats, lang)
+		<div class="w-full border-t border-border/30"></div>
+		@PortalDeepDive(ui, deepDiveEssays, tagCounts, len(posts), lang)
+		<div class="w-full border-t border-border/30"></div>
+		@PortalCommunity(ui, archivePosts, lang, viewCounts)
+		if len(remainingPosts) > 0 {
+			<div class="w-full border-t border-border/30"></div>
+			@PortalFeed(ui, remainingPosts, lang)
+		}
+	</div>
+}

@@ -1,127 +1,61 @@
 package handler
 
 import (
-	"log/slog"
 	"net/http"
-	"strconv"
 
-	"daemontalk/internal/comment"
-	"daemontalk/internal/post"
-	"daemontalk/internal/postdb"
-	"daemontalk/web/templates"
-	"github.com/go-chi/chi/v5"
+	"daemontalk/internal/handler/admin"
 )
 
-func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
-
-	if h.AdminToken != "" {
-		if tok := r.URL.Query().Get("admin"); tok != "" {
-			if tok == h.AdminToken {
-				http.SetCookie(w, &http.Cookie{
-					Name:     CookieAdminToken,
-					Value:    tok,
-					Path:     "/",
-					HttpOnly: true,
-					Secure:   r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https",
-					SameSite: http.SameSiteLaxMode,
-					MaxAge:   CookieAdminMaxAge,
-				})
-			}
-			http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
-			return
-		}
+func (h *Handler) AdminHandler() *admin.Handler {
+	return &admin.Handler{
+		AdminToken:      h.AdminToken,
+		Comments:        h.Comments,
+		ContentDir:      h.ContentDir,
+		FilePosts:       h.GetFilePosts,
+		ReloadFilePosts: h.ReloadFilePosts,
+		VisiblePosts:    h.VisiblePosts,
+		AllPosts:        h.AllPosts,
+		RefreshPosts:    h.RefreshPosts,
+		NotFound:        h.NotFound,
 	}
-
-	if !h.isAdmin(r) {
-		h.NotFound(w, r)
-		return
-	}
-
-	views := make(map[string]int)
-	var allComments []comment.Comment
-	var topPages []comment.PageView
-	totalHits := 0
-	if h.Comments != nil {
-		if v, err := h.Comments.AllViewCounts(); err != nil {
-			slog.Error("admin view counts query failed", "error", err)
-		} else {
-			views = v
-		}
-		if cs, err := h.Comments.ListAll(); err != nil {
-			slog.Error("admin list comments query failed", "error", err)
-		} else {
-			allComments = cs
-		}
-		if tp, err := h.Comments.TopPageViews(10); err != nil {
-			slog.Error("admin top pages query failed", "error", err)
-		} else {
-			topPages = tp
-		}
-		if n, err := h.Comments.TotalPageViews(); err != nil {
-			slog.Error("admin total hits query failed", "error", err)
-		} else {
-			totalHits = n
-		}
-	}
-
-	var webPosts []postdb.WebPost
-	if h.PostDB != nil {
-		if wp, err := h.PostDB.List(); err != nil {
-			slog.Error("admin list web posts failed", "error", err)
-		} else {
-			webPosts = wp
-		}
-	}
-
-	var archivedPosts []post.Post
-	if arc, err := post.LoadArchived(h.getContentPath("posts")); err == nil {
-		archivedPosts = arc
-	}
-
-	stats := templates.AdminStats{
-		Posts:         h.AllPosts(),
-		FilePosts:     h.getFilePosts(),
-		ArchivedPosts: archivedPosts,
-		WebPosts:      webPosts,
-		Views:         views,
-		Comments:      allComments,
-		TopPages:      topPages,
-		TotalHits:     totalHits,
-		RadarEnabled:  templates.IsRadarEnabled(),
-	}
-
-	h.Render(w, r, templates.AdminLayout("admin", r.URL.Path, templates.AdminPage(stats)))
 }
 
-func (h *Handler) AdminToggleRadar(w http.ResponseWriter, r *http.Request) {
-	if !h.isAdmin(r) {
-		h.NotFound(w, r)
-		return
-	}
-
-	newState := !templates.IsRadarEnabled()
-	templates.SetRadarEnabled(newState)
-
-	http.Redirect(w, r, "/admin#dashboard", http.StatusSeeOther)
+func (h *Handler) Admin(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().Admin(w, r)
 }
 
 func (h *Handler) AdminDeleteComment(w http.ResponseWriter, r *http.Request) {
-	if !h.isAdmin(r) {
-		h.NotFound(w, r)
-		return
-	}
+	h.AdminHandler().AdminDeleteComment(w, r)
+}
 
-	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
-	if err != nil {
-		http.Error(w, "bad request", http.StatusBadRequest)
-		return
-	}
+func (h *Handler) AdminPostUploadMD(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostUploadMD(w, r)
+}
 
-	if h.Comments != nil {
-		if err := h.Comments.Delete(id); err != nil {
-			slog.Error("admin delete comment failed", "id", id, "error", err)
-		}
-	}
+func (h *Handler) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminUploadImage(w, r)
+}
 
-	w.WriteHeader(http.StatusOK)
+func (h *Handler) AdminPostFileEdit(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostFileEdit(w, r)
+}
+
+func (h *Handler) AdminPostFileSave(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostFileSave(w, r)
+}
+
+func (h *Handler) AdminPostExportMD(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostExportMD(w, r)
+}
+
+func (h *Handler) AdminPostFileArchive(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostFileArchive(w, r)
+}
+
+func (h *Handler) AdminPostFileRestore(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostFileRestore(w, r)
+}
+
+func (h *Handler) AdminPostFileDelete(w http.ResponseWriter, r *http.Request) {
+	h.AdminHandler().AdminPostFileDelete(w, r)
 }

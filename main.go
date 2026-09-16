@@ -24,14 +24,9 @@ import (
 	"daemontalk/internal/config"
 	"daemontalk/internal/forum"
 	"daemontalk/internal/handler"
-	"daemontalk/internal/highlight"
 	"daemontalk/internal/post"
-	"daemontalk/internal/postdb"
-	"daemontalk/internal/project"
 	"daemontalk/internal/router"
-	"daemontalk/internal/tuisrv"
-	"daemontalk/web/templates"
-	"github.com/charmbracelet/ssh"
+	"daemontalk/web/templates/shared"
 )
 
 func main() {
@@ -52,15 +47,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := os.WriteFile("web/static/css/chroma.css", []byte(highlight.GenerateCSS()), 0644); err != nil {
-		slog.Warn("chroma.css generation failed", "error", err)
-	}
-
 	if fi, err := os.Stat("web/static/css/main.css"); err == nil {
-		templates.AssetVersion = fmt.Sprintf("%d", fi.ModTime().Unix())
+		shared.AssetVersion = fmt.Sprintf("%d", fi.ModTime().Unix())
 	}
 	if cfg.BaseURL != "" {
-		templates.SiteBaseURL = strings.TrimSuffix(cfg.BaseURL, "/")
+		shared.SiteBaseURL = strings.TrimSuffix(cfg.BaseURL, "/")
 	}
 	for _, sz := range []int{192, 512} {
 		name := fmt.Sprintf("web/static/images/icon-%d.png", sz)
@@ -108,18 +99,9 @@ func main() {
 		slog.Info("github oauth enabled", "client_id", cfg.GitHubClientID)
 	}
 
-	pdb, err := postdb.Open(filepath.Join(cfg.DataDir, "posts.db"))
-	if err != nil {
-		slog.Error("open posts db failed", "error", err)
-		os.Exit(1)
-	}
-	defer pdb.Close()
-
 	h := &handler.Handler{
 		ContentDir:   cfg.ContentDir,
-		AllProjects:  project.All,
 		FilePosts:    posts,
-		PostDB:       pdb,
 		Comments:     comments,
 		Auth:         authStore,
 		GitHubOAuth:  ghOAuth,
@@ -158,19 +140,6 @@ func main() {
 		},
 	}
 
-	sshHostKey := filepath.Join(cfg.DataDir, ".ssh_host_key")
-	sshSrv, err := tuisrv.Start(":"+cfg.SSHPort, sshHostKey)
-	if err != nil {
-		slog.Warn("failed to initialize SSH TUI server", "error", err)
-	} else {
-		go func() {
-			slog.Info("SSH TUI server starting", "port", cfg.SSHPort)
-			if err := sshSrv.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
-				slog.Error("SSH TUI server failed", "error", err)
-			}
-		}()
-	}
-
 	go func() {
 		slog.Info("server starting", "port", cfg.Port)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -180,13 +149,7 @@ func main() {
 	}()
 
 	<-ctx.Done()
-	slog.Info("shutting down servers...")
-
-	if sshSrv != nil {
-		sshShutdownCtx, sshCancel := context.WithTimeout(context.Background(), 3*time.Second)
-		defer sshCancel()
-		_ = sshSrv.Shutdown(sshShutdownCtx)
-	}
+	slog.Info("shutting down server...")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

@@ -1,0 +1,24 @@
+package blog
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+)
+
+templ blogContent(ui i18n.UI, p post.Post) {
+	if len(p.TOC) > 0 {
+		<div id="article-toc" class="mb-8 sm:mb-10 border border-border bg-transparent p-4 sm:p-5 scroll-mt-28 select-none rounded-none font-sans">
+			<details id="toc-details" class="group">
+				<summary class="text-xs font-sans font-bold uppercase tracking-wider text-muted hover:text-text cursor-pointer list-none block select-none [&::-webkit-details-marker]:hidden">
+					{ ui.Post_TOC }
+				</summary>
+				<nav class="mt-4 pt-3 border-t border-border/60">
+					@tocList(p.TOC)
+				</nav>
+			</details>
+		</div>
+	}
+	<div id="prose-body" class="prose md:prose-lg max-w-none leading-relaxed prose-serif">
+		@templ.Raw(string(p.Body))
+	</div>
+}

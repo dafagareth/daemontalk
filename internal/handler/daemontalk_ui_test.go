@@ -241,7 +241,45 @@ func TestRedirectTag(t *testing.T) {
 	rec3 := httptest.NewRecorder()
 	req3 := httptest.NewRequest(http.MethodGet, "/id/blog/tag?tag=linux", nil)
 	h.RedirectTag(rec3, req3)
-	if rec3.Code != http.StatusMovedPermanently || rec3.Header().Get("Location") != "/id/blog/tag/linux" {
-		t.Errorf("expected 301 to /id/blog/tag/linux, got %d -> %s", rec3.Code, rec3.Header().Get("Location"))
+	if rec3.Code != http.StatusMovedPermanently || rec3.Header().Get("Location") != "/blog/tag/linux" {
+		t.Errorf("expected 301 to /blog/tag/linux, got %d -> %s", rec3.Code, rec3.Header().Get("Location"))
+	}
+}
+
+func TestPillarsFilter(t *testing.T) {
+	posts := []post.Post{
+		{Slug: "linux-kernel-deep-dive", Title: "Linux Kernel", Tags: []string{"linux", "kernel"}},
+		{Slug: "go-concurrency-patterns", Title: "Go Concurrency", Tags: []string{"go", "backend"}},
+		{Slug: "neovim-terminal-setup", Title: "Neovim Setup", Tags: []string{"terminal", "tools"}},
+		{Slug: "ai-llm-agents", Title: "LLM Agents", Tags: []string{"ai", "llm"}},
+		{Slug: "freelancer-thoughts", Title: "Freelancer Realities", Tags: []string{"opinion", "career"}},
+	}
+	h := &Handler{FilePosts: posts}
+
+	testCases := []struct {
+		pillar        string
+		expectedTitle string
+	}{
+		{"wire", "Linux Kernel"},
+		{"craft", "Go Concurrency"},
+		{"tools", "Neovim Setup"},
+		{"radar", "LLM Agents"},
+		{"essays", "Freelancer Realities"},
+	}
+
+	for _, tc := range testCases {
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/blog/tag/"+tc.pillar, nil)
+		rctx := chi.NewRouteContext()
+		rctx.URLParams.Add("tag", tc.pillar)
+		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+
+		h.TagIndex(rec, req)
+		if rec.Code != http.StatusOK {
+			t.Errorf("expected 200 for pillar %s, got %d", tc.pillar, rec.Code)
+		}
+		if !strings.Contains(rec.Body.String(), tc.expectedTitle) {
+			t.Errorf("expected pillar %s to contain %s", tc.pillar, tc.expectedTitle)
+		}
 	}
 }

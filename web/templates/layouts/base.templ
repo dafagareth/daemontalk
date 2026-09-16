@@ -1,0 +1,126 @@
+package layouts
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+)
+
+templ HeadTags(page string, currentPath string, meta shared.PageMeta, noindex bool) {
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="view-transition" content="same-origin"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>{ pageTitle(page) }</title>
+		<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+		<link rel="icon" type="image/png" sizes="32x32" href="/static/logo/favicon-32x32.png"/>
+		<link rel="icon" type="image/png" sizes="16x16" href="/static/logo/favicon-16x16.png"/>
+		<link rel="icon" type="image/png" sizes="48x48" href="/static/logo/icon-48x48.png"/>
+		<link rel="icon" type="image/png" sizes="96x96" href="/static/logo/icon-96x96.png"/>
+		<link rel="icon" type="image/png" sizes="192x192" href="/static/logo/icon-192x192.png"/>
+		<link rel="apple-touch-icon" sizes="180x180" href="/static/logo/apple-touch-icon.png"/>
+		<script>
+			(function() {
+				var t = localStorage.getItem("theme");
+				if (t) document.documentElement.setAttribute("data-theme", t);
+			})();
+		</script>
+		if !noindex {
+			<script>
+				(function() {
+					try {
+						if (sessionStorage.getItem("visited")) {
+							document.documentElement.setAttribute("data-anims", "off");
+						}
+						sessionStorage.setItem("visited", "1");
+					} catch (e) {}
+				})();
+			</script>
+			<noscript>
+				<style>.reveal, .anim-fade-up, .anim-fade-in { opacity: 1 !important; transform: none !important; }</style>
+			</noscript>
+		}
+		<link rel="preconnect" href="https://fonts.googleapis.com"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap"/>
+		<link rel="stylesheet" href={ assetURL("/static/css/chroma.css") }/>
+		<link rel="stylesheet" href={ assetURL("/static/css/main.css") }/>
+		if noindex {
+			<meta name="robots" content="noindex,nofollow"/>
+		} else {
+			<link rel="alternate" type="application/rss+xml" title="daemontalk" href="/rss.xml"/>
+			<link rel="alternate" type="application/feed+json" title="daemontalk" href="/feed.json"/>
+			<link rel="canonical" href={ shared.SiteBaseURL + hreflangEN(currentPath) }/>
+			<link rel="manifest" href="/manifest.json"/>
+			<meta name="description" content={ meta.OgDesc() }/>
+			<meta property="og:title" content={ pageTitle(page) }/>
+			<meta property="og:description" content={ meta.OgDesc() }/>
+			<meta property="og:type" content={ meta.OgType() }/>
+			<meta property="og:url" content={ meta.OgURL(currentPath) }/>
+			<meta property="og:image" content={ meta.OgImage() }/>
+			<meta property="og:image:width" content="1200"/>
+			<meta property="og:image:height" content="630"/>
+			<meta property="og:site_name" content="daemontalk"/>
+			<meta name="twitter:card" content="summary_large_image"/>
+			<meta name="twitter:title" content={ pageTitle(page) }/>
+			<meta name="twitter:description" content={ meta.OgDesc() }/>
+			<meta name="twitter:image" content={ meta.OgImage() }/>
+			if meta.Author != "" {
+				<meta name="author" content={ meta.Author }/>
+				<meta property="article:author" content={ meta.Author }/>
+			}
+			if meta.JSONLD != "" {
+				@templ.Raw(`<script type="application/ld+json">` + meta.JSONLD + `</script>`)
+			}
+		}
+		<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+	</head>
+}
+
+templ Layout(ui i18n.UI, lang string, page string, currentPath string, meta shared.PageMeta, content templ.Component) {
+	<!DOCTYPE html>
+	<html lang={ lang } class={ templ.KV("h-full", isSocketApp(currentPath)) }>
+		@HeadTags(page, currentPath, meta, false)
+		<body
+			class={
+				"flex flex-col bg-bg text-text",
+				templ.KV("h-screen h-[100dvh] overflow-hidden", isSocketApp(currentPath)),
+				templ.KV("min-h-screen", !isSocketApp(currentPath)),
+			}
+		>
+			@topNav(ui, lang, page, currentPath)
+			@mobileMenu(ui, lang, page, currentPath)
+			<main
+				class={
+					"w-full flex-1",
+					templ.KV("min-h-0 overflow-hidden flex flex-col", isSocketApp(currentPath)),
+				}
+			>
+				@content
+			</main>
+			if !isSocketApp(currentPath) {
+				@footer(ui, lang, currentPath)
+				<button
+					id="back-to-top"
+					onclick="window.scrollTo({top:0,behavior:'smooth'})"
+					aria-label="Back to top"
+					title="Back to top"
+					class="hidden sm:block fixed bottom-6 right-6 z-40 p-2.5 rounded-none bg-surface border border-border text-muted hover:text-text shadow-sm transition-all duration-200 opacity-0 pointer-events-none cursor-pointer"
+				>
+					@components.IconArrowUp()
+				</button>
+			}
+			@shortcutsModal(ui, lang)
+			@components.ConfirmModal(ui)
+			@layoutScripts()
+		</body>
+	</html>
+}
+
+templ layoutScripts() {
+	<script src={ assetURL("/static/js/layout/theme.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/confirm.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/nav.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/shortcuts.js") } defer></script>
+	<script src={ assetURL("/static/js/layout/observer.js") } defer></script>
+}

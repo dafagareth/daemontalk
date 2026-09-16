@@ -19,8 +19,42 @@ function setTagActive(btn) {
 	btn.className = 'text-xs font-mono px-3 py-1.5 rounded-none transition-all bg-[var(--c-link)] text-white font-semibold shadow-sm';
 }
 
-function initLoadMore(btn) {
+var currentFeedBatch = 0;
+window.loadMoreFeed = function() {
+	currentFeedBatch++;
+	var items = document.querySelectorAll('[data-feed-batch="' + currentFeedBatch + '"]');
+	items.forEach(function(el) {
+		el.classList.remove('hidden');
+	});
 
+	var hiddenRemaining = document.querySelectorAll('[data-feed-item].hidden').length;
+	if (hiddenRemaining === 0) {
+		var wrap = document.getElementById('feed-load-more-wrap');
+		if (wrap) {
+			wrap.style.display = 'none';
+		}
+	}
+};
+
+function filterCategory(cat, btn) {
+	cat = (cat || "").trim().toLowerCase();
+	document.querySelectorAll(".portal-tab-btn").forEach(function(el) {
+		el.className = "portal-tab-btn btn btn-xs btn-ghost";
+	});
+	if (btn) {
+		btn.className = "portal-tab-btn btn btn-xs btn-neutral";
+	}
+	var items = document.querySelectorAll(".blog-item");
+	var shown = 0;
+	items.forEach(function(el) {
+		var tags = (el.getAttribute("data-tags") || "").toLowerCase();
+		var search = (el.getAttribute("data-search") || "").toLowerCase();
+		var match = cat === "" || tags.indexOf(cat) !== -1 || search.indexOf(cat) !== -1;
+		el.style.display = match ? "" : "none";
+		if (match) shown++;
+	});
+	var none = document.getElementById("blog-noresults");
+	if (none) none.classList.toggle("hidden", shown !== 0);
 }
 
 function syncBookmarks() {

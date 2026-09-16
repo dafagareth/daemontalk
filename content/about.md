@@ -32,8 +32,6 @@ In addition to in-depth technical dispatches, Daemontalk offers modern computati
 
 **Terminal-Friendly CLI Streaming (`curl`)**: Pure plain-text streaming for daily tech briefings, sysadmin recipes, and full articles directly inside your terminal using commands like `curl -sL daemontalk.com/daily` or `curl -sL daemontalk.com/p/<slug>`.
 
-**Public SSH TUI Reader Gateway (`ssh daemontalk.com -p 2222`)**: An interactive terminal reader interface built with Bubble Tea & Wish, accessible over standard SSH without a graphical browser.
-
 ## Technology Stack
 
 The platform is engineered as a single standalone Go binary powered by the `chi` router, compiled type-safe `templ` templates, and TailwindCSS. Everything is rendered swiftly on the server without heavy JavaScript frameworks to remain lightweight, secure, and computationally minimalist. Review the complete infrastructure architecture on the [Colophon / Behind The Stack](/colophon) page.

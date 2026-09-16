@@ -24,15 +24,16 @@
     color: var(--c-text);
     border: 1px solid var(--c-border);
     border-radius: 0;
-    padding: 1.5rem;
+    padding: 1rem 1.25rem;
     overflow-x: auto;
     margin-bottom: 0;
   }
 
   .prose .code-wrap pre,
   .prose .code-wrap pre.chroma {
-    padding: 2.5rem 1.5rem 2.5rem 1.75rem;
+    padding: 2.25rem 1.25rem 0.75rem 1.25rem;
   }
+
   .prose pre code,
   .prose pre.chroma code {
     font-family: 'JetBrains Mono', 'DM Mono', ui-monospace, SFMono-Regular, monospace;
@@ -47,11 +48,11 @@
   @media (max-width: 640px) {
     .prose pre,
     .prose pre.chroma {
-      padding: 1rem;
+      padding: 0.875rem 1rem;
     }
     .prose .code-wrap pre,
     .prose .code-wrap pre.chroma {
-      padding: 2.25rem 1rem 1rem 1rem;
+      padding: 2rem 1rem 0.625rem 1rem;
     }
     .prose pre code,
     .prose pre.chroma code {

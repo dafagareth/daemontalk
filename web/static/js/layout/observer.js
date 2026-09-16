@@ -48,42 +48,30 @@
 })();
 
 (function() {
-	var monthsID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 	var monthsEN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-	function formatCommentDate(d, lang) {
+	function formatCommentDate(d) {
 		var now = new Date();
 		var diffMs = now.getTime() - d.getTime();
 		if (diffMs < 0) diffMs = 0;
 		var mins = Math.floor(diffMs / 60000);
-		var isID = (lang === 'id');
 
 		if (mins < 1) {
-			return isID ? 'baru saja' : 'just now';
+			return 'just now';
 		}
 		if (mins < 60) {
-			if (isID) {
-				return mins + ' menit yang lalu';
-			}
 			return mins === 1 ? '1 minute ago' : mins + ' minutes ago';
 		}
 		var hours = Math.floor(diffMs / 3600000);
 		if (hours < 24) {
-			if (isID) {
-				return hours + ' jam yang lalu';
-			}
 			return hours === 1 ? '1 hour ago' : hours + ' hours ago';
 		}
 		var days = Math.floor(diffMs / 86400000);
 		if (days <= 7) {
-			if (isID) {
-				return days + ' hari yang lalu';
-			}
 			return days === 1 ? '1 day ago' : days + ' days ago';
 		}
-		var months = isID ? monthsID : monthsEN;
 		var day = d.getDate();
-		var monthName = months[d.getMonth()];
+		var monthName = monthsEN[d.getMonth()];
 		if (d.getFullYear() === now.getFullYear()) {
 			return day + ' ' + monthName;
 		}
@@ -91,13 +79,12 @@
 	}
 
 	function formatTimes() {
-		var lang = document.documentElement.lang || 'en';
 		document.querySelectorAll('time.comment-time').forEach(function(el) {
 			var iso = el.getAttribute('datetime');
 			if (!iso) return;
 			var d = new Date(iso);
 			if (isNaN(d.getTime())) return;
-			el.textContent = formatCommentDate(d, lang);
+			el.textContent = formatCommentDate(d);
 		});
 	}
 

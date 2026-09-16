@@ -22,22 +22,9 @@ func TestAccessibilityPage(t *testing.T) {
 
 	body := rec.Body.String()
 	if !strings.Contains(body, "Accessibility Statement") {
-		t.Error("expected 'Accessibility Statement' in english page")
+		t.Error("expected 'Accessibility Statement' in page")
 	}
 	if !strings.Contains(body, "WCAG 2.1 Level AA") {
 		t.Error("expected WCAG standard mention")
-	}
-
-	recID := httptest.NewRecorder()
-	reqID := httptest.NewRequest(http.MethodGet, "/id/accessibility", nil)
-	h.Accessibility(recID, reqID)
-
-	if recID.Code != http.StatusOK {
-		t.Fatalf("expected status 200 for ID locale, got %d", recID.Code)
-	}
-
-	bodyID := recID.Body.String()
-	if !strings.Contains(bodyID, "Pernyataan Aksesibilitas") {
-		t.Error("expected 'Pernyataan Aksesibilitas' in indonesian page")
 	}
 }

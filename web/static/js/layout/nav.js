@@ -26,10 +26,18 @@ window.toggleMobileMenu = function() {
 		isTagPage = true;
 	}
 	var isHome = window.location.pathname === "/" || window.location.pathname === "/id" || window.location.pathname === "/id/";
+	var pillarMap = {
+		"linux": "wire", "kernel": "wire", "networking": "wire", "security": "wire", "storage": "wire", "devops": "wire", "docker": "wire", "ebpf": "wire", "io-uring": "wire", "systemd": "wire", "sysadmin": "wire", "wireguard": "wire", "cgroups": "wire",
+		"go": "craft", "rust": "craft", "backend": "craft", "database": "craft", "sqlite": "craft", "architecture": "craft", "python": "craft", "concurrency": "craft", "performance": "craft", "algorithms": "craft",
+		"cli": "tools", "terminal": "tools", "neovim": "tools", "tmux": "tools", "git": "tools", "bash": "tools", "fzf": "tools", "jq": "tools", "debugging": "tools", "workflow": "tools",
+		"ai": "radar", "llm": "radar", "agents": "radar", "wasm": "radar", "quantization": "radar", "inference": "radar",
+		"opinion": "essays", "career": "essays", "culture": "essays", "critique": "essays", "freelance": "essays", "essay": "essays"
+	};
+	var activePillar = pillarMap[tag] || tag;
 	var links = document.querySelectorAll("#subnav-tags .subnav-tag");
 	for (var i = 0; i < links.length; i++) {
 		var linkTag = links[i].getAttribute("data-tag");
-		if (isTagPage && linkTag === tag) {
+		if (isTagPage && (linkTag === tag || linkTag === activePillar)) {
 			links[i].classList.add("active");
 		} else if (isHome && linkTag === "") {
 			links[i].classList.add("active");
@@ -49,49 +57,6 @@ window.addEventListener("scroll", function() {
 		}
 	}
 }, { passive: true });
-
-(function() {
-	var header = document.getElementById("site-header-wrapper");
-	if (!header) return;
-
-	var lastScrollY = window.scrollY;
-	var threshold = 10;
-	var topThreshold = 70;
-
-	window.addEventListener("scroll", function() {
-
-		var isBlogPost = !!document.getElementById("reading-progress-bar") || !!document.getElementById("nav-post-title");
-		if (isBlogPost) {
-			header.classList.remove("-translate-y-full");
-			return;
-		}
-
-		var currentScrollY = window.scrollY;
-
-		if (currentScrollY <= topThreshold) {
-
-			header.classList.remove("-translate-y-full");
-			lastScrollY = currentScrollY;
-			return;
-		}
-
-		var diff = currentScrollY - lastScrollY;
-
-		if (Math.abs(diff) < threshold) {
-			return;
-		}
-
-		if (diff > 0 && currentScrollY > topThreshold) {
-
-			header.classList.add("-translate-y-full");
-		} else if (diff < 0) {
-
-			header.classList.remove("-translate-y-full");
-		}
-
-		lastScrollY = currentScrollY;
-	}, { passive: true });
-})();
 
 (function() {
 	var navTitle = document.getElementById("nav-post-title");

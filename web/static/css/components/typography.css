@@ -36,8 +36,8 @@
   .prose p {
     color: var(--c-text);
     font-size: 1em;
-    line-height: 1.62;
-    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    margin-bottom: 1.55rem;
     overflow-wrap: break-word;
   }
   .prose ul, .prose ol {
@@ -290,5 +290,19 @@
     text-decoration-color: var(--c-muted);
     text-underline-offset: 4px;
     cursor: help;
+  }
+
+  
+  .card-title {
+    @apply font-sans font-bold text-text group-hover:text-link transition-colors leading-snug;
+  }
+
+  .badge,
+  .tag-badge {
+    @apply text-[10px] font-mono font-bold uppercase tracking-wider text-accent;
+  }
+
+  .feed-meta {
+    @apply flex items-center gap-2 text-[11px] font-mono text-muted;
   }
 }

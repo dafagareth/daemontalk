@@ -22,21 +22,9 @@ func TestPrivacyPage(t *testing.T) {
 
 	body := rec.Body.String()
 	if !strings.Contains(body, "Privacy Policy") {
-		t.Error("expected 'Privacy Policy' title in english privacy page")
+		t.Error("expected 'Privacy Policy' title in privacy page")
 	}
 	if !strings.Contains(body, "zero-tracker") {
 		t.Error("expected zero-tracker declaration")
-	}
-
-	recID := httptest.NewRecorder()
-	reqID := httptest.NewRequest(http.MethodGet, "/id/privacy", nil)
-	h.Privacy(recID, reqID)
-
-	bodyID := recID.Body.String()
-	if !strings.Contains(bodyID, "Kebijakan Privasi") {
-		t.Error("expected 'Kebijakan Privasi' title in indonesian privacy page")
-	}
-	if !strings.Contains(bodyID, "zero-tracker") {
-		t.Error("expected indonesian zero-tracker description")
 	}
 }

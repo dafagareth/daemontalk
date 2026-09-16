@@ -8,7 +8,6 @@ import (
 
 type Config struct {
 	Port               string
-	SSHPort            string
 	Env                string
 	BaseURL            string
 	AdminToken         string
@@ -57,7 +56,6 @@ func Load() *Config {
 	loadDotEnv()
 	return &Config{
 		Port:               getEnv("PORT", "8080"),
-		SSHPort:            getEnv("SSH_PORT", "2222"),
 		Env:                getEnv("ENV", "development"),
 		BaseURL:            getEnv("BASE_URL", "https://www.daemontalk.com"),
 		AdminToken:         getEnv("ADMIN_TOKEN", ""),

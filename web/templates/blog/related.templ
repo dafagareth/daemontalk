@@ -1,0 +1,78 @@
+package blog
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/internal/post"
+	"daemontalk/web/templates/components"
+	"daemontalk/web/templates/shared"
+	"fmt"
+)
+
+func relatedCountText(count int) string {
+	if count > 3 {
+		count = 3
+	}
+	return fmt.Sprintf("%d dispatches", count)
+}
+
+func limitRelated(posts []post.Post, limit int) []post.Post {
+	if len(posts) > limit {
+		return posts[:limit]
+	}
+	return posts
+}
+
+templ blogRelated(ui i18n.UI, related []post.Post, currentTags []string, lang string) {
+	{{ _ = currentTags }}
+	if len(related) > 0 {
+		<section class="w-full font-sans border-t border-border pt-8 sm:pt-10">
+			<div class="mb-5 sm:mb-6 flex items-center justify-between font-sans text-xs text-muted select-none">
+				<span class="font-bold text-text uppercase tracking-wider">
+					Related Dispatches
+				</span>
+				<span class="text-[11px] text-muted">{ relatedCountText(len(related)) }</span>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+				for _, p := range limitRelated(related, 3) {
+					@relatedCard(ui, p, lang)
+				}
+			</div>
+		</section>
+	}
+}
+
+templ relatedCard(ui i18n.UI, p post.Post, lang string) {
+	<article class="flex flex-col h-full group">
+		<a
+			href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) }
+			class="block relative aspect-[16/9] w-full bg-surface mb-3.5 overflow-hidden border border-border"
+		>
+			@components.PostThumbnailImg(p)
+		</a>
+		<div class="min-h-[1.25rem] mb-1.5 select-none">
+			if len(p.Tags) > 0 {
+				<a
+					href={ templ.SafeURL(shared.Prefix(lang) + "/blog/tag/" + p.Tags[0]) }
+					class="badge text-[11px] hover:underline"
+				>
+					#{ p.Tags[0] }
+				</a>
+			}
+		</div>
+		<a href={ templ.SafeURL(shared.Prefix(lang) + "/blog/" + p.Slug) } class="block mb-2">
+			<h3 class="card-title text-base sm:text-lg line-clamp-3 leading-snug break-words">
+				{ p.Title }
+			</h3>
+		</a>
+		if p.Description != "" {
+			<p class="text-xs sm:text-sm text-muted line-clamp-2 leading-relaxed font-sans mb-3 break-words">
+				{ p.Description }
+			</p>
+		}
+		<div class="feed-meta mt-auto pt-2 select-none">
+			<time datetime={ p.Date.Format("2006-01-02") }>{ shared.FmtDate(p, lang) }</time>
+			<span class="text-muted/40">·</span>
+			<span>{ fmt.Sprintf("%d %s", p.ReadTime, ui.Blog_MinRead) }</span>
+		</div>
+	</article>
+}

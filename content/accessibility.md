@@ -1,63 +1,41 @@
 # Accessibility Statement
 
-**Last updated: September 4, 2026** · **Standard: WCAG 2.1 Level AA**
+**Effective Date: September 12, 2026 · Standard: WCAG 2.1 Level AA**
 
-Daemontalk is committed to providing an inclusive, fast, and legible reading and browsing experience for all individuals, including users with visual, motor, auditory, or cognitive disabilities, as well as those operating in headless or screen reader environments.
+Daemontalk is committed to making technical knowledge universally accessible. We target **WCAG 2.1 Level AA** conformance and design the platform to work well for users navigating via keyboard, screen readers, and assistive technologies.
 
 ---
 
-## Universal Design Principles
+## Keyboard Navigation
 
-This platform is designed under universal accessibility principles aligned with the international Web Content Accessibility Guidelines (**WCAG 2.1 Level AA**). We ensure that navigational ease, typographic clarity, and visual contrast remain paramount without sacrificing performance.
+The entire platform is operable without a mouse. Tab and Shift+Tab step through interactive elements in logical DOM order, and focus indicators are visible at all times. Pressing `/` focuses the global search from anywhere on the page, `?` opens the keyboard shortcut reference, `j` and `k` navigate between dispatches, `t` cycles the theme, and `Esc` closes any open dialog or overlay. No keyboard traps exist.
 
-## Comprehensive Keyboard Navigation
+---
 
-All platform features and interactive components support full keyboard navigation without requiring a pointing device:
+## Typography & Contrast
 
-**Global Shortcuts Guide (`?`)**: Opens an interactive modal cheat sheet detailing all available keyboard hotkeys.
+Body text meets a minimum 4.5:1 contrast ratio; large headings meet 3:1. Long-form prose is set in Lora (serif), interface controls in Plus Jakarta Sans, and code blocks in JetBrains Mono. Readers can adjust prose size across three preset steps via the reading controls. The platform supports browser zoom up to 200% without horizontal overflow or loss of functionality.
 
-**Instant Search (`/`)**: Focuses immediately on the site-wide search input.
+---
 
-**Theme Toggle (`t`)**: Cycles visual color schemes between Light and Dark modes.
+## Semantic Markup
 
-**Sequential Post Navigation (`j` and `k`)**: Steps forward and backward through published dispatches.
+Page templates use semantic HTML5 landmarks (`header`, `nav`, `main`, `article`, `aside`, `footer`) to allow screen readers to jump directly between sections. Heading hierarchy is maintained without skipped levels. Interactive components carry appropriate WAI-ARIA attributes (`aria-expanded`, `aria-controls`, `aria-hidden`, `aria-live`). Decorative elements are marked `aria-hidden="true"` and meaningful images carry descriptive `alt` text.
 
-**Modal Dismissal (`Esc`)**: Closes any active search popup, shortcut modal, or drawer menu.
+---
 
-**Linear Tab Stepping (`Tab` & `Shift+Tab`)**: Navigates sequentially through links, buttons, and form inputs with high-contrast focus rings for clear visual tracking.
+## Motion & Cognitive Comfort
 
-## Ergonomic Typography & Visual Contrast
+The platform respects the `prefers-reduced-motion` OS setting and suppresses transitions and animated transforms accordingly. No content flashes more than three times per second. There are no auto-playing media, countdown timers, or unsolicited overlays.
 
-**High-Legibility Font Pairing**: Body prose is rendered in **Source Serif 4** with generous line height for sustained technical reading, interface controls in **Plus Jakarta Sans**, and code blocks in **JetBrains Mono**.
+---
 
-**Dynamic Font Scaling**: Every dispatch includes on-page text scaling controls (`A-` and `A+`) that reflow prose vertically without clipping words or breaking responsive layouts.
+## Known Limitations
 
-**Calibrated Contrast Ratios**: All text-to-background color combinations maintain a contrast ratio exceeding 4.5:1 for normal text and 3:1 for large display headers in both light and dark themes.
+Some deep-dive kernel articles contain raw terminal output, ANSI streams, or hex dumps for which full accessible alternatives are not always practical. In those cases we provide plain-text descriptions alongside the raw blocks where possible.
 
-**Warm Screen Tint**: An integrated warm tint slider filters high-frequency blue light to alleviate eye strain during low-light reading sessions.
+---
 
-## Semantic Structure & Screen Reader Compatibility
+## Feedback
 
-**HTML5 Landmark Semantics**: Document layouts use strict HTML5 structural tags (`<main>`, `<nav>`, `<article>`, `<header>`, `<footer>`, `<aside>`, `<section>`) allowing assistive screen readers (NVDA, VoiceOver, JAWS, Orca) to navigate landmarks effortlessly.
-
-**Explicit ARIA Attributes**: Interactive controls, iconography, asynchronous loading states, and dialog windows are equipped with accurate ARIA labels and states (`aria-label`, `aria-expanded`, `aria-hidden`, `role="dialog"`).
-
-**Descriptive Alternative Text**: System blueprints, performance charts, and flow diagrams include contextual `alt` text explaining their technical meaning.
-
-## Motion Reduction & Cognitive Comfort
-
-**Reduced Motion Support**: The site automatically detects system `prefers-reduced-motion` settings and eliminates non-essential transition animations for readers with vestibular sensitivities.
-
-**Distraction-Free Environment**: The platform contains zero rapidly flashing elements, zero autoplaying media, and zero invasive marketing popups.
-
-## Headless & Terminal Accessibility
-
-For users operating in text-only environments, console displays, or braille terminals, the entire technical archive is accessible directly over SSH without requiring a graphical web browser:
-
-```bash
-$ ssh ssh.daemontalk.com -p 2222
-```
-
-## Feedback & Accessibility Assistance
-
-We continuously audit and improve the accessibility of this platform. If you encounter any barriers, difficult-to-read text, or keyboard traps, please reach out directly via email at: **realdaemontalk@gmail.com**. All accessibility inquiries are treated with high priority.
+If you encounter an accessibility barrier, please email **realdaemontalk@gmail.com** with the subject line `[Accessibility Barrier]`, the affected URL, your assistive technology and browser, and a brief description. Daemontalk is maintained by a single operator and we will address reported barriers as promptly as possible.

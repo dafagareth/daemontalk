@@ -1,0 +1,36 @@
+package layouts
+
+import (
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/components"
+)
+
+templ shortcutsModal(ui i18n.UI, lang string) {
+	<div
+		class="shortcuts-overlay"
+		id="shortcuts-overlay"
+		onclick="if(event.target===this)this.classList.remove('open')"
+	>
+		<div class="shortcuts-modal">
+			<div class="flex items-center justify-between mb-5">
+				<p class="text-sm font-medium text-text">{ ui.Modal_ShortcutsTitle }</p>
+				<button
+					onclick="document.getElementById('shortcuts-overlay').classList.remove('open')"
+					class="text-lg leading-none text-muted hover:text-text bg-none border-none cursor-pointer"
+				>×</button>
+			</div>
+			<div class="flex flex-col gap-2.5">
+				@components.ShortcutRow("?", "Show this help")
+				@components.ShortcutRow("/", "Search posts")
+				@components.ShortcutRow("j / k", "Navigate dispatch list")
+				@components.ShortcutRow("Enter", "Open focused item")
+				@components.ShortcutRow("g h", "Go to Home")
+				@components.ShortcutRow("g b", "Go to Dispatches")
+				@components.ShortcutRow("g s", "Go to Socket")
+				@components.ShortcutRow("g c", "Go to Colophon")
+				@components.ShortcutRow("Ctrl + Enter", "Submit comment / form")
+				@components.ShortcutRow("Esc", "Close / unfocus")
+			</div>
+		</div>
+	</div>
+}

@@ -1,0 +1,42 @@
+package pages
+
+import (
+	"fmt"
+
+	"daemontalk/internal/i18n"
+	"daemontalk/web/templates/shared"
+)
+
+templ NotFound(ui i18n.UI, lang string) {
+	@ErrorPage(404, ui.NotFound_Title, ui.NotFound_Body, ui.NotFound_Home, ui, lang)
+}
+
+templ ErrorPage(code int, title string, message string, homeLabel string, ui i18n.UI, lang string) {
+	<div class="max-w-3xl mx-auto px-6 py-20 sm:py-32">
+		<div class="space-y-6 max-w-lg">
+			<div class="text-6xl sm:text-7xl font-sans font-black text-text tracking-tight mb-4">
+				{ fmt.Sprintf("%d", code) }
+			</div>
+			<h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-text">
+				{ title }
+			</h1>
+			<p class="text-sm sm:text-base text-muted leading-relaxed">
+				{ message }
+			</p>
+			<div class="pt-2 flex flex-wrap items-center gap-3">
+				<a
+					href={ templ.SafeURL(shared.Prefix(lang) + "/") }
+					class="text-xs font-medium px-4 py-2 bg-[var(--c-link)] text-white hover:brightness-110 transition-all shadow-sm"
+				>
+					{ homeLabel }
+				</a>
+				<a
+					href={ templ.SafeURL(shared.Prefix(lang) + "/colophon") }
+					class="text-xs font-medium px-4 py-2 border border-border text-muted hover:text-text hover:bg-hover transition-colors"
+				>
+					{ ui.Nav_Colophon }
+				</a>
+			</div>
+		</div>
+	</div>
+}

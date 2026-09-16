@@ -32,7 +32,6 @@ sudo ufw default allow outgoing
 sudo ufw allow 22/tcp comment 'SSH'
 sudo ufw allow 80/tcp comment 'HTTP'
 sudo ufw allow 443/tcp comment 'HTTPS'
-sudo ufw allow 2222/tcp comment 'DaemonTalk TUI SSH'
 sudo ufw --force enable
 
 echo "[ok] VPS setup completed successfully."
