@@ -26,6 +26,7 @@ templ ContactPage(ui i18n.UI, lang string) {
 				hx-post={ string(templ.SafeURL(shared.Prefix(lang) + "/contact")) }
 				hx-target="#contact-result"
 				hx-swap="innerHTML"
+				hx-on::after-request="if(event.detail.successful){ this.reset(); var ta = this.querySelector('textarea'); if(ta) { ta.style.height = ''; } }"
 				class="flex flex-col gap-4"
 			>
 				<!-- ponytail: honeypot hidden from users, catches bots that fill all fields -->
@@ -58,18 +59,22 @@ templ ContactPage(ui i18n.UI, lang string) {
 						id="contact-message"
 						name="message"
 						required
-						rows="6"
-						class="bg-surface border border-border px-3 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:border-text transition-colors resize-y"
+						rows="2"
+						class="bg-surface border border-border px-3 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:border-text transition-colors resize-none overflow-hidden"
 						placeholder="What's on your mind?"
+						style="field-sizing: content;"
+						oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
 					></textarea>
 				</div>
-				<div id="contact-result" class="text-sm font-sans min-h-[1.5rem]"></div>
-				<button
-					type="submit"
-					class="self-start px-5 py-2.5 bg-text text-bg text-xs font-bold uppercase tracking-wider hover:opacity-80 transition-opacity cursor-pointer"
-				>
-					{ ui.Contact_Submit }
-				</button>
+				<div class="flex items-center justify-between gap-3 pt-1">
+					<div id="contact-result" class="text-sm font-sans"></div>
+					<button
+						type="submit"
+						class="ml-auto px-5 py-2.5 bg-text text-bg text-xs font-bold uppercase tracking-wider hover:opacity-80 transition-opacity cursor-pointer shrink-0"
+					>
+						{ ui.Contact_Submit }
+					</button>
+				</div>
 			</form>
 		</div>
 	</section>

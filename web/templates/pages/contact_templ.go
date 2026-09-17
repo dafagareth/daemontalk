@@ -82,14 +82,14 @@ func ContactPage(ui i18n.UI, lang string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-target=\"#contact-result\" hx-swap=\"innerHTML\" class=\"flex flex-col gap-4\"><!-- ponytail: honeypot hidden from users, catches bots that fill all fields --><input type=\"text\" name=\"website\" class=\"hidden\" tabindex=\"-1\" autocomplete=\"off\"><div class=\"flex flex-col gap-1\"><label for=\"contact-name\" class=\"text-xs font-semibold text-muted uppercase tracking-wider\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-target=\"#contact-result\" hx-swap=\"innerHTML\" hx-on::after-request=\"if(event.detail.successful){ this.reset(); var ta = this.querySelector('textarea'); if(ta) { ta.style.height = ''; } }\" class=\"flex flex-col gap-4\"><!-- ponytail: honeypot hidden from users, catches bots that fill all fields --><input type=\"text\" name=\"website\" class=\"hidden\" tabindex=\"-1\" autocomplete=\"off\"><div class=\"flex flex-col gap-1\"><label for=\"contact-name\" class=\"text-xs font-semibold text-muted uppercase tracking-wider\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Contact_NameLabel)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 34, Col: 119}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 35, Col: 119}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -102,7 +102,7 @@ func ContactPage(ui i18n.UI, lang string) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Contact_EmailLabel)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 45, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 46, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -115,26 +115,26 @@ func ContactPage(ui i18n.UI, lang string) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Contact_MessageLabel)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 56, Col: 125}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 57, Col: 125}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</label> <textarea id=\"contact-message\" name=\"message\" required rows=\"6\" class=\"bg-surface border border-border px-3 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:border-text transition-colors resize-y\" placeholder=\"What's on your mind?\"></textarea></div><div id=\"contact-result\" class=\"text-sm font-sans min-h-[1.5rem]\"></div><button type=\"submit\" class=\"self-start px-5 py-2.5 bg-text text-bg text-xs font-bold uppercase tracking-wider hover:opacity-80 transition-opacity cursor-pointer\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</label> <textarea id=\"contact-message\" name=\"message\" required rows=\"2\" class=\"bg-surface border border-border px-3 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:border-text transition-colors resize-none overflow-hidden\" placeholder=\"What's on your mind?\" style=\"field-sizing: content;\" oninput=\"this.style.height='auto';this.style.height=this.scrollHeight+'px'\"></textarea></div><div class=\"flex items-center justify-between gap-3 pt-1\"><div id=\"contact-result\" class=\"text-sm font-sans\"></div><button type=\"submit\" class=\"ml-auto px-5 py-2.5 bg-text text-bg text-xs font-bold uppercase tracking-wider hover:opacity-80 transition-opacity cursor-pointer shrink-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(ui.Contact_Submit)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 71, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/pages/contact.templ`, Line: 75, Col: 25}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</button></form></div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</button></div></form></div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -60,9 +60,6 @@
     html:not([data-theme="light"]) .logo-dark  { display: block; }
   }
 
-  footer .logo-light { display: none !important; }
-  footer .logo-dark { display: block !important; }
-
   .katex-scroll-wrapper {
     position: relative;
     width: 100%;

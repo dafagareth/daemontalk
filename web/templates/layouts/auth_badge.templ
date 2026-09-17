@@ -75,6 +75,17 @@ templ AuthNavBadge(user *auth.User, returnTo string, lang string, currentPath st
 					>
 						<span>Settings</span>
 					</a>
+					<button
+						type="button"
+						onclick="toggleTheme()"
+						class="w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors cursor-pointer group"
+					>
+						<span>Theme</span>
+						<span class="text-muted group-hover:text-text inline-flex items-center">
+							@sunIcon()
+							@moonIcon()
+						</span>
+					</button>
 				</div>
 				<div class="h-px bg-border"></div>
 				<div>

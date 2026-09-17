@@ -234,41 +234,7 @@ func AuthNavBadge(user *auth.User, returnTo string, lang string, currentPath str
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" class=\"w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors\"><span>Settings</span></a></div><div class=\"h-px bg-border\"></div><div><a href=\"/auth/logout\" class=\"w-full h-10 px-4 flex items-center justify-between text-muted hover:text-rose-500 hover:bg-hover transition-colors font-bold\"><span>Logout</span></a></div></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"relative flex items-center gap-1.5\" id=\"guest-menu-container\"><a href=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var14 templ.SafeURL
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/auth/github?return_to=" + returnTo))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 93, Col: 62}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" class=\"flex items-center gap-1.5 border border-border bg-surface hover:bg-hover px-2.5 h-9 text-xs font-sans font-bold text-text hover:text-text transition-colors select-none\" title=\"Login with GitHub\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = components.IconGitHub().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<span class=\"hidden lg:inline text-text\">Login</span></a> <button type=\"button\" onclick=\"var m=document.getElementById('guest-menu-dropdown'); if(m) m.classList.toggle('hidden');\" class=\"w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer\" aria-label=\"Settings\" title=\"Settings\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = components.IconSettings("w-4 h-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</button><div id=\"guest-menu-dropdown\" class=\"hidden absolute right-0 top-full mt-2 w-64 bg-surface border border-border shadow-2xl z-50 font-sans text-xs select-none whitespace-nowrap overflow-hidden rounded-none\"><div class=\"border-b border-border bg-surface px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted font-sans\">Preferences</div><button type=\"button\" onclick=\"toggleTheme()\" class=\"w-full h-10 px-4 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group\"><span class=\"text-text font-medium\">Theme</span> <span class=\"inline-flex items-center gap-2 text-muted group-hover:text-text\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" class=\"w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors\"><span>Settings</span></a> <button type=\"button\" onclick=\"toggleTheme()\" class=\"w-full h-10 px-4 flex items-center justify-between text-text hover:bg-hover hover:text-link transition-colors cursor-pointer group\"><span>Theme</span> <span class=\"text-muted group-hover:text-text inline-flex items-center\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -280,7 +246,53 @@ func AuthNavBadge(user *auth.User, returnTo string, lang string, currentPath str
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<span>Toggle</span></span></button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span></button></div><div class=\"h-px bg-border\"></div><div><a href=\"/auth/logout\" class=\"w-full h-10 px-4 flex items-center justify-between text-muted hover:text-rose-500 hover:bg-hover transition-colors font-bold\"><span>Logout</span></a></div></div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<div class=\"relative flex items-center gap-1.5\" id=\"guest-menu-container\"><a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var14 templ.SafeURL
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/auth/github?return_to=" + returnTo))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 104, Col: 62}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" class=\"flex items-center gap-1.5 border border-border bg-surface hover:bg-hover px-2.5 h-9 text-xs font-sans font-bold text-text hover:text-text transition-colors select-none\" title=\"Login with GitHub\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.IconGitHub().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<span class=\"hidden lg:inline text-text\">Login</span></a> <button type=\"button\" onclick=\"var m=document.getElementById('guest-menu-dropdown'); if(m) m.classList.toggle('hidden');\" class=\"w-9 h-9 flex items-center justify-center border border-border bg-surface text-muted hover:text-text hover:bg-hover transition-colors cursor-pointer\" aria-label=\"Settings\" title=\"Settings\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.IconSettings("w-4 h-4").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</button><div id=\"guest-menu-dropdown\" class=\"hidden absolute right-0 top-full mt-2 w-64 bg-surface border border-border shadow-2xl z-50 font-sans text-xs select-none whitespace-nowrap overflow-hidden rounded-none\"><div class=\"border-b border-border bg-surface px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted font-sans\">Preferences</div><button type=\"button\" onclick=\"toggleTheme()\" class=\"w-full h-10 px-4 text-left text-muted hover:text-text hover:bg-hover flex items-center justify-between gap-3 cursor-pointer rounded-none transition-colors group\"><span class=\"text-text font-medium\">Theme</span> <span class=\"inline-flex items-center gap-2 text-muted group-hover:text-text\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = sunIcon().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = moonIcon().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<span>Toggle</span></span></button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -311,144 +323,144 @@ func AuthNavBadgeMobile(user *auth.User, returnTo string, lang string, currentPa
 		}
 		ctx = templ.ClearChildren(ctx)
 		if user != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div class=\"py-2.5 px-0.5 border-b border-border/60 flex flex-col gap-2 font-sans\"><div class=\"flex items-center justify-between\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"py-2.5 px-0.5 border-b border-border/60 flex flex-col gap-2 font-sans\"><div class=\"flex items-center justify-between\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var16 templ.SafeURL
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/u/" + user.Username))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 139, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 150, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\" class=\"flex items-center gap-2.5 min-w-0 hover:opacity-85 transition-opacity\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" class=\"flex items-center gap-2.5 min-w-0 hover:opacity-85 transition-opacity\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if user.AvatarURL != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<img src=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<img src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(user.AvatarURL)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 141, Col: 31}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 152, Col: 31}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\" alt=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" alt=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(user.Username)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 141, Col: 53}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 152, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" class=\"w-8 h-8 object-cover border border-border shrink-0\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" class=\"w-8 h-8 object-cover border border-border shrink-0\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"w-8 h-8 bg-chip flex items-center justify-center font-sans font-bold text-text text-xs border border-border shrink-0\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"w-8 h-8 bg-chip flex items-center justify-center font-sans font-bold text-text text-xs border border-border shrink-0\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(string([]rune(user.Username)[:1]))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 144, Col: 42}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 155, Col: 42}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div class=\"min-w-0\"><div class=\"flex items-center gap-1.5\"><span class=\"text-xs font-sans font-bold text-text truncate\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"min-w-0\"><div class=\"flex items-center gap-1.5\"><span class=\"text-xs font-sans font-bold text-text truncate\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs("@" + user.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 149, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 160, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</span> <span class=\"border border-border bg-chip px-1.5 py-0.5 text-[8px] uppercase font-sans font-bold text-muted shrink-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span> <span class=\"border border-border bg-chip px-1.5 py-0.5 text-[8px] uppercase font-sans font-bold text-muted shrink-0\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(user.Role)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 150, Col: 136}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 161, Col: 136}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span></div></div></a> <a href=\"/auth/logout\" class=\"text-xs font-sans text-muted hover:text-rose-500 font-bold transition-colors\">Logout</a></div><div class=\"flex items-center gap-3 text-xs text-muted pt-0.5\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span></div></div></a> <a href=\"/auth/logout\" class=\"text-xs font-sans text-muted hover:text-rose-500 font-bold transition-colors\">Logout</a></div><div class=\"flex items-center gap-3 text-xs text-muted pt-0.5\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var22 templ.SafeURL
 			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/u/" + user.Username))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 159, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 170, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\" class=\"hover:text-text hover:underline transition-colors font-medium\">My Profile</a> <span class=\"text-muted/40\">·</span> <a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" class=\"hover:text-text hover:underline transition-colors font-medium\">My Profile</a> <span class=\"text-muted/40\">·</span> <a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var23 templ.SafeURL
 			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(prefix(lang) + "/settings"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 163, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 174, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" class=\"hover:text-text hover:underline transition-colors font-medium\">Settings</a></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "\" class=\"hover:text-text hover:underline transition-colors font-medium\">Settings</a></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var24 templ.SafeURL
 			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/auth/github?return_to=" + returnTo))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 170, Col: 61}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/layouts/auth_badge.templ`, Line: 181, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\" class=\"flex items-center justify-between w-full py-2.5 px-3 border border-border bg-surface hover:bg-hover font-sans text-xs font-bold text-text transition-colors\" title=\"Login with GitHub\"><span class=\"flex items-center gap-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "\" class=\"flex items-center justify-between w-full py-2.5 px-3 border border-border bg-surface hover:bg-hover font-sans text-xs font-bold text-text transition-colors\" title=\"Login with GitHub\"><span class=\"flex items-center gap-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -456,7 +468,7 @@ func AuthNavBadgeMobile(user *auth.User, returnTo string, lang string, currentPa
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<span>Login with GitHub</span></span> <span class=\"text-muted font-sans text-xs\">→</span></a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<span>Login with GitHub</span></span> <span class=\"text-muted font-sans text-xs\">→</span></a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
